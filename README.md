@@ -77,7 +77,7 @@ Tout se fait sur GitHub : ouvrir le fichier, cliquer sur le crayon, modifier, pu
 | Textes : à propos, livres, mémoire, extraits, contact | `index.html` |
 | Réalisations graphiques | `index.html`, section « Graphisme » : un bloc `<article>` par projet, un `<button class="graphisme-vignette">` par image |
 | Œuvres du portfolio (trois tirées au hasard à chaque visite) | `script.js`, liste `allWorks` |
-| Photos du carrousel | `script.js`, liste `allPhotos` : adresse de l'image et page Pexels de chaque photo |
+| Photos du carrousel | `script.js`, liste `allPhotos` : numéro Pexels, titre et légende de chaque photo. « Voir la photo » ouvre sa page sur photos.karlforterre.fr |
 | En-têtes (six variantes : un clic sur l'en-tête passe à la suivante) | `js/header-templates.js` |
 | Couleurs, polices, mise en page | `styles.css` |
 | Mentions légales | `mentions-legales/index.html` |

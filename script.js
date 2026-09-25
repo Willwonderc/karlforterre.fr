@@ -791,20 +791,22 @@ function initPhotoCarousel() {
     const totalNum = document.getElementById('totalNum');
     const progressFill = document.getElementById('progressFill');
     const autoplayToggle = document.getElementById('autoplayToggle');
-    const pexelsLink = document.getElementById('carouselPexels');
+    const lienPhoto = document.getElementById('carouselLien');
 
-    // Photos les plus vues sur Pexels (relevé du 24 septembre 2026), servies par Pexels
+    // Photos les plus vues sur Pexels (relevé du 24 septembre 2026) : numéro Pexels, titre, légende.
+    // L'image vient de Pexels ; « Voir la photo » ouvre sa page sur le site photo, qui mène au téléchargement.
     const allPhotos = [
-        { image: 'https://images.pexels.com/photos/13102252/pexels-photo-13102252.jpeg', page: 'https://www.pexels.com/photo/crescent-moon-on-a-sunset-sky-13102252/', title: 'Croissant de lune au crépuscule', desc: 'Un fin croissant de lune dans le dégradé du soir.' },
-        { image: 'https://images.pexels.com/photos/27116682/pexels-photo-27116682.jpeg', page: 'https://www.pexels.com/photo/ciel-etoile-27116682/', title: 'Ciel étoilé', desc: "Un ciel sombre semé d'étoiles, traversé par la Voie lactée." },
-        { image: 'https://images.pexels.com/photos/13087478/pexels-photo-13087478.jpeg', page: 'https://www.pexels.com/photo/a-pathway-between-green-trees-in-the-forest-13087478/', title: 'Chemin sous les arbres', desc: "Un chemin de terre bordé d'arbres, un jour d'été à Moyemont." },
-        { image: 'https://images.pexels.com/photos/19047681/pexels-photo-19047681.jpeg', page: 'https://www.pexels.com/photo/train-by-platform-in-black-and-white-19047681/', title: 'Train à quai', desc: "Un train en gare vu d'en haut, en noir et blanc." },
-        { image: 'https://images.pexels.com/photos/34894953/pexels-photo-34894953.jpeg', page: 'https://www.pexels.com/photo/le-loup-lighthouse-in-france-on-foggy-day-34894953/', title: 'Le phare du Loup', desc: 'Un phare solitaire dans une mer de brume.' },
-        { image: 'https://images.pexels.com/photos/31514838/pexels-photo-31514838.jpeg', page: 'https://www.pexels.com/photo/close-up-of-a-delicate-pink-rose-blossom-31514838/', title: 'Rose', desc: "La délicatesse des pétales d'une rose, en gros plan." },
-        { image: 'https://images.pexels.com/photos/23414381/pexels-photo-23414381.jpeg', page: 'https://www.pexels.com/photo/eglise-notre-dame-de-niort-23414381/', title: 'Notre-Dame de Niort', desc: "Les flèches gothiques de l'église Notre-Dame au-dessus des toits de Niort." },
-        { image: 'https://images.pexels.com/photos/38694057/pexels-photo-38694057.jpeg', page: 'https://www.pexels.com/photo/elegant-parterre-in-villandry-gardens-38694057/', title: 'Les jardins de Villandry', desc: 'Les parterres du château de Villandry, vus du ciel.' }
+        { id: '13102252', title: 'Croissant de lune au crépuscule', desc: 'Un fin croissant de lune dans le dégradé du soir.' },
+        { id: '27116682', title: 'Ciel étoilé', desc: "Un ciel sombre semé d'étoiles, traversé par la Voie lactée." },
+        { id: '13087478', title: 'Chemin sous les arbres', desc: "Un chemin de terre bordé d'arbres, un jour d'été à Moyemont." },
+        { id: '19047681', title: 'Train à quai', desc: "Un train en gare vu d'en haut, en noir et blanc." },
+        { id: '34894953', title: 'Le phare du Loup', desc: 'Un phare solitaire dans une mer de brume.' },
+        { id: '31514838', title: 'Rose', desc: "La délicatesse des pétales d'une rose, en gros plan." },
+        { id: '23414381', title: 'Notre-Dame de Niort', desc: "Les flèches gothiques de l'église Notre-Dame au-dessus des toits de Niort." },
+        { id: '38694057', title: 'Les jardins de Villandry', desc: 'Les parterres du château de Villandry, vus du ciel.' }
     ];
-    const pexels = (photo, largeur) => `${photo.image}?auto=compress&cs=tinysrgb&w=${largeur}`;
+    const pexels = (photo, largeur) => `https://images.pexels.com/photos/${photo.id}/pexels-photo-${photo.id}.jpeg?auto=compress&cs=tinysrgb&w=${largeur}`;
+    const pagePhoto = (photo) => `https://photos.karlforterre.fr/photo/${photo.id}/`;
 
     // Shuffle and select 8 photos
     const shuffled = allPhotos.sort(() => Math.random() - 0.5);
@@ -858,7 +860,7 @@ function initPhotoCarousel() {
         slideTitle.textContent = photo.title;
         slideDesc.textContent = photo.desc;
         currentNum.textContent = String(carouselState.currentIndex + 1).padStart(2, '0');
-        if (pexelsLink) pexelsLink.href = photo.page;
+        if (lienPhoto) lienPhoto.href = pagePhoto(photo);
     }
 
     function nextSlide() {

@@ -27,8 +27,9 @@ dans le dépôt Willwonderc/PexelsWillwonder.
   images, 600 à 900 pixels pour les vignettes, noms en minuscules sans espaces ni
   accents. Jamais de TIFF ni d'original lourd : le dépôt est public.
 - Polices hébergées dans `fonts/` : aucun appel à Google Fonts.
-- Carrousel photo : images servies par images.pexels.com, chaque photo renvoie vers sa
-  page Pexels. Aucune collecte automatique sur les pages de pexels.com.
+- Carrousel photo : images servies par images.pexels.com ; chaque photo ouvre sa page sur
+  photos.karlforterre.fr, qui mène au téléchargement sur Pexels. Aucune collecte
+  automatique sur les pages de pexels.com.
 - Captures d'écran en session : Chromium ne charge pas les images de images.pexels.com
   à travers le proxy. Intercepter ces requêtes (Playwright, `page.route`) et y répondre
   avec les fichiers téléchargés par curl.
