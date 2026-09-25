@@ -18,6 +18,13 @@ dans le dépôt Willwonderc/PexelsWillwonder.
 - Karl Forterre a fermé son entreprise : aucune offre de prestations, de devis ni de
   tarifs sur le site.
 - Pas de formulaire : le contact passe par contact@karlforterre.fr et LinkedIn.
+- Trois langues : français, anglais, chinois. `js/traductions.js` associe à chaque phrase
+  française (clé exacte, espaces ramenés à un seul) son anglais et son chinois ;
+  `js/langues.js` les applique, y compris aux contenus ajoutés par script. Toute phrase
+  française ajoutée ou modifiée reçoit ses deux traductions. Pas de détection
+  automatique de la langue : Google doit continuer de voir la page en français.
+- Graphisme : un `<article class="graphisme-projet">` par projet, un
+  `<button class="graphisme-carte">` par œuvre (vignette 600 px, grande image 1800 px).
 - Ne jamais inventer de citation ni d'extrait : les extraits viennent des livres
   (`livres/*.pdf`), les textes des projets de l'auteur lui-même.
 - Liens relatifs, pour que le site fonctionne aussi à l'adresse d'essai

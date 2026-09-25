@@ -75,12 +75,13 @@ Tout se fait sur GitHub : ouvrir le fichier, cliquer sur le crayon, modifier, pu
 | Quoi | Où |
 |---|---|
 | Textes : à propos, livres, mémoire, extraits, contact | `index.html` |
-| Réalisations graphiques | `index.html`, section « Graphisme » : un bloc `<article>` par projet, un `<button class="graphisme-vignette">` par image |
+| Réalisations graphiques | `index.html`, section « Graphisme » : un bloc `<article>` par projet, un `<button class="graphisme-carte">` par œuvre (la largeur et la hauteur de la vignette dans `width` et `height`) |
 | Œuvres du portfolio (trois tirées au hasard à chaque visite) | `script.js`, liste `allWorks` |
 | Photos du carrousel, séries et galeries | rien à faire ici : voir « Photographie » plus bas |
 | En-têtes (six variantes : un clic sur l'en-tête passe à la suivante) | `js/header-templates.js` |
 | Couleurs, polices, mise en page | `styles.css` |
 | Mentions légales | `mentions-legales/index.html` |
+| Traductions anglaise et chinoise | `js/traductions.js` : voir « Langues » plus bas |
 
 ### Photographie : reliée au site photo
 
@@ -98,6 +99,29 @@ nuit (dépôt Willwonderc/PexelsWillwonder).
 Pour changer ces photos, on modifie donc la Sélection du site photo : les deux sites se
 mettent à jour ensemble. La liste `photosIntegrees` de `script.js` ne sert qu'en secours,
 si le site photo ne répond pas.
+
+### Langues : anglais et chinois
+
+La pastille à côté de « Contact » (FR, EN, 中文) traduit tout le site. Le français de
+`index.html` reste la référence : `js/traductions.js` donne, pour chaque phrase
+française, son anglais (`en`) et son chinois (`zh`).
+
+- **Corriger une traduction** : ouvrir `js/traductions.js`, chercher la phrase
+  française et modifier le texte après `en:` ou `zh:`.
+- **Changer une phrase française** dans `index.html`, `script.js` ou
+  `js/header-templates.js` : changer aussi sa clé, c'est-à-dire la phrase française
+  écrite en tête de ligne dans `js/traductions.js`. Sinon, cette phrase restera en
+  français dans les deux autres langues.
+- **Titres du site photo** (sélection, séries, galeries) : ils sont traduits par le même
+  fichier. Un nouveau titre s'affiche en français tant qu'il n'y a pas été ajouté.
+- Le choix de la langue est mémorisé par le navigateur du visiteur. Un lien peut aussi
+  l'imposer : `https://karlforterre.fr/?lang=en` ou `?lang=zh`.
+- Les liens vers le site photo mènent à sa version anglaise, qui existe pour toutes ses
+  pages ; il n'a pas de version chinoise.
+- En chinois, les caractères viennent des polices déjà installées sur l'appareil du
+  visiteur (PingFang, Microsoft YaHei, Noto…).
+- Google continue d'indexer la version française : les traductions s'adressent aux
+  visiteurs.
 
 ### Ajouter une image
 
@@ -117,7 +141,8 @@ Pour déposer un fichier : **Add file** → **Upload files**, dans le bon dossie
 ## Contenu du dossier
 
 - `index.html`, `styles.css`, `script.js`, `js/` : la page d'accueil et son
-  fonctionnement.
+  fonctionnement. Dans `js/` : les en-têtes (`header-templates.js`, `header-loader.js`),
+  les traductions (`traductions.js`) et le bouton de langue (`langues.js`).
 - `images/` : portrait, logo, fond, `portfolio/` et `graphisme/` (grandes images et
   vignettes).
 - `livres/` : couvertures, livres en PDF et EPUB, mémoire.

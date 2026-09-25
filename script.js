@@ -866,7 +866,7 @@ function initPhotoCarousel(apercu) {
         // Create thumbnail
         const thumb = document.createElement('div');
         thumb.className = `carousel-thumbnail${index === 0 ? ' active' : ''}`;
-        thumb.innerHTML = `<img src="${imagePexels(photo, 240)}" alt="Miniature ${index + 1}" loading="lazy">`;
+        thumb.innerHTML = `<img src="${imagePexels(photo, 240)}" alt="" loading="lazy">`;
         thumb.addEventListener('click', () => {
             goToSlide(index);
             if (carouselState.autoplay) startAutoplay();
@@ -896,8 +896,12 @@ function initPhotoCarousel(apercu) {
     function updateSlideContent() {
         const photo = carouselState.photos[carouselState.currentIndex];
         slideTitle.textContent = photo.title;
-        slideDesc.textContent = photo.rubrique ? `${photo.rubrique.nom} : ` : (photo.desc || '');
+        slideDesc.textContent = photo.rubrique ? '' : (photo.desc || '');
         if (photo.rubrique) {
+            const nom = document.createElement('span');
+            nom.className = 'rubrique-nom';
+            nom.textContent = `${photo.rubrique.nom} :`;
+            slideDesc.appendChild(nom);
             const lien = document.createElement('a');
             lien.href = photo.rubrique.page;
             lien.textContent = photo.rubrique.titre;
@@ -1008,20 +1012,59 @@ function initPhotoCarousel(apercu) {
 }
 
 /**
- * Galerie Graphisme : chaque vignette ouvre la visionneuse sur les images de son projet
+ * Galerie Graphisme : un rail de cartes par projet, qui défile au doigt ou avec les
+ * flèches ; chaque carte ouvre la visionneuse. Le bouton « Vue d'ensemble » montre
+ * toutes les œuvres en petit, et le survol les agrandit.
  */
 function initGraphisme() {
-    document.querySelectorAll('.graphisme-projet').forEach(projet => {
-        const titreProjet = projet.querySelector('.graphisme-titre')?.textContent || '';
-        const vignettes = Array.from(projet.querySelectorAll('.graphisme-vignette'));
-        const galerie = vignettes.map(v => ({ src: v.dataset.grand, title: v.dataset.titre, desc: titreProjet }));
+    const section = document.getElementById('graphisme');
+    if (!section) return;
+    const miseAJour = [];
 
-        vignettes.forEach((vignette, index) => {
-            vignette.addEventListener('click', () => {
+    section.querySelectorAll('.graphisme-projet').forEach(projet => {
+        const titreProjet = projet.querySelector('.graphisme-titre')?.textContent || '';
+        const cartes = Array.from(projet.querySelectorAll('.graphisme-carte'));
+        const galerie = cartes.map(c => ({ src: c.dataset.grand, title: c.dataset.titre, desc: titreProjet }));
+
+        cartes.forEach((carte, index) => {
+            carte.addEventListener('click', () => {
                 if (window.lightboxState) window.lightboxState.open(galerie, index);
             });
         });
+
+        const rail = projet.querySelector('.graphisme-rail');
+        const fleches = Array.from(projet.querySelectorAll('.graphisme-fleche'));
+        const majFleches = () => {
+            const deborde = !section.classList.contains('vue-ensemble') && rail.scrollWidth > rail.clientWidth + 4;
+            fleches.forEach(fleche => {
+                fleche.hidden = !deborde;
+                fleche.disabled = Number(fleche.dataset.sens) < 0
+                    ? rail.scrollLeft <= 4
+                    : rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 4;
+            });
+        };
+        fleches.forEach(fleche => {
+            fleche.addEventListener('click', () => {
+                rail.scrollBy({ left: Number(fleche.dataset.sens) * rail.clientWidth * 0.8, behavior: 'smooth' });
+            });
+        });
+        rail.addEventListener('scroll', majFleches, { passive: true });
+        rail.querySelectorAll('img').forEach(image => image.addEventListener('load', majFleches));
+        miseAJour.push(majFleches);
+        majFleches();
     });
+
+    window.addEventListener('resize', debounce(() => miseAJour.forEach(maj => maj()), 150));
+
+    const bascule = document.getElementById('graphisme-bascule');
+    if (bascule) {
+        bascule.addEventListener('click', () => {
+            const ensemble = section.classList.toggle('vue-ensemble');
+            bascule.setAttribute('aria-pressed', String(ensemble));
+            bascule.querySelector('span').textContent = ensemble ? 'Défilement' : 'Vue d’ensemble';
+            miseAJour.forEach(maj => maj());
+        });
+    }
 }
 
 /**
@@ -1029,19 +1072,25 @@ function initGraphisme() {
  */
 function initSitePhoto(apercu) {
     if (!apercu) return;
-    const nombre = n => Number(n || 0).toLocaleString('fr-FR');
     const c = apercu.chiffres || {};
 
+    // Chiffres, recomposés à chaque changement de langue (js/langues.js)
     const chiffres = document.getElementById('site-photo-chiffres');
-    if (chiffres && c.photos) {
-        const morceaux = [`${nombre(c.photos)} photos`, `${nombre(c.series)} séries`, `${nombre(c.galeries)} galeries`];
-        if (c.vues_pexels) {
-            morceaux.push(`${nombre(c.vues_pexels)} vues`
-                + (c.telechargements_pexels ? ` et ${nombre(c.telechargements_pexels)} téléchargements sur Pexels` : ' sur Pexels'));
-        }
-        chiffres.textContent = morceaux.join(' · ');
+    const afficherChiffres = () => {
+        if (!chiffres || !c.photos) return;
+        const langue = window.Langues ? window.Langues.actuelle : 'fr';
+        const nombre = n => Number(n || 0).toLocaleString({ fr: 'fr-FR', en: 'en-GB', zh: 'zh-CN' }[langue] || 'fr-FR');
+        const [p, s, g, v, t] = [c.photos, c.series, c.galeries, c.vues_pexels, c.telechargements_pexels].map(nombre);
+        const morceaux = {
+            fr: [`${p} photos`, `${s} séries`, `${g} galeries`, c.vues_pexels && (c.telechargements_pexels ? `${v} vues et ${t} téléchargements sur Pexels` : `${v} vues sur Pexels`)],
+            en: [`${p} photos`, `${s} series`, `${g} galleries`, c.vues_pexels && (c.telechargements_pexels ? `${v} views and ${t} downloads on Pexels` : `${v} views on Pexels`)],
+            zh: [`${p} 张照片`, `${s} 个系列`, `${g} 个图集`, c.vues_pexels && (c.telechargements_pexels ? `Pexels 上 ${v} 次浏览、${t} 次下载` : `Pexels 上 ${v} 次浏览`)]
+        }[langue] || [];
+        chiffres.textContent = morceaux.filter(Boolean).join(' · ');
         chiffres.hidden = false;
-    }
+    };
+    afficherChiffres();
+    document.addEventListener('kf:langue', afficherChiffres);
 
     const series = document.getElementById('site-photo-series');
     (apercu.series || []).forEach(serie => {
@@ -1052,7 +1101,7 @@ function initSitePhoto(apercu) {
         image.src = imagePexels(serie.couverture, 800);
         image.srcset = `${imagePexels(serie.couverture, 600)} 600w, ${imagePexels(serie.couverture, 1200)} 1200w`;
         image.sizes = '(max-width: 768px) 92vw, 380px';
-        image.alt = serie.couverture.titre || '';
+        image.alt = '';
         image.loading = 'lazy';
         const infos = document.createElement('span');
         infos.className = 'serie-infos';
@@ -1061,7 +1110,11 @@ function initSitePhoto(apercu) {
         titre.textContent = serie.titre;
         const lieu = document.createElement('span');
         lieu.className = 'serie-lieu';
-        lieu.textContent = [serie.lieu, serie.date].filter(Boolean).join(' · ');
+        // Lieu et date en morceaux séparés, traduits chacun par js/langues.js
+        [serie.lieu, serie.date].filter(Boolean).forEach((morceau, i) => {
+            if (i) lieu.append(' · ');
+            lieu.append(morceau);
+        });
         infos.append(titre, lieu);
         carte.append(image, infos);
         series.appendChild(carte);
