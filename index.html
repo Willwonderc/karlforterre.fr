@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Karl Forterre, auteur. Les belles lettres font les bons mots. Découvrez mes livres, mon mémoire de recherche, mes créations graphiques et mes photographies.">
+    <meta name="keywords" content="Karl Forterre, auteur, écrivain, livres, Darshan, L'histoire du petit Théo, graphisme, photographie">
+    <meta name="author" content="Karl Forterre">
+
+    <title>Karl Forterre | Auteur</title>
+    <link rel="canonical" href="https://karlforterre.fr/">
+
+    <!-- Aperçu lors d'un partage (réseaux sociaux, messageries) -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:site_name" content="Karl Forterre">
+    <meta property="og:title" content="Karl Forterre | Auteur">
+    <meta property="og:description" content="Mes livres, mon mémoire de recherche, mes créations graphiques et mes photographies.">
+    <meta property="og:url" content="https://karlforterre.fr/">
+    <meta property="og:image" content="https://karlforterre.fr/images/partage.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Polices : hébergées avec le site (dossier fonts/), déclarées en tête de styles.css -->
+    <link rel="preload" href="fonts/cormorant-garamond-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <img src="images/logo-kf.webp" alt="KF’" class="loader-logo-img">
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+            <div class="loader-text">Chargement...</div>
+        </div>
+    </div>
+
+    <!-- Floating Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <img src="images/logo-kf.webp" alt="KF’, retour en haut de page" class="logo-img">
+            </a>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+                <span class="hamburger"></span>
+            </button>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="#about" class="nav-link" data-text="À propos">À propos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#portfolio" class="nav-link" data-text="Portfolio">Portfolio</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#graphisme" class="nav-link" data-text="Graphisme">Graphisme</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#photography" class="nav-link" data-text="Photographie">Photographie</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#books" class="nav-link" data-text="Mes livres">Mes livres</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#memoir" class="nav-link" data-text="Une expertise auctoriale">Une expertise auctoriale</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link nav-link-cta magnetic-btn">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Dynamic Header Container -->
+    <div id="header-container">
+        <!-- Header chargé dynamiquement par header-loader.js -->
+        <!-- Fallback pour JS désactivé ou erreur de chargement -->
+        <noscript>
+            <section class="hero" id="hero">
+                <div class="hero-background">
+                    <div class="hero-gradient"></div>
+                    <div class="hero-pattern"></div>
+                    <div class="hero-glow"></div>
+                </div>
+                <div class="floating-shapes">
+                    <div class="shape shape-1"></div>
+                    <div class="shape shape-2"></div>
+                    <div class="shape shape-3"></div>
+                    <div class="shape shape-4"></div>
+                    <div class="shape shape-5"></div>
+                </div>
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <p class="hero-subtitle">Auteur</p>
+                        <h1 class="hero-title">
+                            <span class="title-line">Karl</span>
+                            <span class="title-line">Forterre</span>
+                        </h1>
+                        <p class="hero-tagline">« Les belles lettres font les bons mots. »</p>
+                        <div class="hero-cta">
+                            <a href="#books" class="btn btn-primary">
+                                <span class="btn-text">Découvrir mes œuvres</span>
+                            </a>
+                            <a href="#contact" class="btn btn-secondary">
+                                <span class="btn-text">Me contacter</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <div class="image-wrapper">
+                            <img src="images/auteur/photo-auteur.webp" alt="Karl Forterre" class="profile-img">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </noscript>
+    </div>
+
+    <!-- About Section -->
+    <section class="section about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image reveal-element" data-delay="0">
+                    <div class="image-frame tilt-element">
+                        <div class="frame-border"></div>
+                        <img src="images/auteur/portrait.webp" alt="Portrait de Karl Forterre" class="author-photo">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="floating-badge">
+                        <span class="badge-icon">✍️</span>
+                        <span class="badge-text">Auteur</span>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <span class="section-label reveal-element" data-delay="0.1">À propos</span>
+                    <h2 class="section-title split-text reveal-element" data-delay="0.2">L'auteur derrière les mots</h2>
+                    <div class="about-text reveal-element" data-delay="0.3">
+                        <p>Passionné par le pouvoir des mots et la beauté de la langue française, je consacre ma plume à créer des œuvres qui résonnent avec l'âme de mes lecteurs.</p>
+                        <p>Mon parcours m'a mené à explorer différentes formes d'écriture, de la fiction littéraire à la rédaction professionnelle, toujours avec le même souci du détail et de l'élégance stylistique.</p>
+                        <p>Chaque projet est une nouvelle aventure, une occasion de donner vie à des idées et de tisser des récits qui marquent les esprits.</p>
+                    </div>
+                    <div class="about-stats reveal-element" data-delay="0.4">
+                        <div class="stat" data-count="3">
+                            <span class="stat-number counter">0</span>
+                            <span class="stat-plus">+</span>
+                            <span class="stat-label">Ouvrages publiés</span>
+                        </div>
+                        <div class="stat" data-count="50">
+                            <span class="stat-number counter">0</span>
+                            <span class="stat-plus">+</span>
+                            <span class="stat-label">Projets réalisés</span>
+                        </div>
+                        <div class="stat" data-count="5">
+                            <span class="stat-number counter">0</span>
+                            <span class="stat-plus">+</span>
+                            <span class="stat-label">Années d'expérience</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section class="section portfolio" id="portfolio">
+        <div class="portfolio-bg-image" style="background-image: url('images/fond-auteur.webp');"></div>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label reveal-element">Créations</span>
+                <h2 class="section-title reveal-element">Portfolio</h2>
+                <p class="section-description reveal-element">Une sélection de mes créations visuelles et artistiques.</p>
+            </div>
+
+            <!-- Elegant 3-item Grid -->
+            <div class="portfolio-showcase reveal-element" id="portfolio-showcase">
+                <!-- Items loaded dynamically by JavaScript -->
+            </div>
+
+            <div class="portfolio-cta reveal-element">
+                <a href="#graphisme" class="btn btn-primary magnetic-btn">
+                    <span class="btn-text">Voir mes réalisations graphiques</span>
+                    <span class="btn-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" aria-label="Fermer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <button class="lightbox-nav lightbox-prev" aria-label="Précédent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+        </button>
+        <button class="lightbox-nav lightbox-next" aria-label="Suivant">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+            </svg>
+        </button>
+        <div class="lightbox-content">
+            <img src="" alt="" class="lightbox-image">
+            <div class="lightbox-info">
+                <h3 class="lightbox-title"></h3>
+                <p class="lightbox-desc"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphisme : réalisations reprises de l'ancien site Adobe Portfolio -->
+    <section class="section graphisme" id="graphisme">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label reveal-element">Réalisations</span>
+                <h2 class="section-title reveal-element">Graphisme et édition</h2>
+                <p class="section-description reveal-element">Logos, couvertures, affiches et publicités, pour des maisons d’édition, des événements et des projets universitaires.</p>
+            </div>
+
+            <div class="graphisme-projets">
+            <article class="graphisme-projet reveal-element">
+                <div class="graphisme-texte">
+                    <h3 class="graphisme-titre">Société des Éditions du Poitou</h3>
+                    <p>Voici le logo que j’ai réalisé pour la Société des Éditions du Poitou. Ce logo est suivi de publicités ainsi que de documents à usage interne. Sont également présentes les couvertures que j’ai pu réaliser pour la maison d’édition pictavienne.</p>
+                </div>
+                <div class="graphisme-grille">
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/sep-logo.webp" data-titre="Logo de la Société des Éditions du Poitou">
+                        <img src="images/graphisme/sep-logo-vignette.webp" alt="Logo de la Société des Éditions du Poitou" loading="lazy" width="600" height="388">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/sep-charte-logo.webp" data-titre="Présentation du logo">
+                        <img src="images/graphisme/sep-charte-logo-vignette.webp" alt="Présentation du logo" loading="lazy" width="600" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/sep-carte.webp" data-titre="Carte de la maison d’édition">
+                        <img src="images/graphisme/sep-carte-vignette.webp" alt="Carte de la maison d’édition" loading="lazy" width="600" height="388">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/sep-publicite-cartes.webp" data-titre="Publicité « Une infinité d’impressions possibles »">
+                        <img src="images/graphisme/sep-publicite-cartes-vignette.webp" alt="Publicité « Une infinité d’impressions possibles »" loading="lazy" width="424" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/sep-publicite-noir-et-blanc.webp" data-titre="Publicité « On voit la vie en couleur »">
+                        <img src="images/graphisme/sep-publicite-noir-et-blanc-vignette.webp" alt="Publicité « On voit la vie en couleur »" loading="lazy" width="424" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/sep-publicite-engagees.webp" data-titre="Publicité « Engagées »">
+                        <img src="images/graphisme/sep-publicite-engagees-vignette.webp" alt="Publicité « Engagées »" loading="lazy" width="423" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/sep-publicite-remises.webp" data-titre="Publicité « Des impressions pour l’année »">
+                        <img src="images/graphisme/sep-publicite-remises-vignette.webp" alt="Publicité « Des impressions pour l’année »" loading="lazy" width="423" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/sep-publicite-luttes.webp" data-titre="Publicité « Nos luttes sous reliure »">
+                        <img src="images/graphisme/sep-publicite-luttes-vignette.webp" alt="Publicité « Nos luttes sous reliure »" loading="lazy" width="424" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/couverture-kolo.webp" data-titre="Couverture de « Kolo », de Léo Tamisier">
+                        <img src="images/graphisme/couverture-kolo-vignette.webp" alt="Couverture de « Kolo », de Léo Tamisier" loading="lazy" width="423" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/couverture-petit-theo.webp" data-titre="Couverture de « L’histoire du petit Théo »">
+                        <img src="images/graphisme/couverture-petit-theo-vignette.webp" alt="Couverture de « L’histoire du petit Théo »" loading="lazy" width="367" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/couverture-darshan.webp" data-titre="Couverture de « Darshan »">
+                        <img src="images/graphisme/couverture-darshan-vignette.webp" alt="Couverture de « Darshan »" loading="lazy" width="423" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/quatrieme-darshan.webp" data-titre="Quatrième de couverture de « Darshan »">
+                        <img src="images/graphisme/quatrieme-darshan-vignette.webp" alt="Quatrième de couverture de « Darshan »" loading="lazy" width="367" height="600">
+                    </button>
+                </div>
+            </article>
+
+            <article class="graphisme-projet reveal-element">
+                <div class="graphisme-texte">
+                    <h3 class="graphisme-titre">Collection Cheminement</h3>
+                    <p>Cheminement est une collection de la Société des Éditions du Poitou. Ce logo induit le dynamisme par son triangle qui forme un petit marque-page rouge dont la couleur rappelle l’engagement social de la maison d’édition.</p>
+                </div>
+                <div class="graphisme-grille">
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/cheminement-logo.webp" data-titre="Logo de la collection Cheminement">
+                        <img src="images/graphisme/cheminement-logo-vignette.webp" alt="Logo de la collection Cheminement" loading="lazy" width="600" height="520">
+                    </button>
+                </div>
+            </article>
+
+            <article class="graphisme-projet reveal-element">
+                <div class="graphisme-texte">
+                    <h3 class="graphisme-titre">F-Tournament</h3>
+                    <p>Il s’agit d’un document de promotion du F-Tournament dont la création des visuels de communication m’a été confiée. Cet événement e-sport encourageait au don de moelle osseuse. Il a été lauréat du prix Solidarité de l’université de Poitiers pour l’année 2021.</p>
+                </div>
+                <div class="graphisme-grille">
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/f-tournament.webp" data-titre="Visuel du F-Tournament">
+                        <img src="images/graphisme/f-tournament-vignette.webp" alt="Visuel du F-Tournament" loading="lazy" width="600" height="338">
+                    </button>
+                </div>
+            </article>
+
+            <article class="graphisme-projet reveal-element">
+                <div class="graphisme-texte">
+                    <h3 class="graphisme-titre">Artefact</h3>
+                    <p>Dans le cadre de travaux universitaires, ce photomontage a pu être réalisé sur la base du montage d’après photo de Nicolas Boudier « Artefact » de Joris Mathieu.</p>
+                </div>
+                <div class="graphisme-grille">
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/artefact-photomontage.webp" data-titre="Photomontage « Artefact »">
+                        <img src="images/graphisme/artefact-photomontage-vignette.webp" alt="Photomontage « Artefact »" loading="lazy" width="600" height="600">
+                    </button>
+                </div>
+            </article>
+
+            <article class="graphisme-projet reveal-element">
+                <div class="graphisme-texte">
+                    <h3 class="graphisme-titre">Le Plan</h3>
+                    <p>Voici deux affiches destinées à accompagner un court métrage réalisé par Pierre Jeandroz pour le festival de Troyes. Ces affiches portent une œuvre humoristique, au ton léger.</p>
+                </div>
+                <div class="graphisme-grille">
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/le-plan-affiche-1.webp" data-titre="Affiche du court métrage « Le Plan »">
+                        <img src="images/graphisme/le-plan-affiche-1-vignette.webp" alt="Affiche du court métrage « Le Plan »" loading="lazy" width="450" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/le-plan-affiche-2.webp" data-titre="Seconde affiche du court métrage « Le Plan »">
+                        <img src="images/graphisme/le-plan-affiche-2-vignette.webp" alt="Seconde affiche du court métrage « Le Plan »" loading="lazy" width="450" height="600">
+                    </button>
+                </div>
+            </article>
+
+            <article class="graphisme-projet reveal-element">
+                <div class="graphisme-texte">
+                    <h3 class="graphisme-titre">Une police de caractères</h3>
+                    <p>Mon intérêt pour les différentes polices et le travail de certains fondeurs m’a amené à mener l’expérience de proposer une police et les fontes associées.</p>
+                </div>
+                <div class="graphisme-grille">
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/police-specimen-1.webp" data-titre="Spécimen de la police">
+                        <img src="images/graphisme/police-specimen-1-vignette.webp" alt="Spécimen de la police" loading="lazy" width="600" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/police-specimen-2.webp" data-titre="Spécimen : « Portez ce whisky au vieux juge blond qui fume »">
+                        <img src="images/graphisme/police-specimen-2-vignette.webp" alt="Spécimen : « Portez ce whisky au vieux juge blond qui fume »" loading="lazy" width="600" height="600">
+                    </button>
+                </div>
+            </article>
+
+            <article class="graphisme-projet reveal-element">
+                <div class="graphisme-texte">
+                    <h3 class="graphisme-titre">Couvertures, logos et supports</h3>
+                    <p>J’ai eu la chance de produire des visuels pour différents usages et contextes. Ceux-ci incluent un grand nombre de couvertures, mais également des supports thérapeutiques ainsi que des outils pour des animations ou de communication dans des structures.</p>
+                </div>
+                <div class="graphisme-grille">
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/couverture-bavardage-philosophique.webp" data-titre="Couverture de « Bavardage philosophique d’un citoyen ordinaire »">
+                        <img src="images/graphisme/couverture-bavardage-philosophique-vignette.webp" alt="Couverture de « Bavardage philosophique d’un citoyen ordinaire »" loading="lazy" width="367" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/materiel-orthophonique.webp" data-titre="Matériel orthophonique">
+                        <img src="images/graphisme/materiel-orthophonique-vignette.webp" alt="Matériel orthophonique" loading="lazy" width="600" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/logo-reverse.webp" data-titre="Logo « Reverse »">
+                        <img src="images/graphisme/logo-reverse-vignette.webp" alt="Logo « Reverse »" loading="lazy" width="600" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/logo-sos-cookies.webp" data-titre="Logo « SOS Cookies »">
+                        <img src="images/graphisme/logo-sos-cookies-vignette.webp" alt="Logo « SOS Cookies »" loading="lazy" width="600" height="428">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/logo-ma-priorite.webp" data-titre="Logo « Ma priorité ! »">
+                        <img src="images/graphisme/logo-ma-priorite-vignette.webp" alt="Logo « Ma priorité ! »" loading="lazy" width="600" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/affiche-lire.webp" data-titre="Affiche « Lire, plus qu’un loisir »">
+                        <img src="images/graphisme/affiche-lire-vignette.webp" alt="Affiche « Lire, plus qu’un loisir »" loading="lazy" width="600" height="338">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/affiche-revons-imaginons.webp" data-titre="Affiche « Rêvons, imaginons »">
+                        <img src="images/graphisme/affiche-revons-imaginons-vignette.webp" alt="Affiche « Rêvons, imaginons »" loading="lazy" width="600" height="600">
+                    </button>
+                    <button type="button" class="graphisme-vignette" data-grand="images/graphisme/affiche-simple.webp" data-titre="Affiche « Simple »">
+                        <img src="images/graphisme/affiche-simple-vignette.webp" alt="Affiche « Simple »" loading="lazy" width="400" height="600">
+                    </button>
+                </div>
+            </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photography Section - Carousel Fullscreen -->
+    <section class="section photography-carousel" id="photography">
+        <div class="carousel-container" id="photoCarousel">
+            <div class="carousel-main">
+                <!-- Slides générés par JavaScript -->
+            </div>
+
+            <div class="carousel-content">
+                <span class="section-label reveal-element">Photographie</span>
+                <div class="carousel-counter"><span id="currentNum">01</span> / <span id="totalNum">08</span></div>
+                <h2 class="carousel-title" id="slideTitle">Galerie photo</h2>
+                <p class="carousel-description" id="slideDesc">Captures d'instants, jeux de lumière et perspectives uniques.</p>
+                <div class="carousel-actions">
+                    <a href="https://www.pexels.com/@karl-forterre-28489473" target="_blank" rel="noopener" class="btn btn-secondary magnetic-btn carousel-cta" id="carouselPexels">
+                        <span class="btn-text">Voir sur Pexels</span>
+                        <span class="btn-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                        </span>
+                    </a>
+                    <a href="https://photos.karlforterre.fr/" class="btn btn-primary magnetic-btn carousel-cta">
+                        <span class="btn-text">Toutes mes photos</span>
+                    </a>
+                </div>
+                <p class="carousel-credit">Photos de Karl Forterre, libres de droits sur <a href="https://www.pexels.com/@karl-forterre-28489473" target="_blank" rel="noopener">Pexels</a>.</p>
+            </div>
+
+            <button class="carousel-nav carousel-prev" id="carouselPrev" aria-label="Photo précédente">
+                <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            </button>
+            <button class="carousel-nav carousel-next" id="carouselNext" aria-label="Photo suivante">
+                <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </button>
+
+            <div class="carousel-thumbnails" id="carouselThumbnails">
+                <!-- Miniatures générées par JavaScript -->
+            </div>
+
+            <div class="autoplay-toggle active" id="autoplayToggle">
+                <span>Auto</span>
+                <div class="toggle-btn"></div>
+            </div>
+
+            <div class="carousel-progress">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Books Section -->
+    <section class="section books" id="books">
+        <div class="section-background">
+            <div class="bg-text">LIVRES</div>
+        </div>
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label reveal-element">Publications</span>
+                <h2 class="section-title reveal-element">Mes livres</h2>
+                <p class="section-description reveal-element">Découvrez mes ouvrages, fruits de passion et de réflexion.</p>
+            </div>
+
+            <div class="books-grid">
+                <article class="book-card reveal-element tilt-element" data-delay="0">
+                    <div class="book-cover">
+                        <img src="livres/couverture-darshan.webp" alt="Couverture de Darshan" class="cover-img" loading="lazy">
+                        <div class="book-shine"></div>
+                        <div class="book-overlay">
+                            <div class="overlay-content">
+                                <span class="book-year">2022</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">Darshan</h3>
+                        <p class="book-genre">Roman</p>
+                        <p class="book-editeur">La SEP, collection Cheminement</p>
+                        <p class="book-description">Une exploration poétique des émotions humaines à travers le prisme de l'écriture contemporaine.</p>
+                    </div>
+                    <div class="book-downloads">
+                        <a href="livres/darshan.pdf" class="btn btn-small magnetic-btn" download="Darshan - Karl Forterre.pdf">
+                            <span class="btn-text">PDF</span>
+                        </a>
+                        <a href="livres/darshan.epub" class="btn btn-small magnetic-btn" download="Darshan - Karl Forterre.epub">
+                            <span class="btn-text">EPUB</span>
+                        </a>
+                    </div>
+                    <div class="book-decoration"></div>
+                </article>
+
+                <article class="book-card reveal-element tilt-element" data-delay="0.1">
+                    <div class="book-cover">
+                        <img src="livres/couverture-petit-theo.webp" alt="Couverture de L'histoire du petit Théo" class="cover-img" loading="lazy">
+                        <div class="book-shine"></div>
+                        <div class="book-overlay">
+                            <div class="overlay-content">
+                                <span class="book-year">2023</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">L'histoire du petit Théo</h3>
+                        <p class="book-genre">Conte</p>
+                        <p class="book-editeur">La SEP, collection Cheminement</p>
+                        <p class="book-description">Un conte touchant qui explore l'imagination et les rêves d'enfance avec tendresse.</p>
+                    </div>
+                    <div class="book-downloads">
+                        <a href="livres/histoire-du-petit-theo.pdf" class="btn btn-small magnetic-btn" download="L'histoire du petit Théo - Karl Forterre.pdf">
+                            <span class="btn-text">PDF</span>
+                        </a>
+                        <a href="livres/histoire-du-petit-theo.epub" class="btn btn-small magnetic-btn" download="L'histoire du petit Théo - Karl Forterre.epub">
+                            <span class="btn-text">EPUB</span>
+                        </a>
+                    </div>
+                    <div class="book-decoration"></div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee Section -->
+    <section class="marquee-section">
+        <div class="marquee">
+            <div class="marquee-content">
+                <span>Écriture</span>
+                <span class="marquee-dot"></span>
+                <span>Romans</span>
+                <span class="marquee-dot"></span>
+                <span>Contes</span>
+                <span class="marquee-dot"></span>
+                <span>Édition</span>
+                <span class="marquee-dot"></span>
+                <span>Graphisme</span>
+                <span class="marquee-dot"></span>
+                <span>Photographie</span>
+                <span class="marquee-dot"></span>
+            </div>
+            <div class="marquee-content" aria-hidden="true">
+                <span>Écriture</span>
+                <span class="marquee-dot"></span>
+                <span>Romans</span>
+                <span class="marquee-dot"></span>
+                <span>Contes</span>
+                <span class="marquee-dot"></span>
+                <span>Édition</span>
+                <span class="marquee-dot"></span>
+                <span>Graphisme</span>
+                <span class="marquee-dot"></span>
+                <span>Photographie</span>
+                <span class="marquee-dot"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Memoir Section -->
+    <section class="section memoir" id="memoir">
+        <div class="container">
+            <div class="memoir-grid">
+                <div class="memoir-content">
+                    <span class="section-label reveal-element">Recherche académique</span>
+                    <h2 class="section-title reveal-element">Une expertise auctoriale</h2>
+                    <p class="memoir-description reveal-element">Quelle influence la médiation auctoriale exerce-t-elle sur le public d’un site d’auteur ? Pour y répondre, ce mémoire de master 2 Livres et médiations s’appuie sur un questionnaire rempli par 102 visiteurs de sites d’auteurs et sur des entretiens avec des acteurs de leur création.</p>
+                    <div class="memoir-details reveal-element">
+                        <div class="memoir-detail">
+                            <div class="detail-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                </svg>
+                            </div>
+                            <h4>Sujet</h4>
+                            <p>L’influence de la médiation auctoriale du site d’auteur</p>
+                        </div>
+                        <div class="memoir-detail">
+                            <div class="detail-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                                </svg>
+                            </div>
+                            <h4>Institution</h4>
+                            <p>Université de Poitiers</p>
+                        </div>
+                        <div class="memoir-detail">
+                            <div class="detail-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                            </div>
+                            <h4>Année</h4>
+                            <p>Juin 2023</p>
+                        </div>
+                    </div>
+                    <a href="livres/memoire-mediation-auctoriale-2023.pdf" target="_blank" rel="noopener" class="btn btn-primary magnetic-btn reveal-element">
+                        <span class="btn-text">Consulter le mémoire</span>
+                        <span class="btn-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+                <div class="memoir-visual reveal-element">
+                    <div class="memoir-decoration">
+                        <div class="decoration-ring ring-1"></div>
+                        <div class="decoration-ring ring-2"></div>
+                        <div class="decoration-ring ring-3"></div>
+                        <div class="quote-card tilt-element">
+                            <div class="quote-icon">"</div>
+                            <blockquote class="memoir-quote">
+                                L'écriture est l'art de donner forme à l'invisible.
+                            </blockquote>
+                            <div class="quote-author">— Karl Forterre</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Extraits Section -->
+    <section class="section extraits">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label reveal-element">Extraits</span>
+                <h2 class="section-title reveal-element">Plongez dans mes écrits</h2>
+            </div>
+
+            <div class="extraits-grid reveal-element">
+                <div class="extrait-card glass-effect">
+                    <div class="extrait-quote">"</div>
+                    <div class="extrait-content">
+                        <p>Des étincelles passent et se chassent sur une toile d’un bleu royal. Il est d’un régal sans pareil d’admirer ce que nous offre l’éternel. L’infini s’y déploie, s’exempte de toute loi.</p>
+                    </div>
+                    <div class="extrait-source">
+                        <div class="source-cover">
+                            <img src="livres/couverture-darshan.webp" alt="Darshan" loading="lazy">
+                        </div>
+                        <div class="source-info">
+                            <span class="source-title">Darshan</span>
+                            <span class="source-type">Roman</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="extrait-card glass-effect">
+                    <div class="extrait-quote">"</div>
+                    <div class="extrait-content">
+                        <p>Notre regard va s’attarder sur le petit Théo. Non pas qu’il soit plus exceptionnel qu’un autre enfant à un quelconque égard, mais cet enfant présente, il faut le dire, un sourire charmeur, les yeux de l’océan et un rire enjôleur.</p>
+                    </div>
+                    <div class="extrait-source">
+                        <div class="source-cover">
+                            <img src="livres/couverture-petit-theo.webp" alt="L'histoire du petit Théo" loading="lazy">
+                        </div>
+                        <div class="source-info">
+                            <span class="source-title">L'histoire du petit Théo</span>
+                            <span class="source-type">Conte</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="extrait-card glass-effect">
+                    <div class="extrait-quote">"</div>
+                    <div class="extrait-content">
+                        <p>Dans sa visée paratextuelle, le site d’auteur devient un musée pour l’écrivain. Cet espace d’archive permet de rassembler des extraits d’œuvres, des préfaces, des postfaces, des notes de l’auteur ou encore des photographies.</p>
+                    </div>
+                    <div class="extrait-source">
+                        <div class="source-cover">
+                            <img src="livres/couverture-memoire.webp" alt="Mémoire" loading="lazy">
+                        </div>
+                        <div class="source-info">
+                            <span class="source-title">Mémoire de recherche</span>
+                            <span class="source-type">Travail académique</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact" id="contact">
+        <div class="container">
+            <div class="contact-grid contact-grid--seul">
+                <div class="contact-info">
+                    <span class="section-label reveal-element">Contact</span>
+                    <h2 class="section-title reveal-element">Écrivez-moi</h2>
+                    <p class="contact-description reveal-element">Une question sur mes livres, mes photos ou mes créations ? N’hésitez pas à m’écrire.</p>
+
+                    <div class="contact-methods reveal-element">
+                        <a href="mailto:contact@karlforterre.fr" class="contact-method magnetic-btn">
+                            <div class="method-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </div>
+                            <div class="method-info">
+                                <span class="method-label">Email</span>
+                                <span class="method-value">contact@karlforterre.fr</span>
+                            </div>
+                            <div class="method-arrow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </div>
+                        </a>
+
+                        <a href="https://linkedin.com/in/karl-forterre-720b61220/" target="_blank" rel="noopener" class="contact-method magnetic-btn">
+                            <div class="method-icon">
+                                <img src="images/linkedin.webp" alt="LinkedIn" class="linkedin-icon" width="48" height="48">
+                            </div>
+                            <div class="method-info">
+                                <span class="method-label">LinkedIn</span>
+                                <span class="method-value">Karl Forterre</span>
+                            </div>
+                            <div class="method-arrow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="images/logo-kf.webp" alt="KF’" class="footer-logo-img footer-logo-large" loading="lazy">
+                    <p class="footer-tagline">Les belles lettres font les bons mots.</p>
+                </div>
+
+                <nav class="footer-nav">
+                    <a href="#about" class="footer-link">À propos</a>
+                    <a href="#books" class="footer-link">Mes livres</a>
+                    <a href="#graphisme" class="footer-link">Graphisme</a>
+                    <a href="https://photos.karlforterre.fr/" class="footer-link">Photos libres de droits</a>
+                    <a href="#contact" class="footer-link">Contact</a>
+                    <a href="mentions-legales/" class="footer-link">Mentions légales</a>
+                </nav>
+
+                <div class="footer-social">
+                    <a href="https://linkedin.com/in/karl-forterre-720b61220/" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-link magnetic-btn">
+                        <img src="images/linkedin.webp" alt="LinkedIn" class="linkedin-icon" width="48" height="48">
+                    </a>
+                    <a href="mailto:contact@karlforterre.fr" aria-label="Email" class="social-link magnetic-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Karl Forterre. Tous droits réservés.</p>
+                <div class="back-to-top magnetic-btn" id="back-to-top">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 15l-6-6-6 6"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- Templates des headers (doit être chargé AVANT header-loader.js) -->
+    <script src="js/header-templates.js"></script>
+    <!-- Loader qui sélectionne et injecte un header aléatoire -->
+    <script src="js/header-loader.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
