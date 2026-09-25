@@ -3435,6 +3435,7 @@ p:last-child {
     font-family: var(--font-heading);
     font-size: 1.75rem;
     margin-bottom: var(--space-sm);
+    color: var(--color-surface);
 }
 
 .lightbox-desc {
@@ -3600,6 +3601,7 @@ html {
     scroll-snap-type: x proximity;
     padding: var(--space-xl) var(--space-lg) var(--space-2xl);
     margin: 0 calc(-1 * var(--space-lg));
+    scroll-padding-inline: var(--space-lg);
     scrollbar-width: thin;
     scrollbar-color: var(--color-accent) transparent;
     overscroll-behavior-x: contain;

@@ -125,16 +125,31 @@ française, son anglais (`en`) et son chinois (`zh`).
 
 ### Ajouter une image
 
-1. La préparer au format web : WebP (ou JPEG), 2000 pixels au plus sur le grand côté,
-   moins de 500 Ko. L'outil gratuit https://squoosh.app le fait dans le navigateur,
-   sans rien installer. Ne jamais déposer de TIFF ni d'original lourd : le dépôt est
-   public.
-2. Lui donner un nom en minuscules, sans espaces ni accents : `affiche-le-plan.webp`.
-3. Portfolio : une grande image `images/portfolio/nom.webp` et une vignette de
-   900 pixels `images/portfolio/nom-vignette.webp`, puis une ligne dans `allWorks`.
-4. Graphisme : `images/graphisme/nom.webp` (1800 pixels) et
-   `images/graphisme/nom-vignette.webp` (600 pixels), puis un bloc `<button>` copié sur
-   ses voisins.
+La qualité d'image passe en premier. Chaque œuvre existe en trois tailles, et le
+navigateur prend celle qui convient à l'écran du visiteur : la vignette sur un écran
+ordinaire, la version moyenne sur un écran haute densité (Retina, téléphone), la grande
+dans la visionneuse d'un grand écran. Rien n'est chargé tant que l'œuvre n'approche pas.
+
+1. Partir de l'original le plus grand (TIFF, JPEG ou PDF d'impression) et en tirer trois
+   fichiers WebP, qualité 90 :
+   - `nom-vignette.webp` : 800 pixels sur le grand côté (1000 pour le portfolio) ;
+   - `nom-moyenne.webp` : 1600 pixels ;
+   - `nom.webp` : 3200 pixels, ou la taille de l'original s'il est plus petit.
+
+   L'outil gratuit https://squoosh.app le fait dans le navigateur, sans rien installer :
+   format **WebP**, **Quality** 90, **Resize** à la taille voulue. Les couleurs doivent
+   être en sRGB : un fichier CMJN préparé pour l'imprimeur paraît terne à l'écran
+   (Photoshop : **Exporter** → **Exporter sous**, case « Convertir en sRGB »). Ne jamais
+   déposer l'original lui-même : le dépôt est public, et ces fichiers sont trop lourds.
+2. Leur donner un nom en minuscules, sans espaces ni accents : `affiche-le-plan.webp`,
+   `affiche-le-plan-moyenne.webp`, `affiche-le-plan-vignette.webp`.
+3. Portfolio : les trois fichiers dans `images/portfolio/`, puis une ligne dans
+   `allWorks` (`script.js`).
+4. Graphisme : les trois fichiers dans `images/graphisme/`, puis un bloc
+   `<button class="graphisme-carte">` copié sur un voisin : y remplacer le nom des
+   fichiers (trois fois) et la légende (trois fois), et mettre dans `width` et `height`
+   la largeur et la hauteur de la vignette, en pixels.
+5. Ajouter la légende et sa traduction à `js/traductions.js` (voir « Langues »).
 
 Pour déposer un fichier : **Add file** → **Upload files**, dans le bon dossier.
 
@@ -143,8 +158,8 @@ Pour déposer un fichier : **Add file** → **Upload files**, dans le bon dossie
 - `index.html`, `styles.css`, `script.js`, `js/` : la page d'accueil et son
   fonctionnement. Dans `js/` : les en-têtes (`header-templates.js`, `header-loader.js`),
   les traductions (`traductions.js`) et le bouton de langue (`langues.js`).
-- `images/` : portrait, logo, fond, `portfolio/` et `graphisme/` (grandes images et
-  vignettes).
+- `images/` : portrait, logo, fond, `portfolio/` et `graphisme/` (pour chaque œuvre,
+  vignette, version moyenne et grande image).
 - `livres/` : couvertures, livres en PDF et EPUB, mémoire.
 - `fonts/` : polices Cormorant Garamond et Inter, hébergées avec le site (licence
   SIL Open Font License), sans appel à Google.
