@@ -27,7 +27,10 @@ dans le dépôt Willwonderc/PexelsWillwonder.
   images, 600 à 900 pixels pour les vignettes, noms en minuscules sans espaces ni
   accents. Jamais de TIFF ni d'original lourd : le dépôt est public.
 - Polices hébergées dans `fonts/` : aucun appel à Google Fonts.
-- Carrousel photo : images servies par images.pexels.com ; chaque photo ouvre sa page sur
+- Section Photographie : elle lit à chaque visite `https://photos.karlforterre.fr/apercu.json`,
+  écrit chaque nuit par `vitrine/build.py` du dépôt PexelsWillwonder (sélection, séries,
+  galeries, chiffres). La liste `photosIntegrees` de `script.js` ne sert qu'en secours.
+  Images servies par images.pexels.com ; chaque photo ouvre sa page sur
   photos.karlforterre.fr, qui mène au téléchargement sur Pexels. Aucune collecte
   automatique sur les pages de pexels.com.
 - Captures d'écran en session : Chromium ne charge pas les images de images.pexels.com

@@ -767,6 +767,29 @@ function initLightbox() {
 }
 
 /**
+ * Site photo : chaque nuit, photos.karlforterre.fr publie son aperçu (apercu.json) :
+ * sélection, séries, galeries et chiffres Pexels. S'il ne répond pas, la section
+ * Photographie garde sa liste intégrée et ses liens.
+ */
+const SITE_PHOTO = 'https://photos.karlforterre.fr';
+
+function chargerApercu() {
+    if (!window.fetch) return Promise.resolve(null);
+    const controle = window.AbortController ? new AbortController() : null;
+    const delai = controle ? setTimeout(() => controle.abort(), 5000) : null;
+    return fetch(`${SITE_PHOTO}/apercu.json`, controle ? { signal: controle.signal } : undefined)
+        .then(reponse => (reponse.ok ? reponse.json() : null))
+        .catch(() => null)
+        .finally(() => { if (delai) clearTimeout(delai); });
+}
+
+// Image servie par Pexels, à la largeur voulue
+function imagePexels(photo, largeur) {
+    const base = photo.image || `https://images.pexels.com/photos/${photo.id}/pexels-photo-${photo.id}.jpeg`;
+    return `${base}?auto=compress&cs=tinysrgb&w=${largeur}`;
+}
+
+/**
  * Photo Carousel - Fullscreen Gallery
  */
 let carouselState = {
@@ -777,7 +800,7 @@ let carouselState = {
     photos: []
 };
 
-function initPhotoCarousel() {
+function initPhotoCarousel(apercu) {
     const container = document.getElementById('photoCarousel');
     if (!container) return;
 
@@ -793,9 +816,9 @@ function initPhotoCarousel() {
     const autoplayToggle = document.getElementById('autoplayToggle');
     const lienPhoto = document.getElementById('carouselLien');
 
-    // Photos les plus vues sur Pexels (relevé du 24 septembre 2026) : numéro Pexels, titre, légende.
-    // L'image vient de Pexels ; « Voir la photo » ouvre sa page sur le site photo, qui mène au téléchargement.
-    const allPhotos = [
+    // En secours, si l'aperçu du site photo ne répond pas : photos les plus vues sur Pexels
+    // (relevé du 24 septembre 2026), avec leur numéro Pexels, un titre et une légende.
+    const photosIntegrees = [
         { id: '13102252', title: 'Croissant de lune au crépuscule', desc: 'Un fin croissant de lune dans le dégradé du soir.' },
         { id: '27116682', title: 'Ciel étoilé', desc: "Un ciel sombre semé d'étoiles, traversé par la Voie lactée." },
         { id: '13087478', title: 'Chemin sous les arbres', desc: "Un chemin de terre bordé d'arbres, un jour d'été à Moyemont." },
@@ -805,12 +828,23 @@ function initPhotoCarousel() {
         { id: '23414381', title: 'Notre-Dame de Niort', desc: "Les flèches gothiques de l'église Notre-Dame au-dessus des toits de Niort." },
         { id: '38694057', title: 'Les jardins de Villandry', desc: 'Les parterres du château de Villandry, vus du ciel.' }
     ];
-    const pexels = (photo, largeur) => `https://images.pexels.com/photos/${photo.id}/pexels-photo-${photo.id}.jpeg?auto=compress&cs=tinysrgb&w=${largeur}`;
-    const pagePhoto = (photo) => `https://photos.karlforterre.fr/photo/${photo.id}/`;
 
-    // Shuffle and select 8 photos
-    const shuffled = allPhotos.sort(() => Math.random() - 0.5);
-    carouselState.photos = shuffled.slice(0, 8);
+    // Sélection du site photo (vitrine/selection.txt du dépôt PexelsWillwonder) : photos en
+    // largeur, avec leur titre court et un lien vers leur série ou leur galerie.
+    const selection = ((apercu && apercu.selection) || [])
+        .filter(p => p.largeur > p.hauteur)
+        .slice(0, 10)
+        .map(p => ({
+            id: p.id,
+            image: p.image,
+            page: p.page,
+            title: p.titre,
+            rubrique: p.serie ? { nom: 'Série', ...p.serie } : (p.galerie ? { nom: 'Galerie', ...p.galerie } : null)
+        }));
+
+    carouselState.photos = selection.length >= 3
+        ? selection
+        : photosIntegrees.sort(() => Math.random() - 0.5).slice(0, 8);
 
     // Update total counter
     totalNum.textContent = String(carouselState.photos.length).padStart(2, '0');
@@ -820,15 +854,19 @@ function initPhotoCarousel() {
         // Create slide
         const slide = document.createElement('div');
         slide.className = `carousel-slide${index === 0 ? ' active' : ''}`;
-        slide.dataset.title = photo.title;
-        slide.dataset.desc = photo.desc;
-        slide.innerHTML = `<img src="${pexels(photo, 1920)}" srcset="${pexels(photo, 960)} 960w, ${pexels(photo, 1920)} 1920w" sizes="100vw" alt="${photo.title}" loading="${index === 0 ? 'eager' : 'lazy'}">`;
+        const image = document.createElement('img');
+        image.src = imagePexels(photo, 1920);
+        image.srcset = `${imagePexels(photo, 960)} 960w, ${imagePexels(photo, 1920)} 1920w`;
+        image.sizes = '100vw';
+        image.alt = photo.title;
+        image.loading = index === 0 ? 'eager' : 'lazy';
+        slide.appendChild(image);
         carouselMain.appendChild(slide);
 
         // Create thumbnail
         const thumb = document.createElement('div');
         thumb.className = `carousel-thumbnail${index === 0 ? ' active' : ''}`;
-        thumb.innerHTML = `<img src="${pexels(photo, 240)}" alt="Miniature ${index + 1}" loading="lazy">`;
+        thumb.innerHTML = `<img src="${imagePexels(photo, 240)}" alt="Miniature ${index + 1}" loading="lazy">`;
         thumb.addEventListener('click', () => {
             goToSlide(index);
             if (carouselState.autoplay) startAutoplay();
@@ -858,9 +896,15 @@ function initPhotoCarousel() {
     function updateSlideContent() {
         const photo = carouselState.photos[carouselState.currentIndex];
         slideTitle.textContent = photo.title;
-        slideDesc.textContent = photo.desc;
+        slideDesc.textContent = photo.rubrique ? `${photo.rubrique.nom} : ` : (photo.desc || '');
+        if (photo.rubrique) {
+            const lien = document.createElement('a');
+            lien.href = photo.rubrique.page;
+            lien.textContent = photo.rubrique.titre;
+            slideDesc.appendChild(lien);
+        }
         currentNum.textContent = String(carouselState.currentIndex + 1).padStart(2, '0');
-        if (lienPhoto) lienPhoto.href = pagePhoto(photo);
+        if (lienPhoto) lienPhoto.href = photo.page || `${SITE_PHOTO}/photo/${photo.id}/`;
     }
 
     function nextSlide() {
@@ -980,7 +1024,68 @@ function initGraphisme() {
     });
 }
 
-// Legacy function name for compatibility
+/**
+ * « Séries et galeries » : chiffres, séries racontées et galeries par lieu du site photo
+ */
+function initSitePhoto(apercu) {
+    if (!apercu) return;
+    const nombre = n => Number(n || 0).toLocaleString('fr-FR');
+    const c = apercu.chiffres || {};
+
+    const chiffres = document.getElementById('site-photo-chiffres');
+    if (chiffres && c.photos) {
+        const morceaux = [`${nombre(c.photos)} photos`, `${nombre(c.series)} séries`, `${nombre(c.galeries)} galeries`];
+        if (c.vues_pexels) {
+            morceaux.push(`${nombre(c.vues_pexels)} vues`
+                + (c.telechargements_pexels ? ` et ${nombre(c.telechargements_pexels)} téléchargements sur Pexels` : ' sur Pexels'));
+        }
+        chiffres.textContent = morceaux.join(' · ');
+        chiffres.hidden = false;
+    }
+
+    const series = document.getElementById('site-photo-series');
+    (apercu.series || []).forEach(serie => {
+        const carte = document.createElement('a');
+        carte.className = 'serie-carte';
+        carte.href = serie.page;
+        const image = document.createElement('img');
+        image.src = imagePexels(serie.couverture, 800);
+        image.srcset = `${imagePexels(serie.couverture, 600)} 600w, ${imagePexels(serie.couverture, 1200)} 1200w`;
+        image.sizes = '(max-width: 768px) 92vw, 380px';
+        image.alt = serie.couverture.titre || '';
+        image.loading = 'lazy';
+        const infos = document.createElement('span');
+        infos.className = 'serie-infos';
+        const titre = document.createElement('span');
+        titre.className = 'serie-titre';
+        titre.textContent = serie.titre;
+        const lieu = document.createElement('span');
+        lieu.className = 'serie-lieu';
+        lieu.textContent = [serie.lieu, serie.date].filter(Boolean).join(' · ');
+        infos.append(titre, lieu);
+        carte.append(image, infos);
+        series.appendChild(carte);
+    });
+    if (series && series.children.length) series.hidden = false;
+
+    const lieux = (apercu.galeries || []).filter(galerie => galerie.type === 'lieu');
+    const pastilles = document.getElementById('site-photo-pastilles');
+    lieux.forEach(galerie => {
+        const lien = document.createElement('a');
+        lien.href = galerie.page;
+        lien.textContent = galerie.titre;
+        const compte = document.createElement('span');
+        compte.textContent = galerie.photos;
+        lien.appendChild(compte);
+        pastilles.appendChild(lien);
+    });
+    if (lieux.length) document.getElementById('site-photo-lieux').hidden = false;
+}
+
+// Section Photographie : carrousel et « Séries et galeries », d'après l'aperçu du site photo
 function initPhotoGallery() {
-    initPhotoCarousel();
+    chargerApercu().then(apercu => {
+        initPhotoCarousel(apercu);
+        initSitePhoto(apercu);
+    });
 }

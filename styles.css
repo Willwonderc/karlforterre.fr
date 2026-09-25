@@ -3636,3 +3636,155 @@ html {
         justify-content: center;
     }
 }
+
+/* ================================
+   Séries et galeries du site photo (données de photos.karlforterre.fr)
+   ================================ */
+.site-photo {
+    background: var(--color-surface);
+}
+
+.site-photo [hidden] {
+    display: none !important;
+}
+
+.site-photo-chiffres {
+    margin-top: var(--space-md);
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    color: var(--color-accent-dark);
+}
+
+.site-photo-series {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-3xl);
+}
+
+.serie-carte {
+    position: relative;
+    display: block;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--color-dark-alt);
+}
+
+.serie-carte img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s var(--ease-out-expo);
+}
+
+.serie-carte::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 35%, rgba(10, 10, 20, 0.85) 100%);
+}
+
+.serie-carte:hover img,
+.serie-carte:focus-visible img {
+    transform: scale(1.05);
+}
+
+.serie-infos {
+    position: absolute;
+    left: var(--space-lg);
+    right: var(--space-lg);
+    bottom: var(--space-lg);
+    z-index: 1;
+    color: var(--color-surface);
+}
+
+.serie-titre {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    line-height: 1.2;
+}
+
+.serie-lieu {
+    display: block;
+    margin-top: var(--space-xs);
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.site-photo-sous-titre {
+    margin-bottom: var(--space-lg);
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 500;
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.site-photo-pastilles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-3xl);
+}
+
+.site-photo-pastilles a {
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    color: var(--color-text);
+    transition: border-color var(--transition-base), background var(--transition-base), color var(--transition-base);
+}
+
+.site-photo-pastilles a span {
+    margin-left: 0.4em;
+    color: var(--color-text-muted);
+}
+
+.site-photo-pastilles a:hover,
+.site-photo-pastilles a:focus-visible {
+    border-color: var(--color-accent);
+    background: rgba(201, 169, 98, 0.08);
+    color: var(--color-primary);
+}
+
+.site-photo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-md);
+}
+
+.site-photo .btn-secondary {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.site-photo .btn-secondary:hover {
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-primary);
+}
+
+/* Légende du carrousel : lien vers la série ou la galerie */
+.carousel-description a {
+    color: var(--color-accent-light);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Carrousel : texte lisible sur les photos claires */
+.carousel-title,
+.carousel-description,
+.carousel-counter {
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 576px) {
+    .carousel-main::before {
+        background: linear-gradient(180deg, rgba(26, 26, 46, 0.35) 0%, rgba(26, 26, 46, 0.25) 25%, rgba(26, 26, 46, 0.75) 60%, rgba(26, 26, 46, 0.92) 100%);
+    }
+}

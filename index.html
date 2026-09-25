@@ -22,6 +22,87 @@
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
 
+    <!-- Données structurées pour les moteurs de recherche : l'auteur, ses livres, son mémoire -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Person",
+                "@id": "https://karlforterre.fr/#auteur",
+                "name": "Karl Forterre",
+                "url": "https://karlforterre.fr/",
+                "image": "https://karlforterre.fr/images/auteur/portrait.webp",
+                "jobTitle": "Auteur",
+                "alumniOf": {
+                    "@type": "CollegeOrUniversity",
+                    "name": "Université de Poitiers"
+                },
+                "sameAs": [
+                    "https://photos.karlforterre.fr/",
+                    "https://www.pexels.com/@karl-forterre-28489473",
+                    "https://www.linkedin.com/in/karl-forterre-720b61220/"
+                ]
+            },
+            {
+                "@type": "WebSite",
+                "@id": "https://karlforterre.fr/#site",
+                "url": "https://karlforterre.fr/",
+                "name": "Karl Forterre",
+                "inLanguage": "fr",
+                "author": {
+                    "@id": "https://karlforterre.fr/#auteur"
+                }
+            },
+            {
+                "@type": "Book",
+                "name": "Darshan",
+                "author": {
+                    "@id": "https://karlforterre.fr/#auteur"
+                },
+                "datePublished": "2022",
+                "inLanguage": "fr",
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "Société des Éditions du Poitou"
+                },
+                "image": "https://karlforterre.fr/livres/couverture-darshan.webp",
+                "url": "https://karlforterre.fr/#books"
+            },
+            {
+                "@type": "Book",
+                "name": "L'histoire du petit Théo",
+                "author": {
+                    "@id": "https://karlforterre.fr/#auteur"
+                },
+                "datePublished": "2023",
+                "inLanguage": "fr",
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "Société des Éditions du Poitou"
+                },
+                "image": "https://karlforterre.fr/livres/couverture-petit-theo.webp",
+                "url": "https://karlforterre.fr/#books"
+            },
+            {
+                "@type": "Thesis",
+                "name": "L'influence de la médiation auctoriale du site d'auteur",
+                "author": {
+                    "@id": "https://karlforterre.fr/#auteur"
+                },
+                "datePublished": "2023-06",
+                "inLanguage": "fr",
+                "inSupportOf": "Master 2 Livres et médiations",
+                "sourceOrganization": {
+                    "@type": "CollegeOrUniversity",
+                    "name": "Université de Poitiers"
+                },
+                "url": "https://karlforterre.fr/livres/memoire-mediation-auctoriale-2023.pdf"
+            }
+        ]
+    }
+    </script>
+
     <!-- Polices : hébergées avec le site (dossier fonts/), déclarées en tête de styles.css -->
     <link rel="preload" href="fonts/cormorant-garamond-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -437,6 +518,34 @@
 
             <div class="carousel-progress">
                 <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Séries et galeries du site photo, lues dans https://photos.karlforterre.fr/apercu.json -->
+    <section class="section site-photo" id="site-photo">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label reveal-element">photos.karlforterre.fr</span>
+                <h2 class="section-title reveal-element">Séries et galeries</h2>
+                <p class="section-description reveal-element">Des centaines de photographies libres de droits, racontées en séries et rangées en galeries, à télécharger gratuitement sur Pexels.</p>
+                <p class="site-photo-chiffres" id="site-photo-chiffres" hidden></p>
+            </div>
+
+            <div class="site-photo-series" id="site-photo-series" hidden></div>
+
+            <div class="site-photo-lieux" id="site-photo-lieux" hidden>
+                <h3 class="site-photo-sous-titre">Par lieu</h3>
+                <div class="site-photo-pastilles" id="site-photo-pastilles"></div>
+            </div>
+
+            <div class="site-photo-actions reveal-element">
+                <a href="https://photos.karlforterre.fr/galeries/" class="btn btn-primary magnetic-btn">
+                    <span class="btn-text">Toutes les galeries</span>
+                </a>
+                <a href="https://photos.karlforterre.fr/" class="btn btn-secondary magnetic-btn">
+                    <span class="btn-text">Le site photo</span>
+                </a>
             </div>
         </div>
     </section>
