@@ -610,7 +610,7 @@ function initPortfolio() {
         item.style.animationDelay = `${index * 0.15}s`;
         item.innerHTML = `
             <div class="portfolio-image">
-                <img src="${work.thumb}" alt="${work.title}" loading="lazy">
+                <img src="${work.thumb}" srcset="${versionMoyenne(work.src)} 2x" alt="${work.title}" loading="lazy" decoding="async">
             </div>
             <div class="portfolio-showcase-info">
                 <h3 class="portfolio-showcase-title">${work.title}</h3>
@@ -620,6 +620,7 @@ function initPortfolio() {
 
         // Click to open in lightbox
         item.addEventListener('click', () => {
+            work.ratio = rapportImage(item.querySelector('img'));
             openShowcaseLightbox(index);
         });
 
@@ -634,6 +635,26 @@ function openShowcaseLightbox(index) {
     if (window.lightboxState && portfolioShowcaseData.length > 0) {
         window.lightboxState.open(portfolioShowcaseData, index);
     }
+}
+
+// Version moyenne (1600 pixels) d'une grande image (3200 pixels) : même nom, suffixe -moyenne
+function versionMoyenne(grande) {
+    return grande.replace(/\.webp$/, '-moyenne.webp');
+}
+
+// Rapport largeur/hauteur d'une image, d'après ses attributs ou son fichier chargé
+function rapportImage(image) {
+    const largeur = Number(image && image.getAttribute('width')) || (image && image.naturalWidth);
+    const hauteur = Number(image && image.getAttribute('height')) || (image && image.naturalHeight);
+    return largeur && hauteur ? largeur / hauteur : 0;
+}
+
+// Visionneuse : la version moyenne suffit sur téléphone, la grande sert les grands écrans
+function versionVisionneuse(data) {
+    if (!data.ratio || !/\.webp$/.test(data.src)) return data.src;
+    const largeur = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.8 * data.ratio);
+    const cote = Math.max(largeur, largeur / data.ratio) * (window.devicePixelRatio || 1);
+    return cote <= 1600 ? versionMoyenne(data.src) : data.src;
 }
 
 /**
@@ -652,6 +673,7 @@ function initLightbox() {
 
     let currentIndex = 0;
     let currentGallery = [];
+    let affichage = 0;
 
     // Global lightbox state
     window.lightboxState = {
@@ -686,13 +708,19 @@ function initLightbox() {
         if (!data) return;
 
         lightboxImage.style.opacity = '0';
+        const numero = ++affichage;
 
         setTimeout(() => {
-            lightboxImage.src = data.src;
+            if (numero !== affichage) return;
+            // L'image n'apparaît qu'une fois chargée, pour ne pas montrer la précédente
+            const montrer = () => { if (numero === affichage) lightboxImage.style.opacity = '1'; };
+            lightboxImage.onload = montrer;
+            lightboxImage.onerror = montrer;
+            lightboxImage.src = versionVisionneuse(data);
             lightboxImage.alt = data.title || 'Image';
             lightboxTitle.textContent = data.title || '';
             lightboxDesc.textContent = data.desc || '';
-            lightboxImage.style.opacity = '1';
+            if (lightboxImage.complete) montrer();
         }, 200);
     }
 
@@ -839,6 +867,7 @@ function initPhotoCarousel(apercu) {
             image: p.image,
             page: p.page,
             title: p.titre,
+            ratio: p.largeur / p.hauteur,
             rubrique: p.serie ? { nom: 'Série', ...p.serie } : (p.galerie ? { nom: 'Galerie', ...p.galerie } : null)
         }));
 
@@ -851,28 +880,59 @@ function initPhotoCarousel(apercu) {
 
     // Create slides and thumbnails
     carouselState.photos.forEach((photo, index) => {
-        // Create slide
+        // Create slide : image posée par hydrater(), quand la diapositive approche
         const slide = document.createElement('div');
         slide.className = `carousel-slide${index === 0 ? ' active' : ''}`;
         const image = document.createElement('img');
-        image.src = imagePexels(photo, 1920);
-        image.srcset = `${imagePexels(photo, 960)} 960w, ${imagePexels(photo, 1920)} 1920w`;
-        image.sizes = '100vw';
         image.alt = photo.title;
-        image.loading = index === 0 ? 'eager' : 'lazy';
+        image.loading = 'lazy';
+        image.decoding = 'async';
         slide.appendChild(image);
         carouselMain.appendChild(slide);
 
         // Create thumbnail
         const thumb = document.createElement('div');
         thumb.className = `carousel-thumbnail${index === 0 ? ' active' : ''}`;
-        thumb.innerHTML = `<img src="${imagePexels(photo, 240)}" alt="Miniature ${index + 1}" loading="lazy">`;
+        thumb.innerHTML = `<img src="${imagePexels(photo, 240)}" srcset="${imagePexels(photo, 240)} 240w, ${imagePexels(photo, 480)} 480w" sizes="96px" alt="" loading="lazy">`;
         thumb.addEventListener('click', () => {
             goToSlide(index);
             if (carouselState.autoplay) startAutoplay();
         });
         thumbnailsContainer.appendChild(thumb);
     });
+
+    // Haute définition : jusqu'à 3200 pixels, selon la largeur que la photo occupe vraiment
+    // (elle couvre tout le cadre, et déborde sur les côtés sur un écran en hauteur). Seules
+    // la diapositive affichée et ses deux voisines sont chargées, quand le carrousel approche.
+    const largeursPexels = [1280, 1920, 2560, 3200];
+    const images = carouselMain.querySelectorAll('.carousel-slide img');
+    const tailleAffichee = photo => `${Math.round(Math.max(container.clientWidth, container.clientHeight * (photo.ratio || 1.5)))}px`;
+    function hydrater(index) {
+        const n = carouselState.photos.length;
+        [index, (index + 1) % n, (index - 1 + n) % n].forEach(i => {
+            const image = images[i];
+            if (image.dataset.hydratee) return;
+            image.dataset.hydratee = '1';
+            const photo = carouselState.photos[i];
+            image.sizes = tailleAffichee(photo);
+            image.srcset = largeursPexels.map(l => `${imagePexels(photo, l)} ${l}w`).join(', ');
+            image.src = imagePexels(photo, 1920);
+        });
+    }
+    window.addEventListener('resize', debounce(() => {
+        images.forEach((image, i) => {
+            if (image.dataset.hydratee) image.sizes = tailleAffichee(carouselState.photos[i]);
+        });
+    }, 200));
+    let carrouselProche = !('IntersectionObserver' in window);
+    if (carrouselProche) {
+        hydrater(0);
+    } else {
+        new IntersectionObserver(entrees => {
+            carrouselProche = entrees[0].isIntersecting;
+            if (carrouselProche) hydrater(carouselState.currentIndex);
+        }, { rootMargin: '800px 0px' }).observe(container);
+    }
 
     // Initialize first slide content
     updateSlideContent();
@@ -882,6 +942,7 @@ function initPhotoCarousel(apercu) {
         const slides = carouselMain.querySelectorAll('.carousel-slide');
         const thumbs = thumbnailsContainer.querySelectorAll('.carousel-thumbnail');
 
+        if (carrouselProche) hydrater(carouselState.currentIndex);
         slides.forEach((slide, i) => {
             slide.classList.toggle('active', i === carouselState.currentIndex);
         });
@@ -896,8 +957,12 @@ function initPhotoCarousel(apercu) {
     function updateSlideContent() {
         const photo = carouselState.photos[carouselState.currentIndex];
         slideTitle.textContent = photo.title;
-        slideDesc.textContent = photo.rubrique ? `${photo.rubrique.nom} : ` : (photo.desc || '');
+        slideDesc.textContent = photo.rubrique ? '' : (photo.desc || '');
         if (photo.rubrique) {
+            const nom = document.createElement('span');
+            nom.className = 'rubrique-nom';
+            nom.textContent = `${photo.rubrique.nom} :`;
+            slideDesc.appendChild(nom);
             const lien = document.createElement('a');
             lien.href = photo.rubrique.page;
             lien.textContent = photo.rubrique.titre;
@@ -1008,20 +1073,70 @@ function initPhotoCarousel(apercu) {
 }
 
 /**
- * Galerie Graphisme : chaque vignette ouvre la visionneuse sur les images de son projet
+ * Galerie Graphisme : un rail de cartes par projet, qui défile au doigt ou avec les
+ * flèches ; chaque carte ouvre la visionneuse. Le bouton « Vue d'ensemble » montre
+ * toutes les œuvres en petit, et le survol les agrandit.
  */
 function initGraphisme() {
-    document.querySelectorAll('.graphisme-projet').forEach(projet => {
-        const titreProjet = projet.querySelector('.graphisme-titre')?.textContent || '';
-        const vignettes = Array.from(projet.querySelectorAll('.graphisme-vignette'));
-        const galerie = vignettes.map(v => ({ src: v.dataset.grand, title: v.dataset.titre, desc: titreProjet }));
+    const section = document.getElementById('graphisme');
+    if (!section) return;
+    const miseAJour = [];
 
-        vignettes.forEach((vignette, index) => {
-            vignette.addEventListener('click', () => {
+    section.querySelectorAll('.graphisme-projet').forEach(projet => {
+        const titreProjet = projet.querySelector('.graphisme-titre')?.textContent || '';
+        const cartes = Array.from(projet.querySelectorAll('.graphisme-carte'));
+        const galerie = cartes.map(c => ({ src: c.dataset.grand, title: c.dataset.titre, desc: titreProjet, ratio: rapportImage(c.querySelector('img')) }));
+
+        cartes.forEach((carte, index) => {
+            carte.addEventListener('click', () => {
                 if (window.lightboxState) window.lightboxState.open(galerie, index);
             });
         });
+
+        const rail = projet.querySelector('.graphisme-rail');
+        const fleches = Array.from(projet.querySelectorAll('.graphisme-fleche'));
+        const majFleches = () => {
+            const deborde = !section.classList.contains('vue-ensemble') && rail.scrollWidth > rail.clientWidth + 4;
+            fleches.forEach(fleche => {
+                fleche.hidden = !deborde;
+                fleche.disabled = Number(fleche.dataset.sens) < 0
+                    ? rail.scrollLeft <= 4
+                    : rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 4;
+            });
+        };
+        fleches.forEach(fleche => {
+            fleche.addEventListener('click', () => {
+                rail.scrollBy({ left: Number(fleche.dataset.sens) * rail.clientWidth * 0.8, behavior: 'smooth' });
+            });
+        });
+        rail.addEventListener('scroll', majFleches, { passive: true });
+        rail.querySelectorAll('img').forEach(image => image.addEventListener('load', majFleches));
+        miseAJour.push(majFleches);
+        majFleches();
     });
+
+    window.addEventListener('resize', debounce(() => miseAJour.forEach(maj => maj()), 150));
+
+    const bascule = document.getElementById('graphisme-bascule');
+    if (bascule) {
+        bascule.addEventListener('click', () => {
+            const ensemble = section.classList.toggle('vue-ensemble');
+            // En vue d'ensemble, les œuvres encore à charger se contentent de leur vignette,
+            // assez fine pour leur petite taille ; le défilement retrouve la version moyenne.
+            section.querySelectorAll('.graphisme-carte img').forEach(image => {
+                if (ensemble && !image.complete && image.hasAttribute('srcset')) {
+                    image.dataset.srcset = image.getAttribute('srcset');
+                    image.removeAttribute('srcset');
+                } else if (!ensemble && image.dataset.srcset) {
+                    image.setAttribute('srcset', image.dataset.srcset);
+                    delete image.dataset.srcset;
+                }
+            });
+            bascule.setAttribute('aria-pressed', String(ensemble));
+            bascule.querySelector('span').textContent = ensemble ? 'Défilement' : 'Vue d’ensemble';
+            miseAJour.forEach(maj => maj());
+        });
+    }
 }
 
 /**
@@ -1029,19 +1144,25 @@ function initGraphisme() {
  */
 function initSitePhoto(apercu) {
     if (!apercu) return;
-    const nombre = n => Number(n || 0).toLocaleString('fr-FR');
     const c = apercu.chiffres || {};
 
+    // Chiffres, recomposés à chaque changement de langue (js/langues.js)
     const chiffres = document.getElementById('site-photo-chiffres');
-    if (chiffres && c.photos) {
-        const morceaux = [`${nombre(c.photos)} photos`, `${nombre(c.series)} séries`, `${nombre(c.galeries)} galeries`];
-        if (c.vues_pexels) {
-            morceaux.push(`${nombre(c.vues_pexels)} vues`
-                + (c.telechargements_pexels ? ` et ${nombre(c.telechargements_pexels)} téléchargements sur Pexels` : ' sur Pexels'));
-        }
-        chiffres.textContent = morceaux.join(' · ');
+    const afficherChiffres = () => {
+        if (!chiffres || !c.photos) return;
+        const langue = window.Langues ? window.Langues.actuelle : 'fr';
+        const nombre = n => Number(n || 0).toLocaleString({ fr: 'fr-FR', en: 'en-GB', zh: 'zh-CN' }[langue] || 'fr-FR');
+        const [p, s, g, v, t] = [c.photos, c.series, c.galeries, c.vues_pexels, c.telechargements_pexels].map(nombre);
+        const morceaux = {
+            fr: [`${p} photos`, `${s} séries`, `${g} galeries`, c.vues_pexels && (c.telechargements_pexels ? `${v} vues et ${t} téléchargements sur Pexels` : `${v} vues sur Pexels`)],
+            en: [`${p} photos`, `${s} series`, `${g} galleries`, c.vues_pexels && (c.telechargements_pexels ? `${v} views and ${t} downloads on Pexels` : `${v} views on Pexels`)],
+            zh: [`${p} 张照片`, `${s} 个系列`, `${g} 个图集`, c.vues_pexels && (c.telechargements_pexels ? `Pexels 上 ${v} 次浏览、${t} 次下载` : `Pexels 上 ${v} 次浏览`)]
+        }[langue] || [];
+        chiffres.textContent = morceaux.filter(Boolean).join(' · ');
         chiffres.hidden = false;
-    }
+    };
+    afficherChiffres();
+    document.addEventListener('kf:langue', afficherChiffres);
 
     const series = document.getElementById('site-photo-series');
     (apercu.series || []).forEach(serie => {
@@ -1050,9 +1171,9 @@ function initSitePhoto(apercu) {
         carte.href = serie.page;
         const image = document.createElement('img');
         image.src = imagePexels(serie.couverture, 800);
-        image.srcset = `${imagePexels(serie.couverture, 600)} 600w, ${imagePexels(serie.couverture, 1200)} 1200w`;
-        image.sizes = '(max-width: 768px) 92vw, 380px';
-        image.alt = serie.couverture.titre || '';
+        image.srcset = [600, 1200, 1600].map(l => `${imagePexels(serie.couverture, l)} ${l}w`).join(', ');
+        image.sizes = '(max-width: 768px) 92vw, 420px';
+        image.alt = '';
         image.loading = 'lazy';
         const infos = document.createElement('span');
         infos.className = 'serie-infos';
@@ -1061,7 +1182,11 @@ function initSitePhoto(apercu) {
         titre.textContent = serie.titre;
         const lieu = document.createElement('span');
         lieu.className = 'serie-lieu';
-        lieu.textContent = [serie.lieu, serie.date].filter(Boolean).join(' · ');
+        // Lieu et date en morceaux séparés, traduits chacun par js/langues.js
+        [serie.lieu, serie.date].filter(Boolean).forEach((morceau, i) => {
+            if (i) lieu.append(' · ');
+            lieu.append(morceau);
+        });
         infos.append(titre, lieu);
         carte.append(image, infos);
         series.appendChild(carte);

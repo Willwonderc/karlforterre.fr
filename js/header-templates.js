@@ -1808,13 +1808,13 @@ const HeaderTemplates = {
                         <span>Romans</span><span>•</span>
                         <span>Nouvelles</span><span>•</span>
                         <span>Poésie</span><span>•</span>
-                        <span>Rédaction créative</span><span>•</span>
-                        <span>Conseils éditoriaux</span><span>•</span>
+                        <span>Écriture</span><span>•</span>
+                        <span>Édition</span><span>•</span>
                         <span>Romans</span><span>•</span>
                         <span>Nouvelles</span><span>•</span>
                         <span>Poésie</span><span>•</span>
-                        <span>Rédaction créative</span><span>•</span>
-                        <span>Conseils éditoriaux</span><span>•</span>
+                        <span>Écriture</span><span>•</span>
+                        <span>Édition</span><span>•</span>
                     </div>
                 </div>
             </section>

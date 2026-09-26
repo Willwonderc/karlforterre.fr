@@ -3435,6 +3435,7 @@ p:last-child {
     font-family: var(--font-heading);
     font-size: 1.75rem;
     margin-bottom: var(--space-sm);
+    color: var(--color-surface);
 }
 
 .lightbox-desc {
@@ -3488,23 +3489,54 @@ html {
 }
 
 /* ================================
-   Graphisme
+   Graphisme : rails de cartes, agrandies au survol, et vue d'ensemble
    ================================ */
 .graphisme {
+    --hauteur-carte: 380px;
     background: var(--color-background);
+}
+
+.graphisme .section-header {
+    margin-bottom: var(--space-2xl);
+}
+
+.graphisme-bascule {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+    padding: var(--space-sm) var(--space-lg);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    transition: background var(--transition-base), color var(--transition-base);
+}
+
+.graphisme-bascule svg {
+    width: 18px;
+    height: 18px;
+}
+
+.graphisme-bascule:hover,
+.graphisme-bascule[aria-pressed="true"] {
+    background: var(--color-primary);
+    color: var(--color-surface);
 }
 
 .graphisme-projets {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4xl);
+    gap: var(--space-3xl);
 }
 
-.graphisme-projet {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    gap: var(--space-2xl);
-    align-items: start;
+.graphisme-entete {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-sm);
 }
 
 .graphisme-titre {
@@ -3512,56 +3544,199 @@ html {
     font-size: 1.75rem;
     font-weight: 500;
     color: var(--color-primary);
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-sm);
 }
 
 .graphisme-texte p {
+    max-width: 68ch;
     font-size: 0.95rem;
     line-height: 1.7;
     color: var(--color-text-light);
 }
 
-.graphisme-grille {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: var(--space-md);
+.graphisme-fleches {
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--space-sm);
 }
 
-.graphisme-vignette {
-    aspect-ratio: 1;
-    padding: var(--space-sm);
-    background: var(--color-surface);
+.graphisme-fleche {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-primary);
+    transition: border-color var(--transition-base), background var(--transition-base), color var(--transition-base), opacity var(--transition-base);
 }
 
-.graphisme-vignette img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+.graphisme-fleche svg {
+    width: 20px;
+    height: 20px;
 }
 
-.graphisme-vignette:hover,
-.graphisme-vignette:focus-visible {
-    transform: translateY(-4px);
+.graphisme-fleche:hover:not(:disabled) {
     border-color: var(--color-accent);
-    box-shadow: var(--shadow-lg);
+    background: var(--color-accent);
+    color: var(--color-surface);
 }
 
-@media (max-width: 1024px) {
-    .graphisme-projet {
-        grid-template-columns: 1fr;
-        gap: var(--space-lg);
+.graphisme-fleche:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.graphisme-fleche[hidden] {
+    display: none;
+}
+
+/* Rail : les cartes défilent ; la marge intérieure laisse la place à l'agrandissement */
+.graphisme-rail {
+    display: flex;
+    gap: var(--space-lg);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+    margin: 0 calc(-1 * var(--space-lg));
+    scroll-padding-inline: var(--space-lg);
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) transparent;
+    overscroll-behavior-x: contain;
+}
+
+.graphisme-carte {
+    position: relative;
+    flex: 0 0 auto;
+    height: var(--hauteur-carte);
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-md);
+    scroll-snap-align: start;
+    cursor: zoom-in;
+    transition: transform 0.45s var(--ease-out-expo), box-shadow 0.45s var(--ease-out-expo), opacity 0.3s ease;
+}
+
+.graphisme-carte img {
+    display: block;
+    width: auto;
+    height: 100%;
+    max-width: none;
+}
+
+.graphisme-legende {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: var(--space-xl) var(--space-md) var(--space-md);
+    background: linear-gradient(180deg, transparent, rgba(10, 10, 20, 0.82));
+    font-size: 0.85rem;
+    line-height: 1.4;
+    text-align: left;
+    color: var(--color-surface);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    pointer-events: none;
+}
+
+@media (hover: hover) {
+    .graphisme-carte:hover,
+    .graphisme-carte:focus-visible {
+        z-index: 2;
+        transform: scale(1.06);
+        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25);
+    }
+
+    .graphisme-carte:hover .graphisme-legende,
+    .graphisme-carte:focus-visible .graphisme-legende {
+        opacity: 1;
+        transform: none;
+    }
+
+    .graphisme-rail:hover .graphisme-carte:not(:hover) {
+        opacity: 0.7;
     }
 }
 
-@media (max-width: 480px) {
-    .graphisme-grille {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--space-sm);
+@media (hover: none) {
+    .graphisme-legende {
+        opacity: 1;
+        transform: none;
+    }
+
+    .graphisme-fleches {
+        display: none;
+    }
+}
+
+/* Vue d'ensemble : toutes les œuvres en petit ; le survol les agrandit comme une loupe */
+.graphisme.vue-ensemble {
+    --hauteur-carte: 150px;
+}
+
+.graphisme.vue-ensemble .graphisme-projets {
+    gap: var(--space-2xl);
+}
+
+.graphisme.vue-ensemble .graphisme-texte p,
+.graphisme.vue-ensemble .graphisme-legende {
+    display: none;
+}
+
+.graphisme.vue-ensemble .graphisme-titre {
+    font-size: 1.35rem;
+}
+
+.graphisme.vue-ensemble .graphisme-rail {
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    overflow: visible;
+    padding: var(--space-sm) 0 0;
+    margin: 0;
+}
+
+@media (hover: hover) {
+    .graphisme.vue-ensemble .graphisme-carte:hover,
+    .graphisme.vue-ensemble .graphisme-carte:focus-visible {
+        transform: scale(1.6);
+    }
+}
+
+@media (max-width: 1024px) {
+    .graphisme {
+        --hauteur-carte: 320px;
+    }
+
+    .graphisme-entete {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+    }
+
+    .graphisme-fleches {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 768px) {
+    .graphisme {
+        --hauteur-carte: 260px;
+    }
+
+    .graphisme.vue-ensemble {
+        --hauteur-carte: 110px;
+    }
+
+    .graphisme-rail {
+        gap: var(--space-md);
+        padding: var(--space-lg) var(--space-md) var(--space-xl);
+        margin: 0 calc(-1 * var(--space-md));
     }
 }
 
@@ -3786,5 +3961,165 @@ html {
 @media (max-width: 576px) {
     .carousel-main::before {
         background: linear-gradient(180deg, rgba(26, 26, 46, 0.35) 0%, rgba(26, 26, 46, 0.25) 25%, rgba(26, 26, 46, 0.75) 60%, rgba(26, 26, 46, 0.92) 100%);
+    }
+}
+
+/* ================================
+   Langues : pastille à côté de « Contact » et choix Français, English, 中文
+   ================================ */
+.nav-langues {
+    position: relative;
+}
+
+.nav-langue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.nav-langue svg {
+    width: 16px;
+    height: 16px;
+}
+
+.menu-langues {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    min-width: 160px;
+    padding: var(--space-xs);
+    list-style: none;
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    z-index: 1002;
+}
+
+.menu-langues[hidden] {
+    display: none;
+}
+
+.menu-langues button {
+    display: block;
+    white-space: nowrap;
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    text-align: left;
+    color: var(--color-text);
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.menu-langues button:hover,
+.menu-langues button:focus-visible {
+    background: rgba(201, 169, 98, 0.12);
+    color: var(--color-primary);
+}
+
+.menu-langues button[aria-current="true"] {
+    font-weight: 600;
+    color: var(--color-accent-dark);
+}
+
+.menu-langues button[aria-current="true"]::after {
+    content: ' ✓';
+}
+
+@media (min-width: 769px) and (max-width: 1180px) {
+    .nav-langue {
+        font-size: 0.82rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .menu-langues {
+        position: static;
+        display: flex;
+        gap: var(--space-sm);
+        min-width: 0;
+        margin-top: var(--space-md);
+        padding: 0;
+        background: none;
+        box-shadow: none;
+    }
+
+    .menu-langues button {
+        width: auto;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: var(--radius-full);
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .menu-langues button:hover,
+    .menu-langues button:focus-visible {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--color-surface);
+    }
+
+    .menu-langues button[aria-current="true"] {
+        border-color: var(--color-accent);
+        color: var(--color-accent-light);
+    }
+
+    .menu-langues button[aria-current="true"]::after {
+        content: '';
+    }
+}
+
+/* Chinois : les caractères viennent des polices du système (PingFang, YaHei, Noto…) */
+html[lang|="zh"] {
+    --font-heading: 'Cormorant Garamond', 'Songti SC', 'STSong', 'Noto Serif SC', 'Source Han Serif SC', serif;
+    --font-body: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+}
+
+/* Légende du carrousel : « Série : » ou « Galerie : » avant le lien */
+.rubrique-nom {
+    margin-right: 0.35em;
+}
+
+html[lang|="zh"] .rubrique-nom {
+    margin-right: 0.1em;
+}
+
+/* Tablettes : le menu passe dans le panneau latéral, comme sur téléphone,
+   pour que les libellés anglais tiennent */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .nav-toggle {
+        display: block;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 320px;
+        height: 100vh;
+        background: rgba(26, 26, 46, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 100px var(--space-xl) var(--space-xl);
+        gap: var(--space-lg);
+        transition: right var(--transition-base);
+        box-shadow: -10px 0 40px rgba(0, 0, 0, 0.4);
+        border-left: 1px solid rgba(201, 169, 98, 0.2);
+    }
+
+    .nav-menu.active {
+        right: 0;
+    }
+
+    .nav-menu .nav-link {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 1.1rem;
+    }
+
+    .nav-link-cta {
+        margin-top: var(--space-md);
     }
 }
