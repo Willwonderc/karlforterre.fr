@@ -75,7 +75,7 @@ Tout se fait sur GitHub : ouvrir le fichier, cliquer sur le crayon, modifier, pu
 | Quoi | Où |
 |---|---|
 | Textes : à propos, livres, mémoire, extraits, contact | `index.html` |
-| Réalisations graphiques | `index.html`, section « Graphisme » : un bloc `<article>` par projet, un `<button class="graphisme-carte">` par œuvre (la largeur et la hauteur de la vignette dans `width` et `height`) |
+| Réalisations graphiques | `index.html`, section « Graphisme » : un bloc `<article>` par projet, un `<button class="graphisme-carte">` par œuvre (la largeur et la hauteur de la vignette dans `width` et `height`) ; les projets d'une ou deux œuvres sont des fiches côte à côte, regroupées dans `<div class="graphisme-grille">` |
 | Œuvres du portfolio (trois tirées au hasard à chaque visite) | `script.js`, liste `allWorks` |
 | Photos du carrousel, séries et galeries | rien à faire ici : voir « Photographie » plus bas |
 | En-têtes (six variantes : un clic sur l'en-tête passe à la suivante) | `js/header-templates.js` |
