@@ -3740,6 +3740,126 @@ html {
     }
 }
 
+/* Projets d'une ou deux œuvres : fiches côte à côte, images alignées en bas de chaque
+   rangée, au lieu d'une ligne entière à moitié vide pour chacun */
+.graphisme-grille {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-xl);
+}
+
+.graphisme-grille .graphisme-projet {
+    --hauteur-carte: clamp(200px, 18vw, 260px);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: var(--space-xl) var(--space-xl) 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.graphisme-grille .graphisme-titre {
+    font-size: 1.5rem;
+}
+
+/* Fiche restée seule sur sa rangée : toute la largeur, le texte à gauche, les œuvres à
+   droite */
+.graphisme-grille .graphisme-projet:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+
+@media (min-width: 901px) {
+    .graphisme:not(.vue-ensemble) .graphisme-grille .graphisme-projet:last-child:nth-child(odd) {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--space-2xl);
+    }
+
+    .graphisme:not(.vue-ensemble) .graphisme-grille .graphisme-projet:last-child:nth-child(odd) .graphisme-entete {
+        flex: 1;
+        margin-bottom: var(--space-xl);
+    }
+
+    .graphisme:not(.vue-ensemble) .graphisme-grille .graphisme-projet:last-child:nth-child(odd) .graphisme-rail {
+        flex: 0 1 auto;
+        min-width: 0;
+        margin-top: 0;
+    }
+}
+
+/* Écran tactile : dans les fiches, le titre du projet suffit ; la légende de chaque
+   œuvre apparaît dans la visionneuse */
+@media (hover: none) {
+    .graphisme-grille .graphisme-legende {
+        display: none;
+    }
+}
+
+.graphisme-grille .graphisme-rail {
+    margin-top: auto;
+    padding-bottom: var(--space-xl);
+}
+
+.graphisme.vue-ensemble .graphisme-grille .graphisme-projet {
+    --hauteur-carte: 150px;
+    padding-bottom: var(--space-xl);
+}
+
+@media (max-width: 1024px) {
+    .graphisme-grille .graphisme-projet {
+        --hauteur-carte: 200px;
+        padding: var(--space-lg) var(--space-lg) 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .graphisme-grille {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .graphisme-grille .graphisme-projet {
+        --hauteur-carte: 240px;
+        padding: var(--space-lg) var(--space-lg) 0;
+    }
+
+    .graphisme.vue-ensemble .graphisme-grille .graphisme-projet {
+        --hauteur-carte: 110px;
+    }
+}
+
+/* Téléphone : le badge de « À propos » reste dans l'écran (il dépassait de 4 px et
+   faisait glisser la page de côté) */
+@media (max-width: 576px) {
+    .floating-badge {
+        right: 0;
+    }
+}
+
+/* Téléphone : les œuvres d'une fiche se partagent sa largeur, sans défilement */
+@media (max-width: 576px) {
+    .graphisme:not(.vue-ensemble) .graphisme-grille .graphisme-rail {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(0, 1fr);
+        align-items: start;
+        overflow: visible;
+    }
+
+    .graphisme:not(.vue-ensemble) .graphisme-grille .graphisme-carte {
+        width: 100%;
+        height: auto;
+    }
+
+    .graphisme:not(.vue-ensemble) .graphisme-grille .graphisme-carte img {
+        width: 100%;
+        height: auto;
+    }
+}
+
 /* ================================
    Livres : maison d'édition
    ================================ */
@@ -3789,6 +3909,27 @@ html {
 
     .carousel-content {
         bottom: 150px;
+    }
+}
+
+/* ================================
+   Carrousel : le texte commence après la flèche de gauche (marge, largeur de la flèche,
+   espace), pour ne jamais passer dessous, quelle que soit la hauteur de l'écran
+   ================================ */
+.carousel-content {
+    padding-left: calc(var(--space-xl) + 60px + var(--space-lg));
+    max-width: 868px;
+}
+
+@media (max-width: 992px) {
+    .carousel-content {
+        padding: 0 calc(var(--space-xl) + 50px + var(--space-md));
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-content {
+        padding: 0 var(--space-md);
     }
 }
 
@@ -3956,6 +4097,17 @@ html {
 .carousel-description,
 .carousel-counter {
     text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+}
+
+/* Libellé doré et compteur, fins et clairs : une ombre plus serrée les détache du ciel */
+.carousel-content .section-label,
+.carousel-counter {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 2px 14px rgba(0, 0, 0, 0.6);
+}
+
+.carousel-counter {
+    color: var(--color-accent-light);
+    font-weight: 600;
 }
 
 @media (max-width: 576px) {

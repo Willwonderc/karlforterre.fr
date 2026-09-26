@@ -26,7 +26,8 @@ dans le dépôt Willwonderc/PexelsWillwonder.
 - Graphisme : un `<article class="graphisme-projet">` par projet, un
   `<button class="graphisme-carte">` par œuvre : vignette en `src` (avec sa largeur et sa
   hauteur dans `width` et `height`), version moyenne en `srcset` (`2x`), grande image dans
-  `data-grand`. La visionneuse prend la moyenne ou la grande selon l'écran.
+  `data-grand`. La visionneuse prend la moyenne ou la grande selon l'écran. Les projets
+  d'une ou deux œuvres sont des fiches côte à côte dans `<div class="graphisme-grille">`.
 - Ne jamais inventer de citation ni d'extrait : les extraits viennent des livres
   (`livres/*.pdf`), les textes des projets de l'auteur lui-même.
 - Liens relatifs, pour que le site fonctionne aussi à l'adresse d'essai
