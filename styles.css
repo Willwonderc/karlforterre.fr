@@ -4153,9 +4153,10 @@ html {
     display: none;
 }
 
-.menu-langues button {
+.menu-langues a {
     display: block;
     white-space: nowrap;
+    text-decoration: none;
     width: 100%;
     padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-sm);
@@ -4165,18 +4166,18 @@ html {
     transition: background var(--transition-fast), color var(--transition-fast);
 }
 
-.menu-langues button:hover,
-.menu-langues button:focus-visible {
+.menu-langues a:hover,
+.menu-langues a:focus-visible {
     background: rgba(201, 169, 98, 0.12);
     color: var(--color-primary);
 }
 
-.menu-langues button[aria-current="true"] {
+.menu-langues a[aria-current="true"] {
     font-weight: 600;
     color: var(--color-accent-dark);
 }
 
-.menu-langues button[aria-current="true"]::after {
+.menu-langues a[aria-current="true"]::after {
     content: ' ✓';
 }
 
@@ -4198,25 +4199,25 @@ html {
         box-shadow: none;
     }
 
-    .menu-langues button {
+    .menu-langues a {
         width: auto;
         border: 1px solid rgba(255, 255, 255, 0.3);
         border-radius: var(--radius-full);
         color: rgba(255, 255, 255, 0.9);
     }
 
-    .menu-langues button:hover,
-    .menu-langues button:focus-visible {
+    .menu-langues a:hover,
+    .menu-langues a:focus-visible {
         background: rgba(255, 255, 255, 0.1);
         color: var(--color-surface);
     }
 
-    .menu-langues button[aria-current="true"] {
+    .menu-langues a[aria-current="true"] {
         border-color: var(--color-accent);
         color: var(--color-accent-light);
     }
 
-    .menu-langues button[aria-current="true"]::after {
+    .menu-langues a[aria-current="true"]::after {
         content: '';
     }
 }

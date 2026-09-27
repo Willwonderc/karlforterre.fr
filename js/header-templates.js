@@ -399,7 +399,7 @@ const HeaderTemplates = {
                         <div class="image-wrapper">
                             <div class="image-glow" aria-hidden="true"></div>
                             <div class="image-border" aria-hidden="true"></div>
-                            <img src="images/auteur/photo-auteur.webp" alt="Portrait de Karl Forterre, auteur" class="profile-img">
+                            <img src="/images/auteur/photo-auteur.webp" alt="Portrait de Karl Forterre, auteur" class="profile-img">
                         </div>
                     </div>
                 </div>
@@ -445,7 +445,7 @@ const HeaderTemplates = {
             .hero--cinematique .hero-image-bg {
                 position: absolute;
                 inset: 0;
-                background: url('images/fond-auteur.webp') center/cover;
+                background: url('/images/fond-auteur.webp') center/cover;
                 filter: brightness(0.3);
             }
 
@@ -758,7 +758,7 @@ const HeaderTemplates = {
             .hero--splitscreen .hero-image {
                 position: absolute;
                 inset: 0;
-                background: url('images/auteur/photo-auteur.webp') center/cover;
+                background: url('/images/auteur/photo-auteur.webp') center/cover;
                 filter: grayscale(100%);
                 transition: filter 0.6s ease, transform 0.6s ease;
             }
