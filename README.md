@@ -5,7 +5,8 @@ livres, mémoire de recherche, portfolio, réalisations graphiques et photograph
 
 C'est un site statique : GitHub Pages publie les fichiers de ce dépôt tels quels, sans
 étape de construction. Une modification enregistrée sur la branche `main` est en ligne
-une à deux minutes plus tard. Le site photo, photos.karlforterre.fr, vit dans un autre
+une à deux minutes plus tard. Seules les pages anglaise et chinoise (`en/`, `zh/`) sont
+écrites par un programme, que GitHub relance tout seul (voir « Langues »). Le site photo, photos.karlforterre.fr, vit dans un autre
 dépôt : Willwonderc/PexelsWillwonder.
 
 ## 1. Mise en ligne à l'adresse d'essai (une seule fois)
@@ -102,9 +103,20 @@ si le site photo ne répond pas.
 
 ### Langues : anglais et chinois
 
-La pastille à côté de « Contact » (FR, EN, 中文) traduit tout le site. Le français de
-`index.html` reste la référence : `js/traductions.js` donne, pour chaque phrase
-française, son anglais (`en`) et son chinois (`zh`).
+Chaque langue a sa propre adresse : https://karlforterre.fr/ (français),
+https://karlforterre.fr/en/ (anglais) et https://karlforterre.fr/zh/ (chinois). Les
+moteurs de recherche trouvent ainsi les trois versions, reliées entre elles (balises
+`hreflang` et plan du site). La pastille à côté de « Contact » (FR, EN, 中文) mène d'une
+version à l'autre.
+
+Le français de `index.html` reste la référence : `js/traductions.js` donne, pour chaque
+phrase française, son anglais (`en`) et son chinois (`zh`). Les pages `en/index.html` et
+`zh/index.html` en sont tirées par `outils/pages-langues.py` : **ne les modifiez pas à
+la main**. Après chaque modification d'`index.html` ou de `js/traductions.js`
+enregistrée sur `main`, la tâche GitHub « Pages en anglais et en chinois » les réécrit
+et les enregistre ; le site est à jour deux ou trois minutes plus tard. Les en-têtes, le
+carrousel et les titres du site photo, ajoutés par les scripts, sont traduits dans le
+navigateur, avec le même fichier.
 
 - **Corriger une traduction** : ouvrir `js/traductions.js`, chercher la phrase
   française et modifier le texte après `en:` ou `zh:`.
@@ -114,14 +126,16 @@ française, son anglais (`en`) et son chinois (`zh`).
   français dans les deux autres langues.
 - **Titres du site photo** (sélection, séries, galeries) : ils sont traduits par le même
   fichier. Un nouveau titre s'affiche en français tant qu'il n'y a pas été ajouté.
-- Le choix de la langue est mémorisé par le navigateur du visiteur. Un lien peut aussi
-  l'imposer : `https://karlforterre.fr/?lang=en` ou `?lang=zh`.
-- Les liens vers le site photo mènent à sa version anglaise, qui existe pour toutes ses
-  pages ; il n'a pas de version chinoise.
+- Les anciens liens `https://karlforterre.fr/?lang=en` ou `?lang=zh` mènent à la page
+  de la langue.
+- Les liens vers le site photo mènent à sa version dans la même langue (`/en/` ou
+  `/zh/`).
+- Dans `script.js` et `js/header-templates.js`, les chemins des images commencent par
+  `/` (`/images/…`) : ils fonctionnent ainsi depuis `/en/` et `/zh/`. Gardez cette forme.
 - En chinois, les caractères viennent des polices déjà installées sur l'appareil du
   visiteur (PingFang, Microsoft YaHei, Noto…).
-- Google continue d'indexer la version française : les traductions s'adressent aux
-  visiteurs.
+- Google peut indexer les trois versions : déclarez le plan du site,
+  https://karlforterre.fr/sitemap.xml, dans Google Search Console.
 
 ### Ajouter une image
 
@@ -144,7 +158,8 @@ dans la visionneuse d'un grand écran. Rien n'est chargé tant que l'œuvre n'ap
 2. Leur donner un nom en minuscules, sans espaces ni accents : `affiche-le-plan.webp`,
    `affiche-le-plan-moyenne.webp`, `affiche-le-plan-vignette.webp`.
 3. Portfolio : les trois fichiers dans `images/portfolio/`, puis une ligne dans
-   `allWorks` (`script.js`).
+   `allWorks` (`script.js`), copiée sur une voisine : ses chemins commencent par
+   `/images/`.
 4. Graphisme : les trois fichiers dans `images/graphisme/`, puis un bloc
    `<button class="graphisme-carte">` copié sur un voisin : y remplacer le nom des
    fichiers (trois fois) et la légende (trois fois), et mettre dans `width` et `height`
@@ -158,6 +173,8 @@ Pour déposer un fichier : **Add file** → **Upload files**, dans le bon dossie
 - `index.html`, `styles.css`, `script.js`, `js/` : la page d'accueil et son
   fonctionnement. Dans `js/` : les en-têtes (`header-templates.js`, `header-loader.js`),
   les traductions (`traductions.js`) et le bouton de langue (`langues.js`).
+- `en/`, `zh/` : pages anglaise et chinoise, écrites par `outils/pages-langues.py` et
+  tenues à jour par la tâche `.github/workflows/langues.yml`.
 - `images/` : portrait, logo, fond, `portfolio/` et `graphisme/` (pour chaque œuvre,
   vignette, version moyenne et grande image).
 - `livres/` : couvertures, livres en PDF et EPUB, mémoire.

@@ -1,11 +1,14 @@
 /**
- * Langues du site : français (le texte d'origine de la page), anglais et chinois.
+ * Langues du site : français (/), anglais (/en/) et chinois (/zh/).
  *
- * La pastille à côté de « Contact » ouvre le choix de la langue. Chaque phrase française
- * est alors remplacée par sa traduction (js/traductions.js), y compris dans les en-têtes,
- * le carrousel et les données du site photo, qui arrivent après le chargement. Les liens
- * vers photos.karlforterre.fr mènent à sa version anglaise. Le choix est mémorisé dans le
- * navigateur ; un lien peut aussi imposer la langue : ?lang=en ou ?lang=zh.
+ * Chaque langue a sa propre adresse, pour que les moteurs de recherche trouvent les trois
+ * versions. Les pages /en/ et /zh/ sont écrites par outils/pages-langues.py à partir
+ * d'index.html et de js/traductions.js. Ce script complète la traduction dans le
+ * navigateur : les en-têtes, le carrousel et les données du site photo, qui arrivent
+ * après le chargement, passent eux aussi dans la langue de la page. Les liens vers
+ * photos.karlforterre.fr mènent à sa version dans la même langue. La pastille à côté de
+ * « Contact » ouvre le choix de la langue : chaque choix est un lien vers l'autre page.
+ * Les anciens liens ?lang=en et ?lang=zh mènent à la bonne page.
  */
 const Langues = {
     disponibles: {
@@ -13,20 +16,29 @@ const Langues = {
         en: { code: 'EN', html: 'en' },
         zh: { code: '中文', html: 'zh-Hans' }
     },
-    cle: 'karlForterre_langue',
     actuelle: 'fr',
     textes: new WeakMap(),
     attributs: new WeakMap(),
     nomsAttributs: ['alt', 'aria-label', 'title', 'data-titre', 'data-text', 'href'],
 
+    // Langue de la page, d'après son adresse : /en/…, /zh/… ou le français
+    langueDePage() {
+        const segment = window.location.pathname.split('/')[1];
+        return segment !== 'fr' && this.disponibles[segment] ? segment : 'fr';
+    },
+
+    adressePage(langue) {
+        return langue === 'fr' ? '/' : `/${langue}/`;
+    },
+
     init() {
         this.titreOriginal = document.title;
+        const langue = this.langueDePage();
         const demandee = new URLSearchParams(window.location.search).get('lang');
-        let enregistree = null;
-        try {
-            enregistree = localStorage.getItem(this.cle);
-        } catch (e) {}
-        const langue = this.disponibles[demandee] ? demandee : (this.disponibles[enregistree] ? enregistree : 'fr');
+        if (demandee && demandee !== langue && this.disponibles[demandee]) {
+            window.location.replace(this.adressePage(demandee) + window.location.hash);
+            return;
+        }
 
         this.initBouton();
         this.observateur = new MutationObserver(mutations => this.surMutations(mutations));
@@ -34,20 +46,15 @@ const Langues = {
             subtree: true, childList: true, characterData: true,
             attributes: true, attributeFilter: this.nomsAttributs
         });
-        this.appliquer(langue, Boolean(this.disponibles[demandee]));
+        this.appliquer(langue);
     },
 
-    appliquer(langue, enregistrer = true) {
+    appliquer(langue) {
         this.actuelle = this.disponibles[langue] ? langue : 'fr';
         document.documentElement.lang = this.disponibles[this.actuelle].html;
         document.title = this.traduction(this.titreOriginal) || this.titreOriginal;
         this.traduire(document.body);
         this.majBouton();
-        if (enregistrer) {
-            try {
-                localStorage.setItem(this.cle, this.actuelle);
-            } catch (e) {}
-        }
         document.dispatchEvent(new CustomEvent('kf:langue', { detail: { langue: this.actuelle } }));
     },
 
@@ -58,12 +65,18 @@ const Langues = {
         return entree && entree[this.actuelle] ? entree[this.actuelle] : null;
     },
 
-    // Version anglaise des pages du site photo, qui n'existe pas en chinois
+    // Page du site photo dans la langue de la page (même règle dans outils/pages-langues.py)
+    rubriquesPhotos: {
+        'galeries': 'galleries', 'a-propos': 'about', 'utiliser-mes-photos': 'use-my-photos',
+        'mentions-legales': 'legal-notice', 'confidentialite': 'privacy'
+    },
+
     lienPhotos(adresse) {
         if (this.actuelle === 'fr' || !adresse.startsWith('https://photos.karlforterre.fr/')) return adresse;
         const lien = new URL(adresse);
-        if (lien.pathname.startsWith('/en/')) return adresse;
-        lien.pathname = '/en' + lien.pathname.replace(/^\/galeries\//, '/galleries/');
+        if (/^\/(en|zh)\//.test(lien.pathname)) return adresse;
+        lien.pathname = `/${this.actuelle}` + lien.pathname.replace(
+            /^\/([^/]+)\//, (tout, rubrique) => `/${this.rubriquesPhotos[rubrique] || rubrique}/`);
         return lien.href;
     },
 
@@ -143,10 +156,10 @@ const Langues = {
             this.menu.hidden = !ouvrir;
             this.bouton.setAttribute('aria-expanded', String(ouvrir));
         });
+        // Chaque choix est un lien vers la page de la langue ; on y garde la section affichée
         this.menu.querySelectorAll('[data-langue]').forEach(choix => {
             choix.addEventListener('click', () => {
-                this.appliquer(choix.dataset.langue);
-                fermer();
+                choix.href = this.adressePage(choix.dataset.langue) + window.location.hash;
             });
         });
         document.addEventListener('click', (e) => {

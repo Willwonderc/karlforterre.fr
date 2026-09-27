@@ -1,0 +1,51 @@
+# Pages en anglais (/en/) et en chinois (/zh/) du site.
+#
+# Après chaque modification d'index.html ou de js/traductions.js enregistrée sur main,
+# outils/pages-langues.py réécrit en/index.html, zh/index.html et sitemap.xml, puis
+# cette tâche les enregistre sur main. GitHub Pages publie ensuite le site comme
+# d'habitude. On peut aussi la lancer à la main : Actions → « Pages en anglais et en
+# chinois » → Run workflow.
+name: Pages en anglais et en chinois
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - js/traductions.js
+      - outils/pages-langues.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: langues
+  cancel-in-progress: false
+
+jobs:
+  pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Écrire les pages /en/ et /zh/
+        run: python3 outils/pages-langues.py
+
+      - name: Enregistrer les pages sur main et republier le site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -n "$(git status --porcelain en zh sitemap.xml)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add en zh sitemap.xml
+            git commit -m "Pages en anglais et en chinois mises à jour"
+            git pull --rebase origin main
+            git push origin HEAD:main
+            # Un envoi fait par une tâche ne relance pas toujours la publication : on la demande.
+            gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" || true
+          else
+            echo "Pages déjà à jour."
+          fi

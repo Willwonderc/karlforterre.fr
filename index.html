@@ -9,6 +9,11 @@
 
     <title>Karl Forterre | Auteur</title>
     <link rel="canonical" href="https://karlforterre.fr/">
+    <!-- Versions du site dans chaque langue (pages /en/ et /zh/ générées par outils/pages-langues.py) -->
+    <link rel="alternate" hreflang="fr" href="https://karlforterre.fr/">
+    <link rel="alternate" hreflang="en" href="https://karlforterre.fr/en/">
+    <link rel="alternate" hreflang="zh-Hans" href="https://karlforterre.fr/zh/">
+    <link rel="alternate" hreflang="x-default" href="https://karlforterre.fr/">
 
     <!-- Aperçu lors d'un partage (réseaux sociaux, messageries) -->
     <meta property="og:type" content="website">
@@ -172,9 +177,9 @@
                         <span class="nav-langue-code" data-sans-traduction>FR</span>
                     </button>
                     <ul class="menu-langues" id="menu-langues" hidden data-sans-traduction>
-                        <li><button type="button" data-langue="fr" lang="fr">Français</button></li>
-                        <li><button type="button" data-langue="en" lang="en">English</button></li>
-                        <li><button type="button" data-langue="zh" lang="zh-Hans">中文</button></li>
+                        <li><a href="/" data-langue="fr" hreflang="fr" lang="fr">Français</a></li>
+                        <li><a href="/en/" data-langue="en" hreflang="en" lang="en">English</a></li>
+                        <li><a href="/zh/" data-langue="zh" hreflang="zh-Hans" lang="zh-Hans">中文</a></li>
                     </ul>
                 </li>
             </ul>
