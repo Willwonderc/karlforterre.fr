@@ -1,6 +1,6 @@
 # Karl Forterre — auteur
 
-> Site d'auteur de Karl Forterre, auteur, graphiste et photographe français installé à Niort : ses livres (Darshan, nouvelle, 2023 ; L'histoire du petit Théo, conte au format roman, 2023), son mémoire de master sur la médiation auctoriale des sites d'auteurs (Université de Poitiers, 2023), ses créations graphiques et ses photographies, libres de droits sur Pexels.
+> Site d'auteur de Karl Forterre, auteur, graphiste et photographe français installé à Niort : ses livres (Darshan, nouvelle, 2023 ; L'histoire du petit Théo, conte au format roman, 2023 ; L'Histoire de Mélusine, publiée en ligne en 2020), son mémoire de master sur la médiation auctoriale des sites d'auteurs (Université de Poitiers, 2023), ses créations graphiques et ses photographies, libres de droits sur Pexels.
 
 - Livres : parus à la Société des Éditions du Poitou, dans la collection Cheminement ; à lire librement sur ce site, en PDF et en EPUB.
 - Mémoire : « L'influence de la médiation auctoriale du site d'auteur », master 2 Livres et médiations : édition, commercialisation et vie littéraire, Université de Poitiers, juin 2023, sous la direction de Jean-François Cerisier et la codirection de Joachim Séné. Il s'appuie sur un questionnaire rempli par 102 visiteurs de sites d'auteurs et sur des entretiens avec des acteurs de leur création.
@@ -18,8 +18,9 @@
 
 ## Livres
 
-- [Darshan (PDF)](https://karlforterre.fr/livres/darshan.pdf): nouvelle, 2023, Société des Éditions du Poitou, collection Cheminement ; ISBN 978-2-9588873-3-9 (papier) et 978-2-9588873-4-6 (EPUB). Aussi en EPUB : https://karlforterre.fr/livres/darshan.epub
-- [L'histoire du petit Théo (PDF)](https://karlforterre.fr/livres/histoire-du-petit-theo.pdf): conte au format roman, 2023, Société des Éditions du Poitou, collection Cheminement ; ISBN 978-2-9588873-2-2 (papier). Aussi en EPUB : https://karlforterre.fr/livres/histoire-du-petit-theo.epub
+- [Darshan (PDF)](https://karlforterre.fr/livres/darshan.pdf): nouvelle, 2023, Société des Éditions du Poitou, collection Cheminement ; ISBN 978-2-9588873-3-9 (papier) et 978-2-9588873-4-6 (EPUB). Aussi en EPUB : https://karlforterre.fr/livres/darshan.epub. Résumé de l'auteur : « Darshan tente de renouer avec un monde avec lequel il peine à s'accorder. Il cherche à surmonter ce qui le rend unique pour conquérir le cœur de sa dulcinée et retrouver son père. »
+- [L'histoire du petit Théo (PDF)](https://karlforterre.fr/livres/histoire-du-petit-theo.pdf): conte au format roman, 2023, Société des Éditions du Poitou, collection Cheminement ; ISBN 978-2-9588873-2-2 (papier). Aussi en EPUB : https://karlforterre.fr/livres/histoire-du-petit-theo.epub. Résumé de l'auteur : « Tout est bousculé pour Théo, son quotidien, ses convictions, son chemin qui n'annonce rien d'extraordinaire. Plongé dans une satire au cœur d'un monde dystopique, Théo cherche à comprendre un monde loin de l'idée qu'il en avait. Il y affrontera un ennemi discret et pourtant omniprésent. Pour cela il faudra s'unir pour ne pas être vaincu individuellement. »
+- [L'Histoire de Mélusine](https://lirenligne.net/detail-oeuvre-a-decouvrir/Karl%20FORTERRE/L%27Histoire%20de%20M%C3%A9lusine/8159): texte publié en ligne en 2020 sur Lire en ligne (lirenligne.net), où il se lit gratuitement. Résumé de l'auteur : « Mélusine est une fée pleine de vie découvrant un monde dont elle ne connait rien, un environnement rude parfois, notre monde. Elle le parcourra en Candide, curieuse des différences, amusée par la vie, elle se lance à pieds joints dans une aventure qui la marquera. »
 
 ## Mémoire
 
