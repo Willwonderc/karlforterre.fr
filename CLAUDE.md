@@ -10,7 +10,8 @@ dans le dépôt Willwonderc/PexelsWillwonder.
 
 ## Façon de travailler
 
-- Échanger en français ; documentation en français.
+- Échanger en français, même quand les contenus sont en chinois ou en anglais ;
+  documentation en français.
 - Tout doit rester simple à maintenir sans compétences de développement : aucune
   dépendance, aucun outil de construction à lancer soi-même, aucun service payant.
 - Chaque session travaille sur sa branche et propose une pull request vers `main`.
