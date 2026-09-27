@@ -2,7 +2,9 @@
 
 Site d'auteur de Karl Forterre (https://karlforterre.fr), qui remplace l'ancien site
 Adobe Portfolio. Site statique publié tel quel par GitHub Pages depuis `main`
-(« Deploy from a branch », racine), sans étape de construction. Mode d'emploi et
+(« Deploy from a branch », racine), sans étape de construction. Seules les pages `en/` et
+`zh/` sont écrites par un programme, `outils/pages-langues.py`, que la tâche GitHub
+« Pages en anglais et en chinois » relance toute seule. Mode d'emploi et
 bascule du domaine chez OVH : `README.md`. Le site photo (photos.karlforterre.fr) vit
 dans le dépôt Willwonderc/PexelsWillwonder.
 
@@ -10,7 +12,7 @@ dans le dépôt Willwonderc/PexelsWillwonder.
 
 - Échanger en français ; documentation en français.
 - Tout doit rester simple à maintenir sans compétences de développement : aucune
-  dépendance, aucun outil de construction, aucun service payant.
+  dépendance, aucun outil de construction à lancer soi-même, aucun service payant.
 - Chaque session travaille sur sa branche et propose une pull request vers `main`.
 
 ## Règles
@@ -18,11 +20,15 @@ dans le dépôt Willwonderc/PexelsWillwonder.
 - Karl Forterre a fermé son entreprise : aucune offre de prestations, de devis ni de
   tarifs sur le site.
 - Pas de formulaire : le contact passe par contact@karlforterre.fr et LinkedIn.
-- Trois langues : français, anglais, chinois. `js/traductions.js` associe à chaque phrase
-  française (clé exacte, espaces ramenés à un seul) son anglais et son chinois ;
-  `js/langues.js` les applique, y compris aux contenus ajoutés par script. Toute phrase
-  française ajoutée ou modifiée reçoit ses deux traductions. Pas de détection
-  automatique de la langue : Google doit continuer de voir la page en français.
+- Trois langues, chacune à son adresse, pour que les moteurs de recherche les trouvent :
+  français (`/`), anglais (`/en/`), chinois (`/zh/`), reliées par `hreflang` et
+  `sitemap.xml`. Seule `index.html` se modifie : `en/index.html` et `zh/index.html` en
+  sont tirées par `outils/pages-langues.py` (ne jamais les modifier à la main).
+  `js/traductions.js` associe à chaque phrase française (clé exacte, espaces ramenés à
+  un seul) son anglais et son chinois ; le programme les applique d'avance,
+  `js/langues.js` aux contenus ajoutés par script. Toute phrase française ajoutée ou
+  modifiée reçoit ses deux traductions. Pas de détection automatique de la langue :
+  chaque version reste à son adresse, et Google voit le français à l'adresse principale.
 - Graphisme : un `<article class="graphisme-projet">` par projet, un
   `<button class="graphisme-carte">` par œuvre : vignette en `src` (avec sa largeur et sa
   hauteur dans `width` et `height`), version moyenne en `srcset` (`2x`), grande image dans
@@ -30,14 +36,19 @@ dans le dépôt Willwonderc/PexelsWillwonder.
   d'une ou deux œuvres sont des fiches côte à côte dans `<div class="graphisme-grille">`.
 - Ne jamais inventer de citation ni d'extrait : les extraits viennent des livres
   (`livres/*.pdf`), les textes des projets de l'auteur lui-même.
-- Liens relatifs, pour que le site fonctionne aussi à l'adresse d'essai
-  https://willwonderc.github.io/karlforterre.fr/. Seuls `canonical`, `og:*`, les données
-  structurées, les balises `citation_*` (Google Scholar), `sitemap.xml`, `robots.txt` et
-  `llms.txt` donnent des adresses absolues en https://karlforterre.fr.
-- Mémoire : la page `memoire/` le présente pour les moteurs, Google Scholar et les
-  assistants IA ; ses citations viennent mot pour mot du PDF, avec leur page. L'auteur a
-  pour identifiant `https://karlforterre.fr/#auteur` dans les données structurées des deux
-  sites. `llms.txt` présente le site aux assistants IA ; guide complet dans
+- Chemins : dans `index.html`, liens relatifs (le programme les rend absolus pour
+  `/en/` et `/zh/`) ; dans les scripts (`script.js`, `js/header-templates.js`) et dans
+  `memoire/index.html`, chemins depuis la racine (`/images/…`), qui fonctionnent depuis
+  toutes les pages. L'adresse d'essai https://willwonderc.github.io/karlforterre.fr/
+  redirige désormais vers karlforterre.fr. Seuls `canonical`, `og:*`, `hreflang`, les
+  données structurées, les balises `citation_*` (Google Scholar), `sitemap.xml`,
+  `robots.txt` et `llms.txt` donnent des adresses complètes en https://karlforterre.fr.
+- Mémoire : la page `memoire/index.html` le présente pour les moteurs, Google Scholar et
+  les assistants IA ; ses citations viennent mot pour mot du PDF, avec leur page.
+  `en/memoire/` et `zh/memoire/` en sont tirées par `outils/pages-langues.py`, comme
+  l'accueil (ne pas les modifier à la main). L'auteur a pour identifiant
+  `https://karlforterre.fr/#auteur` dans les données structurées des deux sites.
+  `llms.txt` présente le site aux assistants IA ; guide complet dans
   `referencement/README.md` du dépôt PexelsWillwonder.
 - Qualité d'image d'abord, à la demande de Karl Forterre : chaque œuvre en trois
   fichiers WebP tirés de l'original le plus grand, `nom-vignette.webp` (800 px sur le

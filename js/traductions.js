@@ -22,6 +22,8 @@ window.TRADUCTIONS = {
     "Précédent": { en: "Previous", zh: "上一张" },
     "Suivant": { en: "Next", zh: "下一张" },
     "Karl Forterre | Auteur": { en: "Karl Forterre | Author", zh: "Karl Forterre | 作家" },
+    "Karl Forterre, auteur. Les belles lettres font les bons mots. Découvrez mes livres, mon mémoire de recherche, mes créations graphiques et mes photographies.": { en: "Karl Forterre, author. Fine letters make fine words. Discover my books, my master’s thesis, my graphic design work and my photographs.", zh: "作家 Karl Forterre。美文成就妙语。欢迎了解我的书、我的硕士论文、我的平面设计作品和摄影作品。" },
+    "Mes livres, mon mémoire de recherche, mes créations graphiques et mes photographies.": { en: "My books, my master’s thesis, my graphic design work and my photographs.", zh: "我的书、我的硕士论文、我的平面设计作品和摄影作品。" },
 
     // En-tête
     "Auteur": { en: "Author", zh: "作家" },
@@ -294,6 +296,8 @@ window.TRADUCTIONS = {
     "Présentation, définitions et résultats du mémoire": { en: "The thesis: definitions and findings", zh: "论文介绍：定义与研究结果" },
 
     // Page du mémoire (memoire/index.html)
+    "L’influence de la médiation auctoriale du site d’auteur : mémoire de master 2 Livres et médiations de Karl Forterre (Université de Poitiers, 2023). Définitions, méthode, résultats et texte intégral.": { en: "The influence of authorial mediation through the author’s website: Karl Forterre’s master’s thesis in Books and Mediation (University of Poitiers, 2023). Definitions, method, findings and full text (in French).", zh: "《作者网站中作者媒介的影响》：Karl Forterre 的“书籍与媒介”硕士论文（普瓦捷大学，2023年）。定义、方法、研究结果与全文（法语）。" },
+    "Mémoire de master 2 Livres et médiations de Karl Forterre, Université de Poitiers, 2023.": { en: "Karl Forterre’s master’s thesis in Books and Mediation, University of Poitiers, 2023.", zh: "Karl Forterre 的“书籍与媒介”硕士论文，普瓦捷大学，2023年。" },
     "La médiation auctoriale — mémoire de Karl Forterre": { en: "Authorial mediation — Karl Forterre’s master’s thesis", zh: "作者媒介 — Karl Forterre 的硕士论文" },
     "Auteur du mémoire": { en: "Author", zh: "作者" },
     "Direction": { en: "Supervision", zh: "指导教师" },
