@@ -21,7 +21,7 @@ window.TRADUCTIONS = {
     "Fermer": { en: "Close", zh: "关闭" },
     "Précédent": { en: "Previous", zh: "上一张" },
     "Suivant": { en: "Next", zh: "下一张" },
-    "Karl Forterre | Auteur": { en: "Karl Forterre | Author", zh: "Karl Forterre | 作家" },
+    "Karl Forterre — auteur et photographe, livres et mémoire": { en: "Karl Forterre — author and photographer, books and thesis", zh: "Karl Forterre — 作家与摄影师，著作与硕士论文" },
     "Karl Forterre, auteur. Les belles lettres font les bons mots. Découvrez mes livres, mon mémoire de recherche, mes créations graphiques et mes photographies.": { en: "Karl Forterre, author. Fine letters make fine words. Discover my books, my master’s thesis, my graphic design work and my photographs.", zh: "作家 Karl Forterre。美文成就妙语。欢迎了解我的书、我的硕士论文、我的平面设计作品和摄影作品。" },
     "Mes livres, mon mémoire de recherche, mes créations graphiques et mes photographies.": { en: "My books, my master’s thesis, my graphic design work and my photographs.", zh: "我的书、我的硕士论文、我的平面设计作品和摄影作品。" },
 
