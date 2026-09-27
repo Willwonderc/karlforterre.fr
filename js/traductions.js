@@ -110,7 +110,7 @@ window.TRADUCTIONS = {
     "Œuvres précédentes": { en: "Previous works", zh: "上一组作品" },
     "Œuvres suivantes": { en: "Next works", zh: "下一组作品" },
     "Œuvres grand format": { en: "Large-format works", zh: "大幅面作品" },
-    "Des créations pensées pour l’impression en grand format.": { en: "Works designed to be printed in large format.", zh: "为大幅面印刷而创作的作品。" },
+    "Créations avec des démarches singulières les inscrivant dans des projets éditoriaux ou une finalité en premier lieu expressive et esthétique.": { en: "Works born of singular approaches, part of editorial projects or driven first and foremost by an expressive and aesthetic purpose.", zh: "这些作品以独特的创作路径完成，或融入出版项目，或首先以表达与审美为目的。" },
     "Niort, Front populaire": { en: "Niort, Popular Front", zh: "尼奥尔，人民阵线" },
     "Pétrole et rêves": { en: "Oil and Dreams", zh: "石油与梦想" },
     "Montre à gousset": { en: "Pocket watch", zh: "怀表" },
