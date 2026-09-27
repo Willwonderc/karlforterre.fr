@@ -1,6 +1,6 @@
 # Karl Forterre — auteur
 
-> Site d'auteur de Karl Forterre, auteur, graphiste et photographe français installé à Niort : ses livres (Darshan, roman, 2022 ; L'histoire du petit Théo, conte, 2023), son mémoire de master sur la médiation auctoriale des sites d'auteurs (Université de Poitiers, 2023), ses créations graphiques et ses photographies, libres de droits sur Pexels.
+> Site d'auteur de Karl Forterre, auteur, graphiste et photographe français installé à Niort : ses livres (Darshan, roman, 2023 ; L'histoire du petit Théo, conte, 2023), son mémoire de master sur la médiation auctoriale des sites d'auteurs (Université de Poitiers, 2023), ses créations graphiques et ses photographies, libres de droits sur Pexels.
 
 - Livres : parus à la Société des Éditions du Poitou, dans la collection Cheminement ; à lire librement sur ce site, en PDF et en EPUB.
 - Mémoire : « L'influence de la médiation auctoriale du site d'auteur », master 2 Livres et médiations : édition, commercialisation et vie littéraire, Université de Poitiers, juin 2023, sous la direction de Jean-François Cerisier et la codirection de Joachim Séné. Il s'appuie sur un questionnaire rempli par 102 visiteurs de sites d'auteurs et sur des entretiens avec des acteurs de leur création.
@@ -18,8 +18,8 @@
 
 ## Livres
 
-- [Darshan (PDF)](https://karlforterre.fr/livres/darshan.pdf): roman, 2022, Société des Éditions du Poitou, collection Cheminement. Aussi en EPUB : https://karlforterre.fr/livres/darshan.epub
-- [L'histoire du petit Théo (PDF)](https://karlforterre.fr/livres/histoire-du-petit-theo.pdf): conte, 2023, Société des Éditions du Poitou, collection Cheminement. Aussi en EPUB : https://karlforterre.fr/livres/histoire-du-petit-theo.epub
+- [Darshan (PDF)](https://karlforterre.fr/livres/darshan.pdf): roman, 2023, Société des Éditions du Poitou, collection Cheminement ; ISBN 978-2-9588873-3-9 (papier) et 978-2-9588873-4-6 (EPUB). Aussi en EPUB : https://karlforterre.fr/livres/darshan.epub
+- [L'histoire du petit Théo (PDF)](https://karlforterre.fr/livres/histoire-du-petit-theo.pdf): conte, 2023, Société des Éditions du Poitou, collection Cheminement ; ISBN 978-2-9588873-2-2 (papier). Aussi en EPUB : https://karlforterre.fr/livres/histoire-du-petit-theo.epub
 
 ## Mémoire
 

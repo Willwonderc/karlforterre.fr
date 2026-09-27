@@ -181,8 +181,8 @@ window.TRADUCTIONS = {
     "Un phare solitaire dans une mer de brume.": { en: "A lone lighthouse in a sea of mist.", zh: "雾海中孤独的灯塔。" },
     "Rose": { zh: "玫瑰" },
     "La délicatesse des pétales d'une rose, en gros plan.": { en: "The delicate petals of a rose, up close.", zh: "玫瑰花瓣的细腻特写。" },
-    "Notre-Dame de Niort": { en: "Notre-Dame, Niort", zh: "尼奥尔圣母院" },
-    "Les flèches gothiques de l'église Notre-Dame au-dessus des toits de Niort.": { en: "The Gothic spires of Notre-Dame church above the rooftops of Niort.", zh: "尼奥尔屋顶之上，圣母院教堂的哥特式尖塔。" },
+    "Saint-André de Niort": { en: "Saint-André, Niort", zh: "尼奥尔圣安德烈教堂" },
+    "Les flèches néogothiques de l'église Saint-André au-dessus des toits de Niort.": { en: "The neo-Gothic spires of Saint-André church above the rooftops of Niort.", zh: "尼奥尔屋顶之上，圣安德烈教堂的新哥特式尖塔。" },
     "Les jardins de Villandry": { en: "The gardens of Villandry", zh: "维朗德里城堡花园" },
     "Les parterres du château de Villandry, vus du ciel.": { en: "The parterres of the Château de Villandry, seen from the sky.", zh: "从空中俯瞰维朗德里城堡的花坛。" },
 

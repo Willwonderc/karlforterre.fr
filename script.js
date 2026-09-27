@@ -853,7 +853,7 @@ function initPhotoCarousel(apercu) {
         { id: '19047681', title: 'Train à quai', desc: "Un train en gare vu d'en haut, en noir et blanc." },
         { id: '34894953', title: 'Le phare du Loup', desc: 'Un phare solitaire dans une mer de brume.' },
         { id: '31514838', title: 'Rose', desc: "La délicatesse des pétales d'une rose, en gros plan." },
-        { id: '23414381', title: 'Notre-Dame de Niort', desc: "Les flèches gothiques de l'église Notre-Dame au-dessus des toits de Niort." },
+        { id: '23414381', title: 'Saint-André de Niort', desc: "Les flèches néogothiques de l'église Saint-André au-dessus des toits de Niort." },
         { id: '38694057', title: 'Les jardins de Villandry', desc: 'Les parterres du château de Villandry, vus du ciel.' }
     ];
 
