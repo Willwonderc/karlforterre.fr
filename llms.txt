@@ -1,0 +1,41 @@
+# Karl Forterre — auteur
+
+> Site d'auteur de Karl Forterre, auteur, graphiste et photographe français installé à Niort : ses livres (Darshan, nouvelle, 2023 ; L'histoire du petit Théo, conte au format roman, 2023), son mémoire de master sur la médiation auctoriale des sites d'auteurs (Université de Poitiers, 2023), ses créations graphiques et ses photographies, libres de droits sur Pexels.
+
+- Livres : parus à la Société des Éditions du Poitou, dans la collection Cheminement ; à lire librement sur ce site, en PDF et en EPUB.
+- Mémoire : « L'influence de la médiation auctoriale du site d'auteur », master 2 Livres et médiations : édition, commercialisation et vie littéraire, Université de Poitiers, juin 2023, sous la direction de Jean-François Cerisier et la codirection de Joachim Séné. Il s'appuie sur un questionnaire rempli par 102 visiteurs de sites d'auteurs et sur des entretiens avec des acteurs de leur création.
+- La médiation auctoriale, selon le mémoire (p. 13) : « La médiation auctoriale est un processus par lequel l'auteur met en relation le public avec son travail. Ses supports divers incluent les rencontres en librairies, les réseaux sociaux, les passages à la télévision et la présence sur un site d'auteur. »
+- Le site d'auteur, selon le mémoire (p. 14) : « Un site d'auteur est une page web ou plus largement un espace numérique qui porte sur l'auteur et son œuvre indistinctement de tout autre critère. »
+- Référence : Forterre, Karl. L'influence de la médiation auctoriale du site d'auteur. Mémoire de master 2 Livres et médiations, Université de Poitiers, 2023. https://karlforterre.fr/memoire/
+- Photographies : des centaines de photos de France et d'Espagne, présentées sur photos.karlforterre.fr et téléchargeables gratuitement sur Pexels (licence Pexels).
+- Le site est en français, avec une version anglaise (https://karlforterre.fr/en/) et une version chinoise (https://karlforterre.fr/zh/) ; la page du mémoire aussi (https://karlforterre.fr/en/memoire/, https://karlforterre.fr/zh/memoire/).
+
+## Pages
+
+- [Accueil](https://karlforterre.fr/): livres, extraits, graphisme, photographie, mémoire et contact
+- [Le mémoire](https://karlforterre.fr/memoire/): question posée, définitions, méthode, résultats, sommaire, résumé en anglais et référence à citer ; en anglais : https://karlforterre.fr/en/memoire/
+- [Mentions légales](https://karlforterre.fr/mentions-legales/)
+
+## Livres
+
+- [Darshan (PDF)](https://karlforterre.fr/livres/darshan.pdf): nouvelle, 2023, Société des Éditions du Poitou, collection Cheminement ; ISBN 978-2-9588873-3-9 (papier) et 978-2-9588873-4-6 (EPUB). Aussi en EPUB : https://karlforterre.fr/livres/darshan.epub
+- [L'histoire du petit Théo (PDF)](https://karlforterre.fr/livres/histoire-du-petit-theo.pdf): conte au format roman, 2023, Société des Éditions du Poitou, collection Cheminement ; ISBN 978-2-9588873-2-2 (papier). Aussi en EPUB : https://karlforterre.fr/livres/histoire-du-petit-theo.epub
+
+## Mémoire
+
+- [Présentation du mémoire](https://karlforterre.fr/memoire/): les définitions et les résultats, cités mot pour mot avec leur page
+- [Texte intégral (PDF, 223 pages)](https://karlforterre.fr/livres/memoire-mediation-auctoriale-2023.pdf): en français, avec un résumé en anglais
+
+## Photographie
+
+- [photos.karlforterre.fr](https://photos.karlforterre.fr/): photographies libres de droits, en séries, en galeries par thème et par lieu, et par couleur ; chaque photo mène à sa page Pexels
+- [llms.txt du site photo](https://photos.karlforterre.fr/llms.txt): présentation détaillée, licence, crédit à donner, questions fréquentes
+- [Profil Pexels](https://www.pexels.com/@karl-forterre-28489473)
+
+## Contact et profils
+
+- [contact@karlforterre.fr](mailto:contact@karlforterre.fr)
+- [LinkedIn](https://www.linkedin.com/in/karl-forterre-720b61220/)
+- [Mastodon](https://mastodon.social/@KarlForterre)
+- [Bluesky](https://bsky.app/profile/karlforterre.bsky.social)
+- [RedNote (小红书), compte « Soviet Croissant »](https://www.xiaohongshu.com/user/profile/678629da000000000801aa88)

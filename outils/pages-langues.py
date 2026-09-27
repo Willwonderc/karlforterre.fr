@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
-"""Écrit les pages anglaise (en/index.html) et chinoise (zh/index.html) du site.
+"""Écrit les pages anglaises (en/…) et chinoises (zh/…) du site.
 
-La page d'origine est la page française, index.html. Ce programme la recopie dans chaque
-langue en remplaçant chaque texte par sa traduction de js/traductions.js, avec les mêmes
-règles que js/langues.js dans le navigateur, mais à l'avance : les moteurs de recherche
-lisent ainsi directement le texte anglais ou chinois, à sa propre adresse. Il ajuste
-aussi la langue de la page, son adresse, les liens vers le site photo, les chemins des
-images et le plan du site (sitemap.xml). Un texte sans traduction reste en français.
+Les pages d'origine sont les pages françaises de PAGES : l'accueil (index.html) et la
+page du mémoire (memoire/index.html). Ce programme les recopie dans chaque langue en
+remplaçant chaque texte par sa traduction de js/traductions.js, avec les mêmes règles que
+js/langues.js dans le navigateur, mais à l'avance : les moteurs de recherche lisent ainsi
+directement le texte anglais ou chinois, à sa propre adresse. Il ajuste aussi la langue
+de la page, son adresse, les liens vers le site photo et vers les autres pages traduites,
+les chemins des images et le plan du site (sitemap.xml). Un texte sans traduction reste
+en français. Les balises de Google Scholar (citation_…) ne restent que sur la page
+française : une seule adresse par travail.
 
 La tâche GitHub « Pages en anglais et en chinois » le relance après chaque modification
-d'index.html ou de js/traductions.js : il n'y a rien à faire à la main. Pour l'essayer :
+d'une de ces pages ou de js/traductions.js : il n'y a rien à faire à la main. Pour
+l'essayer :
     python3 outils/pages-langues.py
 Python seul suffit, sans bibliothèque à installer.
 """
@@ -22,6 +26,8 @@ from pathlib import Path
 RACINE = Path(__file__).resolve().parent.parent
 SITE = "https://karlforterre.fr"
 SITE_PHOTO = "https://photos.karlforterre.fr/"
+# Pages traduites : fichier français et adresse ; la version anglaise est sous /en/…
+PAGES = {"index.html": "/", "memoire/index.html": "/memoire/"}
 LANGUES = {
     "en": {"html": "en", "locale": "en_US", "code": "EN"},
     "zh": {"html": "zh-Hans", "locale": "zh_CN", "code": "中文"},
@@ -72,6 +78,14 @@ def srcset_absolu(valeur):
     return ", ".join(" ".join([chemin_absolu(c.split()[0])] + c.split()[1:]) for c in candidats)
 
 
+def lien_interne(adresse, langue):
+    """Lien vers une autre page traduite, dans la même langue : / → /en/, /memoire/ → /en/memoire/."""
+    chemin, separateur, reste = re.match(r"([^#?]*)([#?]?)(.*)", adresse).groups()
+    if chemin in PAGES.values():
+        return f"/{langue}{chemin}{separateur}{reste}"
+    return adresse
+
+
 def lien_photos(adresse, langue):
     """Page du site photo dans la langue voulue : /galeries/x/ → /en/galleries/x/."""
     if not adresse.startswith(SITE_PHOTO):
@@ -86,9 +100,10 @@ def lien_photos(adresse, langue):
 class Page:
     """Traduction d'une page HTML dans une langue, balise par balise."""
 
-    def __init__(self, langue, traductions):
+    def __init__(self, langue, traductions, chemin="/"):
         self.langue = langue
         self.traductions = traductions
+        self.chemin = chemin  # adresse de la page française : /, /memoire/
         self.pile = []  # (nom de la balise, texte exclu de la traduction)
         self.manquantes = set()
 
@@ -128,6 +143,8 @@ class Page:
         attributs = {m.group(2).lower(): html.unescape((m.group(4) or "").strip("\"'"))
                      for m in ATTRIBUT.finditer(jeton[ouvrante.end():])}
         exclu = self.exclu() or "data-sans-traduction" in attributs
+        if nom == "meta" and attributs.get("name", "").startswith("citation_"):
+            return ""  # Google Scholar : la page française seule
         jeton = jeton[:ouvrante.end()] + ATTRIBUT.sub(
             lambda m: self.attribut(m, nom, attributs, exclu), jeton[ouvrante.end():])
         if nom not in VIDES and not jeton.rstrip(">").rstrip().endswith("/"):
@@ -146,7 +163,7 @@ class Page:
         if balise == "html" and nom_bas == "lang":
             nouvelle = t["html"]
         elif balise == "link" and attributs.get("rel") == "canonical" and nom_bas == "href":
-            nouvelle = f"{SITE}/{self.langue}/"
+            nouvelle = f"{SITE}/{self.langue}{self.chemin}"
         elif balise == "meta" and nom_bas == "content":
             propriete = attributs.get("property") or attributs.get("name")
             if propriete in ("description", "og:title", "og:description"):
@@ -154,7 +171,7 @@ class Page:
             elif propriete == "og:locale":
                 nouvelle = t["locale"]
             elif propriete == "og:url":
-                nouvelle = f"{SITE}/{self.langue}/"
+                nouvelle = f"{SITE}/{self.langue}{self.chemin}"
         elif nom_bas in ATTRIBUTS_TEXTE and not exclu:
             nouvelle = self.traduction(valeur) or valeur
         elif nom_bas == "srcset":
@@ -163,6 +180,8 @@ class Page:
             nouvelle = re.sub(r"url\((['\"]?)([^'\")]+)", lambda u: f"url({u.group(1)}{chemin_absolu(u.group(2))}", valeur)
         elif nom_bas in ATTRIBUTS_CHEMIN:
             nouvelle = chemin_absolu(lien_photos(valeur, self.langue) if nom_bas == "href" and not exclu else valeur)
+            if nom_bas == "href" and not exclu and balise == "a":
+                nouvelle = lien_interne(nouvelle, self.langue)
         if nouvelle == valeur:
             return m.group(0)
         echappee = html.escape(nouvelle, quote=True) if guillemet == '"' else html.escape(nouvelle, quote=False)
@@ -201,19 +220,23 @@ class Page:
 
 
 def ecrire_plan():
-    """sitemap.xml : les trois versions de l'accueil, reliées entre elles, puis les
-    autres adresses déjà présentes dans le plan."""
+    """sitemap.xml : les trois versions de chaque page traduite, reliées entre elles, puis
+    les autres adresses déjà présentes dans le plan."""
     chemin = RACINE / "sitemap.xml"
-    accueils = {"fr": f"{SITE}/", "en": f"{SITE}/en/", "zh-Hans": f"{SITE}/zh/"}
+    versions = [{"fr": f"{SITE}{page}", "en": f"{SITE}/en{page}", "zh-Hans": f"{SITE}/zh{page}"}
+                for page in PAGES.values()]
+    traduites = {adresse for v in versions for adresse in v.values()}
     autres = []
     if chemin.exists():
         for bloc in re.findall(r"<url>.*?</url>", chemin.read_text(encoding="utf-8"), re.S):
             adresse = re.search(r"<loc>(.*?)</loc>", bloc).group(1).strip()
-            if adresse not in accueils.values():
+            if adresse not in traduites:
                 autres.append(f"    <url><loc>{adresse}</loc></url>")
-    liens = "".join(f'\n        <xhtml:link rel="alternate" hreflang="{code}" href="{adresse}"/>'
-                    for code, adresse in list(accueils.items()) + [("x-default", accueils["fr"])])
-    lignes = [f"    <url>\n        <loc>{adresse}</loc>{liens}\n    </url>" for adresse in accueils.values()]
+    lignes = []
+    for v in versions:
+        liens = "".join(f'\n        <xhtml:link rel="alternate" hreflang="{code}" href="{adresse}"/>'
+                        for code, adresse in list(v.items()) + [("x-default", v["fr"])])
+        lignes += [f"    <url>\n        <loc>{adresse}</loc>{liens}\n    </url>" for adresse in v.values()]
     chemin.write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
@@ -222,15 +245,16 @@ def ecrire_plan():
 
 def main():
     traductions = lire_traductions()
-    source = (RACINE / "index.html").read_text(encoding="utf-8")
-    for langue in LANGUES:
-        page = Page(langue, traductions)
-        dossier = RACINE / langue
-        dossier.mkdir(exist_ok=True)
-        (dossier / "index.html").write_text(page.traduire(source), encoding="utf-8")
-        print(f"{langue}/index.html écrite ; textes restés en français : {len(page.manquantes)}")
-        for texte in sorted(page.manquantes):
-            print(f"   - {texte[:100]}")
+    for fichier, chemin in PAGES.items():
+        source = (RACINE / fichier).read_text(encoding="utf-8")
+        for langue in LANGUES:
+            page = Page(langue, traductions, chemin)
+            sortie = RACINE / langue / fichier
+            sortie.parent.mkdir(parents=True, exist_ok=True)
+            sortie.write_text(page.traduire(source), encoding="utf-8")
+            print(f"{langue}/{fichier} écrite ; textes restés en français : {len(page.manquantes)}")
+            for texte in sorted(page.manquantes):
+                print(f"   - {texte[:100]}")
     ecrire_plan()
     print("sitemap.xml mis à jour.")
 

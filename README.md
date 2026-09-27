@@ -82,6 +82,8 @@ Tout se fait sur GitHub : ouvrir le fichier, cliquer sur le crayon, modifier, pu
 | En-têtes (six variantes : un clic sur l'en-tête passe à la suivante) | `js/header-templates.js` |
 | Couleurs, polices, mise en page | `styles.css` |
 | Mentions légales | `mentions-legales/index.html` |
+| Page du mémoire (définitions, méthode, résultats, référence à citer) | `memoire/index.html` : les citations sont reprises mot pour mot du PDF, avec leur page ; toute phrase ajoutée reçoit sa traduction dans `js/traductions.js`. Ses versions `en/memoire/` et `zh/memoire/` s'écrivent seules, comme celles de l'accueil |
+| Présentation du site pour les assistants IA (ChatGPT, Claude…) | `llms.txt`, en texte simple : à tenir à jour quand un livre ou une page s'ajoute |
 | Traductions anglaise et chinoise | `js/traductions.js` : voir « Langues » plus bas |
 
 ### Photographie : reliée au site photo
@@ -109,12 +111,14 @@ moteurs de recherche trouvent ainsi les trois versions, reliées entre elles (ba
 `hreflang` et plan du site). La pastille à côté de « Contact » (FR, EN, 中文) mène d'une
 version à l'autre.
 
-Le français de `index.html` reste la référence : `js/traductions.js` donne, pour chaque
-phrase française, son anglais (`en`) et son chinois (`zh`). Les pages `en/index.html` et
-`zh/index.html` en sont tirées par `outils/pages-langues.py` : **ne les modifiez pas à
-la main**. Après chaque modification d'`index.html` ou de `js/traductions.js`
-enregistrée sur `main`, la tâche GitHub « Pages en anglais et en chinois » les réécrit
-et les enregistre ; le site est à jour deux ou trois minutes plus tard. Les en-têtes, le
+Le français de `index.html` et de `memoire/index.html` reste la référence :
+`js/traductions.js` donne, pour chaque phrase française, son anglais (`en`) et son
+chinois (`zh`). Les pages `en/index.html`, `zh/index.html`, `en/memoire/index.html` et
+`zh/memoire/index.html` en sont tirées par `outils/pages-langues.py` : **ne les modifiez
+pas à la main**. Après chaque modification d'une page française ou de
+`js/traductions.js` enregistrée sur `main`, la tâche GitHub « Pages en anglais et en
+chinois » les réécrit et les enregistre ; le site est à jour deux ou trois minutes plus
+tard. La pastille des langues de la page du mémoire mène au mémoire dans l'autre langue. Les en-têtes, le
 carrousel et les titres du site photo, ajoutés par les scripts, sont traduits dans le
 navigateur, avec le même fichier.
 
@@ -173,13 +177,17 @@ Pour déposer un fichier : **Add file** → **Upload files**, dans le bon dossie
 - `index.html`, `styles.css`, `script.js`, `js/` : la page d'accueil et son
   fonctionnement. Dans `js/` : les en-têtes (`header-templates.js`, `header-loader.js`),
   les traductions (`traductions.js`) et le bouton de langue (`langues.js`).
-- `en/`, `zh/` : pages anglaise et chinoise, écrites par `outils/pages-langues.py` et
-  tenues à jour par la tâche `.github/workflows/langues.yml`.
+- `en/`, `zh/` : pages anglaises et chinoises (accueil et mémoire), écrites par
+  `outils/pages-langues.py` et tenues à jour par la tâche `.github/workflows/langues.yml`.
 - `images/` : portrait, logo, fond, `portfolio/` et `graphisme/` (pour chaque œuvre,
   vignette, version moyenne et grande image).
 - `livres/` : couvertures, livres en PDF et EPUB, mémoire.
 - `fonts/` : polices Cormorant Garamond et Inter, hébergées avec le site (licence
   SIL Open Font License), sans appel à Google.
+- `memoire/` : la page du mémoire, avec les balises lues par Google Scholar.
+- `llms.txt` : présentation du site pour les assistants IA (format llmstxt.org). Le guide
+  du référencement auprès des moteurs et des assistants IA (Bing, Wikidata, Wikimedia
+  Commons, dépôt du mémoire) est dans le dépôt du site photo : `referencement/README.md`.
 - `mentions-legales/`, `404.html` (page introuvable), `robots.txt`, `sitemap.xml`,
   `favicon.svg`, `apple-touch-icon.png`, `images/partage.jpg` (aperçu lors d'un partage).
 - `work/`, `projets/`, `tarifs-des-services/`, `copie-de-consulter/`,

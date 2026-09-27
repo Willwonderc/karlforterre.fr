@@ -37,11 +37,19 @@ dans le dépôt Willwonderc/PexelsWillwonder.
 - Ne jamais inventer de citation ni d'extrait : les extraits viennent des livres
   (`livres/*.pdf`), les textes des projets de l'auteur lui-même.
 - Chemins : dans `index.html`, liens relatifs (le programme les rend absolus pour
-  `/en/` et `/zh/`) ; dans les scripts (`script.js`, `js/header-templates.js`), chemins
-  depuis la racine (`/images/…`), qui fonctionnent depuis les trois pages. L'adresse
-  d'essai https://willwonderc.github.io/karlforterre.fr/ redirige désormais vers
-  karlforterre.fr. Seuls `canonical`, `og:*`, `hreflang`, `sitemap.xml` et `robots.txt`
-  donnent des adresses complètes en https://karlforterre.fr.
+  `/en/` et `/zh/`) ; dans les scripts (`script.js`, `js/header-templates.js`) et dans
+  `memoire/index.html`, chemins depuis la racine (`/images/…`), qui fonctionnent depuis
+  toutes les pages. L'adresse d'essai https://willwonderc.github.io/karlforterre.fr/
+  redirige désormais vers karlforterre.fr. Seuls `canonical`, `og:*`, `hreflang`, les
+  données structurées, les balises `citation_*` (Google Scholar), `sitemap.xml`,
+  `robots.txt` et `llms.txt` donnent des adresses complètes en https://karlforterre.fr.
+- Mémoire : la page `memoire/index.html` le présente pour les moteurs, Google Scholar et
+  les assistants IA ; ses citations viennent mot pour mot du PDF, avec leur page.
+  `en/memoire/` et `zh/memoire/` en sont tirées par `outils/pages-langues.py`, comme
+  l'accueil (ne pas les modifier à la main). L'auteur a pour identifiant
+  `https://karlforterre.fr/#auteur` dans les données structurées des deux sites.
+  `llms.txt` présente le site aux assistants IA ; guide complet dans
+  `referencement/README.md` du dépôt PexelsWillwonder.
 - Qualité d'image d'abord, à la demande de Karl Forterre : chaque œuvre en trois
   fichiers WebP tirés de l'original le plus grand, `nom-vignette.webp` (800 px sur le
   grand côté, 1000 pour le portfolio), `nom-moyenne.webp` (1600 px) et `nom.webp`

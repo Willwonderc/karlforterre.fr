@@ -1,7 +1,8 @@
 # Pages en anglais (/en/) et en chinois (/zh/) du site.
 #
-# Après chaque modification d'index.html ou de js/traductions.js enregistrée sur main,
-# outils/pages-langues.py réécrit en/index.html, zh/index.html et sitemap.xml, puis
+# Après chaque modification d'index.html, de memoire/index.html ou de js/traductions.js
+# enregistrée sur main, outils/pages-langues.py réécrit les pages de en/ et zh/ et
+# sitemap.xml, puis
 # cette tâche les enregistre sur main. GitHub Pages publie ensuite le site comme
 # d'habitude. On peut aussi la lancer à la main : Actions → « Pages en anglais et en
 # chinois » → Run workflow.
@@ -12,6 +13,7 @@ on:
     branches: [main]
     paths:
       - index.html
+      - memoire/index.html
       - js/traductions.js
       - outils/pages-langues.py
   workflow_dispatch:

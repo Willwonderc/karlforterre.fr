@@ -27,8 +27,10 @@ const Langues = {
         return segment !== 'fr' && this.disponibles[segment] ? segment : 'fr';
     },
 
+    // Adresse de la page affichée dans une langue : /memoire/ → /en/memoire/, /en/ → /zh/
     adressePage(langue) {
-        return langue === 'fr' ? '/' : `/${langue}/`;
+        const chemin = window.location.pathname.replace(/^\/(en|zh)(?=\/)/, '') || '/';
+        return (langue === 'fr' ? '' : `/${langue}`) + chemin;
     },
 
     init() {

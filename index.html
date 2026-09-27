@@ -14,6 +14,8 @@
     <link rel="alternate" hreflang="en" href="https://karlforterre.fr/en/">
     <link rel="alternate" hreflang="zh-Hans" href="https://karlforterre.fr/zh/">
     <link rel="alternate" hreflang="x-default" href="https://karlforterre.fr/">
+    <!-- Présentation du site pour les assistants IA (llmstxt.org) -->
+    <link rel="describedby" href="llms.txt" type="text/markdown">
 
     <!-- Aperçu lors d'un partage (réseaux sociaux, messageries) -->
     <meta property="og:type" content="website">
@@ -43,10 +45,15 @@
                     "@type": "CollegeOrUniversity",
                     "name": "Université de Poitiers"
                 },
+                "description": "Auteur de deux livres parus en 2023, Darshan et L'histoire du petit Théo, photographe et graphiste, Karl Forterre a consacré son mémoire de master à la médiation auctoriale des sites d'auteurs.",
+                "knowsAbout": ["écriture", "édition", "graphisme", "photographie", "médiation auctoriale", "site d'auteur"],
                 "sameAs": [
                     "https://photos.karlforterre.fr/",
                     "https://www.pexels.com/@karl-forterre-28489473",
-                    "https://www.linkedin.com/in/karl-forterre-720b61220/"
+                    "https://www.linkedin.com/in/karl-forterre-720b61220/",
+                    "https://mastodon.social/@KarlForterre",
+                    "https://bsky.app/profile/karlforterre.bsky.social",
+                    "https://www.xiaohongshu.com/user/profile/678629da000000000801aa88"
                 ]
             },
             {
@@ -62,47 +69,69 @@
             {
                 "@type": "Book",
                 "name": "Darshan",
+                "genre": "nouvelle",
                 "author": {
                     "@id": "https://karlforterre.fr/#auteur"
                 },
-                "datePublished": "2022",
-                "inLanguage": "fr",
+                "datePublished": "2023",
+                "inLanguage": "fr-FR",
                 "publisher": {
                     "@type": "Organization",
                     "name": "Société des Éditions du Poitou"
                 },
+                "workExample": [
+                    {
+                        "@type": "Book",
+                        "bookFormat": "https://schema.org/Paperback",
+                        "isbn": "9782958887339"
+                    },
+                    {
+                        "@type": "Book",
+                        "bookFormat": "https://schema.org/EBook",
+                        "isbn": "9782958887346",
+                        "url": "https://karlforterre.fr/livres/darshan.epub"
+                    }
+                ],
                 "image": "https://karlforterre.fr/livres/couverture-darshan.webp",
                 "url": "https://karlforterre.fr/#books"
             },
             {
                 "@type": "Book",
                 "name": "L'histoire du petit Théo",
+                "genre": "conte",
                 "author": {
                     "@id": "https://karlforterre.fr/#auteur"
                 },
                 "datePublished": "2023",
-                "inLanguage": "fr",
+                "inLanguage": "fr-FR",
                 "publisher": {
                     "@type": "Organization",
                     "name": "Société des Éditions du Poitou"
+                },
+                "workExample": {
+                    "@type": "Book",
+                    "bookFormat": "https://schema.org/Paperback",
+                    "isbn": "9782958887322"
                 },
                 "image": "https://karlforterre.fr/livres/couverture-petit-theo.webp",
                 "url": "https://karlforterre.fr/#books"
             },
             {
                 "@type": "Thesis",
+                "@id": "https://karlforterre.fr/memoire/#memoire",
                 "name": "L'influence de la médiation auctoriale du site d'auteur",
                 "author": {
                     "@id": "https://karlforterre.fr/#auteur"
                 },
                 "datePublished": "2023-06",
-                "inLanguage": "fr",
+                "inLanguage": "fr-FR",
                 "inSupportOf": "Master 2 Livres et médiations",
                 "sourceOrganization": {
                     "@type": "CollegeOrUniversity",
                     "name": "Université de Poitiers"
                 },
-                "url": "https://karlforterre.fr/livres/memoire-mediation-auctoriale-2023.pdf"
+                "about": { "@id": "https://karlforterre.fr/memoire/#mediation-auctoriale" },
+                "url": "https://karlforterre.fr/memoire/"
             }
         ]
     }
@@ -715,13 +744,13 @@
                         <div class="book-shine"></div>
                         <div class="book-overlay">
                             <div class="overlay-content">
-                                <span class="book-year">2022</span>
+                                <span class="book-year">2023</span>
                             </div>
                         </div>
                     </div>
                     <div class="book-info">
                         <h3 class="book-title">Darshan</h3>
-                        <p class="book-genre">Roman</p>
+                        <p class="book-genre">Nouvelle</p>
                         <p class="book-editeur">La SEP, collection Cheminement</p>
                         <p class="book-description">Une exploration poétique des émotions humaines à travers le prisme de l'écriture contemporaine.</p>
                     </div>
@@ -748,7 +777,7 @@
                     </div>
                     <div class="book-info">
                         <h3 class="book-title">L'histoire du petit Théo</h3>
-                        <p class="book-genre">Conte</p>
+                        <p class="book-genre">Conte au format roman</p>
                         <p class="book-editeur">La SEP, collection Cheminement</p>
                         <p class="book-description">Un conte touchant qui explore l'imagination et les rêves d'enfance avec tendresse.</p>
                     </div>
@@ -772,7 +801,7 @@
             <div class="marquee-content">
                 <span>Écriture</span>
                 <span class="marquee-dot"></span>
-                <span>Romans</span>
+                <span>Nouvelles</span>
                 <span class="marquee-dot"></span>
                 <span>Contes</span>
                 <span class="marquee-dot"></span>
@@ -786,7 +815,7 @@
             <div class="marquee-content" aria-hidden="true">
                 <span>Écriture</span>
                 <span class="marquee-dot"></span>
-                <span>Romans</span>
+                <span>Nouvelles</span>
                 <span class="marquee-dot"></span>
                 <span>Contes</span>
                 <span class="marquee-dot"></span>
@@ -852,6 +881,7 @@
                             </svg>
                         </span>
                     </a>
+                    <a href="memoire/" class="memoir-lien reveal-element">Présentation, définitions et résultats du mémoire</a>
                 </div>
                 <div class="memoir-visual reveal-element">
                     <div class="memoir-decoration">
@@ -891,7 +921,7 @@
                         </div>
                         <div class="source-info">
                             <span class="source-title">Darshan</span>
-                            <span class="source-type">Roman</span>
+                            <span class="source-type">Nouvelle</span>
                         </div>
                     </div>
                 </div>
