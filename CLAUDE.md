@@ -31,8 +31,14 @@ dans le dépôt Willwonderc/PexelsWillwonder.
 - Ne jamais inventer de citation ni d'extrait : les extraits viennent des livres
   (`livres/*.pdf`), les textes des projets de l'auteur lui-même.
 - Liens relatifs, pour que le site fonctionne aussi à l'adresse d'essai
-  https://willwonderc.github.io/karlforterre.fr/. Seuls `canonical`, `og:*`,
-  `sitemap.xml` et `robots.txt` donnent des adresses absolues en https://karlforterre.fr.
+  https://willwonderc.github.io/karlforterre.fr/. Seuls `canonical`, `og:*`, les données
+  structurées, les balises `citation_*` (Google Scholar), `sitemap.xml`, `robots.txt` et
+  `llms.txt` donnent des adresses absolues en https://karlforterre.fr.
+- Mémoire : la page `memoire/` le présente pour les moteurs, Google Scholar et les
+  assistants IA ; ses citations viennent mot pour mot du PDF, avec leur page. L'auteur a
+  pour identifiant `https://karlforterre.fr/#auteur` dans les données structurées des deux
+  sites. `llms.txt` présente le site aux assistants IA ; guide complet dans
+  `referencement/README.md` du dépôt PexelsWillwonder.
 - Qualité d'image d'abord, à la demande de Karl Forterre : chaque œuvre en trois
   fichiers WebP tirés de l'original le plus grand, `nom-vignette.webp` (800 px sur le
   grand côté, 1000 pour le portfolio), `nom-moyenne.webp` (1600 px) et `nom.webp`

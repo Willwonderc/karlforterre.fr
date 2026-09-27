@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://karlforterre.fr/sitemap.xml
+# Présentation pour les assistants IA : https://karlforterre.fr/llms.txt

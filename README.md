@@ -81,6 +81,8 @@ Tout se fait sur GitHub : ouvrir le fichier, cliquer sur le crayon, modifier, pu
 | En-têtes (six variantes : un clic sur l'en-tête passe à la suivante) | `js/header-templates.js` |
 | Couleurs, polices, mise en page | `styles.css` |
 | Mentions légales | `mentions-legales/index.html` |
+| Page du mémoire (définitions, méthode, résultats, référence à citer) | `memoire/index.html` : les citations sont reprises mot pour mot du PDF, avec leur page ; toute phrase ajoutée reçoit sa traduction dans `js/traductions.js` |
+| Présentation du site pour les assistants IA (ChatGPT, Claude…) | `llms.txt`, en texte simple : à tenir à jour quand un livre ou une page s'ajoute |
 | Traductions anglaise et chinoise | `js/traductions.js` : voir « Langues » plus bas |
 
 ### Photographie : reliée au site photo
@@ -163,6 +165,10 @@ Pour déposer un fichier : **Add file** → **Upload files**, dans le bon dossie
 - `livres/` : couvertures, livres en PDF et EPUB, mémoire.
 - `fonts/` : polices Cormorant Garamond et Inter, hébergées avec le site (licence
   SIL Open Font License), sans appel à Google.
+- `memoire/` : la page du mémoire, avec les balises lues par Google Scholar.
+- `llms.txt` : présentation du site pour les assistants IA (format llmstxt.org). Le guide
+  du référencement auprès des moteurs et des assistants IA (Bing, Wikidata, Wikimedia
+  Commons, dépôt du mémoire) est dans le dépôt du site photo : `referencement/README.md`.
 - `mentions-legales/`, `404.html` (page introuvable), `robots.txt`, `sitemap.xml`,
   `favicon.svg`, `apple-touch-icon.png`, `images/partage.jpg` (aperçu lors d'un partage).
 - `work/`, `projets/`, `tarifs-des-services/`, `copie-de-consulter/`,

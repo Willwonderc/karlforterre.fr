@@ -1971,6 +1971,21 @@ p:last-child {
     margin-bottom: var(--space-2xl);
 }
 
+/* Lien vers la page du mémoire (memoire/), sous le bouton du PDF */
+.memoir-lien {
+    display: block;
+    width: fit-content;
+    margin-top: var(--space-lg);
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-underline-offset: 4px;
+}
+
+.memoir-lien:hover {
+    color: var(--color-accent-dark);
+}
+
 .memoir-details {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

@@ -9,6 +9,8 @@
 
     <title>Karl Forterre | Auteur</title>
     <link rel="canonical" href="https://karlforterre.fr/">
+    <!-- Présentation du site pour les assistants IA (llmstxt.org) -->
+    <link rel="describedby" href="llms.txt" type="text/markdown">
 
     <!-- Aperçu lors d'un partage (réseaux sociaux, messageries) -->
     <meta property="og:type" content="website">
@@ -38,10 +40,14 @@
                     "@type": "CollegeOrUniversity",
                     "name": "Université de Poitiers"
                 },
+                "description": "Auteur de Darshan (2022) et de L'histoire du petit Théo (2023), photographe et graphiste, Karl Forterre a consacré son mémoire de master à la médiation auctoriale des sites d'auteurs.",
+                "knowsAbout": ["écriture", "édition", "graphisme", "photographie", "médiation auctoriale", "site d'auteur"],
                 "sameAs": [
                     "https://photos.karlforterre.fr/",
                     "https://www.pexels.com/@karl-forterre-28489473",
-                    "https://www.linkedin.com/in/karl-forterre-720b61220/"
+                    "https://www.linkedin.com/in/karl-forterre-720b61220/",
+                    "https://mastodon.social/@KarlForterre",
+                    "https://bsky.app/profile/karlforterre.bsky.social"
                 ]
             },
             {
@@ -86,6 +92,7 @@
             },
             {
                 "@type": "Thesis",
+                "@id": "https://karlforterre.fr/memoire/#memoire",
                 "name": "L'influence de la médiation auctoriale du site d'auteur",
                 "author": {
                     "@id": "https://karlforterre.fr/#auteur"
@@ -97,7 +104,8 @@
                     "@type": "CollegeOrUniversity",
                     "name": "Université de Poitiers"
                 },
-                "url": "https://karlforterre.fr/livres/memoire-mediation-auctoriale-2023.pdf"
+                "about": { "@id": "https://karlforterre.fr/memoire/#mediation-auctoriale" },
+                "url": "https://karlforterre.fr/memoire/"
             }
         ]
     }
@@ -847,6 +855,7 @@
                             </svg>
                         </span>
                     </a>
+                    <a href="memoire/" class="memoir-lien reveal-element">Présentation, définitions et résultats du mémoire</a>
                 </div>
                 <div class="memoir-visual reveal-element">
                     <div class="memoir-decoration">
