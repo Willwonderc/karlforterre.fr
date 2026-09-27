@@ -232,6 +232,7 @@ window.TRADUCTIONS = {
     "Nuits étoilées": { en: "Starry nights", zh: "星夜" },
     "France et Espagne": { en: "France and Spain", zh: "法国与西班牙" },
     "2022 à 2026": { en: "2022 to 2026", zh: "2022年至2026年" },
+    "Phares et marées, de Granville à Saint-Malo": { en: "Lighthouses and tides, from Granville to Saint-Malo", zh: "从格朗维尔到圣马洛：灯塔与潮汐" },
     "Jardins des châteaux de la Loire": { en: "Loire château gardens", zh: "卢瓦尔河谷城堡花园" },
     "Ciel et astrophotographie": { en: "Sky and astrophotography", zh: "天空与天文摄影" },
     "Nuages et couchers de soleil": { en: "Clouds and sunsets", zh: "云彩与日落" },
