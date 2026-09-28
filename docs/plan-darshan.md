@@ -355,8 +355,15 @@ liseuses, et l'intérêt d'un lecteur pendant quarante minutes.
 - **Métadonnées.** Celles de l'EPUB de 2023 sont à reprendre dans l'édition de Karl : il se
   déclare en français **et en hindi** (`hi-IN`), et son ISBN, 978-2-9588873-4-6, n'y figure
   pas.
-- **Couverture.** La photographie est d'Arianna Jadé et montre un modèle : pour l'animer
-  ou la reprendre, il faut leur accord. Sinon, une couverture nouvelle.
+- **Couverture.** La photographie d'Arianna Jadé vient de Pexels, sous la licence Pexels :
+  usage commercial et modification permis, y compris sur un livre, sans autorisation à
+  demander ; le crédit est facultatif (il figure déjà au colophon). Si la couverture
+  assemble plusieurs photos Pexels, la même règle vaut pour chacune. Deux limites de la
+  licence comptent pour le jeu : ne pas montrer le modèle, reconnaissable, sous un jour
+  dégradant ou offensant ; ne pas laisser croire qu'il recommande le livre (il incarne
+  Darshan, il ne le présente pas). Garder l'adresse de chaque photo sur Pexels et la date
+  du téléchargement : une photo peut être retirée plus tard du site. Seuls les logos de la
+  SEP et de la collection Cheminement sont à retirer.
 - **Polices.** Amiri et Unna (celles du livre) et Tiro Devanagari Sanskrit (pour दर्शन)
   sont sous licence SIL OFL : incorporation permise, même allégée.
 - **Photos de Karl** : les siennes. **Sons et musiques** : un fichier des licences et des
@@ -433,8 +440,9 @@ Ace by DAISY sans erreur grave, mode lecture, mouvement réduit, clavier, lecteu
 2. **Ouvrir l'extrait jouable dans Apple Books**, sur l'iPhone et sur le Mac, et dire ce
    qui marche : le test qui compte le plus, avant tout le reste.
 3. **Prendre un ISBN à son nom** auprès de l'AFNIL, un par format (37 € HT la première
-   demande, trois semaines), s'il veut que le livre soit référencé ; décider de la
-   couverture (accord d'Arianna Jadé et du modèle, ou couverture nouvelle).
+   demande, trois semaines), s'il veut que le livre soit référencé ; garder la
+   couverture (photo Pexels, usage commercial permis) en retirant les logos de la SEP et de
+   Cheminement, ou en dessiner une nouvelle.
 4. **Valider les coquilles** de l'annexe A, une par une.
 5. **Décider de la voix** : enregistrer le livre soi-même (une heure environ, au Dictaphone
    de l'iPhone), ou non.
