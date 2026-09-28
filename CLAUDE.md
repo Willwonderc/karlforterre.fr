@@ -59,6 +59,10 @@ dans le dépôt Willwonderc/PexelsWillwonder.
   P3) reste joint au fichier. Noms en minuscules sans espaces ni accents. Jamais de TIFF,
   PSD ni PDF d'impression dans le dépôt : il est public.
 - Polices hébergées dans `fonts/` : aucun appel à Google Fonts.
+- Darshan jouable : évaluation, piste retenue et chantiers D1 à D10 dans
+  `docs/plan-darshan.md` ; prototype (extrait jouable, EPUB et web) dans `outils/darshan/`,
+  relié à aucune page. Le texte y est lu dans `livres/darshan.epub`, jamais recopié ni
+  modifié ; les coquilles de l'annexe A attendent l'accord de Karl.
 - Section Photographie : elle lit à chaque visite `https://photos.karlforterre.fr/apercu.json`,
   écrit chaque nuit par `vitrine/build.py` du dépôt PexelsWillwonder (sélection, séries,
   galeries, chiffres). La liste `photosIntegrees` de `script.js` ne sert qu'en secours.

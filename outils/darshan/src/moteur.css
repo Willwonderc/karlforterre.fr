@@ -1,0 +1,156 @@
+/* Darshan, le livre des portes : feuille de style commune à l'EPUB et à l'édition web.
+   La scène mesure 1200 x 1800 unités logiques ; 1cqw = 12 unités (l'EPUB les écrit en px).
+   Sans script, chaque scène est une page illustrée où tout le texte est lisible ; avec le
+   script (classe « jeu » sur <html>), le texte se révèle temps par temps et les gestes
+   s'animent. */
+
+@font-face { font-family: "Amiri"; font-style: normal; font-weight: 400; src: url("../fonts/Amiri-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Amiri"; font-style: italic; font-weight: 400; src: url("../fonts/Amiri-Italic.woff2") format("woff2"); }
+@font-face { font-family: "Amiri"; font-style: normal; font-weight: 700; src: url("../fonts/Amiri-Bold.woff2") format("woff2"); }
+@font-face { font-family: "Unna"; font-style: normal; font-weight: 400; src: url("../fonts/Unna-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Unna"; font-style: italic; font-weight: 400; src: url("../fonts/Unna-Italic.woff2") format("woff2"); }
+@font-face { font-family: "Tiro Darshan"; src: url("../fonts/Tiro-Darshan.woff2") format("woff2"); }
+
+:root {
+  --or: #f4c56a;
+  --or-pale: #ffe7b0;
+  --nuit: #050816;
+  --texte: #f5efe2;
+  --ombre-texte: 0 0.1cqw 0.6cqw rgba(0, 0, 0, 0.9);
+}
+
+html { background: #000; }
+html, body { margin: 0; padding: 0; color: var(--texte); }
+body { font-family: "Amiri", Georgia, serif; -webkit-text-size-adjust: none; text-size-adjust: none; }
+
+/* ------------------------------------------------------------ la scène */
+.plateau { position: relative; margin: 0 auto; }
+.scene {
+  position: relative; overflow: hidden; margin: 0 auto;
+  width: min(100vw, calc(100vh * 2 / 3)); aspect-ratio: 2 / 3;
+  container-type: inline-size; background: var(--nuit);
+}
+.epub .scene { width: 1200px; height: 1800px; aspect-ratio: auto; }
+.decor, .decor > * { position: absolute; inset: 0; width: 100%; height: 100%; }
+.decor img { object-fit: cover; display: block; }
+.calque-anime { will-change: transform; transform-origin: 50% 50%; }
+
+/* ------------------------------------------------------------ le texte (lisible sans script) */
+.texte {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 16cqw 7cqw 7cqw;
+  font-size: 4.1cqw; line-height: 1.48; text-align: left;
+  text-shadow: var(--ombre-texte);
+  background: linear-gradient(to bottom, rgba(3, 4, 12, 0) 0%, rgba(3, 4, 12, 0.72) 22%, rgba(3, 4, 12, 0.9) 100%);
+  hyphens: auto; -webkit-hyphens: auto;
+}
+.texte.en-haut { top: 0; bottom: auto; padding: 7cqw 7cqw 16cqw;
+  background: linear-gradient(to top, rgba(3, 4, 12, 0) 0%, rgba(3, 4, 12, 0.72) 22%, rgba(3, 4, 12, 0.9) 100%); }
+.texte.clair { color: #1d140c; text-shadow: 0 0 0.8cqw rgba(255, 244, 222, 0.9);
+  background: linear-gradient(to bottom, rgba(250, 238, 214, 0) 0%, rgba(250, 238, 214, 0.8) 22%, rgba(250, 238, 214, 0.94) 100%); }
+.texte p { margin: 0 0 1.6cqw; text-indent: 0; }
+.texte .voix { font-style: italic; color: var(--or-pale); }
+.texte.clair .voix { color: #6b3b0c; }
+h1.chapitre {
+  font-family: "Unna", Georgia, serif; font-weight: 400; font-variant: small-caps;
+  font-size: 6cqw; letter-spacing: 0.08em; text-align: center; margin: 0 0 3cqw;
+  color: var(--or-pale); text-shadow: 0 0 2cqw rgba(255, 210, 120, 0.45), var(--ombre-texte);
+}
+.poeme { text-align: center; font-size: 3.9cqw; top: 0; bottom: 0; display: flex; flex-direction: column;
+  justify-content: center; background: radial-gradient(ellipse at 50% 50%, rgba(2, 3, 10, 0.55), rgba(2, 3, 10, 0.1) 70%); }
+.poeme p { margin: 0 0 3.2cqw; }
+.suite-para { text-indent: 0; }
+
+/* ------------------------------------------------------------ page de titre */
+.titre-livre { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.titre-livre .auteur { font-size: 3.6cqw; letter-spacing: 0.25em; text-transform: uppercase; color: #d9d2c4; margin: 0; }
+.titre-livre .titre { font-family: "Unna", serif; font-weight: 400; font-size: 17cqw; line-height: 1; margin: 2cqw 0 1cqw; color: var(--or-pale);
+  text-shadow: 0 0 5cqw rgba(255, 200, 110, 0.35), var(--ombre-texte); }
+.titre-livre .devanagari { font-family: "Tiro Darshan", serif; font-size: 4.4cqw; color: #cdbfa5; margin: 0 0 8cqw; letter-spacing: 0.1em; }
+.titre-livre .genre { font-style: italic; font-size: 3.4cqw; color: #cfc6b3; margin: 0; }
+
+/* ------------------------------------------------------------ interface (mode jeu seulement) */
+.ui { display: none; }
+.jeu .ui { display: block; }
+.jeu .scene { display: none; }
+.jeu .scene.active { display: block; }
+
+.jeu .texte { padding-top: 12cqw; min-height: 26cqw; cursor: pointer;
+  background: linear-gradient(to bottom, rgba(3, 4, 12, 0) 0%, rgba(3, 4, 12, 0.66) 30%, rgba(3, 4, 12, 0.82) 100%); }
+.jeu .texte.en-haut { padding-top: 13cqw; padding-bottom: 12cqw;
+  background: linear-gradient(to top, rgba(3, 4, 12, 0) 0%, rgba(3, 4, 12, 0.66) 30%, rgba(3, 4, 12, 0.82) 100%); }
+.jeu .texte.clair { background: linear-gradient(to bottom, rgba(250, 238, 214, 0) 0%, rgba(250, 238, 214, 0.78) 30%, rgba(250, 238, 214, 0.92) 100%); }
+.jeu .poeme { background: radial-gradient(ellipse at 50% 50%, rgba(2, 3, 10, 0.55), rgba(2, 3, 10, 0.1) 70%); padding-top: 7cqw; }
+.jeu .texte .temps { opacity: 0; filter: blur(0.5cqw); transition: opacity 900ms ease, filter 1200ms ease; }
+.jeu .texte .temps.vu { opacity: 1; filter: blur(0); }
+.jeu .texte .temps.passe { opacity: 0.4; }
+.jeu .texte .temps.cache { display: none; }
+.jeu .poeme .temps.passe { opacity: 0.55; }
+.jeu h1.chapitre.carton { position: absolute; left: 0; right: 0; top: 36%; font-size: 10cqw; opacity: 0; z-index: 4; pointer-events: none;
+  transition: opacity 1400ms ease, top 1800ms ease, font-size 1800ms ease; }
+.jeu h1.chapitre.carton.vu { opacity: 1; }
+.jeu h1.chapitre.carton.range { top: 11cqw; font-size: 5cqw; opacity: 0.85; }
+
+.suite {
+  position: absolute; right: 5cqw; bottom: 4cqw; width: 6cqw; height: 6cqw; border: 0; padding: 0; margin: 0;
+  background: none; color: var(--or); font-size: 4.4cqw; line-height: 6cqw; cursor: pointer; opacity: 0;
+  transition: opacity 500ms; z-index: 5;
+}
+.suite.pret { opacity: 0.9; animation: pouls 1.8s ease-in-out infinite; }
+@keyframes pouls { 50% { transform: translateY(-0.6cqw); opacity: 0.55; } }
+
+.barre { position: absolute; top: 3cqw; right: 3cqw; display: flex; gap: 2cqw; z-index: 20; }
+.jeu .barre { display: flex; }
+.barre button {
+  font: inherit; font-size: 2.8cqw; color: #efe6d2; background: rgba(8, 10, 20, 0.55);
+  border: 0.15cqw solid rgba(244, 197, 106, 0.45); border-radius: 5cqw; padding: 1cqw 2.6cqw; cursor: pointer;
+}
+.barre button[aria-pressed="false"] { opacity: 0.6; }
+
+.consigne {
+  position: absolute; left: 4cqw; right: 4cqw; text-align: center; font-family: "Unna", serif; font-style: italic;
+  font-size: 3.6cqw; color: var(--or-pale); text-shadow: var(--ombre-texte); opacity: 0; transition: opacity 700ms;
+  pointer-events: none; z-index: 6;
+}
+.consigne.vu { opacity: 0.95; }
+
+.bouton-porte {
+  font-family: "Unna", serif; font-size: 4.6cqw; letter-spacing: 0.12em; color: #1a1208;
+  background: linear-gradient(#ffe2a0, #e9b75c); border: 0; border-radius: 1cqw; padding: 2cqw 7cqw; cursor: pointer;
+  box-shadow: 0 0 4cqw rgba(255, 200, 110, 0.5);
+}
+
+canvas.toile { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+svg.jeu-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 3; }
+.lumiere-flot { position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 8;
+  background: radial-gradient(ellipse at 50% 55%, #fffaf0 0%, #ffe3a0 35%, rgba(255, 210, 120, 0) 75%); }
+
+/* fin de l'extrait et carnet des portes */
+.fin-extrait { position: absolute; left: 6cqw; right: 6cqw; top: 8cqw; padding: 4cqw 5cqw; border-radius: 2cqw;
+  background: rgba(20, 12, 4, 0.84); color: #f7ecd6; font-size: 3.4cqw; text-align: center; opacity: 0;
+  transition: opacity 1.2s; pointer-events: none; z-index: 10; }
+.jeu .fin-extrait.vu { opacity: 1; pointer-events: auto; }
+.fin-extrait .fin-titre { font-family: "Unna", serif; font-variant: small-caps; font-size: 5.4cqw; color: #ffe2a0; margin: 0 0 2cqw; }
+.fin-extrait p { margin: 0 0 2cqw; }
+.fin-extrait button { font: inherit; font-size: 3.2cqw; margin: 1cqw; padding: 1.4cqw 3.2cqw; border-radius: 5cqw; cursor: pointer;
+  border: 0.2cqw solid #f4c56a; background: rgba(244, 197, 106, 0.15); color: #ffe7b0; }
+.carnet { position: absolute; inset: 0; background: rgba(3, 5, 14, 0.95); z-index: 30; padding: 10cqw 7cqw; font-size: 3.6cqw; }
+.jeu .carnet { display: none; }
+.jeu .carnet.ouvert { display: block; }
+.carnet h2 { font-family: "Unna", serif; font-variant: small-caps; font-weight: 400; color: var(--or-pale); font-size: 6cqw; margin: 0 0 3cqw; text-align: center; }
+.carnet svg { width: 100%; height: auto; display: block; margin: 2cqw 0 4cqw; }
+.carnet p { margin: 0 0 2cqw; }
+.voix-du-pere .texte .voix { text-shadow: 0 0 2cqw rgba(255, 220, 150, 0.8), var(--ombre-texte); }
+
+/* édition web : les bandes autour de la scène reprennent le décor, flouté */
+#ambiance { position: fixed; inset: -8%; background-size: cover; background-position: center;
+  filter: blur(3.5vmax) brightness(0.45) saturate(1.2); z-index: -1; }
+
+/* mouvement réduit : pas de flou, pas de secousses, fondus courts */
+@media (prefers-reduced-motion: reduce) {
+  .jeu .texte .temps { filter: none; transition: opacity 200ms; }
+  .suite.pret { animation: none; }
+}
+
+/* sans script, sur le web : les scènes se suivent comme les pages d'un album */
+html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
