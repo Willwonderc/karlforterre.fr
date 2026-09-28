@@ -7,3 +7,4 @@ outils/darshan/src/img/*.png
 outils/darshan/src/img/pexels-*.jpg
 outils/darshan/planche-*.jpg
 outils/darshan/src/img/toits.jpg
+__pycache__/
