@@ -55,8 +55,15 @@
     var r = scene.getBoundingClientRect();
     return { x: (ev.clientX - r.left) * W / r.width, y: (ev.clientY - r.top) * H / r.height };
   }
-  function horsBarre(ev) { return !(ev.target && ev.target.closest && ev.target.closest('.barre, .fin-extrait, .carnet')); }
+  function toucheDeBouton(ev) {
+    var t = ev.target;
+    return !!(t && t.tagName && t.tagName.toUpperCase() === 'BUTTON' && (ev.key === 'Enter' || ev.key === ' '));
+  }
+  function horsBarre(ev) { return !(ev.target && ev.target.closest && ev.target.closest('.barre, .fin-extrait, .carnet, .fiche, .nouvel-objet')); }
   var TOUCHES = [' ', 'Enter', 'ArrowRight', 'ArrowUp'];
+  // Jusqu'où le lecteur a lu (paragraphe et caractère, en un nombre) : les fiches d'objet
+  // n'affichent que des phrases déjà lues.
+  var Lecture = { max: 0 };
 
   // ---------------------------------------------------------------- le son, fabriqué en direct
   var Son = (function () {
@@ -219,6 +226,19 @@
         var g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.5, t + 1.1); g.gain.linearRampToValueAtTime(0, t + 2.4);
         s.connect(f); f.connect(g); g.connect(bus); s.start(t); s.stop(t + 2.5);
       },
+      tinte: function (t) {
+        [1318.5, 1975.5].forEach(function (f0, i) {
+          var o = ctx.createOscillator(); o.frequency.value = f0;
+          var g = ctx.createGain(); env(g, t + i * 0.09, 0.005, 0.07, 0.9); o.connect(g); g.connect(bus);
+          o.start(t + i * 0.09); o.stop(t + i * 0.09 + 1.1);
+        });
+      },
+      papier: function (t) {
+        var s = ctx.createBufferSource(); s.buffer = bruit('rose');
+        var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 0.8;
+        f.frequency.setValueAtTime(900, t); f.frequency.exponentialRampToValueAtTime(2600, t + 0.25);
+        var g = ctx.createGain(); env(g, t, 0.03, 0.12, 0.25); s.connect(f); f.connect(g); g.connect(bus); s.start(t); s.stop(t + 0.4);
+      },
       grince: function (t) {
         var o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(70, t);
         for (var i = 1; i < 12; i++) o.frequency.setValueAtTime(60 + Math.random() * 45, t + i * 0.05);
@@ -337,8 +357,7 @@
     doc.addEventListener('keydown', function (ev) {
       if (!estEpub && !scene.classList.contains('active')) return;
       if (['ArrowRight', ' ', 'Enter', 'PageDown'].indexOf(ev.key) < 0) return;
-      if (soi.enAttente || soi.fini) return;
-      if (ev.target && ev.target.tagName && ev.target.tagName.toUpperCase() === 'BUTTON') return;
+      if (soi.enAttente || soi.fini || Objets.estOuverte() || toucheDeBouton(ev)) return;
       if (ev.cancelable) ev.preventDefault();
       soi.avancer();
     });
@@ -371,30 +390,46 @@
     }
     t.classList.add('vu');
     t.removeAttribute('aria-hidden');
+    var lu = +t.getAttribute('data-lu') || 0;
+    if (lu > Lecture.max) Lecture.max = lu;
     this.i = j;
     var soi = this;
-    Promise.resolve(this.surTemps(j, t)).then(function () { setTimeout(function () { soi.pret(true); }, calme ? 100 : 700); });
+    this.enAttente = true;   // le temps suivant attend la fin des effets de celui-ci (fonte, fiche…)
+    Promise.resolve(this.surTemps(j, t)).then(function () {
+      soi.enAttente = false;
+      setTimeout(function () { soi.pret(true); }, calme ? 100 : 700);
+    });
     annoncer(t.textContent);
   };
 
-  function consigne(scene, texte, y) {
+  function consigne(scene, texte, y, delai) {
     var c = $('.consigne', scene) || el('div', { 'class': 'consigne ui', 'aria-live': 'polite' }, scene);
     c.style.top = (y / H * 100) + '%';
-    c.textContent = texte;
-    requestAnimationFrame(function () { c.classList.add('vu'); });
-    return { effacer: function () { c.classList.remove('vu'); } };
+    function montrer() { c.textContent = texte; requestAnimationFrame(function () { c.classList.add('vu'); }); }
+    var minuterie = (delai && !calme) ? setTimeout(montrer, delai) : (montrer(), null);
+    return { effacer: function () { if (minuterie) clearTimeout(minuterie); c.classList.remove('vu'); } };
   }
 
   // attend un toucher (ou Entrée, Espace, flèche) sur une zone de la scène
-  function toucher(cible) {
+  // action : { objet, libelle } ; le geste peut alors venir aussi du bouton de la fiche
+  function toucher(cible, action) {
     return new Promise(function (ok) {
+      var fait = false;
+      function terminer(ev) {
+        if (fait) return; fait = true;
+        cible.removeEventListener('pointerup', fin); doc.removeEventListener('keydown', fin);
+        if (action) Objets.retirerAction(action.objet);
+        ok(ev);
+      }
       function fin(ev) {
-        if (ev.type === 'keydown' && TOUCHES.indexOf(ev.key) < 0) return;
+        if (Objets.estOuverte()) return;
+        if (ev.type === 'keydown' && (TOUCHES.indexOf(ev.key) < 0 || toucheDeBouton(ev))) return;
         if (ev.type !== 'keydown' && !horsBarre(ev)) return;
         if (ev.cancelable) ev.preventDefault();
-        cible.removeEventListener('pointerup', fin); doc.removeEventListener('keydown', fin); ok(ev);
+        terminer(ev);
       }
       cible.addEventListener('pointerup', fin); doc.addEventListener('keydown', fin);
+      if (action) Objets.proposer(action.objet, action.libelle, function () { terminer({ type: 'action' }); });
     });
   }
 
@@ -403,6 +438,12 @@
   var actuelle = -1;
   var demarreurs = {};
   var fond = estEpub ? null : el('div', { id: 'ambiance', 'aria-hidden': 'true' }, doc.body);
+  // Ce que le lecteur a lu et ce qu'il porte se déduisent de la page : aucune mémoire requise.
+  function entrerDansScene(sc) {
+    var lu0 = +sc.getAttribute('data-lu0') || 0;
+    if (lu0 > Lecture.max) Lecture.max = lu0;
+    Objets.initialiser((sc.getAttribute('data-objets') || '').split(/\s+/).filter(Boolean));
+  }
   function aller(i) {
     if (i < 0 || i >= scenes.length) return;
     var avant = scenes[actuelle];
@@ -410,6 +451,7 @@
     actuelle = i;
     if (avant) avant.classList.remove('active');
     apres.classList.add('active');
+    entrerDansScene(apres);
     var img = $('.decor img', apres);
     if (fond && img) fond.style.backgroundImage = 'url("' + img.getAttribute('src') + '")';
     var son = apres.getAttribute('data-son');
@@ -417,6 +459,212 @@
     var nom = apres.getAttribute('data-scene');
     if (demarreurs[nom] && !apres.demarree) { apres.demarree = true; demarreurs[nom](apres); }
   }
+
+  // ---------------------------------------------------------------- les objets : ce qu'on porte, fiches, actions
+  // Gros plans des objets, en SVG (les identifiants internes sont rendus uniques à chaque copie).
+  var DESSINS = {
+    lunettes: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-345 -125 690 250"><defs>' +
+      '<radialGradient id="f-verre" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#8a7358"/><stop offset=".45" stop-color="#2a1e14"/><stop offset="1" stop-color="#0a0705"/></radialGradient></defs>' +
+      '<path d="M178,-14 C235,-22 292,-42 332,-74" fill="none" stroke="#3b2a1a" stroke-width="13" stroke-linecap="round"/>' +
+      '<path d="M-178,-14 C-235,-22 -292,-42 -332,-74" fill="none" stroke="#3b2a1a" stroke-width="13" stroke-linecap="round"/>' +
+      '<circle cx="-105" cy="0" r="78" fill="url(#f-verre)" stroke="#4a3522" stroke-width="15"/>' +
+      '<circle cx="105" cy="0" r="78" fill="url(#f-verre)" stroke="#4a3522" stroke-width="15"/>' +
+      '<path d="M-32,-12 Q0,-42 32,-12" fill="none" stroke="#4a3522" stroke-width="13"/>' +
+      '<ellipse cx="-135" cy="-32" rx="30" ry="11" fill="#fff" opacity=".3" transform="rotate(-20 -135 -32)"/>' +
+      '<ellipse cx="75" cy="-32" rx="30" ry="11" fill="#fff" opacity=".22" transform="rotate(-20 75 -32)"/></svg>',
+    cle: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-230 -110 490 220"><defs>' +
+      '<linearGradient id="f-laiton" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eac47d"/><stop offset=".5" stop-color="#a8742f"/><stop offset="1" stop-color="#5b3814"/></linearGradient>' +
+      '<pattern id="f-rayures" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="14" height="14" fill="url(#f-laiton)"/><rect width="5" height="14" fill="#6d3f17" opacity=".55"/></pattern>' +
+      '<filter id="f-rouille" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".18" numOctaves="2" seed="4" result="r"/>' +
+      '<feColorMatrix in="r" type="matrix" values="0 0 0 0 .55  0 0 0 0 .25  0 0 0 0 .08  0 0 0 1.6 -.6" result="rr"/><feComposite in="rr" in2="SourceGraphic" operator="in" result="rrr"/>' +
+      '<feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="rrr"/></feMerge></filter></defs>' +
+      '<g filter="url(#f-rouille)"><circle cx="-150" cy="0" r="58" fill="none" stroke="url(#f-rayures)" stroke-width="30"/>' +
+      '<rect x="-96" y="-12" width="330" height="24" rx="6" fill="url(#f-rayures)"/>' +
+      '<rect x="170" y="10" width="22" height="46" fill="url(#f-rayures)"/><rect x="204" y="10" width="16" height="30" fill="url(#f-rayures)"/>' +
+      '<rect x="226" y="10" width="10" height="52" fill="url(#f-rayures)"/></g></svg>'
+  };
+  var copies = 0;
+
+  var Objets = (function () {
+    var donnees = {};
+    try { var bloc = doc.getElementById('donnees-objets'); donnees = bloc ? JSON.parse(bloc.textContent) : {}; } catch (e) { donnees = {}; }
+    var sac = [], actions = {}, ouverte = null, avant = null, surFin = null;
+
+    function sceneCourante() { return estEpub ? scenes[0] : scenes[actuelle]; }
+    function nom(id) { return (donnees[id] || {}).nom || id; }
+    function lues(id) { return ((donnees[id] || {}).citations || []).filter(function (c) { return c.lu <= Lecture.max; }); }
+    function vider(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+    function dessin(id) {
+      var s = DESSINS[id];
+      if (!s) return null;
+      copies++;
+      s = s.replace(/f-([a-z]+)/g, 'f' + copies + '-$1');
+      return doc.importNode(new DOMParser().parseFromString(s, 'image/svg+xml').documentElement, true);
+    }
+    function structure(sc) {
+      if (sc.fiche) return sc.fiche;
+      var f = el('div', { 'class': 'fiche', role: 'dialog', 'aria-modal': 'true' }, sc);
+      var fond = el('div', { 'class': 'fiche-fond' }, f);
+      f.carte = el('div', { 'class': 'fiche-carte', tabindex: '-1' }, f);
+      fond.addEventListener('click', function () { fermer(); });
+      f.addEventListener('pointerup', function (ev) { ev.stopPropagation(); });
+      f.addEventListener('click', function (ev) { ev.stopPropagation(); });
+      f.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape') { ev.preventDefault(); fermer(); }
+        else if (ev.key === 'Tab') {
+          var b = $$('button', f.carte), i = b.indexOf(doc.activeElement);
+          if (b.length && ev.shiftKey && i <= 0) { ev.preventDefault(); b[b.length - 1].focus(); }
+          else if (b.length && !ev.shiftKey && i === b.length - 1) { ev.preventDefault(); b[0].focus(); }
+        }
+        ev.stopPropagation();
+      });
+      sc.fiche = f;
+      return f;
+    }
+    function montrer(f) {
+      if (!ouverte) avant = doc.activeElement;
+      ouverte = f;
+      f.classList.add('ouverte');
+      requestAnimationFrame(function () { requestAnimationFrame(function () { f.classList.add('visible'); }); });
+      Son.effet('papier');
+      setTimeout(function () { var b = f.carte.querySelector('.fiche-actions button'); (b || f.carte).focus(); }, 80);
+    }
+    function fermer() {
+      if (!ouverte) return;
+      var f = ouverte; ouverte = null;
+      f.classList.remove('visible');
+      setTimeout(function () { if (ouverte !== f) f.classList.remove('ouverte'); }, calme ? 30 : 360);
+      if (avant && avant.focus && doc.contains(avant)) { try { avant.focus(); } catch (e) { /* rien */ } }
+      var cb = surFin; surFin = null;
+      if (cb) cb();
+    }
+    // Examiner : on fait tourner le gros plan du doigt ; il revient en place quand on lâche.
+    function examiner(zone) {
+      var svg = zone.querySelector('svg'), x0 = 0, y0 = 0, tenu = false;
+      if (!svg) return;
+      zone.addEventListener('pointerdown', function (ev) {
+        tenu = true; x0 = ev.clientX; y0 = ev.clientY; zone.classList.add('tenu');
+        if (zone.setPointerCapture) { try { zone.setPointerCapture(ev.pointerId); } catch (e) { /* rien */ } }
+      });
+      zone.addEventListener('pointermove', function (ev) {
+        if (!tenu || calme) return;
+        var ry = Math.max(-70, Math.min(70, (ev.clientX - x0) * 0.45)), rx = Math.max(-40, Math.min(40, -(ev.clientY - y0) * 0.35));
+        svg.style.transform = 'rotateY(' + ry + 'deg) rotateX(' + rx + 'deg)';
+      });
+      function lacher() { if (!tenu) return; tenu = false; zone.classList.remove('tenu'); svg.style.transform = ''; }
+      zone.addEventListener('pointerup', lacher);
+      zone.addEventListener('pointercancel', lacher);
+    }
+    function ouvrir(id, options) {
+      options = options || {};
+      var sc = sceneCourante();
+      if (!sc) return;
+      var f = structure(sc), c = f.carte;
+      vider(c);
+      f.setAttribute('aria-label', nom(id));
+      var visuel = el('div', { 'class': 'fiche-visuel', 'aria-hidden': 'true' }, c);
+      var d = dessin(id);
+      if (d) { visuel.appendChild(d); examiner(visuel); }
+      el('p', { 'class': 'fiche-surtitre' }, c).textContent = options.nouveau ? 'Nouvel objet' : '';
+      el('h2', { tabindex: '-1' }, c).textContent = nom(id);
+      lues(id).forEach(function (q) {
+        var b = el('blockquote', {}, c);
+        b.appendChild(doc.createTextNode('« ' + q.texte + ' »'));
+        el('cite', {}, b).textContent = q.chapitre;
+      });
+      var zone = el('div', { 'class': 'fiche-actions' }, c), a = actions[id];
+      if (a) {
+        var ba = el('button', { type: 'button' }, zone);
+        ba.textContent = a.libelle;
+        ba.addEventListener('click', function () {
+          var faire = a.faire;
+          avant = null; fermer();
+          if (doc.activeElement && doc.activeElement.blur) doc.activeElement.blur();
+          faire();
+        });
+      }
+      var bf = el('button', { type: 'button' }, zone);
+      if (a) bf.className = 'secondaire';
+      bf.textContent = 'Fermer';
+      bf.addEventListener('click', function () { fermer(); });
+      if (options.fin) surFin = options.fin;
+      montrer(f);
+    }
+    function panneau() {
+      var sc = sceneCourante();
+      if (!sc) return;
+      var f = structure(sc), c = f.carte;
+      vider(c);
+      f.setAttribute('aria-label', 'Objets');
+      el('p', { 'class': 'fiche-surtitre' }, c).textContent = 'Sur soi';
+      el('h2', { tabindex: '-1' }, c).textContent = 'Objets';
+      if (!sac.length) el('p', { 'class': 'fiche-vide' }, c).textContent = 'Aucun objet pour l’instant.';
+      else {
+        var liste = el('div', { 'class': 'fiche-liste' }, c);
+        sac.forEach(function (id) {
+          var b = el('button', { type: 'button' }, liste);
+          var d = dessin(id);
+          if (d) b.appendChild(d);
+          el('span', {}, b).textContent = nom(id);
+          b.addEventListener('click', function () { ouvrir(id); });
+        });
+      }
+      var zone = el('div', { 'class': 'fiche-actions' }, c);
+      var bf = el('button', { type: 'button' }, zone);
+      bf.textContent = 'Fermer';
+      bf.addEventListener('click', function () { fermer(); });
+      montrer(f);
+    }
+    // L'annonce « Nouvel objet » : un bandeau qui descend, se touche pour ouvrir la fiche.
+    function signaler(id) {
+      var sc = sceneCourante();
+      if (!sc) return;
+      var t = el('button', { type: 'button', 'class': 'nouvel-objet' }, sc);
+      var d = dessin(id);
+      if (d) t.appendChild(d);
+      var txt = el('span', {}, t);
+      el('small', {}, txt).textContent = 'Nouvel objet';
+      txt.appendChild(doc.createTextNode(nom(id)));
+      var minuterie = setTimeout(retirer, 4800);
+      function retirer() {
+        clearTimeout(minuterie); t.classList.remove('vu');
+        setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 700);
+      }
+      t.addEventListener('pointerup', function (ev) { ev.stopPropagation(); });
+      t.addEventListener('click', function (ev) { ev.stopPropagation(); retirer(); ouvrir(id); });
+      requestAnimationFrame(function () { requestAnimationFrame(function () { t.classList.add('vu'); }); });
+      Son.effet('tinte');
+    }
+    function majBoutons(pulser) {
+      $$('.barre .objets').forEach(function (b) {
+        b.hidden = !sac.length;                  // l'interface n'apparaît que lorsqu'elle sert
+        var c = b.querySelector('.compte');
+        if (c) c.textContent = String(sac.length);
+        b.setAttribute('aria-label', 'Objets : ' + sac.length);
+        if (pulser) { b.classList.remove('pulse'); void b.offsetWidth; b.classList.add('pulse'); }
+      });
+    }
+    return {
+      initialiser: function (liste) { sac = liste.slice(); majBoutons(false); },
+      ajouter: function (id, avecAnnonce) {
+        if (sac.indexOf(id) < 0) sac.push(id);
+        majBoutons(true);
+        if (avecAnnonce) signaler(id);
+        annoncer('Nouvel objet : ' + nom(id));
+      },
+      remplacer: function (ancien, nouveau) {
+        var i = sac.indexOf(ancien);
+        if (i >= 0) sac[i] = nouveau; else if (sac.indexOf(nouveau) < 0) sac.push(nouveau);
+        majBoutons(true);
+      },
+      proposer: function (id, libelle, faire) { actions[id] = { libelle: libelle, faire: faire }; },
+      retirerAction: function (id) { delete actions[id]; },
+      ouvrir: ouvrir,
+      panneau: panneau,
+      presenter: function (id) { return new Promise(function (fin) { ouvrir(id, { nouveau: true, fin: fin }); }); },
+      estOuverte: function () { return !!ouverte; }
+    };
+  })();
   var voile = el('div', { 'class': 'ui', style: 'position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity 700ms;z-index:50;' }, doc.body);
   function fondu(milieu, couleur) {
     voile.style.background = couleur || '#000';
@@ -441,6 +689,11 @@
         var a = Son.basculer();
         $$('.barre button.son').forEach(function (b) { b.setAttribute('aria-pressed', String(a)); });
       });
+      var bObj = el('button', { type: 'button', 'class': 'objets' }, barre);
+      bObj.appendChild(doc.createTextNode('Objets'));
+      el('span', { 'class': 'compte', 'aria-hidden': 'true' }, bObj).textContent = '0';
+      bObj.hidden = true;
+      bObj.addEventListener('click', function (ev) { ev.stopPropagation(); Objets.panneau(); });
       var bLire = el('button', { type: 'button', title: 'Afficher tout le texte, sans animation' }, barre);
       bLire.textContent = 'Lecture';
       bLire.addEventListener('click', function (ev) {
@@ -539,7 +792,8 @@
       var c = consigne(scene, 'Touchez en rythme pour enjamber les tuiles', 1000);
       return new Promise(function (ok) {
         function pas(ev) {
-          if (ev.type === 'keydown' && TOUCHES.indexOf(ev.key) < 0) return;
+          if (Objets.estOuverte()) return;
+          if (ev.type === 'keydown' && (TOUCHES.indexOf(ev.key) < 0 || toucheDeBouton(ev))) return;
           if (ev.type !== 'keydown' && !horsBarre(ev)) return;
           if (ev.cancelable) ev.preventDefault();
           etape++;
@@ -555,7 +809,12 @@
         scene.addEventListener('pointerup', pas); doc.addEventListener('keydown', pas);
       });
     }
-    var recit = new Recit(scene, { portes: { 2: danser }, fin: function () { sceneSuivante(scene); } });
+    var recit = new Recit(scene, {
+      portes: { 2: danser },
+      // « Ses lunettes fumées sur le nez » : premier objet du livre
+      surTemps: function (j) { if (j === 2) Objets.ajouter('lunettes', true); },
+      fin: function () { sceneSuivante(scene); }
+    });
     setTimeout(function () { recit.avancer(); }, 500);
   };
 
@@ -582,6 +841,7 @@
       '<circle id="cible-serrure" cx="820" cy="1010" r="60" fill="none" stroke="#ffe7a8" stroke-width="3" stroke-dasharray="8 10" opacity="0"/>' +
       // l'objet : lunettes puis clé, dans un groupe « visqueux »
       '<g id="objet" style="cursor:grab">' +
+      '<circle id="halo" class="halo-interet" cx="0" cy="0" r="215" fill="none" stroke="#ffe7a8" stroke-width="5" stroke-dasharray="4 14" stroke-linecap="round"/>' +
       '<g id="goo-groupe" filter="url(#goo)">' +
       '<circle id="verre-g" cx="-105" cy="0" r="72" fill="url(#verre)" stroke="#1d130b" stroke-width="16"/>' +
       '<circle id="verre-d" cx="105" cy="0" r="72" fill="url(#verre)" stroke="#1d130b" stroke-width="16"/>' +
@@ -599,6 +859,7 @@
     function q(id) { return svg.querySelector('#' + id); }
     var objet = q('objet'), gooG = q('goo-groupe'), cle = q('cle'), vg = q('verre-g'), vd = q('verre-d');
     var pont = q('pont'), branche = q('branche'), reflet = q('reflet'), jours = q('jours'), cibleSerrure = q('cible-serrure');
+    var halo = q('halo');
     var pose = { x: 600, y: 1700, s: 0.001, r: 0 };
     function placer(dx, dy) {
       objet.setAttribute('transform', 'translate(' + (pose.x + (dx || 0)) + ' ' + (pose.y + (dy || 0)) + ') rotate(' + pose.r + ') scale(' + pose.s + ')');
@@ -608,11 +869,20 @@
     var decor = $('.decor', scene);
     var fini = false;
 
+    // Chaque geste attendu : un halo tout de suite, la consigne seulement après 2,5 s,
+    // et le même geste proposé en bouton dans la fiche de l'objet.
     function oterLunettes() {
-      var c = consigne(scene, 'Touchez les lunettes pour les ôter', 1260);
+      var c = null;
       return anime(900, function (x) { pose.s = lisse(x); pose.y = 1700 - 160 * lisse(x); placer(); })
-        .then(function () { return toucher(objet); })
-        .then(function () { c.effacer(); return anime(700, function (x) { pose.y = 1540 - 120 * lisse(x); pose.s = 1 + 0.1 * lisse(x); placer(); }); });
+        .then(function () {
+          halo.classList.add('actif');
+          c = consigne(scene, 'Touchez les lunettes pour les ôter', 1260, 2500);
+          return toucher(objet, { objet: 'lunettes', libelle: 'Ôter les lunettes' });
+        })
+        .then(function () {
+          c.effacer(); halo.classList.remove('actif');
+          return anime(700, function (x) { pose.y = 1540 - 120 * lisse(x); pose.s = 1 + 0.1 * lisse(x); placer(); });
+        });
     }
     var vibration = false;
     function vibrer() {
@@ -629,8 +899,10 @@
       })(0);
     }
     function gesteVif() {
-      var c = consigne(scene, 'Un geste vif : glissez vers le haut, ou touchez', 1240);
-      return toucher(scene).then(function () { c.effacer(); });
+      halo.classList.add('actif');
+      var c = consigne(scene, 'Un geste vif : glissez vers le haut, ou touchez', 1240, 2500);
+      return toucher(scene, { objet: 'lunettes', libelle: 'Faire un geste vif' })
+        .then(function () { c.effacer(); halo.classList.remove('actif'); });
     }
     function fondreEnCle() {
       Son.effet('fonte');
@@ -652,11 +924,13 @@
       });
     }
     function glisserVersSerrure() {
-      var c = consigne(scene, 'Portez la clé jusqu’à la serrure, ou touchez-la', 1220);
+      var c = consigne(scene, 'Portez la clé jusqu’à la serrure, ou touchez-la', 1220, 2500);
       cibleSerrure.setAttribute('opacity', '0.8');
+      halo.classList.add('actif');
       return new Promise(function (ok) {
-        var prise = false, depart = null, bouge = false;
+        var prise = false, depart = null, bouge = false, fait = false;
         function bas(ev) {
+          if (Objets.estOuverte()) return;
           prise = true; bouge = false; depart = coordScene(scene, ev);
           if (objet.setPointerCapture) { try { objet.setPointerCapture(ev.pointerId); } catch (e) { /* rien */ } }
           if (ev.cancelable) ev.preventDefault();
@@ -668,12 +942,17 @@
           pose.x = p.x; pose.y = p.y; pose.s = 0.8; placer();
         }
         function haut(ev) {
-          if (ev.type === 'keydown') { if (TOUCHES.indexOf(ev.key) < 0) return; terminer(); return; }
+          if (Objets.estOuverte()) return;
+          if (ev.type === 'keydown') { if (TOUCHES.indexOf(ev.key) < 0 || toucheDeBouton(ev)) return; terminer(); return; }
           if (!prise) return;
           prise = false;
           if (!bouge || Math.hypot(pose.x - 820, pose.y - 1010) < 170) terminer();
         }
         function terminer() {
+          if (fait) return;
+          fait = true;
+          Objets.retirerAction('cle');
+          halo.classList.remove('actif');
           objet.removeEventListener('pointerdown', bas); objet.removeEventListener('pointermove', mouv);
           objet.removeEventListener('pointerup', haut); doc.removeEventListener('keydown', haut);
           c.effacer(); cibleSerrure.setAttribute('opacity', '0');
@@ -684,6 +963,7 @@
         objet.style.touchAction = 'none';
         objet.addEventListener('pointerdown', bas); objet.addEventListener('pointermove', mouv);
         objet.addEventListener('pointerup', haut); doc.addEventListener('keydown', haut);
+        Objets.proposer('cle', 'Porter la clé à la serrure', terminer);
       });
     }
     function laisserPasserLeJour() {
@@ -700,9 +980,10 @@
         });
     }
     function tourDePoignet() {
-      var c = consigne(scene, 'Un tour de poignet : touchez la clé', 1180);
-      return toucher(objet).then(function () {
-        c.effacer(); Son.effet('tour');
+      halo.classList.add('actif');
+      var c = consigne(scene, 'Un tour de poignet : touchez la clé', 1180, 2500);
+      return toucher(objet, { objet: 'cle', libelle: 'Donner un tour de poignet' }).then(function () {
+        c.effacer(); halo.classList.remove('actif'); Son.effet('tour');
         return anime(650, function (x) { pose.r = -90 * lisse(x); placer(); });
       });
     }
@@ -714,7 +995,7 @@
       }).then(function () { decor.style.transform = ''; });
     }
     function pousser() {
-      var c = consigne(scene, 'Poussez la porte', 1180);
+      var c = consigne(scene, 'Poussez la porte', 1180, 1800);
       return toucher(scene).then(function () {
         c.effacer(); Son.effet('souffle'); fini = true;
         decor.style.transition = calme ? 'none' : 'transform 2.2s ease-in';
@@ -726,7 +1007,8 @@
       portes: { 2: oterLunettes, 3: gesteVif, 6: glisserVersSerrure, 7: tourDePoignet },
       surTemps: function (j) {
         if (j === 2) vibrer();
-        if (j === 3) return fondreEnCle();
+        // la clé née de la fonte entre dans les objets, et sa fiche se présente une fois
+        if (j === 3) return fondreEnCle().then(function () { Objets.remplacer('lunettes', 'cle'); return Objets.presenter('cle'); });
         if (j === 6) return laisserPasserLeJour();
         if (j === 7) return deconsolider();
       },
@@ -768,6 +1050,7 @@
       var s = scenes[0];
       if (!s) return;
       s.classList.add('active');
+      entrerDansScene(s);
       var a = s.getAttribute('data-son');
       if (a) Son.ambiance(a);
       doc.addEventListener('pointerdown', function premier() {
