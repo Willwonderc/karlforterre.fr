@@ -94,6 +94,8 @@ Une par lieu, fabriquée en direct (Web Audio) ; « fait » : déjà dans le pro
 ## Les mécaniques de geste
 
 Tous les gestes du livre se ramènent à douze mécaniques. « Fait » : déjà dans le prototype.
+Aucun glissement horizontal : dans Apple Books, il tourne la page. Les glissements vont vers
+le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace toujours.
 
 | Mécanique | Description | Gestes | Tableaux | Moteur |
 |---|---|---|---|---|
@@ -107,8 +109,8 @@ Tous les gestes du livre se ramènent à douze mécaniques. « Fait » : déjà 
 | **tracer** | Tracer ou suivre un chemin du doigt (moustache, fumée, lettre) | 3 | 1.4, 6.6, 7.7 | à faire |
 | **porter** | Porter un objet jusqu'à sa place (glisser-déposer) | 3 | 1.3, 6.5, 7.8 | fait |
 | **maintenir** | Maintenir le doigt (ou une touche) | 8 | 2.2, 2.9, 3.10, 6.5, 6.10, 7.1, 7.10, 7.13 | à faire |
-| **glisser** | Glisser dans une direction | 18 | 1.3, 1.7, 1.8, 2.1, 2.6, 2.8, 3.6, 3.7, 3.11, 3.14, 4.4, 4.5, 6.7, 6.8, 6.15, 7.4, 7.6, 7.11 | en partie |
-| **toucher** | Toucher (ou Entrée, Espace) | 23 | 1.3, 1.4, 1.9, 2.3, 2.4, 2.7, 3.2, 3.8, 4.3, 4.7, 5.1, 5.2, 5.5, 5.7, 6.2, 6.4, 6.12, 6.13, 7.5 | fait |
+| **glisser** | Glisser dans une direction | 16 | 1.3, 1.7, 1.8, 2.1, 2.6, 2.8, 3.6, 3.11, 3.14, 4.4, 4.5, 6.8, 6.15, 7.4, 7.6, 7.11 | en partie |
+| **toucher** | Toucher (ou Entrée, Espace) | 25 | 1.3, 1.4, 1.9, 2.3, 2.4, 2.7, 3.2, 3.7, 3.8, 4.3, 4.7, 5.1, 5.2, 5.5, 5.7, 6.2, 6.4, 6.7, 6.12, 6.13, 7.5 | fait |
 
 ## Les objets et leurs états
 
@@ -372,7 +374,7 @@ Tous les gestes du livre se ramènent à douze mécaniques. « Fait » : déjà 
 - **Lieu** : Paris, le parc Montsouris · **monde** : Julie · **entrée** : obturateur
 - **Décor** : Le parc ; le pont de rocaille aux branches nouées ; les amoureux accoudés ; la maison de lierre.
 - **Photos de Karl** : [10524140](https://photos.karlforterre.fr/photo/10524140/) « Arche de rocaille au-dessus d'une allée dans un jardin romantique » (photo) ; [12073840](https://photos.karlforterre.fr/photo/12073840/) « Pont vers la nature » (photo) ; [31514847](https://photos.karlforterre.fr/photo/31514847/) « Amour » (photo) ; [10199772](https://photos.karlforterre.fr/photo/10199772/) « Vieille maison couverte de lierre aux volets de bois et femme assise devant » (photo)
-- **Geste** : « Leurs pas sous l’ombrage des arbres les conduisent sur un pont » → marcher : glisser vers l'avant, le parc défile (sinon : toucher)
+- **Geste** : « Leurs pas sous l’ombrage des arbres les conduisent sur un pont » → marcher : glisser vers le haut, le parc défile (sinon : toucher)
 - **Moment** : « ils regardent le Merle noir qui fait son nid » → un merle au nid, en passant
 - **Moment** : « une petite maison beige couverte de lierre » → la maison de lierre
 - **Son** : parc ; merle
@@ -468,7 +470,7 @@ Tous les gestes du livre se ramènent à douze mécaniques. « Fait » : déjà 
 
 - **Lieu** : Pékin, la bibliothèque nationale · **monde** : Darshan · **entrée** : même plan
 - **Décor** : Le coin de table ; le recueil ; les deux vers s'écrivent au pinceau.
-- **Geste** : « Darshan pour sa part parcourt un recueil de poèmes sanskrit » → tourner les pages : glisser (sinon : flèches)
+- **Geste** : « Darshan pour sa part parcourt un recueil de poèmes sanskrit » → tourner les pages : toucher le coin de la page (sinon : flèches)
 - **Moment** : « L’amour est le lit de la famille » → calligraphie à l'encre
 - **Moment** : « La clé de sa chambre est la sincérité et sa porte la réciprocité » → calligraphie ; les deux vers entrent au carnet
 - **Son** : bibliothèque
@@ -542,7 +544,7 @@ Tous les gestes du livre se ramènent à douze mécaniques. « Fait » : déjà 
 
 - **Lieu** : Aluva · **monde** : Darshan · **entrée** : même plan
 - **Décor** : Le même décor ; le vent se lève.
-- **Geste** : « sema aux quatre vents les graines de sa libération » → semer : quatre gestes, vers les quatre bords (sinon : toucher quatre fois)
+- **Geste** : « sema aux quatre vents les graines de sa libération » → semer : quatre touchers, aux quatre coins de la page (sinon : toucher quatre fois)
 - **Moment** : « dans quatre jours je reçois l’élue de mon cœur » → compte à rebours : quatre jours
 - **Son** : kerala ; vent
 
@@ -587,7 +589,7 @@ Tous les gestes du livre se ramènent à douze mécaniques. « Fait » : déjà 
 - **Lieu** : Une rue, le campus · **monde** : Julie · **entrée** : obturateur
 - **Décor** : Julie de dos, dans la rue ; les étudiants.
 - **Photos de Karl** : [33035648](https://photos.karlforterre.fr/photo/33035648/) « Dos » (photo) ; [18458017](https://photos.karlforterre.fr/photo/18458017/) « Étudiant sur sa route » (photo)
-- **Geste** : « je me décide à faire le chemin » → marcher : glisser vers l'avant (sinon : toucher)
+- **Geste** : « je me décide à faire le chemin » → marcher : glisser vers le haut (sinon : toucher)
 - **Son** : rue
 - **Note** : La photo « Dos » de Karl : Julie vue de dos, un chouchou rouge dans les cheveux.
 
@@ -598,7 +600,7 @@ Tous les gestes du livre se ramènent à douze mécaniques. « Fait » : déjà 
 - **Lieu** : La rue, puis la campagne rêvée · **monde** : Julie · **entrée** : même plan
 - **Décor** : La rue grise ; puis la campagne, le temps d'une pensée.
 - **Photos de Karl** : [10355467](https://photos.karlforterre.fr/photo/10355467/) « Piéton traversant un carrefour devant un immeuble moderne arrondi » (photo) ; [13087478](https://photos.karlforterre.fr/photo/13087478/) « Chemin de terre bordé d'arbres à Moyemont, un été idyllique » (photo)
-- **Geste** : « Je veux prendre l’air » → écarter la ville d'un glissement : la campagne apparaît (sinon : toucher)
+- **Geste** : « Je veux prendre l’air » → glisser vers le haut : la ville s'efface, la campagne apparaît (sinon : toucher)
 - **Son** : rue ; puis oiseaux de la campagne
 - **Note** : Le chemin de Moyemont, photo la plus vue de Karl après le ciel étoilé.
 
@@ -821,7 +823,7 @@ Tous les gestes du livre se ramènent à douze mécaniques. « Fait » : déjà 
 - **Lieu** : L'appartement, la fenêtre · **monde** : Julie · **entrée** : même plan
 - **Décor** : Les moulures ; par la fenêtre, une ville qui n'est pas la rue Rousseau.
 - **Photos de Karl** : [12443176](https://photos.karlforterre.fr/photo/12443176/) « Toits pictaves » (photo)
-- **Geste** : « Au bord de sa fenêtre » → écarter le rideau : la rue n'est pas la rue Rousseau (sinon : toucher)
+- **Geste** : « Au bord de sa fenêtre » → toucher le rideau, qui s'écarte : la rue n'est pas la rue Rousseau (sinon : toucher)
 - **Son** : appartement
 
 ### 6.8 Le thé de haut
@@ -909,7 +911,7 @@ Tous les gestes du livre se ramènent à douze mécaniques. « Fait » : déjà 
 - **Lieu** : Le palier de Julie · **monde** : Julie · **entrée** : porte
 - **Décor** : Julie seule, ses lierres, le paquet au ruban rouge.
 - **Photos de Karl** : [10199772](https://photos.karlforterre.fr/photo/10199772/) « Vieille maison couverte de lierre aux volets de bois et femme assise devant » (photo) ; [34978560](https://photos.karlforterre.fr/photo/34978560/) « Entrée de maison éclairée par une seule lampe par une nuit de brouillard » (photo)
-- **Geste** : « elle parcourt les quelques mètres la séparant de son palier » → traverser le placard : glisser vers l'avant (sinon : toucher)
+- **Geste** : « elle parcourt les quelques mètres la séparant de son palier » → traverser le placard : glisser vers le haut (sinon : toucher)
 - **Moment** : « son paquet au ruban rouge à la main » → le paquet, jamais offert
 - **Son** : rue ; soir
 - **Repérage** : Paquet de pâtisserie noué d'un ruban rouge

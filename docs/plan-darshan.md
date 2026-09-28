@@ -38,10 +38,15 @@ mêmes sources :
 **Piste recommandée : « le livre des portes »** (partie 4). Chaque geste du lecteur naît
 d'une phrase du livre, sans jamais en changer un mot. Le monde de Darshan est à l'encre et
 à l'aquarelle, comme les toiles que le texte lui prête ; celui de Julie passe par les
-photographies de Karl. Les portes franchies forment une constellation. À la fin, les
-étoiles s'éteignent une à une et l'interface meurt avec la magie. En chiffres : une
-centaine de tableaux, une dizaine de sessions Claude, 0 € de dépenses hors ISBN, la voix
-de Karl en option.
+photographies de Karl. Les portes franchies forment une constellation. Entre deux
+tableaux, une grammaire de transitions dit ce qui se passe : trois coups de pinceau quand
+Darshan change de lieu, des bandes obliques façon Persona où claque le titre de chaque
+chapitre, les lames d'un obturateur dans le monde photographié de Julie ; quand un objet se
+métamorphose, il éclate en grand. À la fin, les étoiles s'éteignent une à une et
+l'interface meurt avec la magie. En chiffres : 85 tableaux, découpés et vérifiés contre le
+livre ([darshan-decoupage.md](darshan-decoupage.md)), 67 gestes, 77 photographies de Karl
+mises en scène, une dizaine de sessions Claude, 0 € de dépenses hors ISBN, la voix de Karl
+en option.
 
 ## 1. Ce que le texte offre déjà à un jeu
 
@@ -154,8 +159,12 @@ tirée du jeu par le studio vidéo du dépôt PexelsWillwonder.
 
 ### Chapitre par chapitre
 
-Le livre fait environ 8 200 mots, soit une centaine de tableaux de 60 à 110 mots. Un
-tableau, c'est une page fixe : un décor, son texte, parfois un geste.
+Un tableau, c'est une page fixe : un décor, son texte, parfois un geste. Le découpage
+complet, [darshan-decoupage.md](darshan-decoupage.md), en compte 85, de 40 à 160 mots
+(99 en moyenne) : pour chacun, son texte (vérifié contre le livre par programme), son
+lieu, son décor et les photos de Karl, ses gestes, ses objets et leurs changements
+d'état, sa transition d'entrée, son son, et les photos qui manquent encore. Il est écrit
+par `outils/darshan/decoupage.py`. Ci-dessous, l'esprit de chaque chapitre.
 
 **Poème d'ouverture** (145 mots avec la dédicace). Le ciel étoilé photographié par Karl ;
 les vers se déposent un à un ; au dernier (« La noirceur figée finit toujours par
@@ -273,11 +282,21 @@ environ 430 mots, soit 5 % du livre.
 - **Interface d'objet** (ajoutée le même jour) : fiche des lunettes et de la clé, faite de
   phrases du livre déjà lues, bouton « Objets », annonce « Nouvel objet », halo, consigne
   différée, geste proposé en bouton ([plan-darshan-interface.md](plan-darshan-interface.md)).
+- **Transitions** (ajoutées le même jour) : la lumière jaillit du bouton « Ouvrir » ; le
+  titre « Un ciel mouvant » claque sur des bandes obliques ; trois coups de pinceau mènent
+  aux tuiles ; un iris se referme sur le pigeonnier ; quand les lunettes fondent, la clé
+  éclate en grand avec « elles se transforment », puis sa fiche s'ouvre en diagonale ;
+  l'annonce « Nouvel objet » claque depuis la gauche et l'objet vole jusqu'au bouton
+  « Objets » ; Aluva paraît dans l'embrasure de la porte. Dans l'EPUB, chaque page joue
+  son entrée en s'ouvrant. Un banc d'essai (`transitions.html`) montre aussi l'obturateur
+  et le glissement du monde de Julie, sur trois photos de Karl, et une photo de Karl
+  passée à l'encre par programme.
 
 Résultats :
 - **EPUBCheck 5.4.0 : 0 erreur, 0 avertissement.**
-- La partie jouée par programme dans Chromium, sur téléphone et sur ordinateur, traverse
-  les six scènes sans aucune erreur.
+- La partie jouée par programme dans Chromium, sur téléphone, sur ordinateur et en
+  mouvement réduit, traverse les six scènes sans aucune erreur ; chaque transition du
+  banc d'essai se joue et ne laisse aucun calque derrière elle.
 - **Sans script**, chaque page reste un livre illustré où tout le texte se lit.
 - **Pas encore essayé dans Apple Books** ni dans l'application Kobo : aucun Mac ni iPhone
   dans la session. C'est le premier test à faire (partie 9).
@@ -298,14 +317,17 @@ liseuses, et l'intérêt d'un lecteur pendant quarante minutes.
   lisible par VoiceOver), jamais une image.
 - **Moteur.** Un seul fichier JavaScript sans dépendance (quelques dizaines de Ko,
   minifié : règle Qualebook 68). Il gère les temps de texte, les gestes, les sons, les
-  particules, les métamorphoses en SVG, le carnet, l'inventaire et l'accessibilité. Chaque
+  particules, les métamorphoses en SVG, les transitions (balayages entre tableaux, éclats
+  d'objet), le carnet, l'inventaire et l'accessibilité. Chaque
   page déclare sa scène par des attributs ; l'état se reconstitue page par page, et la
   mémoire locale n'est qu'un bonus.
 - **Images.** Décors dessinés par programme (Python, SVG) : toits, portes, palmiers,
   fleuve, rayonnages, désert, lanterne. Ils sont rendus en JPEG ou WebP par Chromium. Les
-  photos de Karl viennent de Pexels, en pleine définition ; en option, une séance de
-  repérage à Paris (parc Montsouris, rue de Rungis, une vitrine de pâtisserie, un couloir
-  de métro) sur une liste d'une quinzaine de plans. Les illustrations assistées par IA
+  photos de Karl viennent de Pexels, en pleine définition : telles quelles dans le monde de
+  Julie, ou passées à l'encre et à l'aquarelle par programme pour celui de Darshan
+  (`images.py encre`, à régler décor par décor). Le découpage en attribue 77 ; en option,
+  une séance de repérage à Paris (parc Montsouris, rue de Rungis, une vitrine de
+  pâtisserie, un couloir d'hôpital) sur une liste de 21 plans. Les illustrations assistées par IA
   restent une option à débattre : elles contrediraient le parti pris d'un auteur qui
   photographie et dessine lui-même.
 - **Son.** Ambiances fabriquées en direct, doublées de fichiers AAC pour Apple. Musique et
@@ -318,7 +340,8 @@ liseuses, et l'intérêt d'un lecteur pendant quarante minutes.
   sur le texte est automatique : Storyteller et son outil stalign (licence MIT, phrase par
   phrase), ou Montreal Forced Aligner (modèle français CC BY 4.0, mot par mot). En
   secours, une voix de synthèse libre (Piper « siwis » ou « mls », CC BY 4.0), à créditer.
-- **Fabrication.** Un programme Python lit les sources et écrit les trois éditions. Une
+- **Fabrication.** Un programme Python lit les sources et écrit les trois éditions ; les
+  tableaux viennent des données du découpage (`outils/darshan/decoupage.py`). Une
   tâche GitHub « Darshan » le relance à chaque modification, sur le modèle de la tâche
   « Pages en anglais et en chinois ». Elle vérifie avec EPUBCheck et Ace by DAISY, joue
   le livre dans Chromium et en photographie chaque page pour la relecture de Karl. Karl
@@ -397,12 +420,12 @@ sûr.
 | Chantier | Contenu | Réussi quand |
 |---|---|---|
 | D1. Fondations | Texte source unique (et corrections validées) ; moteur tiré du prototype ; fabrication des trois éditions ; tâche GitHub avec EPUBCheck, Ace, partie jouée et captures ; EPUB classique corrigé, aux mentions de Karl (ISBN à son nom s'il en a pris un), avec métadonnées d'accessibilité | L'EPUB classique passe EPUBCheck et Ace ; Karl a ouvert l'extrait jouable dans Apple Books sur son iPhone et son Mac |
-| D2. Direction artistique | Bible visuelle (encre et aquarelle, traitement des photos) ; générateurs des éléments récurrents ; sélection des photos de Karl et liste de repérages ; une trentaine de décors | Karl valide la planche des décors |
-| D3. Chapitres 1 et 2 | Jivan, la moustache, Paris dans le Periyar ; le restaurant, le souvenir de la vitrine, Montsouris | Les deux chapitres se jouent du début à la fin |
-| D4. Chapitre 3 | Histoire des portes, bibliothèque de Pékin, vers sanskrits, mudrā à deux pouces, porte à la lanterne | Idem |
-| D5. Chapitres 4 et 5 | Interface de Julie, métro, hôpital, marché et inventaire, galerie du téléphone, vitrine embuée | Idem |
-| D6. Chapitre 6 | Listes parallèles, appartement, thé versé, portes qui ne mènent nulle part, placard | Idem |
-| D7. Chapitre 7 et fin | Désert en fleurs, porte du local, lettre, Paris qui s'efface, porte qui perce le trottoir, prière, extinction de l'interface | Le livre se joue en entier |
+| D2. Direction artistique | Bible visuelle (encre et aquarelle, traitement des photos) ; générateurs des éléments récurrents ; passage à l'encre des photos de Karl réglé décor par décor ; une trentaine de décors. La sélection des photos et la liste des repérages sont faites dans le découpage | Karl valide la planche des décors et la sélection des photos |
+| D3. Chapitres 1 et 2 | Tableaux 0.1 et 1.4 à 2.10 du découpage : Jivan, la moustache, Paris dans le Periyar ; le restaurant, le souvenir de la vitrine, Montsouris | Les deux chapitres se jouent du début à la fin |
+| D4. Chapitre 3 | Tableaux 3.1 à 3.14 : histoire des portes, bibliothèque de Pékin, vers sanskrits, mudrā à deux pouces, porte à la lanterne | Idem |
+| D5. Chapitres 4 et 5 | Tableaux 4.1 à 5.11 : interface de Julie, métro, hôpital, marché et inventaire, galerie du téléphone, vitrine embuée | Idem |
+| D6. Chapitre 6 | Tableaux 6.1 à 6.15 : listes parallèles, appartement, thé versé, portes qui ne mènent nulle part, placard | Idem |
+| D7. Chapitre 7 et fin | Tableaux 7.1 à 8.1 : désert en fleurs, porte du local, lettre, Paris qui s'efface, porte qui perce le trottoir, prière, extinction de l'interface | Le livre se joue en entier |
 | D8. Son et voix | Passe sonore complète ; voix de Karl alignée ; fichier des licences | Toutes les pages ont leur son, coupable ; la lecture synchronisée marche dans Apple Books |
 | D9. Accessibilité, essais, parution | Ace sans erreur grave ; essais sur appareils ; édition web ; dossiers Apple Books et Kobo ; bande-annonce par le studio vidéo | Karl approuve la version finale |
 | D10. Traductions (option) | Anglais et chinois, avec relecture littéraire | Idem en trois langues |
@@ -423,12 +446,12 @@ Chantier D1 de docs/plan-darshan.md : fondations du livre jouable.
 
 ```text
 Chantier D2 de docs/plan-darshan.md : direction artistique.
-Écris la bible visuelle (docs/darshan-bible-visuelle.md) : monde de Darshan à l'encre et à l'aquarelle d'après la description de ses toiles au chapitre 6, monde de Julie en photographies (les miennes, sur Pexels), règles de couleur, de lumière et de typographie (Amiri, Unna). Écris les générateurs des éléments récurrents (toits, portes et clés, palmiers, fleuve, rayonnages, désert, lanterne) et une trentaine de décors. Propose une sélection de mes photos pour les chapitres 2, 4, 5 et 7, et une liste de repérages à faire à Paris. Montre-moi une planche de tous les décors avant d'ouvrir la pull request.
+Écris la bible visuelle (docs/darshan-bible-visuelle.md) : monde de Darshan à l'encre et à l'aquarelle d'après la description de ses toiles au chapitre 6, monde de Julie en photographies (les miennes, sur Pexels), règles de couleur, de lumière et de typographie (Amiri, Unna), grammaire des transitions (docs/darshan-decoupage.md). Écris les générateurs des éléments récurrents (toits, portes et clés, palmiers, fleuve, rayonnages, désert, lanterne) et une trentaine de décors ; règle le passage à l'encre de mes photos (outils/darshan/images.py, commande encre) pour chaque photo que le découpage marque « encre ». Reprends la sélection de mes photos et la liste des repérages du découpage, en y changeant ce que je te demande. Montre-moi une planche de tous les décors avant d'ouvrir la pull request.
 ```
 
 ```text
 Chantier D3 (puis D4, D5, D6, D7, en changeant le numéro et les chapitres) de docs/plan-darshan.md : chapitres 1 et 2 du livre jouable.
-Suis la partie 4 du plan chapitre par chapitre. Chaque geste doit naître d'une phrase du livre, avec un équivalent au toucher simple et au clavier. Aucun texte nouveau hors interface ; les textes d'interface sont courts et je les valide. Vérifie la partie jouée et le mode sans script dans Chromium, envoie-moi les captures, puis ouvre la pull request.
+Suis docs/darshan-decoupage.md tableau par tableau (section « Production », chantier D3) : texte, décor, photos, gestes, objets et leurs états, transition d'entrée, son. Fabrique les tableaux à partir des données de outils/darshan/decoupage.py plutôt que de les recopier. Chaque geste doit naître d'une phrase du livre, avec un équivalent au toucher simple et au clavier. Aucun texte nouveau hors interface ; les textes d'interface sont courts et je les valide. Vérifie la partie jouée (téléphone, ordinateur, mouvement réduit) et le mode sans script dans Chromium, envoie-moi les captures, puis ouvre la pull request.
 ```
 
 ```text
@@ -455,7 +478,12 @@ Ace by DAISY sans erreur grave, mode lecture, mouvement réduit, clavier, lecteu
 5. **Décider de la voix** : enregistrer le livre soi-même (une heure environ, au Dictaphone
    de l'iPhone), ou non.
 6. **Choisir la ballade italienne** du chapitre 5 et valider les textes d'interface.
-7. En option : **une demi-journée de repérages photo à Paris**, sur la liste du chantier D2.
+7. **Valider la sélection de ses photos** dans le découpage (77, avec leur tableau). Deux
+   montrent une personne : le portrait 38536478 (lunettes, moustache, bouc : un Darshan
+   possible, seulement avec l'accord écrit du modèle) et « Dos » (33035648, une jeune femme
+   de dos, pour Julie) ; Karl sait qui y figure et ce qu'il peut en faire.
+8. En option : **une demi-journée de repérages photo à Paris**, sur la liste des 21 plans
+   qui clôt le découpage.
 
 ## 10. Risques et garde-fous
 
@@ -467,7 +495,7 @@ Ace by DAISY sans erreur grave, mode lecture, mouvement réduit, clavier, lecteu
 | Mémoire locale absente | État tiré de la page où l'on se trouve |
 | Texte altéré par erreur | Comparaison automatique avec la source à chaque fabrication |
 | Poids ou lenteur sur un vieil appareil | Décors précalculés, peu de filtres en direct, mode mouvement réduit ; moins de 60 Mo avec la voix |
-| Direction artistique inégale sur cent tableaux | Bible visuelle et générateurs communs (D2) ; planche validée par Karl |
+| Direction artistique inégale sur 85 tableaux | Bible visuelle et générateurs communs (D2) ; planche validée par Karl |
 | Ambition qui déborde | Un chapitre par session, chacun jouable et validé avant le suivant |
 | Travail perdu en cours de session | Pousser sur la branche à chaque étape |
 

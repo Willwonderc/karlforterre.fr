@@ -61,10 +61,13 @@ dans le dépôt Willwonderc/PexelsWillwonder.
 - Polices hébergées dans `fonts/` : aucun appel à Google Fonts.
 - Darshan jouable : évaluation, piste retenue et chantiers D1 à D10 dans
   `docs/plan-darshan.md` ; interface (fiches d'objet, carnet, regard, monde de Julie) et
-  chantiers I1 à I6 dans `docs/plan-darshan-interface.md` ; prototype (extrait jouable, EPUB
-  et web) dans `outils/darshan/`,
-  relié à aucune page. Le texte y est lu dans `livres/darshan.epub`, jamais recopié ni
-  modifié ; les coquilles de l'annexe A attendent l'accord de Karl.
+  chantiers I1 à I6 dans `docs/plan-darshan-interface.md` ; découpage de tout le livre en
+  85 tableaux (gestes, objets, transitions, photos de Karl, repérages) dans
+  `docs/darshan-decoupage.md`, écrit par `outils/darshan/decoupage.py` (modifier le
+  programme, jamais le document) ; prototype (extrait jouable, EPUB et web, banc d'essai des
+  transitions) dans `outils/darshan/`, relié à aucune page. Le texte y est lu dans
+  `livres/darshan.epub`, jamais recopié ni modifié ; les coquilles de l'annexe A attendent
+  l'accord de Karl.
 - Section Photographie : elle lit à chaque visite `https://photos.karlforterre.fr/apercu.json`,
   écrit chaque nuit par `vitrine/build.py` du dépôt PexelsWillwonder (sélection, séries,
   galeries, chiffres). La liste `photosIntegrees` de `script.js` ne sert qu'en secours.

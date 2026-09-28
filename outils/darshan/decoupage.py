@@ -389,7 +389,7 @@ TABLEAUX = [
     T("2.8", "Montsouris", (60, None), "Paris, le parc Montsouris", "Julie", "obturateur",
       "Le parc ; le pont de rocaille aux branches nouées ; les amoureux accoudés ; la maison de lierre.",
       photos=[(10524140, "photo"), (12073840, "photo"), (31514847, "photo"), (10199772, "photo")],
-      gestes=[("Leurs pas sous l’ombrage des arbres les conduisent sur un pont", "marcher : glisser vers l'avant, le parc défile", "toucher")],
+      gestes=[("Leurs pas sous l’ombrage des arbres les conduisent sur un pont", "marcher : glisser vers le haut, le parc défile", "toucher")],
       moments=[("ils regardent le Merle noir qui fait son nid", "un merle au nid, en passant"),
                ("une petite maison beige couverte de lierre", "la maison de lierre")],
       son="parc ; merle",
@@ -440,7 +440,7 @@ TABLEAUX = [
       son="bibliothèque ; pages"),
     T("3.7", "Le recueil sanskrit", (73, "Depuis un coin de table"), "Pékin, la bibliothèque nationale", "Darshan", "—",
       "Le coin de table ; le recueil ; les deux vers s'écrivent au pinceau.",
-      gestes=[("Darshan pour sa part parcourt un recueil de poèmes sanskrit", "tourner les pages : glisser", "flèches")],
+      gestes=[("Darshan pour sa part parcourt un recueil de poèmes sanskrit", "tourner les pages : toucher le coin de la page", "flèches")],
       moments=[("L’amour est le lit de la famille", "calligraphie à l'encre"),
                ("La clé de sa chambre est la sincérité et sa porte la réciprocité", "calligraphie ; les deux vers entrent au carnet")],
       son="bibliothèque"),
@@ -471,7 +471,7 @@ TABLEAUX = [
       "Retour au fleuve : Jivan découpe des légumes.", photos=[(10652212, "modèle")], son="kerala"),
     T("3.13", "Le véritable amour", (93, None), "Aluva", "Darshan", "—", "Le même décor.", son="kerala"),
     T("3.14", "Quatre jours", (96, None), "Aluva", "Darshan", "—", "Le même décor ; le vent se lève.",
-      gestes=[("sema aux quatre vents les graines de sa libération", "semer : quatre gestes, vers les quatre bords", "toucher quatre fois")],
+      gestes=[("sema aux quatre vents les graines de sa libération", "semer : quatre touchers, aux quatre coins de la page", "toucher quatre fois")],
       moments=[("dans quatre jours je reçois l’élue de mon cœur", "compte à rebours : quatre jours")],
       son="kerala ; vent"),
 
@@ -495,12 +495,12 @@ TABLEAUX = [
     T("4.4", "La friperie", (102, None), "Une rue, le campus", "Julie", "obturateur",
       "Julie de dos, dans la rue ; les étudiants.",
       photos=[(33035648, "photo"), (18458017, "photo")],
-      gestes=[("je me décide à faire le chemin", "marcher : glisser vers l'avant", "toucher")],
+      gestes=[("je me décide à faire le chemin", "marcher : glisser vers le haut", "toucher")],
       son="rue", note="La photo « Dos » de Karl : Julie vue de dos, un chouchou rouge dans les cheveux."),
     T("4.5", "Partir", (103, "Ma famille"), "La rue, puis la campagne rêvée", "Julie", "—",
       "La rue grise ; puis la campagne, le temps d'une pensée.",
       photos=[(10355467, "photo"), (13087478, "photo")],
-      gestes=[("Je veux prendre l’air", "écarter la ville d'un glissement : la campagne apparaît", "toucher")],
+      gestes=[("Je veux prendre l’air", "glisser vers le haut : la ville s'efface, la campagne apparaît", "toucher")],
       son="rue ; puis oiseaux de la campagne", note="Le chemin de Moyemont, photo la plus vue de Karl après le ciel étoilé."),
     T("4.6", "Le prince", (105, None), "La vitrine de la rue Rousseau", "Julie", "obturateur",
       "La vitrine du chapitre 2, vue par Julie.",
@@ -611,7 +611,7 @@ TABLEAUX = [
     T("6.7", "Le vertige", (149, None), "L'appartement, la fenêtre", "Julie", "—",
       "Les moulures ; par la fenêtre, une ville qui n'est pas la rue Rousseau.",
       photos=[(12443176, "photo")],
-      gestes=[("Au bord de sa fenêtre", "écarter le rideau : la rue n'est pas la rue Rousseau", "toucher")],
+      gestes=[("Au bord de sa fenêtre", "toucher le rideau, qui s'écarte : la rue n'est pas la rue Rousseau", "toucher")],
       son="appartement"),
     T("6.8", "Le thé de haut", (150, None), "L'appartement", "Julie", "—",
       "La théière levée, le filet de thé, la tasse de cuivre ; « Le lac Ladoga ».",
@@ -653,7 +653,7 @@ TABLEAUX = [
     T("6.15", "Un moyen", (167, None), "Le palier de Julie", "Julie", "porte",
       "Julie seule, ses lierres, le paquet au ruban rouge.",
       photos=[(10199772, "photo"), (34978560, "photo")],
-      gestes=[("elle parcourt les quelques mètres la séparant de son palier", "traverser le placard : glisser vers l'avant", "toucher")],
+      gestes=[("elle parcourt les quelques mètres la séparant de son palier", "traverser le placard : glisser vers le haut", "toucher")],
       moments=[("son paquet au ruban rouge à la main", "le paquet, jamais offert")],
       son="rue ; soir", reperages=["Paquet de pâtisserie noué d'un ruban rouge"]),
 
@@ -922,6 +922,8 @@ def document():
     w("## Les mécaniques de geste")
     w("")
     w("Tous les gestes du livre se ramènent à douze mécaniques. « Fait » : déjà dans le prototype.")
+    w("Aucun glissement horizontal : dans Apple Books, il tourne la page. Les glissements vont vers")
+    w("le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace toujours.")
     w("")
     w("| Mécanique | Description | Gestes | Tableaux | Moteur |")
     w("|---|---|---|---|---|")

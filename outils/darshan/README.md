@@ -8,6 +8,10 @@ L'extrait couvre le poème d'ouverture et le début du chapitre « Un ciel mouva
 jusqu'à l'arrivée à Aluva : six tableaux, environ 430 mots, le texte de l'édition 2023
 sans un mot changé.
 
+Le livre entier est découpé en 85 tableaux dans
+[docs/darshan-decoupage.md](../../docs/darshan-decoupage.md), document écrit par
+`decoupage.py` (voir plus bas).
+
 Rien ici n'est encore relié au site : aucune page ne pointe vers ce dossier.
 
 ## Jouer
@@ -21,11 +25,16 @@ Rien ici n'est encore relié au site : aucune page ne pointe vers ce dossier.
   livre illustré où tout le texte se lit.
 - Le bouton **Lecture** affiche tout le texte sans animation ; **Son** coupe ou remet le
   son.
-- Le bouton **Objets** apparaît avec le premier objet (les lunettes, sur les tuiles). Il
-  ouvre la fiche de chaque objet : un gros plan qu'on fait tourner du doigt, les phrases du
-  livre déjà lues qui en parlent, et le geste du moment en bouton. La fiche de la clé se
-  présente d'elle-même après la fonte des lunettes. Plan de l'interface :
+- Le bouton **Objets** apparaît avec le premier objet (les lunettes, sur les tuiles) : les
+  lunettes volent de l'annonce « Nouvel objet » jusqu'à lui. Il ouvre la fiche de chaque
+  objet : un gros plan qu'on fait tourner du doigt, les phrases du livre déjà lues qui en
+  parlent, et le geste du moment en bouton. Quand les lunettes fondent, la clé éclate en
+  grand, puis sa fiche s'ouvre d'elle-même. Plan de l'interface :
   [docs/plan-darshan-interface.md](../../docs/plan-darshan-interface.md).
+- **Transitions** : chaque scène entre par la sienne (porte, bandes du chapitre, encre,
+  iris). Le **banc d'essai**, `outils/darshan/dist/web/transitions.html`, les joue toutes à
+  la demande, y compris l'obturateur et le glissement du monde de Julie, sur des photos de
+  Karl. Si le système demande moins de mouvement, elles deviennent des fondus courts.
 
 ## Fabriquer
 
@@ -45,18 +54,35 @@ Contrôle : EPUBCheck 5.4.0 ne relève ni erreur ni avertissement.
 java -jar epubcheck.jar outils/darshan/dist/darshan-extrait-jouable.epub
 ```
 
+## Découper le livre
+
+```
+python3 outils/darshan/decoupage.py
+```
+
+Python seul. Le programme contient le découpage de tout le livre en tableaux (texte, lieu,
+décor, photos de Karl, gestes, objets et leurs états, transition, son, repérages), le
+vérifie contre `livres/darshan.epub` (tout le texte, dans l'ordre ; chaque geste cité mot
+pour mot ; de 40 à 160 mots par tableau) et écrit
+[docs/darshan-decoupage.md](../../docs/darshan-decoupage.md). Pour changer le découpage, on
+modifie les données du programme, jamais le document.
+
 ## Essayer automatiquement
 
 Dans une session Claude (Playwright et Chromium y sont installés), depuis `outils/darshan/` :
 
 ```
 NODE_PATH=/opt/node22/lib/node_modules node essai.js telephone
+NODE_PATH=/opt/node22/lib/node_modules node essai.js calme
+NODE_PATH=/opt/node22/lib/node_modules node essai-transitions.js telephone
 NODE_PATH=/opt/node22/lib/node_modules node captures.js
 ```
 
-`essai.js` joue l'extrait de bout en bout et photographie chaque étape dans `captures/`
-(non suivi par Git) ; `captures.js` photographie la version ordinateur, les pages de l'EPUB
-et ces mêmes pages sans script.
+`essai.js` joue l'extrait de bout en bout (`telephone`, `ordinateur`, ou `calme` pour le
+mouvement réduit) et photographie chaque étape, balayages compris, dans `captures/` (non
+suivi par Git) ; `essai-transitions.js` photographie chaque transition du banc d'essai à
+plusieurs instants et vérifie qu'aucun calque ne reste derrière elle ; `captures.js`
+photographie la version ordinateur, les pages de l'EPUB et ces mêmes pages sans script.
 
 ## Refaire les images
 
@@ -68,16 +94,30 @@ python3 outils/darshan/images.py
 
 Le ciel et les tuiles viennent de deux photos de Karl sur Pexels (27116682 et 34500347) ;
 les toits, la tour Eiffel, le pigeonnier, la porte et Aluva sont dessinés par `art.py`,
-puis photographiés par Chromium (`rendu.js`).
+puis photographiés par Chromium (`rendu.js`). Le banc d'essai ajoute le monde de Julie :
+trois photos de Karl recadrées en 2:3 (« Métro », « Style haussmannien », « Pluie »).
+
+Pour passer une photo de Karl à l'encre et à l'aquarelle (monde de Darshan), avec son
+numéro Pexels :
+
+```
+python3 outils/darshan/images.py encre 34762346
+```
+
+Le programme télécharge le fichier public de la photo (s'il ne l'a pas déjà), le recadre
+en 1200 × 1800 et écrit `src/img/encre-34762346.jpg` : papier, couleur légère avec
+auréoles, encre diluée pour les ombres, traits sur les seuls contours marqués. Les
+réglages (part de traits, couleur, tons) se reprennent décor par décor.
 
 ## Contenu
 
 | Fichier | Rôle |
 |---|---|
-| `build.py` | Fabrique l'édition web et l'EPUB, texte vérifié contre `livres/darshan.epub`. Contient aussi les objets et leurs phrases (`OBJETS`), vérifiées mot pour mot. |
-| `src/moteur.js` | Le moteur : texte révélé temps par temps, gestes, sons fabriqués en direct (Web Audio), étoiles, poussière, fonte des lunettes en clé, interface d'objet (fiche, bouton Objets, annonce), carnet des portes. Sans dépendance, sans appel réseau. |
+| `build.py` | Fabrique l'édition web (avec le banc d'essai `transitions.html`) et l'EPUB, texte vérifié contre `livres/darshan.epub`. Contient aussi les objets et leurs phrases (`OBJETS`), vérifiées mot pour mot, dont le fragment affiché pendant la métamorphose de la clé. |
+| `decoupage.py` | Le découpage de tout le livre en 85 tableaux, vérifié contre l'EPUB ; écrit `docs/darshan-decoupage.md`. |
+| `src/moteur.js` | Le moteur : texte révélé temps par temps, gestes, sons fabriqués en direct (Web Audio), étoiles, poussière, fonte des lunettes en clé, transitions (balayages entre scènes, frisson, envol et éclat des objets), interface d'objet (fiche, bouton Objets, annonce), carnet des portes. Sans dépendance, sans appel réseau. |
 | `src/moteur.css` | La mise en page, commune aux deux éditions (en unités `cqw` ; l'EPUB les convertit en pixels). |
 | `src/fonts/` | Amiri et Unna (les polices du livre), Tiro Devanagari Sanskrit (pour दर्शन), allégées, licence SIL OFL. |
-| `src/img/` | Décors prêts à l'emploi, et les deux images tirées des photos de Karl. |
-| `art.py`, `rendu.js`, `images.py` | Dessin et préparation des images. |
-| `essai.js`, `captures.js` | Essais automatiques dans Chromium. |
+| `src/img/` | Décors prêts à l'emploi, les images tirées des photos de Karl, dont une porte passée à l'encre (`encre-34762346.jpg`). |
+| `art.py`, `rendu.js`, `images.py` | Dessin et préparation des images ; `images.py encre` passe une photo à l'encre. |
+| `essai.js`, `essai-transitions.js`, `captures.js` | Essais automatiques dans Chromium. |

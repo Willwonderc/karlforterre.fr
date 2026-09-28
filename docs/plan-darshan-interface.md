@@ -9,7 +9,10 @@ Point de départ :
 - une première interface d'objet y a été ajoutée le même jour (partie 3) : fiche d'objet,
   bouton « Objets », annonce « Nouvel objet », halo sur l'objet qui attend un geste,
   consigne différée, geste proposé en bouton. EPUBCheck 5.4.0 ne relève rien, et la
-  partie jouée par programme passe sans erreur sur téléphone et sur ordinateur.
+  partie jouée par programme passe sans erreur sur téléphone et sur ordinateur ;
+- puis les transitions (partie 6) : balayages entre tableaux et effets des changements
+  d'état des objets ; le découpage de tout le livre, [darshan-decoupage.md](darshan-decoupage.md),
+  dit pour chaque tableau sa transition, ses gestes et ses objets.
 
 ## Objectif
 
@@ -195,6 +198,19 @@ dans les romans visuels.
 
 ## 6. Mise en scène : aller plus loin
 
+- **Transitions** (*faites* le 28 septembre, module `Transitions` du moteur) : une grammaire
+  qui dit ce qui se passe entre deux tableaux. Même plan, fondu (le temps passe), encre
+  (Darshan change de lieu), bandes façon Persona avec le titre du chapitre, iris (vision,
+  petite porte), porte (on la franchit), lumière (éblouissement), obturateur et glissement
+  (le monde photographié de Julie, son téléphone). Dans l'EPUB, chaque page joue son entrée
+  à l'ouverture. Détail, durées et usage tableau par tableau :
+  [darshan-decoupage.md](darshan-decoupage.md).
+- **Changements d'état des objets** : frisson (les lunettes ôtées, la clé dans la serrure),
+  envol vers le bouton « Objets » (nouvel objet), éclat de la métamorphose (lunettes en clé :
+  bandes, trame, l'objet qui tournoie, son nom et le fragment du livre « elles se
+  transforment »), fiche révélée en diagonale : *faits*. Restent l'éclat court (métamorphose
+  déjà connue), l'éclat brisé (chapitre 6), le dépôt (objet servi ou accroché), le
+  transfert d'un monde à l'autre (la lettre, le paquet) et le désenchantement final.
 - **Profondeur** : trois plans par décor (fond, milieu, premier plan) qui glissent
   légèrement au toucher. Pas d'inclinaison du téléphone : iOS demande une autorisation que
   les liseuses ne donnent pas.
@@ -235,7 +251,7 @@ dans les romans visuels.
 | I2. Carnet et regard | Carnet dès la première porte, fiche de porte, constellation ; loupe du regard | Toutes les portes de l'extrait ont leur fiche ; le regard révèle les jours de la porte du pigeonnier |
 | I3. Dialogues et monde de Julie | Couleurs de dialogue ; interface du téléphone, galerie, messages sans texte, appel | La scène du restaurant et le chapitre 4 se jouent avec leurs interfaces |
 | I4. Confort | Aide progressive complète, historique, réglages (grand texte, sons, sous-titres), menu et reprise | Un lecteur bloqué est toujours débloqué en 8 s ; le grand texte se lit sur un iPhone SE |
-| I5. Mise en scène | Profondeur à trois plans, raccords entre pages, pluie et chaleur, typographie des temps forts | Karl préfère la nouvelle version, vue côte à côte avec l'ancienne |
+| I5. Mise en scène | Transitions et éclats faits le 28 septembre. Reste : éclat court, éclat brisé, dépôt, transfert, désenchantement ; profondeur à trois plans, raccords entre pages, pluie et chaleur, typographie des temps forts | Karl préfère la nouvelle version, vue côte à côte avec l'ancienne |
 | I6. Accessibilité et essais | VoiceOver, clavier complet, mouvement réduit ; essais Apple Books, Kobo, Thorium ; captures de chaque fiche | Ace sans erreur grave ; essai VoiceOver par Karl sans blocage |
 
 ### Consignes prêtes à coller
@@ -262,7 +278,7 @@ Aide progressive à quatre paliers, historique de la page, réglages (son en tro
 
 ```text
 Chantier I5 de docs/plan-darshan-interface.md : mise en scène.
-Profondeur à trois plans par décor, raccords entre les pages, pluie et chaleur, typographie des temps forts. Garde 60 images par seconde et au plus trois animations sur toile par page ; montre-moi l'ancienne et la nouvelle version côte à côte.
+Les transitions et les éclats d'objet sont faits (module Transitions de outils/darshan/src/moteur.js, banc d'essai dist/web/transitions.html). Ajoute l'éclat court, l'éclat brisé, le dépôt, le transfert d'un monde à l'autre et le désenchantement décrits dans docs/darshan-decoupage.md, puis la profondeur à trois plans par décor, les raccords entre les pages, la pluie et la chaleur, la typographie des temps forts. Garde 60 images par seconde et au plus trois animations sur toile par page ; en mouvement réduit, des fondus courts. Montre-moi l'ancienne et la nouvelle version côte à côte.
 ```
 
 ```text
