@@ -64,6 +64,8 @@
   // Jusqu'où le lecteur a lu (paragraphe et caractère, en un nombre) : les fiches d'objet
   // n'affichent que des phrases déjà lues.
   var Lecture = { max: 0 };
+  // Une fiche ouverte ou un balayage en cours retiennent les gestes et la lecture.
+  function bloque() { return Objets.estOuverte() || Transitions.occupe(); }
 
   // ---------------------------------------------------------------- le son, fabriqué en direct
   var Son = (function () {
@@ -244,6 +246,71 @@
         for (var i = 1; i < 12; i++) o.frequency.setValueAtTime(60 + Math.random() * 45, t + i * 0.05);
         var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 900; f.Q.value = 6;
         var g = ctx.createGain(); env(g, t, 0.05, 0.05, 0.6); o.connect(f); f.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.8);
+      },
+      // éclat d'un objet qui se métamorphose : un souffle qui monte, un choc sourd, l'anneau du métal
+      eclat: function (t) {
+        var s = ctx.createBufferSource(); s.buffer = bruit('blanc');
+        var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.1;
+        f.frequency.setValueAtTime(260, t); f.frequency.exponentialRampToValueAtTime(5200, t + 0.38);
+        var g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.3, t + 0.3); g.gain.exponentialRampToValueAtTime(0.0005, t + 0.46);
+        s.connect(f); f.connect(g); g.connect(bus); s.start(t); s.stop(t + 0.5);
+        var t1 = t + 0.5;
+        var o = ctx.createOscillator(); o.frequency.setValueAtTime(120, t1); o.frequency.exponentialRampToValueAtTime(42, t1 + 0.3);
+        var g2 = ctx.createGain(); env(g2, t1, 0.004, 0.7, 0.4); o.connect(g2); g2.connect(bus); o.start(t1); o.stop(t1 + 0.5);
+        [1, 2.76, 5.4, 8.93].forEach(function (m, i) {
+          var p = ctx.createOscillator(); p.frequency.value = 587 * m;
+          var gp = ctx.createGain(); env(gp, t1, 0.002, 0.09 / (i + 1), 1.6 - i * 0.3); p.connect(gp); gp.connect(bus); p.start(t1); p.stop(t1 + 1.8);
+        });
+      },
+      // balayage à l'encre : trois coups de pinceau, secs
+      balai: function (t) {
+        [0, 0.15, 0.3].forEach(function (d, i) {
+          var s = ctx.createBufferSource(); s.buffer = bruit('rose');
+          var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 0.9;
+          f.frequency.setValueAtTime(700 + 300 * i, t + d); f.frequency.exponentialRampToValueAtTime(2600 + 400 * i, t + d + 0.3);
+          var g = ctx.createGain(); g.gain.setValueAtTime(0, t + d); g.gain.linearRampToValueAtTime(0.2, t + d + 0.08); g.gain.exponentialRampToValueAtTime(0.0005, t + d + 0.36);
+          s.connect(f); f.connect(g); g.connect(bus); s.start(t + d); s.stop(t + d + 0.4);
+        });
+      },
+      // obturateur (le monde photographié de Julie) : deux déclics rapprochés
+      declic: function (t) {
+        [0, 0.07].forEach(function (d, i) {
+          var s = ctx.createBufferSource(); s.buffer = bruit('blanc');
+          var f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = i ? 2500 : 1400;
+          var g = ctx.createGain(); env(g, t + d, 0.001, i ? 0.22 : 0.3, 0.035); s.connect(f); f.connect(g); g.connect(bus); s.start(t + d); s.stop(t + d + 0.08);
+          var o = ctx.createOscillator(); o.frequency.value = i ? 180 : 120;
+          var g2 = ctx.createGain(); env(g2, t + d, 0.001, 0.2, 0.04); o.connect(g2); g2.connect(bus); o.start(t + d); o.stop(t + d + 0.08);
+        });
+      },
+      // bandes de chapitre : des souffles brefs, décalés
+      bandes: function (t) {
+        for (var i = 0; i < 4; i++) {
+          var d = i * 0.06, s = ctx.createBufferSource(); s.buffer = bruit('blanc');
+          var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 2;
+          f.frequency.setValueAtTime(900 + i * 500, t + d); f.frequency.exponentialRampToValueAtTime(300 + i * 200, t + d + 0.2);
+          var g = ctx.createGain(); env(g, t + d, 0.02, 0.16, 0.18); s.connect(f); f.connect(g); g.connect(bus); s.start(t + d); s.stop(t + d + 0.3);
+        }
+      },
+      // le titre qui claque sur sa bande
+      coup: function (t) {
+        var o = ctx.createOscillator(); o.frequency.setValueAtTime(160, t); o.frequency.exponentialRampToValueAtTime(48, t + 0.18);
+        var g = ctx.createGain(); env(g, t, 0.002, 0.55, 0.25); o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.35);
+        var s = ctx.createBufferSource(); s.buffer = bruit('blanc');
+        var f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 5000;
+        var g2 = ctx.createGain(); env(g2, t, 0.001, 0.12, 0.5); s.connect(f); f.connect(g2); g2.connect(bus); s.start(t); s.stop(t + 0.6);
+      },
+      // iris : une onde grave qui se referme
+      iris: function (t) {
+        var o = ctx.createOscillator(); o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(55, t + 0.7);
+        var g = ctx.createGain(); env(g, t, 0.15, 0.18, 0.6); o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.9);
+      },
+      // frisson : un objet change d'état, un éclat de verre bref
+      frisson: function (t) {
+        [2637, 3520, 4186].forEach(function (f0, i) {
+          var o = ctx.createOscillator(); o.frequency.value = f0;
+          var g = ctx.createGain(); env(g, t + i * 0.03, 0.002, 0.045, 0.3); o.connect(g); g.connect(bus);
+          o.start(t + i * 0.03); o.stop(t + i * 0.03 + 0.4);
+        });
       }
     };
     return {
@@ -357,7 +424,7 @@
     doc.addEventListener('keydown', function (ev) {
       if (!estEpub && !scene.classList.contains('active')) return;
       if (['ArrowRight', ' ', 'Enter', 'PageDown'].indexOf(ev.key) < 0) return;
-      if (soi.enAttente || soi.fini || Objets.estOuverte() || toucheDeBouton(ev)) return;
+      if (soi.enAttente || soi.fini || bloque() || toucheDeBouton(ev)) return;
       if (ev.cancelable) ev.preventDefault();
       soi.avancer();
     });
@@ -422,7 +489,7 @@
         ok(ev);
       }
       function fin(ev) {
-        if (Objets.estOuverte()) return;
+        if (bloque()) return;
         if (ev.type === 'keydown' && (TOUCHES.indexOf(ev.key) < 0 || toucheDeBouton(ev))) return;
         if (ev.type !== 'keydown' && !horsBarre(ev)) return;
         if (ev.cancelable) ev.preventDefault();
@@ -444,6 +511,8 @@
     if (lu0 > Lecture.max) Lecture.max = lu0;
     Objets.initialiser((sc.getAttribute('data-objets') || '').split(/\s+/).filter(Boolean));
   }
+  // La scène démarre sous son balayage d'entrée ; le texte attend qu'il soit fini.
+  function quandEntree(sc) { return sc.entreeFaite || Promise.resolve(); }
   function aller(i) {
     if (i < 0 || i >= scenes.length) return;
     var avant = scenes[actuelle];
@@ -484,6 +553,419 @@
       '<rect x="226" y="10" width="10" height="52" fill="url(#f-rayures)"/></g></svg>'
   };
   var copies = 0;
+  function dessin(id) {
+    var s = DESSINS[id];
+    if (!s) return null;
+    copies++;
+    s = s.replace(/f-([a-z]+)/g, 'f' + copies + '-$1');
+    return doc.importNode(new DOMParser().parseFromString(s, 'image/svg+xml').documentElement, true);
+  }
+
+  // ---------------------------------------------------------------- transitions : balayages, éclats, envols
+  // Grammaire (docs/darshan-decoupage.md) : fondu (même lieu, même moment) ; encre (Darshan
+  // change de lieu) ; bandes (ouverture de chapitre, façon Persona) ; iris (vision, petite
+  // porte) ; porte (on franchit une porte) ; lumiere (éblouissement) ; obturateur (le monde
+  // photographié de Julie) ; glissement (son téléphone). Chaque balayage a deux moitiés :
+  // couvrir la scène qui part, découvrir celle qui arrive. L'édition web joue les deux ; dans
+  // l'EPUB, où chaque page est un document à part, la page joue la seconde en s'ouvrant.
+  // Les changements d'état d'un objet ont les leurs : frisson (petit changement), éclat
+  // (métamorphose), envol (l'objet rejoint le sac). Mouvement réduit : des fondus courts,
+  // rien ne glisse ni ne tourne.
+  var NS = 'http://www.w3.org/2000/svg';
+  var ENCRE = '#07091a', SINDOOR = '#c9302c', OR = '#f4c56a', CREME = '#fff4de';
+  function svgEl(nom, attrs, parent) {
+    var e = doc.createElementNS(NS, nom);
+    for (var k in attrs) { if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function retirer(e) { if (e && e.parentNode) e.parentNode.removeChild(e); }
+  function attendre(ms) { return new Promise(function (ok) { setTimeout(ok, calme ? Math.min(ms, 150) : ms); }); }
+  function borne(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function vif(t) { return 1 - Math.pow(1 - t, 3); }            // part vite, se pose
+  function lent(t) { return t * t * t; }                        // part lentement, file
+  function ressort(t, c) { c = c || 1.4; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); }
+  function elan(t) { var c = 1.4; return (c + 1) * t * t * t - c * t * t; }
+  function etoile(r) {    // étoile à quatre branches, comme ✦
+    var k = r * 0.28;
+    return 'M0,' + (-r) + 'L' + k + ',' + (-k) + 'L' + r + ',0L' + k + ',' + k + 'L0,' + r + 'L' + (-k) + ',' + k + 'L' + (-r) + ',0L' + (-k) + ',' + (-k) + 'Z';
+  }
+  function plusLoin(c) {  // du point au coin le plus éloigné de la scène
+    return Math.max(Math.hypot(c[0], c[1]), Math.hypot(W - c[0], c[1]), Math.hypot(c[0], H - c[1]), Math.hypot(W - c[0], H - c[1])) + 30;
+  }
+  function rect(e, r) {
+    e.setAttribute('x', r[0]); e.setAttribute('y', r[1]);
+    e.setAttribute('width', Math.max(0, r[2])); e.setAttribute('height', Math.max(0, r[3]));
+  }
+  function melange(a, b, t) { return a.map(function (v, i) { return v + (b[i] - v) * t; }); }
+  var PLEIN = [-80, -80, W + 160, H + 160];
+  // Hasard reproductible (le même pinceau à chaque lecture) et ondulations lissées entre -1 et 1.
+  function hasard(graine) { var x = graine; return function () { x = (x * 16807) % 2147483647; return (x - 1) / 2147483646; }; }
+  function ondes(n, rnd, pas) {
+    var v = [], a = rnd() * 2 - 1, b = rnd() * 2 - 1;
+    for (var i = 0; i < n; i++) {
+      if (i % pas === 0) { a = b; b = rnd() * 2 - 1; }
+      var t = (i % pas) / pas;
+      v.push(a + (b - a) * t * t * (3 - 2 * t));
+    }
+    return v;
+  }
+  function trace(points) { return 'M' + points.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join('L') + 'Z'; }
+  // Le corps d'un coup de pinceau, couché sur l'axe x de 0 à L : bords ondulés et rugueux.
+  function formeDeCoup(L, ep, rnd) {
+    var n = 90, haut = [], bas = [], onde1 = ondes(n + 1, rnd, 15), onde2 = ondes(n + 1, rnd, 15);
+    for (var i = 0; i <= n; i++) {
+      var u = i / n, demi = ep / 2 * (0.86 + 0.14 * Math.sin(u * Math.PI));
+      haut.push([u * L, -demi - onde1[i] * 34 - (rnd() - 0.5) * 18]);
+      bas.push([u * L, demi + onde2[i] * 34 + (rnd() - 0.5) * 18]);
+    }
+    return trace(haut.concat(bas.reverse()));
+  }
+  // Un poil sec : une traînée fine, effilée aux deux bouts, à distance `y` de l'axe.
+  function poil(L, y, rnd, u0, u1, epaisseur) {
+    var n = 16, h = [], b = [], phase = rnd() * 6;
+    u1 = Math.min(1, u1);
+    for (var j = 0; j <= n; j++) {
+      var u = u0 + (u1 - u0) * j / n, e = epaisseur * Math.sin(Math.PI * j / n), yy = y + Math.sin(u * 9 + phase) * 10;
+      h.push([u * L, yy - e / 2]); b.push([u * L, yy + e / 2]);
+    }
+    return trace(h.concat(b.reverse()));
+  }
+
+  // Chaque balayage dessine dans un calque SVG de 1200 x 1800 et renvoie ses deux moitiés,
+  // réglées par t de 0 à 1, leurs durées, et leurs sons.
+  var Balayages = {
+    fondu: function (s, o) {
+      var r = svgEl('rect', { fill: o.couleur || '#000' }, s);
+      rect(r, PLEIN);
+      return {
+        duree: [600, 650],
+        couvrir: function (t) { r.setAttribute('opacity', lisse(t)); },
+        decouvrir: function (t) { r.setAttribute('opacity', 1 - lisse(t)); }
+      };
+    },
+    // Trois coups de pinceau, alternés. Chaque coup est une forme d'encre aux bords irréguliers,
+    // bordée de poils secs, dessinée une fois ; un masque la découvre au fil du geste, et le
+    // bout du masque est arrondi comme la pointe d'un pinceau (puis comme sa fin, au retrait).
+    encre: function (s, o) {
+      var couleur = o.couleur || ENCRE, coups = [], defs = svgEl('defs', {}, s), rnd = hasard(7), ep = 940;
+      [350, 1050, 1750].forEach(function (c, k) {
+        var a = [-260, c + 66], b = [1460, c - 373];         // le long de y = c - 0,2556 x
+        if (k === 1) { var z = a; a = b; b = z; }
+        var L = Math.hypot(b[0] - a[0], b[1] - a[1]), angle = Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI;
+        var id = 'coup' + (++copies), clip = svgEl('clipPath', { id: id, clipPathUnits: 'userSpaceOnUse' }, defs);
+        var masque = svgEl('rect', { x: -ep, y: -ep, width: 0, height: 2 * ep }, clip);
+        var pointe = svgEl('ellipse', { cx: 0, cy: 0, rx: ep * 0.28, ry: ep * 0.62 }, clip);
+        var g = svgEl('g', { transform: 'translate(' + a[0] + ' ' + a[1] + ') rotate(' + angle.toFixed(2) + ')' }, s);
+        var corps = svgEl('g', { 'clip-path': 'url(#' + id + ')' }, g);
+        svgEl('path', { d: formeDeCoup(L, ep, rnd), fill: couleur }, corps);
+        for (var i = 0; i < 4; i++) svgEl('path', { d: poil(L, ep * (0.1 + 0.2 * i) * (i % 2 ? 1 : -1), rnd, 0.1, 0.9, 6 + 8 * rnd()), fill: '#161a33', opacity: 0.7 }, corps);
+        for (var j = 0; j < 10; j++) {
+          var cote = j % 2 ? 1 : -1;
+          svgEl('path', { d: poil(L, cote * (ep / 2 + 6 + rnd() * 50), rnd, rnd() * 0.35, 0.3 + rnd() * 0.65, 5 + rnd() * 13),
+            fill: (k === 1 && j === 4) ? SINDOOR : couleur }, corps);
+        }
+        coups.push({ masque: masque, pointe: pointe, L: L, rx: ep * 0.28, debut: k * 0.2, fin: k * 0.2 + 0.6 });
+      });
+      function poser(t, sortie) {
+        coups.forEach(function (c) {
+          var x = lisse(borne((t - c.debut) / (c.fin - c.debut))), bord = -c.rx + x * (c.L + 2 * c.rx);
+          if (sortie) { c.masque.setAttribute('x', bord); c.masque.setAttribute('width', Math.max(0, c.L + ep - bord)); }
+          else { c.masque.setAttribute('x', -ep); c.masque.setAttribute('width', Math.max(0, bord + ep)); }
+          c.pointe.setAttribute('cx', bord);
+        });
+      }
+      return {
+        duree: [780, 820], sons: ['balai', 'balai'],
+        couvrir: function (t) { poser(t, false); },
+        decouvrir: function (t) { poser(t, true); }
+      };
+    },
+    // des bandes obliques qui claquent l'une après l'autre, avec le titre du chapitre
+    bandes: function (s, o) {
+      var pente = 150, defs = svgEl('defs', {}, s), id = 'trame' + (++copies), titre = null;
+      var motif = svgEl('pattern', { id: id, width: 18, height: 18, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(20)' }, defs);
+      svgEl('circle', { cx: 9, cy: 9, r: 4.2, fill: OR, opacity: 0.45 }, motif);
+      var plan = [[-220, 330, ENCRE], [110, 100, SINDOOR], [210, 330, ENCRE, 'trame'], [540, 34, OR], [574, 470, ENCRE, 'titre'],
+                  [1044, 70, SINDOOR], [1114, 360, ENCRE, 'trame'], [1474, 620, ENCRE]];
+      var bandes = plan.map(function (b, i) {
+        var g = svgEl('g', {}, s), y0 = b[0], y1 = b[0] + b[1] + 40;   // chaque bande glisse sous la suivante
+        var pts = '-220,' + (y0 + pente) + ' 1420,' + (y0 - pente) + ' 1420,' + (y1 - pente) + ' -220,' + (y1 + pente);
+        svgEl('polygon', { points: pts, fill: b[2] }, g);
+        if (b[3] === 'trame') svgEl('polygon', { points: pts, fill: 'url(#' + id + ')' }, g);
+        if (b[3] === 'titre' && o.titre) titre = ecrireTitre(g, o.titre, b[0] + b[1] / 2);
+        return { g: g, sens: i % 2 ? 1 : -1, i: i };
+      });
+      function poser(t, sortie) {
+        bandes.forEach(function (b) {
+          var x = borne((t - b.i * 0.05) / 0.62);
+          var dx = sortie ? -b.sens * 1700 * elan(x) : b.sens * 1700 * (1 - ressort(x));
+          b.g.setAttribute('transform', 'translate(' + dx.toFixed(1) + ' 0)');
+        });
+      }
+      return {
+        duree: [640, 680], sons: ['bandes', 'bandes'],
+        couvrir: function (t) { poser(t, false); },
+        decouvrir: function (t) { poser(t, true); },
+        avant: function () {    // le titre claque sur sa bande et reste un instant
+          if (!titre) return attendre(150);
+          Son.effet('coup');
+          return anime(340, function (x) {
+            titre.setAttribute('transform', 'scale(' + (2.3 - 1.3 * ressort(x, 2.2)).toFixed(3) + ')');
+            titre.setAttribute('opacity', borne(x * 3));
+          }).then(function () { return attendre(1300); });
+        }
+      };
+    },
+    // un cercle se referme sur un point, puis s'ouvre ailleurs
+    iris: function (s, o) {
+      var de = o.de || [600, 900], vers = o.vers || [600, 900];
+      var voile = svgEl('path', { fill: o.couleur || '#02030a', 'fill-rule': 'evenodd' }, s);
+      var anneaux = [svgEl('circle', { fill: 'none', stroke: OR, 'stroke-width': 8 }, s),
+                     svgEl('circle', { fill: 'none', stroke: SINDOOR, 'stroke-width': 3 }, s)];
+      function trou(c, r) {
+        var d = 'M-80,-80H' + (W + 80) + 'V' + (H + 80) + 'H-80Z';
+        if (r > 0.5) d += 'M' + (c[0] - r) + ',' + c[1] + 'a' + r + ',' + r + ' 0 1,0 ' + 2 * r + ',0a' + r + ',' + r + ' 0 1,0 ' + (-2 * r) + ',0Z';
+        voile.setAttribute('d', d);
+        anneaux.forEach(function (a, i) {
+          a.setAttribute('cx', c[0]); a.setAttribute('cy', c[1]); a.setAttribute('r', Math.max(0, r + i * 16));
+          a.setAttribute('opacity', r > 6 ? 0.9 : 0);
+        });
+      }
+      var R1 = plusLoin(de), R2 = plusLoin(vers);
+      return {
+        duree: [760, 900], sons: ['iris', null], pause: 260,
+        couvrir: function (t) { trou(de, R1 * (1 - lisse(t))); },
+        decouvrir: function (t) { trou(vers, R2 * lisse(t)); }
+      };
+    },
+    // la lumière jaillit d'une embrasure et gagne l'écran ; la scène suivante apparaît dans
+    // une porte qui s'élargit jusqu'à nous
+    porte: function (s, o) {
+      var de = o.de || [520, 760, 160, 280], vers = o.vers || [470, 560, 260, 560], clair = o.couleur || '#fff8ea';
+      var halo = svgEl('rect', { fill: '#ffd98a', opacity: 0 }, s);
+      var plein = svgEl('rect', { fill: clair, opacity: 0 }, s);
+      var cadre = svgEl('path', { fill: clair, 'fill-rule': 'evenodd', opacity: 0 }, s);
+      var bord = svgEl('rect', { fill: 'none', stroke: OR, 'stroke-width': 6, opacity: 0 }, s);
+      return {
+        duree: [900, 1250], sons: ['souffle', null], pause: 160,
+        couvrir: function (t) {
+          var a = lisse(borne(t / 0.3)), b = lent(borne((t - 0.2) / 0.8));
+          var r = melange(de, PLEIN, b), m = 40 + 160 * a;
+          rect(plein, r); plein.setAttribute('opacity', a);
+          rect(halo, [r[0] - m, r[1] - m, r[2] + 2 * m, r[3] + 2 * m]); halo.setAttribute('opacity', 0.55 * a * (1 - b));
+        },
+        decouvrir: function (t) {
+          var r = melange(vers, [-W, -H, 3 * W, 3 * H], lent(t));
+          cadre.setAttribute('d', 'M-80,-80H' + (W + 80) + 'V' + (H + 80) + 'H-80Z M' + r[0] + ',' + r[1] + 'h' + r[2] + 'v' + r[3] + 'h' + (-r[2]) + 'Z');
+          cadre.setAttribute('opacity', 1 - lisse(borne((t - 0.6) / 0.4)));
+          rect(bord, r); bord.setAttribute('opacity', 0.9 * (1 - borne(t / 0.7)));
+        }
+      };
+    },
+    // l'éblouissement : une lumière qui s'étend, puis se dissipe
+    lumiere: function (s, o) {
+      var de = o.de || [600, 900], id = 'eblouir' + (++copies);
+      var g = svgEl('radialGradient', { id: id }, svgEl('defs', {}, s));
+      svgEl('stop', { offset: '0', 'stop-color': '#ffffff' }, g);
+      svgEl('stop', { offset: '0.55', 'stop-color': '#fff3cf' }, g);
+      svgEl('stop', { offset: '1', 'stop-color': '#ffe3a0', 'stop-opacity': '0' }, g);
+      var c = svgEl('circle', { cx: de[0], cy: de[1], r: 1, fill: 'url(#' + id + ')' }, s);
+      var plein = svgEl('rect', { fill: '#fffaf0', opacity: 0 }, s);
+      rect(plein, PLEIN);
+      var R = plusLoin(de) * 1.6;
+      return {
+        duree: [900, 2000], sons: ['souffle', null],
+        couvrir: function (t) { c.setAttribute('r', R * lent(t) + 1); plein.setAttribute('opacity', lisse(borne((t - 0.55) / 0.45))); },
+        decouvrir: function (t) { c.setAttribute('r', 1); plein.setAttribute('opacity', 1 - vif(t)); }
+      };
+    },
+    // le monde de Julie : les lames d'un obturateur se ferment, puis s'ouvrent sur la photo suivante
+    obturateur: function (s, o) {
+      var n = 7, C = o.de || [600, 900], R = plusLoin(C), lames = [];
+      for (var i = 0; i < n; i++) {
+        lames.push(svgEl('polygon', { fill: i % 2 ? '#1c1f25' : '#15171c', stroke: '#4a505c', 'stroke-width': 4, 'stroke-linejoin': 'round' }, s));
+      }
+      function ouverture(r) {
+        var torsion = 0.9 * (1 - r / R), L = 3000;
+        lames.forEach(function (l, i) {
+          var a = i * 2 * Math.PI / n + torsion, ux = Math.cos(a), uy = Math.sin(a), vx = -uy, vy = ux;
+          function p(u, v) { return (C[0] + ux * u + vx * v).toFixed(1) + ',' + (C[1] + uy * u + vy * v).toFixed(1); }
+          l.setAttribute('points', [p(r, -L), p(r, L), p(r + L, L), p(r + L, -L)].join(' '));
+        });
+      }
+      return {
+        duree: [420, 520], sons: ['declic', null], pause: 90,
+        couvrir: function (t) { ouverture(R * (1 - lisse(t))); },
+        decouvrir: function (t) { ouverture(R * lisse(t)); }
+      };
+    },
+    // le téléphone de Julie : un panneau glisse, comme on passe d'une photo à l'autre
+    glissement: function (s, o) {
+      var sens = o.sens || -1, g = svgEl('g', {}, s);
+      rect(svgEl('rect', { fill: o.couleur || '#101114' }, g), PLEIN);
+      rect(svgEl('rect', { fill: '#000', opacity: 0.35 }, g), [sens < 0 ? -116 : W + 80, -80, 36, H + 160]);
+      function x(v) { g.setAttribute('transform', 'translate(' + v.toFixed(1) + ' 0)'); }
+      return {
+        duree: [360, 420], sons: ['papier', null],
+        couvrir: function (t) { x(-sens * (W + 200) * (1 - lisse(t))); },
+        decouvrir: function (t) { x(sens * (W + 200) * lisse(t)); }
+      };
+    }
+  };
+
+  // Le titre d'un chapitre, posé sur sa bande : face crème, contour d'encre, ombre vermillon.
+  function ecrireTitre(g, texte, y) {
+    var pose = svgEl('g', { transform: 'translate(600 ' + y + ') rotate(-10.4) skewX(-8)' }, g);
+    var titre = svgEl('g', { opacity: 0 }, pose);
+    var taille = Math.min(132, Math.round(2000 / Math.max(8, texte.length)));
+    function ligne(attrs) {
+      var t = svgEl('text', { dy: '0.32em', 'text-anchor': 'middle', 'font-family': 'Unna, Georgia, serif', 'font-style': 'italic', 'font-size': taille }, titre);
+      for (var k in attrs) { if (attrs.hasOwnProperty(k)) t.setAttribute(k, attrs[k]); }
+      t.textContent = texte;
+    }
+    ligne({ x: 11, y: 11, fill: SINDOOR });
+    ligne({ x: 0, y: 0, fill: CREME, stroke: ENCRE, 'stroke-width': 4, 'paint-order': 'stroke' });
+    return titre;
+  }
+
+  var Transitions = (function () {
+    var occupe = 0;
+    function voile(scene, classe) {
+      return svgEl('svg', { 'class': classe || 'tr', viewBox: '0 0 ' + W + ' ' + H, 'aria-hidden': 'true', focusable: 'false' }, scene);
+    }
+    function sonner(m, i) { var n = m.sons && m.sons[i]; if (n) Son.effet(n); }
+    // L'entrée d'une scène : data-entree="type x y…" (les nombres : où s'ouvre le balayage).
+    function lireEntree(scene) {
+      var a = (scene.getAttribute('data-entree') || '').split(/\s+/).filter(Boolean);
+      if (!a.length) return null;
+      var o = { type: a[0] }, nombres = a.slice(1).map(Number), h = scene.querySelector('h1.chapitre');
+      if (nombres.length) o.vers = nombres;
+      if (h) o.titre = h.textContent;
+      return o;
+    }
+    function fabriquer(scene, o) {
+      var type = (calme || !Balayages[o.type]) ? 'fondu' : o.type, s = voile(scene);
+      return { s: s, m: Balayages[type](s, o) };
+    }
+    // Couvre tout de suite la scène qui arrive ; renvoie de quoi la découvrir.
+    function preparer(scene, o) {
+      var b = fabriquer(scene, o), fin = null;
+      b.m.decouvrir(0);
+      occupe++;
+      scene.entreeFaite = new Promise(function (ok) { fin = ok; });
+      return function () {
+        return Promise.resolve(b.m.avant ? b.m.avant() : null)
+          .then(function () { sonner(b.m, 1); return anime(b.m.duree[1], b.m.decouvrir); })
+          .then(function () { retirer(b.s); occupe--; fin(); });
+      };
+    }
+    // Une page d'EPUB peut être préparée hors de la vue : l'entrée attend qu'elle se montre.
+    function quandVisible() {
+      return new Promise(function (ok) {
+        function voir() { requestAnimationFrame(function () { ok(); }); }
+        if (!doc.hidden) { voir(); return; }
+        doc.addEventListener('visibilitychange', function f() {
+          if (doc.hidden) return;
+          doc.removeEventListener('visibilitychange', f); voir();
+        });
+      });
+    }
+    // Petit changement d'état d'un objet : une étoile et des rayons, un tintement.
+    function frisson(scene, x, y, r) {
+      if (calme) return Promise.resolve();
+      var s = voile(scene, 'tr tr-leger'), g = svgEl('g', {}, s);
+      [true, false].forEach(function (ombre) {
+        for (var i = 0; i < 12; i++) {
+          var a = i * Math.PI / 6 + 0.26, long = i % 2 ? 0.75 : 1;
+          svgEl('line', { x1: Math.cos(a) * r * 0.45, y1: Math.sin(a) * r * 0.45, x2: Math.cos(a) * r * long, y2: Math.sin(a) * r * long,
+            stroke: ombre ? ENCRE : (i % 3 ? OR : CREME), 'stroke-width': (i % 2 ? 5 : 10) + (ombre ? 8 : 0), 'stroke-linecap': 'round',
+            opacity: ombre ? 0.35 : 1 }, g);
+        }
+        svgEl('path', { d: etoile(r * 0.34), fill: ombre ? ENCRE : CREME, opacity: ombre ? 0.35 : 1,
+          transform: ombre ? 'scale(1.18)' : '' }, g);
+      });
+      Son.effet('frisson');
+      return anime(560, function (t) {
+        var e = vif(t);
+        g.setAttribute('transform', 'translate(' + x + ' ' + y + ') rotate(' + (18 * e).toFixed(2) + ') scale(' + (0.5 + 0.9 * e).toFixed(3) + ')');
+        g.setAttribute('opacity', String(1 - t * t));
+      }).then(function () { retirer(s); });
+    }
+    // Métamorphose d'un objet : des bandes qui claquent, l'objet qui arrive en tournoyant, son
+    // nom en grand, et le fragment du livre qui la raconte. Le style est dans moteur.css (.eclat).
+    function eclat(scene, o) {
+      var e = el('div', { 'class': 'eclat' + (calme ? ' calme' : ''), 'aria-hidden': 'true' }, scene);
+      ['b4', 'b1', 'b2', 'b3', 'b5'].forEach(function (c) { el('div', { 'class': 'eclat-bande ' + c }, e); });
+      el('div', { 'class': 'eclat-trame' }, e);
+      var ciel = svgEl('svg', { 'class': 'eclat-etoiles', viewBox: '0 0 ' + W + ' ' + H }, e);
+      [[170, 420, 46], [1010, 330, 60], [1080, 1180, 38], [240, 1210, 30], [640, 250, 26], [900, 1420, 22], [120, 820, 20]].forEach(function (p, i) {
+        var st = svgEl('path', { d: etoile(p[2]), fill: i % 3 ? CREME : OR }, svgEl('g', { transform: 'translate(' + p[0] + ' ' + p[1] + ')' }, ciel));
+        st.style.animationDelay = (420 + i * 70) + 'ms';
+      });
+      var v = el('div', { 'class': 'eclat-objet' }, e), d = dessin(o.objet);
+      if (d) v.appendChild(d);
+      el('p', { 'class': 'eclat-nom' }, e).textContent = o.nom;
+      if (o.fragment) el('p', { 'class': 'eclat-fragment' }, e).textContent = '« ' + o.fragment + ' »';
+      occupe++;
+      Son.effet('eclat');
+      requestAnimationFrame(function () { requestAnimationFrame(function () { e.classList.add('joue'); }); });
+      // en mouvement réduit, rien ne bouge, mais le nom et la phrase restent le temps d'être lus
+      return new Promise(function (ok) { setTimeout(ok, calme ? 1500 : 2200); }).then(function () {
+        e.classList.add('sort');
+        return attendre(600);
+      }).then(function () { retirer(e); occupe--; });
+    }
+    // L'objet quitte son annonce et vole jusqu'au bouton « Objets ».
+    function envol(scene, source, cible, id) {
+      var rs = scene.getBoundingClientRect(), a = source.getBoundingClientRect(), b = cible.getBoundingClientRect();
+      if (calme || !rs.width || !a.width || !b.width) return Promise.resolve();
+      var vol = el('div', { 'class': 'envol', 'aria-hidden': 'true' }, scene), d = dessin(id);
+      if (d) vol.appendChild(d);
+      var x0 = a.left - rs.left, y0 = a.top - rs.top;
+      var x1 = b.left - rs.left + (b.width - a.width) / 2, y1 = b.top - rs.top + (b.height - a.height) / 2;
+      var cx = (x0 + x1) / 2 + rs.width * 0.08, cy = Math.min(y0, y1) - rs.height * 0.1;
+      var fin = Math.max(0.3, Math.min(1, b.height / a.height));
+      vol.style.width = (a.width / rs.width * 100) + '%';
+      vol.style.height = (a.height / rs.height * 100) + '%';
+      return anime(760, function (t) {
+        var e = lisse(t), u = 1 - e;
+        var x = u * u * x0 + 2 * u * e * cx + e * e * x1, y = u * u * y0 + 2 * u * e * cy + e * e * y1;
+        vol.style.left = (x / rs.width * 100) + '%';
+        vol.style.top = (y / rs.height * 100) + '%';
+        vol.style.transform = 'rotate(' + (-40 * Math.sin(e * Math.PI)).toFixed(2) + 'deg) scale(' + (1 + (fin - 1) * e).toFixed(3) + ')';
+        vol.style.opacity = String(t < 0.85 ? 1 : (1 - t) / 0.15);
+      }).then(function () { retirer(vol); });
+    }
+    return {
+      occupe: function () { return occupe > 0; },
+      // Édition web : couvrir la scène qui part, montrer l'autre (changer), la découvrir.
+      passer: function (avant, apres, changer, o) {
+        var e = lireEntree(apres) || { type: 'fondu' };
+        if (o) { for (var k in o) { if (o.hasOwnProperty(k)) e[k] = o[k]; } }
+        var b = fabriquer(avant, e);
+        b.m.couvrir(0);
+        occupe++;
+        sonner(b.m, 0);
+        return anime(b.m.duree[0], b.m.couvrir).then(function () {
+          var decouvrir = preparer(apres, e);
+          changer();
+          retirer(b.s); occupe--;
+          return attendre(b.m.pause || 80).then(decouvrir);
+        });
+      },
+      // EPUB : la page s'ouvre couverte, puis se découvre.
+      entree: function (scene) {
+        var e = lireEntree(scene);
+        if (!e) return Promise.resolve();
+        var decouvrir = preparer(scene, e);
+        return quandVisible().then(function () { return attendre(200); }).then(decouvrir);
+      },
+      frisson: frisson,
+      eclat: eclat,
+      envol: envol
+    };
+  })();
 
   var Objets = (function () {
     var donnees = {};
@@ -494,13 +976,6 @@
     function nom(id) { return (donnees[id] || {}).nom || id; }
     function lues(id) { return ((donnees[id] || {}).citations || []).filter(function (c) { return c.lu <= Lecture.max; }); }
     function vider(e) { while (e.firstChild) e.removeChild(e.firstChild); }
-    function dessin(id) {
-      var s = DESSINS[id];
-      if (!s) return null;
-      copies++;
-      s = s.replace(/f-([a-z]+)/g, 'f' + copies + '-$1');
-      return doc.importNode(new DOMParser().parseFromString(s, 'image/svg+xml').documentElement, true);
-    }
     function structure(sc) {
       if (sc.fiche) return sc.fiche;
       var f = el('div', { 'class': 'fiche', role: 'dialog', 'aria-modal': 'true' }, sc);
@@ -543,7 +1018,7 @@
       var svg = zone.querySelector('svg'), x0 = 0, y0 = 0, tenu = false;
       if (!svg) return;
       zone.addEventListener('pointerdown', function (ev) {
-        tenu = true; x0 = ev.clientX; y0 = ev.clientY; zone.classList.add('tenu');
+        tenu = true; x0 = ev.clientX; y0 = ev.clientY; zone.classList.add('tenu', 'manie');
         if (zone.setPointerCapture) { try { zone.setPointerCapture(ev.pointerId); } catch (e) { /* rien */ } }
       });
       zone.addEventListener('pointermove', function (ev) {
@@ -565,10 +1040,11 @@
       var visuel = el('div', { 'class': 'fiche-visuel', 'aria-hidden': 'true' }, c);
       var d = dessin(id);
       if (d) { visuel.appendChild(d); examiner(visuel); }
-      el('p', { 'class': 'fiche-surtitre' }, c).textContent = options.nouveau ? 'Nouvel objet' : '';
+      el('p', { 'class': 'fiche-surtitre' + (options.nouveau ? ' etiquette' : '') }, c).textContent = options.nouveau ? 'Nouvel objet' : '';
       el('h2', { tabindex: '-1' }, c).textContent = nom(id);
-      lues(id).forEach(function (q) {
+      lues(id).forEach(function (q, k) {
         var b = el('blockquote', {}, c);
+        b.style.animationDelay = (360 + k * 90) + 'ms';     // les phrases entrent l'une après l'autre
         b.appendChild(doc.createTextNode('« ' + q.texte + ' »'));
         el('cite', {}, b).textContent = q.chapitre;
       });
@@ -615,25 +1091,39 @@
       bf.addEventListener('click', function () { fermer(); });
       montrer(f);
     }
-    // L'annonce « Nouvel objet » : un bandeau qui descend, se touche pour ouvrir la fiche.
+    // L'annonce « Nouvel objet » : un bandeau oblique qui claque depuis la gauche et se touche
+    // pour ouvrir la fiche ; l'objet s'en détache et vole jusqu'au bouton « Objets », qui
+    // n'apparaît qu'à son arrivée.
     function signaler(id) {
       var sc = sceneCourante();
       if (!sc) return;
       var t = el('button', { type: 'button', 'class': 'nouvel-objet' }, sc);
-      var d = dessin(id);
-      if (d) t.appendChild(d);
+      var icone = el('span', { 'class': 'icone' }, t), d = dessin(id);
+      if (d) icone.appendChild(d);
       var txt = el('span', {}, t);
       el('small', {}, txt).textContent = 'Nouvel objet';
       txt.appendChild(doc.createTextNode(nom(id)));
-      var minuterie = setTimeout(retirer, 4800);
-      function retirer() {
+      var minuterie = setTimeout(retirerAnnonce, 4600);
+      function retirerAnnonce() {
         clearTimeout(minuterie); t.classList.remove('vu');
-        setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 700);
+        setTimeout(function () { retirer(t); }, 700);
       }
       t.addEventListener('pointerup', function (ev) { ev.stopPropagation(); });
-      t.addEventListener('click', function (ev) { ev.stopPropagation(); retirer(); ouvrir(id); });
+      t.addEventListener('click', function (ev) { ev.stopPropagation(); retirerAnnonce(); ouvrir(id); });
       requestAnimationFrame(function () { requestAnimationFrame(function () { t.classList.add('vu'); }); });
       Son.effet('tinte');
+      setTimeout(function () {
+        var b = $('.barre .objets', sc);
+        if (!b || !d) { majBoutons(true); return; }
+        b.hidden = false;
+        b.classList.add('arrivee');
+        icone.classList.add('parti');
+        Transitions.envol(sc, icone, b, id).then(function () {
+          b.classList.remove('arrivee');
+          majBoutons(true);
+          Son.effet('cle');
+        });
+      }, calme ? 200 : 1250);
     }
     function majBoutons(pulser) {
       $$('.barre .objets').forEach(function (b) {
@@ -648,8 +1138,7 @@
       initialiser: function (liste) { sac = liste.slice(); majBoutons(false); },
       ajouter: function (id, avecAnnonce) {
         if (sac.indexOf(id) < 0) sac.push(id);
-        majBoutons(true);
-        if (avecAnnonce) signaler(id);
+        if (avecAnnonce) signaler(id); else majBoutons(true);
         annoncer('Nouvel objet : ' + nom(id));
       },
       remplacer: function (ancien, nouveau) {
@@ -662,19 +1151,26 @@
       ouvrir: ouvrir,
       panneau: panneau,
       presenter: function (id) { return new Promise(function (fin) { ouvrir(id, { nouveau: true, fin: fin }); }); },
-      estOuverte: function () { return !!ouverte; }
+      estOuverte: function () { return !!ouverte; },
+      nom: nom,
+      donnee: function (id) { return donnees[id] || {}; }
     };
   })();
-  var voile = el('div', { 'class': 'ui', style: 'position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity 700ms;z-index:50;' }, doc.body);
-  function fondu(milieu, couleur) {
-    voile.style.background = couleur || '#000';
-    voile.style.opacity = '1';
-    setTimeout(function () { milieu(); setTimeout(function () { voile.style.opacity = '0'; }, 120); }, calme ? 150 : 750);
-  }
-  function sceneSuivante(scene, couleur) {
+  // Passer à la scène suivante : l'édition web joue le balayage que la scène suivante
+  // annonce (data-entree) ; dans l'EPUB, le lecteur tourne la page, et la page suivante
+  // joue elle-même son entrée. `o.de` : d'où part le balayage dans la scène qui s'en va.
+  function sceneSuivante(scene, o) {
     if (estEpub) { consigne(scene, 'Tournez la page', 1730); return; }
     var i = scenes.indexOf(scene);
-    fondu(function () { aller(i + 1); }, couleur);
+    if (i < 0 || i + 1 >= scenes.length) return;
+    Transitions.passer(scene, scenes[i + 1], function () { aller(i + 1); }, o);
+  }
+  // Rectangle d'un élément, en unités de scène (1200 x 1800).
+  function zone(e, scene) {
+    var r = scene.getBoundingClientRect(), b = e.getBoundingClientRect();
+    if (!r.width) return null;
+    var k = W / r.width;
+    return [(b.left - r.left) * k, (b.top - r.top) * k, b.width * k, b.height * k];
   }
 
   // ---------------------------------------------------------------- barre de commandes
@@ -724,8 +1220,10 @@
     var b = $('.bouton-porte', scene);
     if (b) b.addEventListener('click', function (ev) {
       ev.stopPropagation();
-      Son.init(); Son.ambiance('cosmos'); Son.effet('souffle');
-      sceneSuivante(scene);
+      if (bloque()) return;
+      Son.init(); Son.ambiance('cosmos');
+      // le bouton est la première porte : la lumière en jaillit
+      sceneSuivante(scene, { de: zone(b, scene) });
     });
   };
 
@@ -739,7 +1237,7 @@
       surTemps: function (j) { if (j === 5) { aube.style.opacity = '1'; etoiles.eclat(0.35); } },
       fin: function () { sceneSuivante(scene); }
     });
-    setTimeout(function () { recit.avancer(); }, 900);
+    quandEntree(scene).then(function () { setTimeout(function () { recit.avancer(); }, 500); });
   };
 
   // Un ciel mouvant : sur le toit, la voûte tourne lentement autour du pôle.
@@ -767,12 +1265,12 @@
       },
       fin: function () { vivant = false; sceneSuivante(scene); }
     });
-    if (carton) {
-      scene.appendChild(carton);
-      carton.classList.add('carton');
-      setTimeout(function () { carton.classList.add('vu'); }, 300);
-      setTimeout(function () { carton.classList.add('range'); recit.avancer(); }, calme ? 600 : 2800);
-    } else recit.avancer();
+    // Le titre du chapitre a claqué sur les bandes d'entrée ; il reste ensuite en haut de l'écran.
+    if (carton) { scene.appendChild(carton); carton.classList.add('carton', 'range'); }
+    quandEntree(scene).then(function () {
+      if (carton) carton.classList.add('vu');
+      setTimeout(function () { recit.avancer(); }, calme ? 200 : 700);
+    });
   };
 
   // La danse sur les tuiles : chaque toucher est une enjambée de cinq tuiles vers le pigeonnier.
@@ -792,7 +1290,7 @@
       var c = consigne(scene, 'Touchez en rythme pour enjamber les tuiles', 1000);
       return new Promise(function (ok) {
         function pas(ev) {
-          if (Objets.estOuverte()) return;
+          if (bloque()) return;
           if (ev.type === 'keydown' && (TOUCHES.indexOf(ev.key) < 0 || toucheDeBouton(ev))) return;
           if (ev.type !== 'keydown' && !horsBarre(ev)) return;
           if (ev.cancelable) ev.preventDefault();
@@ -813,9 +1311,10 @@
       portes: { 2: danser },
       // « Ses lunettes fumées sur le nez » : premier objet du livre
       surTemps: function (j) { if (j === 2) Objets.ajouter('lunettes', true); },
-      fin: function () { sceneSuivante(scene); }
+      // l'iris se referme sur le pigeonnier, là où la danse a mené
+      fin: function () { sceneSuivante(scene, { de: [628, 1134] }); }
     });
-    setTimeout(function () { recit.avancer(); }, 500);
+    quandEntree(scene).then(function () { setTimeout(function () { recit.avancer(); }, 400); });
   };
 
   // Le pigeonnier : ôter les lunettes, les voir fondre en clé, ouvrir sur le soleil.
@@ -881,6 +1380,7 @@
         })
         .then(function () {
           c.effacer(); halo.classList.remove('actif');
+          Transitions.frisson(scene, pose.x, pose.y, 260);    // portées → en main
           return anime(700, function (x) { pose.y = 1540 - 120 * lisse(x); pose.s = 1 + 0.1 * lisse(x); placer(); });
         });
     }
@@ -930,7 +1430,7 @@
       return new Promise(function (ok) {
         var prise = false, depart = null, bouge = false, fait = false;
         function bas(ev) {
-          if (Objets.estOuverte()) return;
+          if (bloque()) return;
           prise = true; bouge = false; depart = coordScene(scene, ev);
           if (objet.setPointerCapture) { try { objet.setPointerCapture(ev.pointerId); } catch (e) { /* rien */ } }
           if (ev.cancelable) ev.preventDefault();
@@ -942,7 +1442,7 @@
           pose.x = p.x; pose.y = p.y; pose.s = 0.8; placer();
         }
         function haut(ev) {
-          if (Objets.estOuverte()) return;
+          if (bloque()) return;
           if (ev.type === 'keydown') { if (TOUCHES.indexOf(ev.key) < 0 || toucheDeBouton(ev)) return; terminer(); return; }
           if (!prise) return;
           prise = false;
@@ -958,7 +1458,7 @@
           c.effacer(); cibleSerrure.setAttribute('opacity', '0');
           var x0 = pose.x, y0 = pose.y, s0 = pose.s;
           anime(700, function (x) { var t = lisse(x); pose.x = x0 + (932 - x0) * t; pose.y = y0 + (1010 - y0) * t; pose.s = s0 + (0.42 - s0) * t; placer(); })
-            .then(function () { Son.effet('cle'); ok(); });
+            .then(function () { Son.effet('cle'); Transitions.frisson(scene, 932, 1010, 170); ok(); });
         }
         objet.style.touchAction = 'none';
         objet.addEventListener('pointerdown', bas); objet.addEventListener('pointermove', mouv);
@@ -984,7 +1484,8 @@
       var c = consigne(scene, 'Un tour de poignet : touchez la clé', 1180, 2500);
       return toucher(objet, { objet: 'cle', libelle: 'Donner un tour de poignet' }).then(function () {
         c.effacer(); halo.classList.remove('actif'); Son.effet('tour');
-        return anime(650, function (x) { pose.r = -90 * lisse(x); placer(); });
+        return anime(650, function (x) { pose.r = -90 * lisse(x); placer(); })
+          .then(function () { Transitions.frisson(scene, 932, 1010, 130); });
       });
     }
     function deconsolider() {
@@ -1008,22 +1509,30 @@
       surTemps: function (j) {
         if (j === 2) vibrer();
         // la clé née de la fonte entre dans les objets, et sa fiche se présente une fois
-        if (j === 3) return fondreEnCle().then(function () { Objets.remplacer('lunettes', 'cle'); return Objets.presenter('cle'); });
+        if (j === 3) {
+          return fondreEnCle()
+            .then(function () {
+              var m = Objets.donnee('cle').metamorphose;
+              return Transitions.eclat(scene, { objet: 'cle', nom: Objets.nom('cle'), fragment: m && m.texte });
+            })
+            .then(function () { Objets.remplacer('lunettes', 'cle'); return Objets.presenter('cle'); });
+        }
         if (j === 6) return laisserPasserLeJour();
         if (j === 7) return deconsolider();
       },
+      // la porte, agrandie par la poussée, remplit l'écran : sa lumière l'envahit
       fin: function () {
-        pousser().then(function () { sceneSuivante(scene, '#fff6e4'); });
+        pousser().then(function () { sceneSuivante(scene, { de: [30, -124, 1140, 2080] }); });
       }
     });
-    setTimeout(function () { recit.avancer(); }, 600);
+    quandEntree(scene).then(function () { setTimeout(function () { recit.avancer(); }, 400); });
   };
 
   // Aluva : l'éblouissement, la poussière dans la lumière, le fleuve.
   demarreurs.aluva = function (scene) {
     var p = Poussiere(el('canvas', { 'class': 'toile' }, $('.decor', scene)));
-    var eblouir = el('div', { 'class': 'lumiere-flot ui', style: 'opacity:1;transition:opacity 3.5s ease-out;' }, scene);
-    setTimeout(function () { eblouir.style.opacity = '0'; }, 80);
+    var eblouir = el('div', { 'class': 'lumiere-flot ui', style: 'opacity:.7;transition:opacity 3s ease-out;' }, scene);
+    quandEntree(scene).then(function () { eblouir.style.opacity = '0'; });
     var recit = new Recit(scene, {
       surTemps: function (j) { if (j === 0) p.bouffee(); },
       fin: function () {
@@ -1032,7 +1541,7 @@
         ecrire('darshan.portes', ['pigeonnier-aluva']);
       }
     });
-    setTimeout(function () { recit.avancer(); }, 1600);
+    quandEntree(scene).then(function () { setTimeout(function () { recit.avancer(); }, 900); });
     var bCarnet = $('.ouvrir-carnet', scene), carnet = $('.carnet', scene);
     if (bCarnet && carnet) {
       bCarnet.addEventListener('click', function (ev) { ev.stopPropagation(); carnet.classList.add('ouvert'); });
@@ -1040,6 +1549,48 @@
     }
     var bRe = $('.recommencer', scene);
     if (bRe) bRe.addEventListener('click', function (ev) { ev.stopPropagation(); window.location.reload(); });
+  };
+
+  // Banc d'essai des transitions (édition web, page transitions.html) : chaque bouton joue un
+  // balayage ou un effet d'objet ; le décor change de monde selon le balayage choisi.
+  demarreurs.banc = function (scene) {
+    var decor = $('.decor img', scene), legende = $('.banc-legende', scene);
+    var mondes = {};
+    $$('.banc-decors [data-monde]', scene).forEach(function (d) {
+      var m = d.getAttribute('data-monde');
+      (mondes[m] = mondes[m] || []).push({ src: d.getAttribute('data-src'), credit: d.textContent });
+      var i = new Image(); i.src = d.getAttribute('data-src');       // prêts avant le premier balayage
+    });
+    var rang = {};
+    function changerDecor(m) {
+      var liste = mondes[m];
+      if (!liste) return;
+      rang[m] = ((rang[m] === undefined ? -1 : rang[m]) + 1) % liste.length;
+      if (decor.getAttribute('src') === liste[rang[m]].src && liste.length > 1) rang[m] = (rang[m] + 1) % liste.length;
+      decor.setAttribute('src', liste[rang[m]].src);
+      var credit = $('.banc-credit', scene);
+      if (credit) credit.textContent = liste[rang[m]].credit;
+    }
+    $$('.banc-boutons button', scene).forEach(function (b) {
+      b.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        if (bloque()) return;
+        Son.init();
+        var type = b.getAttribute('data-type');
+        if (legende) legende.textContent = b.getAttribute('title') || '';
+        if (type === 'frisson') { Transitions.frisson(scene, 600, 760, 260); return; }
+        if (type === 'eclat') {
+          var m = Objets.donnee('cle').metamorphose;
+          Transitions.eclat(scene, { objet: 'cle', nom: Objets.nom('cle'), fragment: m && m.texte });
+          return;
+        }
+        if (type === 'envol') { Objets.ajouter('lunettes', true); return; }
+        if (type === 'fiche') { Objets.ouvrir('cle'); return; }
+        var o = { type: type, titre: b.getAttribute('data-titre') || '' };
+        ['de', 'vers'].forEach(function (k) { var v = b.getAttribute('data-' + k); if (v) o[k] = v.split(' ').map(Number); });
+        Transitions.passer(scene, scene, function () { changerDecor(b.getAttribute('data-monde') || 'darshan'); }, o);
+      });
+    });
   };
 
   // ---------------------------------------------------------------- départ
@@ -1058,6 +1609,7 @@
         Son.init();
       });
       var nom = s.getAttribute('data-scene');
+      Transitions.entree(s);
       if (demarreurs[nom]) demarreurs[nom](s);
       return;
     }

@@ -15,6 +15,9 @@
   --or: #f4c56a;
   --or-pale: #ffe7b0;
   --nuit: #050816;
+  --encre: #07091a;
+  --sindoor: #c9302c;
+  --creme: #fff4de;
   --texte: #f5efe2;
   --ombre-texte: 0 0.1cqw 0.6cqw rgba(0, 0, 0, 0.9);
 }
@@ -164,22 +167,40 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 .fiche-fond { position: absolute; inset: 0; background: rgba(3, 5, 14, 0.58); opacity: 0; transition: opacity 350ms;
   -webkit-backdrop-filter: blur(0.7cqw); backdrop-filter: blur(0.7cqw); }
 .fiche.visible .fiche-fond { opacity: 1; }
+/* La carte entre par une diagonale (façon Persona) et repart par le même chemin. */
 .fiche-carte { position: absolute; left: 5cqw; right: 5cqw; bottom: 5cqw; max-height: 84%; overflow: auto;
   background: linear-gradient(rgba(22, 27, 52, 0.97), rgba(10, 13, 30, 0.98));
   border: 0.2cqw solid rgba(244, 197, 106, 0.55); border-radius: 2.4cqw;
   box-shadow: 0 2cqw 6cqw rgba(0, 0, 0, 0.6), inset 0 0 0 0.7cqw rgba(244, 197, 106, 0.06);
-  padding: 4cqw 6cqw 5cqw; transform: translateY(14%) scale(0.96); opacity: 0;
-  transition: transform 420ms cubic-bezier(.2, .9, .3, 1.15), opacity 300ms; }
-.fiche.visible .fiche-carte { transform: none; opacity: 1; }
+  padding: 4cqw 6cqw 5cqw; transform: translateX(-3%) skewX(-3deg);
+  -webkit-clip-path: polygon(0 0, 0 0, -35% 100%, -35% 100%); clip-path: polygon(0 0, 0 0, -35% 100%, -35% 100%);
+  transition: -webkit-clip-path 480ms cubic-bezier(.25, .8, .25, 1), clip-path 480ms cubic-bezier(.25, .8, .25, 1),
+    transform 560ms cubic-bezier(.2, 1.3, .4, 1); }
+.fiche.visible .fiche-carte { transform: none;
+  -webkit-clip-path: polygon(0 0, 135% 0, 100% 100%, -35% 100%); clip-path: polygon(0 0, 135% 0, 100% 100%, -35% 100%); }
+.fiche-carte::after { content: ""; position: absolute; top: 0; bottom: 0; left: -50%; width: 30%; pointer-events: none; opacity: 0;
+  background: linear-gradient(100deg, rgba(255, 244, 222, 0), rgba(255, 244, 222, 0.2), rgba(255, 244, 222, 0)); transform: skewX(-18deg); }
+.fiche.visible .fiche-carte::after { animation: reflet 900ms 280ms ease-out; }
+@keyframes reflet { from { left: -50%; opacity: 1; } to { left: 130%; opacity: 1; } }
+.fiche.visible .fiche-visuel svg { animation: fiche-objet 700ms 120ms cubic-bezier(.2, 1.2, .35, 1) both, balance 5s 820ms ease-in-out infinite; }
+@keyframes fiche-objet { from { transform: rotateY(-180deg) scale(0.4); opacity: 0; } to { transform: rotateY(-9deg) rotateX(4deg); opacity: 1; } }
+.fiche.visible h2 { animation: fiche-titre 420ms 220ms cubic-bezier(.2, 1.5, .4, 1) both; }
+@keyframes fiche-titre { from { opacity: 0; transform: scale(1.8) skewX(-10deg); } to { opacity: 1; transform: none; } }
+.fiche.visible blockquote { animation: fiche-ligne 460ms cubic-bezier(.2, 1, .3, 1) both; }
+@keyframes fiche-ligne { from { opacity: 0; transform: translateX(-8cqw); } to { opacity: 1; transform: none; } }
 .fiche-carte:focus { outline: none; }
 .fiche-visuel { height: 34cqw; display: flex; align-items: center; justify-content: center; perspective: 150cqw;
   margin: 0 0 2cqw; cursor: grab; touch-action: none; }
 .fiche-visuel svg { width: 70%; height: auto; transition: transform 500ms cubic-bezier(.2, .9, .3, 1.2);
   filter: drop-shadow(0 1.6cqw 2cqw rgba(0, 0, 0, 0.65)); animation: balance 5s ease-in-out infinite; }
-.fiche-visuel.tenu svg { transition: none; animation: none; }
+/* une fois l'objet manié, il ne rejoue plus son entrée : il se balance seulement */
+.fiche.visible .fiche-visuel.manie svg { animation: balance 5s ease-in-out infinite; }
+.fiche.visible .fiche-visuel.tenu svg, .fiche-visuel.tenu svg { transition: none; animation: none; }
 @keyframes balance { 0%, 100% { transform: rotateY(-9deg) rotateX(4deg); } 50% { transform: rotateY(9deg) rotateX(-3deg); } }
 .fiche-surtitre { font-family: "Unna", serif; font-variant: small-caps; letter-spacing: 0.14em; color: var(--or);
   font-size: 3.2cqw; margin: 0; text-align: center; min-height: 1em; }
+.fiche-surtitre.etiquette { display: table; margin: 0 auto; padding: 0.3cqw 2.6cqw 0.5cqw; background: var(--sindoor); color: var(--creme);
+  transform: skewX(-12deg); box-shadow: 0.8cqw 0.8cqw 0 rgba(0, 0, 0, 0.45); }
 .fiche h2 { font-family: "Unna", serif; font-weight: 400; font-size: 6.6cqw; color: var(--or-pale); text-align: center;
   margin: 0.4cqw 0 3.2cqw; outline: none; }
 .fiche blockquote { margin: 0 0 2.6cqw; padding-left: 3cqw; border-left: 0.3cqw solid rgba(244, 197, 106, 0.45);
@@ -198,16 +219,22 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 .fiche-actions button.secondaire { border-color: rgba(239, 230, 210, 0.35); background: none; color: #d9d2c4; }
 .fiche button:focus-visible, .barre button:focus-visible, .nouvel-objet:focus-visible { outline: 0.4cqw solid var(--or-pale); outline-offset: 0.5cqw; }
 
-/* annonce « Nouvel objet » */
-.nouvel-objet { position: absolute; left: 50%; top: 13cqw; z-index: 30; display: flex; align-items: center; gap: 2.4cqw;
-  padding: 1.6cqw 4cqw 1.6cqw 2cqw; border-radius: 5cqw; border: 0.2cqw solid rgba(244, 197, 106, 0.6);
-  background: rgba(12, 15, 34, 0.9); color: var(--or-pale); font: inherit; font-size: 3.4cqw; cursor: pointer;
-  transform: translate(-50%, -30cqw); transition: transform 600ms cubic-bezier(.2, .9, .3, 1.2); }
-.nouvel-objet.vu { transform: translate(-50%, 0); }
-.nouvel-objet svg { width: 11cqw; height: 6cqw; }
+/* annonce « Nouvel objet » : un bandeau oblique qui claque depuis la gauche */
+.nouvel-objet { position: absolute; left: 0; top: 13cqw; z-index: 30; display: flex; align-items: center; gap: 2.4cqw;
+  padding: 1.8cqw 6cqw 1.8cqw 5cqw; border: 0; border-left: 1.6cqw solid var(--sindoor); border-radius: 0;
+  background: rgba(7, 9, 26, 0.95); color: var(--or-pale); font: inherit; font-size: 3.4cqw; text-align: left; cursor: pointer;
+  box-shadow: 1.2cqw 1.2cqw 0 rgba(244, 197, 106, 0.85);
+  transform: translateX(-115%) skewX(-12deg); transition: transform 560ms cubic-bezier(.2, 1.3, .4, 1); }
+.nouvel-objet.vu { transform: translateX(5cqw) skewX(-12deg); }
+.nouvel-objet > span { display: block; transform: skewX(12deg); }
+.nouvel-objet .icone { width: 11cqw; height: 6cqw; }
+.nouvel-objet .icone svg { width: 100%; height: 100%; }
+.nouvel-objet .icone.parti { visibility: hidden; }
 .nouvel-objet small { display: block; font-family: "Unna", serif; font-variant: small-caps; letter-spacing: 0.12em; color: var(--or); font-size: 2.8cqw; }
 .barre .objets .compte { display: inline-block; min-width: 1.6em; margin-left: 0.4em; border-radius: 1em; background: var(--or);
   color: #1a1208; font-size: 0.85em; text-align: center; }
+.barre .objets { transition: opacity 300ms, transform 460ms cubic-bezier(.2, 1.6, .4, 1); }
+.barre .objets.arrivee { opacity: 0; transform: scale(0.4); }
 .barre .objets.pulse { animation: pulse-objets 900ms ease-out 2; }
 @keyframes pulse-objets { 50% { box-shadow: 0 0 0 1.4cqw rgba(244, 197, 106, 0.35); } }
 
@@ -217,7 +244,103 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 @keyframes respire { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.8; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .fiche-visuel svg { animation: none; }
-  .fiche-carte, .nouvel-objet { transition: opacity 200ms; }
+  .fiche-visuel svg, .fiche.visible .fiche-visuel svg, .fiche.visible h2, .fiche.visible blockquote { animation: none; }
+  .fiche-carte { -webkit-clip-path: none; clip-path: none; transform: none; opacity: 0; transition: opacity 200ms; }
+  .fiche.visible .fiche-carte { opacity: 1; }
+  .fiche-carte::after { display: none; }
+  .nouvel-objet { transition: opacity 200ms; transform: translateX(5cqw) skewX(-12deg); opacity: 0; }
+  .nouvel-objet.vu { opacity: 1; }
+  .barre .objets { transition: opacity 200ms; }
+  .barre .objets.arrivee { transform: none; }
   .halo-interet.actif { animation: none; opacity: 0.6; }
 }
+
+/* ------------------------------------------------------------ transitions
+   Balayages entre scènes (calque SVG .tr, dessiné par le moteur), et effets d'objet :
+   frisson (petit changement d'état), éclat (métamorphose), envol (l'objet rejoint le sac). */
+.tr { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 60; overflow: visible; }
+.tr.tr-leger { z-index: 12; pointer-events: none; }
+
+.eclat { position: absolute; inset: 0; z-index: 45; overflow: hidden; }
+.eclat.joue { animation: eclat-secousse 300ms 900ms linear; }
+@keyframes eclat-secousse { 20% { transform: translate(0.8cqw, -0.5cqw); } 40% { transform: translate(-0.7cqw, 0.4cqw); }
+  60% { transform: translate(0.5cqw, 0.3cqw); } 80% { transform: translate(-0.3cqw, -0.2cqw); } }
+.eclat-bande { position: absolute; left: -25%; width: 150%; transform: skewY(-12deg) translateX(-110%); }
+.eclat .b1 { top: 18%; height: 44%; background: var(--encre); }
+.eclat .b2 { top: 60%; height: 4.5%; background: var(--sindoor); transform: skewY(-12deg) translateX(110%); }
+.eclat .b3 { top: 64.2%; height: 1.4%; background: var(--or); }
+.eclat .b4 { top: 13.5%; height: 3.2%; background: var(--sindoor); transform: skewY(-12deg) translateX(110%); }
+.eclat .b5 { top: 65.4%; height: 13%; background: var(--encre); }
+.eclat.joue .eclat-bande { animation: eclat-bande 460ms cubic-bezier(.18, 1.3, .4, 1) both; }
+@keyframes eclat-bande { to { transform: skewY(-12deg) translateX(0); } }
+.eclat.sort .eclat-bande { animation: eclat-sort-g 420ms cubic-bezier(.6, 0, .9, .5) both; }
+.eclat.sort .b2, .eclat.sort .b4 { animation-name: eclat-sort-d; }
+/* les bandes arrivent, puis repartent, l'une après l'autre (règles placées après les raccourcis) */
+.eclat.joue .b2 { animation-delay: 70ms; }
+.eclat.joue .b3 { animation-delay: 140ms; }
+.eclat.joue .b4 { animation-delay: 40ms; }
+.eclat.joue .b5 { animation-delay: 110ms; }
+@keyframes eclat-sort-g { from { transform: skewY(-12deg) translateX(0); } to { transform: skewY(-12deg) translateX(110%); } }
+@keyframes eclat-sort-d { from { transform: skewY(-12deg) translateX(0); } to { transform: skewY(-12deg) translateX(-110%); } }
+.eclat-trame { position: absolute; left: -25%; width: 150%; top: 18%; height: 60%; opacity: 0; transform: skewY(-12deg);
+  background-image: radial-gradient(circle, rgba(244, 197, 106, 0.55) 30%, rgba(244, 197, 106, 0) 34%); background-size: 1.6cqw 1.6cqw;
+  -webkit-mask-image: linear-gradient(90deg, transparent 8%, #000 42%, #000 58%, transparent 92%);
+  mask-image: linear-gradient(90deg, transparent 8%, #000 42%, #000 58%, transparent 92%); }
+.eclat.joue .eclat-trame { animation: eclat-trame 2s 200ms ease-out both; }
+@keyframes eclat-trame { 0% { opacity: 0; background-position: 0 0; } 20% { opacity: 0.9; } 100% { opacity: 0.5; background-position: 6cqw 0; } }
+.eclat-etoiles { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.eclat-etoiles path { opacity: 0; transform-box: fill-box; transform-origin: center; }
+.eclat.joue .eclat-etoiles path { animation: eclat-etoile 1.6s ease-out both; }
+@keyframes eclat-etoile { 0% { opacity: 0; transform: scale(0) rotate(-90deg); } 25% { opacity: 1; transform: scale(1.3) rotate(0); }
+  60% { opacity: 0.8; transform: scale(0.9); } 100% { opacity: 0.9; transform: scale(1); } }
+.eclat-objet { position: absolute; left: 15%; width: 70%; top: 24%; height: 26%; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: rotate(-260deg) scale(0.15); filter: drop-shadow(0 0 2.4cqw rgba(255, 215, 140, 0.75)); }
+.eclat-objet svg { width: 100%; height: 100%; }
+.eclat.joue .eclat-objet { animation: eclat-objet 720ms 160ms cubic-bezier(.2, 1.25, .35, 1) both; }
+@keyframes eclat-objet { to { opacity: 1; transform: rotate(-9deg) scale(1); } }
+.eclat-nom { position: absolute; left: 0; right: 0; top: 49%; margin: 0; text-align: center; white-space: nowrap;
+  font-family: "Unna", Georgia, serif; font-style: italic; font-size: 16cqw; line-height: 1; color: var(--creme);
+  -webkit-text-stroke: 0.3cqw var(--encre); text-shadow: 1cqw 1cqw 0 var(--sindoor), 2cqw 2cqw 0 rgba(7, 9, 26, 0.6);
+  opacity: 0; transform: rotate(-12deg) skewX(-8deg) scale(2.4); }
+.eclat.joue .eclat-nom { animation: eclat-nom 380ms 520ms cubic-bezier(.2, 1.5, .4, 1) both; }
+@keyframes eclat-nom { to { opacity: 1; transform: rotate(-12deg) skewX(-8deg) scale(1); } }
+.eclat-fragment { position: absolute; right: 6%; top: 68%; margin: 0; padding: 1cqw 3cqw; background: var(--or); color: var(--encre);
+  font-style: italic; font-size: 5cqw; white-space: nowrap; transform: skewX(-12deg) translateX(130%); }
+.eclat.joue .eclat-fragment { animation: eclat-fragment 420ms 780ms cubic-bezier(.2, 1.3, .4, 1) both; }
+@keyframes eclat-fragment { to { transform: skewX(-12deg) translateX(0); } }
+.eclat.sort .eclat-objet { animation: eclat-objet-sort 380ms cubic-bezier(.6, 0, .9, .5) both; }
+@keyframes eclat-objet-sort { from { opacity: 1; transform: rotate(-9deg) scale(1); } to { opacity: 0; transform: rotate(8deg) scale(1.6); } }
+.eclat.sort .eclat-nom { animation: eclat-nom-sort 300ms ease-in both; }
+@keyframes eclat-nom-sort { from { opacity: 1; transform: rotate(-12deg) skewX(-8deg) scale(1); } to { opacity: 0; transform: rotate(-12deg) skewX(-8deg) scale(0.8); } }
+.eclat.sort .eclat-fragment { animation: eclat-fragment-sort 300ms ease-in both; }
+@keyframes eclat-fragment-sort { from { transform: skewX(-12deg) translateX(0); } to { transform: skewX(-12deg) translateX(130%); } }
+.eclat.sort .eclat-trame, .eclat.sort .eclat-etoiles { animation: eclat-efface 260ms ease-in both; }
+@keyframes eclat-efface { from { opacity: 0.6; } to { opacity: 0; } }
+/* mouvement réduit : l'éclat devient un simple fondu, sans rien qui glisse ni ne tourne */
+.eclat.calme .eclat-bande, .eclat.calme .eclat-objet, .eclat.calme .eclat-nom, .eclat.calme .eclat-fragment,
+.eclat.calme .eclat-trame, .eclat.calme .eclat-etoiles path { animation: none; opacity: 0; transition: opacity 260ms; }
+.eclat.calme .eclat-bande, .eclat.calme .eclat-trame { transform: skewY(-12deg); }
+.eclat.calme .eclat-objet { transform: rotate(-9deg); }
+.eclat.calme .eclat-nom { transform: rotate(-12deg) skewX(-8deg); }
+.eclat.calme .eclat-fragment { transform: skewX(-12deg); }
+.eclat.calme.joue .eclat-bande, .eclat.calme.joue .eclat-objet, .eclat.calme.joue .eclat-nom, .eclat.calme.joue .eclat-fragment { opacity: 1; }
+.eclat.calme.joue { animation: none; }
+.eclat.calme.sort .eclat-bande, .eclat.calme.sort .eclat-objet, .eclat.calme.sort .eclat-nom, .eclat.calme.sort .eclat-fragment { opacity: 0; }
+
+.envol { position: absolute; z-index: 35; pointer-events: none; display: flex; align-items: center; justify-content: center;
+  filter: drop-shadow(0 0 1.2cqw rgba(255, 215, 140, 0.9)); }
+.envol svg { width: 100%; height: 100%; }
+
+/* banc d'essai des transitions (édition web) */
+.banc-titre { position: absolute; top: 4cqw; left: 5cqw; right: 26cqw; margin: 0; font-family: "Unna", serif; font-weight: 400;
+  font-size: 5.6cqw; line-height: 1.1; color: var(--or-pale); text-shadow: var(--ombre-texte); }
+.banc-legende { position: absolute; left: 5cqw; right: 5cqw; bottom: 43cqw; margin: 0; font-size: 3.6cqw; line-height: 1.4;
+  text-shadow: var(--ombre-texte); }
+.banc-credit { position: absolute; left: 5cqw; right: 5cqw; bottom: 38cqw; margin: 0; font-size: 2.6cqw; color: #d9d2c4; text-shadow: var(--ombre-texte); }
+.banc-decors { display: none; }
+.jeu .banc-boutons { position: absolute; left: 4cqw; right: 4cqw; bottom: 5cqw; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.8cqw; z-index: 20; }
+.banc-boutons button { font: inherit; font-size: 3.2cqw; padding: 1.8cqw 1cqw; border-radius: 1cqw; cursor: pointer;
+  border: 0.2cqw solid rgba(244, 197, 106, 0.6); background: rgba(7, 9, 26, 0.82); color: var(--or-pale); }
+.banc-boutons button.julie { border-color: rgba(239, 230, 210, 0.6); background: rgba(24, 26, 32, 0.85); color: #efe6d2; }
+.banc-boutons button.objet { border-color: var(--sindoor); }

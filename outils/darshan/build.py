@@ -104,6 +104,8 @@ OBJETS = {
     },
     "cle": {
         "nom": "La clé",
+        # le fragment affiché en grand pendant l'éclat de la métamorphose
+        "metamorphose": (22, "elles se transforment"),
         "citations": [
             (22, "D’un geste vif, digne d’un prestidigitateur, elles se transforment, passant de lunettes à une clé au format pincé.", CHAPITRE_1),
             (22, "Elle est adaptée à la porte par sa finesse\u00a0; assortie aux grillages par ses rayures et sa rouille.", CHAPITRE_1),
@@ -123,6 +125,11 @@ def donnees_objets():
             assert k >= 0, (cle, numero, texte)
             cites.append({"texte": texte, "chapitre": chapitre, "lu": position(numero, k + len(texte))})
         sortie[cle] = {"nom": o["nom"], "citations": cites}
+        if "metamorphose" in o:
+            numero, texte = o["metamorphose"]
+            k = lignes[numero].find(texte)
+            assert k >= 0, (cle, numero, texte)
+            sortie[cle]["metamorphose"] = {"texte": texte, "lu": position(numero, k + len(texte))}
     brut = json.dumps(sortie, ensure_ascii=False)
     # sûr en HTML comme en XHTML
     return brut.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
@@ -152,7 +159,7 @@ def carte_portes():
 def scenes(img):
     """Balisage des scènes ; `img` est le préfixe des chemins d'images."""
     return [
-        dict(id="seuil", titre="Darshan", son="cosmos", lu0=0, objets="", html=f'''
+        dict(id="seuil", titre="Darshan", son="cosmos", lu0=0, objets="", entree="", html=f'''
 <div class="decor" aria-hidden="true"><img src="{img}ciel-poeme.jpg" alt=""/></div>
 <div class="titre-livre">
   <p class="auteur">Karl Forterre</p>
@@ -161,10 +168,10 @@ def scenes(img):
   <p class="genre">nouvelle — extrait jouable</p>
   <p class="ui" style="margin-top: 9cqw;"><button type="button" class="bouton-porte">Ouvrir</button></p>
 </div>'''),
-        dict(id="poeme", titre="Poème d’ouverture", son="cosmos", lu0=debut(POEME[0]), objets="", html=f'''
+        dict(id="poeme", titre="Poème d’ouverture", son="cosmos", lu0=debut(POEME[0]), objets="", entree="porte", html=f'''
 <div class="decor" aria-hidden="true"><img src="{img}ciel-poeme.jpg" alt=""/></div>
 <div class="texte poeme">{"".join(para(l) for l in POEME)}</div>'''),
-        dict(id="toit", titre="Un ciel mouvant", son="nuit", lu0=debut(p18), objets="", html=f'''
+        dict(id="toit", titre="Un ciel mouvant", son="nuit", lu0=debut(p18), objets="", entree="bandes", html=f'''
 <div class="decor" aria-hidden="true">
   <div class="ciel-tournant calque-anime"><img src="{img}ciel-nuit.jpg" alt=""/></div>
   <img src="{img}ville.webp" alt=""/>
@@ -173,7 +180,7 @@ def scenes(img):
   <h1 class="chapitre">Un ciel mouvant</h1>
   {para(p18)}{para(p19)}{para(p20, "voix")}
 </div>'''),
-        dict(id="tuiles", titre="Sur les tuiles du seizième", son="nuit", lu0=debut(p21), objets="", html=f'''
+        dict(id="tuiles", titre="Sur les tuiles du seizième", son="nuit", lu0=debut(p21), objets="", entree="encre", html=f'''
 <div class="decor" aria-hidden="true">
   <div class="monde calque-anime">
     <img src="{img}ciel-nuit.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
@@ -181,10 +188,10 @@ def scenes(img):
   </div>
 </div>
 <div class="texte">{para(p21)}</div>'''),
-        dict(id="pigeonnier", titre="Le pigeonnier", son="nuit", lu0=debut(p22), objets="lunettes", html=f'''
+        dict(id="pigeonnier", titre="Le pigeonnier", son="nuit", lu0=debut(p22), objets="lunettes", entree="iris 600 1000", html=f'''
 <div class="decor calque-anime" aria-hidden="true"><img src="{img}porte.jpg" alt=""/></div>
 <div class="texte en-haut">{para(p22)}{para(p23[:2])}</div>'''),
-        dict(id="aluva", titre="Aluva", son="kerala", lu0=debut(p23[2:]), objets="cle", html=f'''
+        dict(id="aluva", titre="Aluva", son="kerala", lu0=debut(p23[2:]), objets="cle", entree="porte", html=f'''
 <div class="decor" aria-hidden="true"><img src="{img}aluva.jpg" alt=""/></div>
 <div class="texte clair">{para(p23[2:], "suite-para")}</div>
 <div class="fin-extrait ui">
@@ -199,6 +206,58 @@ def scenes(img):
   <p style="opacity:.7;font-style:italic;">Chaque porte franchie s’allume ici comme une étoile. (Toucher pour fermer.)</p>
 </div>'''),
     ]
+
+
+def entree(s):
+    """Balayage d'entrée de la scène (voir le moteur) : type, puis d'où il s'ouvre."""
+    return f' data-entree="{s["entree"]}"' if s.get("entree") else ""
+
+
+# ---------------------------------------------------------------- banc d'essai des transitions (web)
+# Une page de démonstration : chaque bouton joue un balayage ou un effet d'objet. Le monde de
+# Darshan passe par ses décors ; celui de Julie par trois photographies de Karl.
+BANC_DECORS = [
+    ("darshan", "ciel-poeme.jpg", "Ciel étoilé : photographie de Karl Forterre, retouchée"),
+    ("darshan", "porte.jpg", "Le pigeonnier : dessin"),
+    ("darshan", "aluva.jpg", "Aluva : dessin"),
+    ("darshan", "encre-34762346.jpg", "« Porte en bois rustique et sa lanterne » : photographie de Karl Forterre, passée à l’encre"),
+    ("julie", "photo-metro.jpg", "« Métro » : photographie de Karl Forterre"),
+    ("julie", "photo-haussmann.jpg", "« Style haussmannien » : photographie de Karl Forterre"),
+    ("julie", "photo-pluie.jpg", "« Pluie » : photographie de Karl Forterre"),
+]
+BANC = [
+    # type, libellé, monde, légende, attributs
+    ("fondu", "Fondu", "darshan", "Même lieu, même moment : un fondu au noir.", {}),
+    ("encre", "Encre", "darshan", "Darshan change de lieu : trois coups de pinceau traversent la page.", {}),
+    ("bandes", "Bandes", "darshan", "Un chapitre commence : les bandes claquent et son titre s’y pose.", {"titre": "Un ciel mouvant"}),
+    ("iris", "Iris", "darshan", "Une vision, une petite porte : le cercle se referme sur un point et s’ouvre ailleurs.", {"de": "600 760", "vers": "600 1000"}),
+    ("porte", "Porte", "darshan", "Darshan franchit une porte : sa lumière gagne l’écran, la scène suivante apparaît dans l’embrasure.", {"de": "500 620 200 360"}),
+    ("lumiere", "Lumière", "darshan", "Un éblouissement : la lumière s’étend, puis se dissipe.", {}),
+    ("obturateur", "Obturateur", "julie", "Le monde de Julie, photographié : les lames d’un obturateur.", {}),
+    ("glissement", "Glissement", "julie", "Le téléphone de Julie : on passe d’une photo à l’autre.", {}),
+    ("frisson", "Frisson", "", "Un objet change d’état : les lunettes ôtées, la clé dans la serrure.", {}),
+    ("eclat", "Éclat", "", "Un objet se métamorphose : les lunettes deviennent une clé.", {}),
+    ("envol", "Envol", "", "Un nouvel objet rejoint le sac.", {}),
+    ("fiche", "Fiche", "", "La fiche d’un objet s’ouvre en diagonale.", {}),
+]
+IMAGES_BANC = ["photo-metro.jpg", "photo-haussmann.jpg", "photo-pluie.jpg", "encre-34762346.jpg"]
+
+
+def banc(img):
+    boutons = []
+    for t, libelle, monde, legende, attrs in BANC:
+        classe = monde if monde == "julie" else ("objet" if not monde else "")
+        extra = "".join(f' data-{k}="{html.escape(v)}"' for k, v in attrs.items())
+        boutons.append(f'<button type="button" class="{classe}" data-type="{t}" data-monde="{monde or "darshan"}"'
+                       f' title="{html.escape(legende)}"{extra}>{libelle}</button>')
+    decors = "".join(f'<li data-monde="{m}" data-src="{img}{f}">{html.escape(c)}</li>' for m, f, c in BANC_DECORS)
+    return f'''
+<div class="decor" aria-hidden="true"><img src="{img}ciel-poeme.jpg" alt=""/></div>
+<h1 class="banc-titre">Darshan : les transitions</h1>
+<p class="banc-legende">Chaque bouton joue une transition ou un effet d’objet, tel qu’il servira dans le livre.</p>
+<p class="banc-credit">{html.escape(BANC_DECORS[0][2])}</p>
+<div class="banc-boutons ui">{"".join(boutons)}</div>
+<ul class="banc-decors">{decors}</ul>'''
 
 
 POLICES = ["Amiri-Regular.woff2", "Amiri-Italic.woff2", "Amiri-Bold.woff2", "Unna-Regular.woff2",
@@ -234,8 +293,30 @@ def web():
     copier_ressources(racine)
     (racine / "css" / "moteur.css").write_text(css_source(), encoding="utf-8")
     corps = "\n".join(f'<section class="scene" id="s-{s["id"]}" data-scene="{s["id"]}" data-son="{s["son"]}" '
-                      f'data-lu0="{s["lu0"]}" data-objets="{s["objets"]}" '
+                      f'data-lu0="{s["lu0"]}" data-objets="{s["objets"]}"{entree(s)} '
                       f'aria-label="{html.escape(s["titre"])}">{s["html"]}</section>' for s in scenes("img/"))
+    for f in IMAGES_BANC:
+        shutil.copy(SRC / "img" / f, racine / "img" / f)
+    banc_page = f'''<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Darshan — les transitions</title>
+<meta name="description" content="Prototype : les transitions du livre jouable Darshan, de Karl Forterre."/>
+<link rel="stylesheet" href="css/moteur.css"/>
+<style>html,body{{height:100%;}} body{{display:flex;align-items:center;justify-content:center;min-height:100%;}}</style>
+</head>
+<body>
+<main class="plateau">
+<section class="scene" id="s-banc" data-scene="banc" data-son="cosmos" data-lu0="{position(24, 0)}" data-objets="" aria-label="Les transitions">{banc("img/")}</section>
+</main>
+<script type="application/json" id="donnees-objets">{donnees_objets()}</script>
+<script src="js/moteur.js"></script>
+</body>
+</html>
+'''
+    (racine / "transitions.html").write_text(banc_page, encoding="utf-8")
     page = f'''<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -272,7 +353,7 @@ def xhtml(s):
 </head>
 <body>
 <div class="plateau">
-<section class="scene" id="s-{s["id"]}" data-scene="{s["id"]}" data-son="{s["son"]}" data-lu0="{s["lu0"]}" data-objets="{s["objets"]}" epub:type="{"titlepage" if s["id"] == "seuil" else "bodymatter"}" aria-label="{html.escape(s["titre"])}">{s["html"]}</section>
+<section class="scene" id="s-{s["id"]}" data-scene="{s["id"]}" data-son="{s["son"]}" data-lu0="{s["lu0"]}" data-objets="{s["objets"]}"{entree(s)} epub:type="{"titlepage" if s["id"] == "seuil" else "bodymatter"}" aria-label="{html.escape(s["titre"])}">{s["html"]}</section>
 </div>
 <script type="application/json" id="donnees-objets">{donnees_objets()}</script>
 <script src="../js/moteur.js"></script>
