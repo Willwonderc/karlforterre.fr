@@ -8,7 +8,8 @@ pour la réalisation.
 Point de départ :
 - *Darshan*, nouvelle de Karl Forterre (Société des Éditions du Poitou, collection
   Cheminement, 2023) : un poème d'ouverture, sept chapitres, un poème de clôture,
-  environ 8 200 mots ;
+  environ 8 200 mots. Karl en a récupéré tous les droits : le contrat avait une durée
+  d'exploitation limitée ;
 - l'EPUB actuel (`livres/darshan.epub`, export InDesign d'août 2023) est valide :
   EPUBCheck 5.4.0 ne relève ni erreur ni avertissement ;
 - une tranche verticale jouable a été construite pendant cette évaluation, pour juger sur
@@ -39,8 +40,8 @@ d'une phrase du livre, sans jamais en changer un mot. Le monde de Darshan est à
 à l'aquarelle, comme les toiles que le texte lui prête ; celui de Julie passe par les
 photographies de Karl. Les portes franchies forment une constellation. À la fin, les
 étoiles s'éteignent une à une et l'interface meurt avec la magie. En chiffres : une
-centaine de tableaux, une dizaine de sessions Claude, 0 € de dépenses, la voix de Karl
-en option.
+centaine de tableaux, une dizaine de sessions Claude, 0 € de dépenses hors ISBN, la voix
+de Karl en option.
 
 ## 1. Ce que le texte offre déjà à un jeu
 
@@ -325,9 +326,33 @@ liseuses, et l'intérêt d'un lecteur pendant quarante minutes.
 
 ## 7. Droits, édition, accessibilité
 
-- **Éditeur.** Le livre est © Société des Éditions du Poitou, 2023, tous droits réservés :
-  une édition enrichie demande l'accord de la SEP et **un nouvel ISBN** (c'est un produit
-  différent). En profiter pour remettre en ordre les métadonnées de l'EPUB actuel : il se
+- **Droits.** Karl a récupéré tous ses droits : son contrat avec la Société des Éditions
+  du Poitou (SEP) avait une durée d'exploitation limitée. L'accord de la SEP n'est donc
+  plus nécessaire, et Karl publie lui-même. Son édition remplace le nom, le logo et la
+  mention « © SEP » de 2023, ainsi que le logo de la collection Cheminement, qui est une
+  collection de la SEP.
+- **ISBN de 2023** (vérifié le 28 septembre 2026) :
+
+  | Question | Constat |
+  |---|---|
+  | Numéros valides ? | Oui : 978-2-9588873-3-9 (papier), 978-2-9588873-4-6 (EPUB) et 978-2-9588873-2-2 (*L'histoire du petit Théo*) ont une clé de contrôle correcte. Le préfixe 978-2-9588873 donne un bloc de dix numéros. |
+  | À qui est le préfixe ? | Non vérifié : le registre mondial des éditeurs de l'agence internationale de l'ISBN était en maintenance. Le livre le rattache à la SEP, toujours en activité (SIREN 303 458 988, gérant Eric Rimbault). |
+  | Catalogue de la BnF | Aucune notice pour les trois numéros : le dépôt légal n'y apparaît pas. |
+  | Commerce du livre | Aucun résultat sur leslibraires.fr, qui puise dans la base professionnelle des libraires : les livres n'y sont pas référencés. |
+  | Autres bases | Rien dans Open Library ; Google Books n'a pas répondu (quota dépassé). |
+
+  **Un ISBN n'expire pas et n'a pas d'état « actif »** : selon l'AFNIL, « une fois attribué,
+  un ISBN ne doit jamais être utilisé de nouveau ». Ces numéros restent attachés à
+  l'édition SEP de 2023, et Karl ne peut pas les reprendre pour la sienne : « C'est
+  seulement quand vous allez rééditer les livres sous votre nom d'éditeur que vous leur
+  attribuerez de nouveaux ISBN » (AFNIL). Chaque format a le sien : « un numéro différent
+  pour chaque format utilisé », soit un pour l'EPUB jouable, un pour l'EPUB classique, un
+  pour le PDF, un pour la voix. L'ISBN n'est pas obligatoire, mais l'AFNIL le juge
+  « souhaitable » pour tout livre accessible au public, gratuit ou non ; il identifie le
+  livre auprès de la BnF, des libraires et des bases de données. Tarif de l'AFNIL pour une
+  première demande : 37 € HT en trois semaines, 87 € HT en une semaine ; liste
+  complémentaire : 28 € HT.
+- **Métadonnées.** Celles de l'EPUB de 2023 sont à reprendre dans l'édition de Karl : il se
   déclare en français **et en hindi** (`hi-IN`), et son ISBN, 978-2-9588873-4-6, n'y figure
   pas.
 - **Couverture.** La photographie est d'Arianna Jadé et montre un modèle : pour l'animer
@@ -341,8 +366,8 @@ liseuses, et l'intérêt d'un lecteur pendant quarante minutes.
 - **Accessibilité.** Depuis le 28 juin 2025, l'acte européen d'accessibilité s'applique
   aux livres numériques. En France (article 48 de la loi n° 2005-102, modifié en 2023),
   les entreprises de moins de dix personnes et de moins de deux millions d'euros de
-  chiffre d'affaires en sont exemptées, sans démarche. La SEP l'est sans doute ; le
-  livre visera quand même le niveau d'accessibilité EPUB 1.1 (WCAG AA) :
+  chiffre d'affaires en sont exemptées, sans démarche. Karl, qui publie seul, est bien en
+  dessous de ces seuils ; le livre visera quand même le niveau d'accessibilité EPUB 1.1 (WCAG AA) :
   - métadonnées schema.org, et le danger « motionSimulation » déclaré ;
   - mode lecture, mouvement réduit, clavier, annonces aux lecteurs d'écran ;
   - sons et animations qu'on peut arrêter ; sous-titres des sons qui portent du sens.
@@ -356,7 +381,7 @@ sûr.
 
 | Chantier | Contenu | Réussi quand |
 |---|---|---|
-| D1. Fondations | Texte source unique (et corrections validées) ; moteur tiré du prototype ; fabrication des trois éditions ; tâche GitHub avec EPUBCheck, Ace, partie jouée et captures ; EPUB classique corrigé avec ISBN et métadonnées d'accessibilité | L'EPUB classique passe EPUBCheck et Ace ; Karl a ouvert l'extrait jouable dans Apple Books sur son iPhone et son Mac |
+| D1. Fondations | Texte source unique (et corrections validées) ; moteur tiré du prototype ; fabrication des trois éditions ; tâche GitHub avec EPUBCheck, Ace, partie jouée et captures ; EPUB classique corrigé, aux mentions de Karl (ISBN à son nom s'il en a pris un), avec métadonnées d'accessibilité | L'EPUB classique passe EPUBCheck et Ace ; Karl a ouvert l'extrait jouable dans Apple Books sur son iPhone et son Mac |
 | D2. Direction artistique | Bible visuelle (encre et aquarelle, traitement des photos) ; générateurs des éléments récurrents ; sélection des photos de Karl et liste de repérages ; une trentaine de décors | Karl valide la planche des décors |
 | D3. Chapitres 1 et 2 | Jivan, la moustache, Paris dans le Periyar ; le restaurant, le souvenir de la vitrine, Montsouris | Les deux chapitres se jouent du début à la fin |
 | D4. Chapitre 3 | Histoire des portes, bibliothèque de Pékin, vers sanskrits, mudrā à deux pouces, porte à la lanterne | Idem |
@@ -376,7 +401,7 @@ fusionner la pull request avant de lancer la suivante.
 Chantier D1 de docs/plan-darshan.md : fondations du livre jouable.
 1. Pars du prototype d'outils/darshan/. Crée la source unique du texte, tirée par programme de livres/darshan.epub, et une liste des corrections (annexe A du plan) que j'aurai cochées ; ne corrige rien que je n'aie validé.
 2. Moteur : reprends outils/darshan/src/moteur.js, découpé en modules lisibles, sans dépendance, minifié à la fabrication. État reconstitué page par page ; la mémoire locale n'est qu'un bonus.
-3. Fabrication (outils/darshan/build.py) : EPUB jouable en pages fixes au format 2:3 (page de 1200 × 1800, images de 1600 × 2400), EPUB classique refusionnable corrigé (ISBN dans les métadonnées, langue fr seule, métadonnées d'accessibilité), édition web dans darshan/ (noindex). Vérifie que le texte de chaque édition est identique à la source.
+3. Fabrication (outils/darshan/build.py) : EPUB jouable en pages fixes au format 2:3 (page de 1200 × 1800, images de 1600 × 2400), EPUB classique refusionnable corrigé (mentions de Karl à la place de celles de la SEP, ISBN à son nom si je t'en donne un, langue fr seule, métadonnées d'accessibilité), édition web dans darshan/ (noindex). Vérifie que le texte de chaque édition est identique à la source.
 4. Tâche GitHub « Darshan » (sur le modèle de langues.yml) : fabrication, EPUBCheck 5.4.0 avec --failonwarnings, Ace by DAISY, partie jouée dans Chromium avec une capture par page, pages de relecture en pièce jointe.
 5. Pousse ton travail sur la branche à chaque étape. Ouvre une pull request vers main et donne-moi les fichiers à essayer dans Apple Books sur mon iPhone et mon Mac.
 ```
@@ -407,8 +432,9 @@ Ace by DAISY sans erreur grave, mode lecture, mouvement réduit, clavier, lecteu
    n'est qu'un nom de travail).
 2. **Ouvrir l'extrait jouable dans Apple Books**, sur l'iPhone et sur le Mac, et dire ce
    qui marche : le test qui compte le plus, avant tout le reste.
-3. **Obtenir l'accord de la SEP** et un nouvel ISBN ; décider de la couverture (accord
-   d'Arianna Jadé et du modèle, ou couverture nouvelle).
+3. **Prendre un ISBN à son nom** auprès de l'AFNIL, un par format (37 € HT la première
+   demande, trois semaines), s'il veut que le livre soit référencé ; décider de la
+   couverture (accord d'Arianna Jadé et du modèle, ou couverture nouvelle).
 4. **Valider les coquilles** de l'annexe A, une par une.
 5. **Décider de la voix** : enregistrer le livre soi-même (une heure environ, au Dictaphone
    de l'iPhone), ou non.
@@ -440,7 +466,7 @@ Ace by DAISY sans erreur grave, mode lecture, mouvement réduit, clavier, lecteu
 | Liseuses où tout le texte se lit | toutes |
 | Poids du livre jouable, voix comprise | moins de 60 Mo |
 | Temps de Karl hors voix et repérages | moins d'une heure par chantier (relecture et essais) |
-| Coût | 0 € |
+| Coût | 0 €, hors ISBN (37 € HT la première demande à l'AFNIL, si Karl en prend) |
 
 ## Annexe A. Coquilles relevées
 
@@ -476,7 +502,7 @@ Certaines :
 | Ch. 6 | « la voie nouée par l'émotion » | « la voix » |
 | Ch. 7 | « désert Lybique » | « désert libyque » |
 | Ch. 7 | « le trottoir de la rue Rungis » | « rue de Rungis », comme ailleurs dans le chapitre |
-| Colophon | « © Société editions du poitou », « ISBN: » | « Société des éditions du Poitou », « ISBN : » |
+| Colophon | « © Société editions du poitou », « ISBN: » | sans objet dans l'édition de Karl, qui a son propre colophon |
 
 À vérifier (peut-être voulu) :
 - la première réplique de chaque dialogue n'a ni tiret ni guillemet, alors que les
@@ -534,6 +560,14 @@ Liseuses :
 - Kindle Publishing Guidelines : https://kindlegen.s3.amazonaws.com/AmazonKindlePublishingGuidelines.pdf
 - Thorium Reader : https://github.com/edrlab/thorium-reader/releases
 - Readium : https://github.com/readium/swift-toolkit , https://github.com/readium/kotlin-toolkit
+
+ISBN et éditeur :
+- AFNIL, foire aux questions : https://www.afnil.org/foire-aux-questions/ ; ISBN :
+  https://www.afnil.org/isbn/ ; tarifs : https://www.afnil.org/tarification/
+- Registre mondial des éditeurs (agence internationale de l'ISBN) : https://grp.isbn-international.org/
+- Catalogue de la BnF, interface SRU : https://catalogue.bnf.fr/api/SRU
+- Société des Éditions du Poitou, annuaire des entreprises :
+  https://annuaire-entreprises.data.gouv.fr/entreprise/societe-des-editions-du-poitou-303458988
 
 Droit :
 - Directive (UE) 2019/882 : https://eur-lex.europa.eu/eli/dir/2019/882/oj
