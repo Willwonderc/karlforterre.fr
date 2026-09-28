@@ -21,6 +21,11 @@ Rien ici n'est encore relié au site : aucune page ne pointe vers ce dossier.
   livre illustré où tout le texte se lit.
 - Le bouton **Lecture** affiche tout le texte sans animation ; **Son** coupe ou remet le
   son.
+- Le bouton **Objets** apparaît avec le premier objet (les lunettes, sur les tuiles). Il
+  ouvre la fiche de chaque objet : un gros plan qu'on fait tourner du doigt, les phrases du
+  livre déjà lues qui en parlent, et le geste du moment en bouton. La fiche de la clé se
+  présente d'elle-même après la fonte des lunettes. Plan de l'interface :
+  [docs/plan-darshan-interface.md](../../docs/plan-darshan-interface.md).
 
 ## Fabriquer
 
@@ -69,8 +74,8 @@ puis photographiés par Chromium (`rendu.js`).
 
 | Fichier | Rôle |
 |---|---|
-| `build.py` | Fabrique l'édition web et l'EPUB, texte vérifié contre `livres/darshan.epub`. |
-| `src/moteur.js` | Le moteur : texte révélé temps par temps, gestes, sons fabriqués en direct (Web Audio), étoiles, poussière, fonte des lunettes en clé, carnet des portes. Sans dépendance, sans appel réseau. |
+| `build.py` | Fabrique l'édition web et l'EPUB, texte vérifié contre `livres/darshan.epub`. Contient aussi les objets et leurs phrases (`OBJETS`), vérifiées mot pour mot. |
+| `src/moteur.js` | Le moteur : texte révélé temps par temps, gestes, sons fabriqués en direct (Web Audio), étoiles, poussière, fonte des lunettes en clé, interface d'objet (fiche, bouton Objets, annonce), carnet des portes. Sans dépendance, sans appel réseau. |
 | `src/moteur.css` | La mise en page, commune aux deux éditions (en unités `cqw` ; l'EPUB les convertit en pixels). |
 | `src/fonts/` | Amiri et Unna (les polices du livre), Tiro Devanagari Sanskrit (pour दर्शन), allégées, licence SIL OFL. |
 | `src/img/` | Décors prêts à l'emploi, et les deux images tirées des photos de Karl. |

@@ -60,7 +60,9 @@ dans le dépôt Willwonderc/PexelsWillwonder.
   PSD ni PDF d'impression dans le dépôt : il est public.
 - Polices hébergées dans `fonts/` : aucun appel à Google Fonts.
 - Darshan jouable : évaluation, piste retenue et chantiers D1 à D10 dans
-  `docs/plan-darshan.md` ; prototype (extrait jouable, EPUB et web) dans `outils/darshan/`,
+  `docs/plan-darshan.md` ; interface (fiches d'objet, carnet, regard, monde de Julie) et
+  chantiers I1 à I6 dans `docs/plan-darshan-interface.md` ; prototype (extrait jouable, EPUB
+  et web) dans `outils/darshan/`,
   relié à aucune page. Le texte y est lu dans `livres/darshan.epub`, jamais recopié ni
   modifié ; les coquilles de l'annexe A attendent l'accord de Karl.
 - Section Photographie : elle lit à chaque visite `https://photos.karlforterre.fr/apercu.json`,

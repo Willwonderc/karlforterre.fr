@@ -270,6 +270,9 @@ environ 430 mots, soit 5 % du livre.
   fleuve, les oiseaux et un tanpura à Aluva.
 - **Sorties** : un EPUB 3 en pages fixes, `darshan-extrait-jouable.epub` (1,6 Mo), et la même
   chose en page web.
+- **Interface d'objet** (ajoutée le même jour) : fiche des lunettes et de la clé, faite de
+  phrases du livre déjà lues, bouton « Objets », annonce « Nouvel objet », halo, consigne
+  différée, geste proposé en bouton ([plan-darshan-interface.md](plan-darshan-interface.md)).
 
 Résultats :
 - **EPUBCheck 5.4.0 : 0 erreur, 0 avertissement.**
@@ -380,6 +383,11 @@ liseuses, et l'intérêt d'un lecteur pendant quarante minutes.
   - sons et animations qu'on peut arrêter ; sous-titres des sons qui portent du sens.
 
 ## 8. Chantiers
+
+Le plan de l'interface, [plan-darshan-interface.md](plan-darshan-interface.md), ajoute six
+chantiers (I1 à I6 : fiches d'objet, carnet et regard, dialogues et monde de Julie,
+confort, mise en scène, accessibilité). Ils s'intercalent ici : I1 et I2 avant D3, I3
+avant D5, I4 à I6 avec D8 et D9.
 
 Chaque chantier tient en une session et se termine par une pull request. Les sessions
 passent d'abord sur la branche : **pousser le travail à chaque étape**. Le 28 septembre, le
