@@ -334,9 +334,10 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 /* banc d'essai des transitions (édition web) */
 .banc-titre { position: absolute; top: 4cqw; left: 5cqw; right: 26cqw; margin: 0; font-family: "Unna", serif; font-weight: 400;
   font-size: 5.6cqw; line-height: 1.1; color: var(--or-pale); text-shadow: var(--ombre-texte); }
-.banc-legende { position: absolute; left: 5cqw; right: 5cqw; bottom: 43cqw; margin: 0; font-size: 3.6cqw; line-height: 1.4;
+.banc-legende { position: absolute; left: 5cqw; right: 5cqw; bottom: 57cqw; margin: 0; font-size: 3.6cqw; line-height: 1.4;
   text-shadow: var(--ombre-texte); }
-.banc-credit { position: absolute; left: 5cqw; right: 5cqw; bottom: 38cqw; margin: 0; font-size: 2.6cqw; color: #d9d2c4; text-shadow: var(--ombre-texte); }
+.banc-credit { position: absolute; left: 5cqw; right: 5cqw; bottom: 50cqw; margin: 0; font-size: 2.6cqw; color: #d9d2c4; text-shadow: var(--ombre-texte); }
+.banc-legende, .banc-credit { background: rgba(7, 9, 26, 0.6); padding: 0.8cqw 2cqw; border-radius: 1cqw; }
 .banc-decors { display: none; }
 .jeu .banc-boutons { position: absolute; left: 4cqw; right: 4cqw; bottom: 5cqw; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.8cqw; z-index: 20; }
