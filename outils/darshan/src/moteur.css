@@ -143,7 +143,7 @@ svg.jeu-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow:
 .carnet h2 { font-family: "Unna", serif; font-variant: small-caps; font-weight: 400; color: var(--or-pale); font-size: 6cqw; margin: 0 0 3cqw; text-align: center; }
 .carnet svg { width: 100%; height: auto; display: block; margin: 2cqw 0 4cqw; }
 .carnet p { margin: 0 0 2cqw; }
-.voix-du-pere .texte .voix { text-shadow: 0 0 2cqw rgba(255, 220, 150, 0.8), var(--ombre-texte); }
+.appel-au-pere .texte .voix { text-shadow: 0 0 2cqw rgba(255, 220, 150, 0.8), var(--ombre-texte); }
 
 /* édition web : les bandes autour de la scène reprennent le décor, flouté */
 #ambiance { position: fixed; inset: -8%; background-size: cover; background-position: center;

@@ -5,9 +5,9 @@ n'est jamais recopié : il est lu dans l'EPUB à chaque fabrication, paragraphe 
 paragraphe, avec le style de chaque paragraphe (titre de chapitre, vers, corps de texte).
 
 L'export EPUB de 2023 a perdu les italiques du livre imprimé : le PDF (livres/darshan.pdf)
-compose en Amiri penché la voix du père, les pensées de Darshan et de Julie, le mot
-« mudrā » et « Angelo mio ». ITALIQUES les rétablit ; chaque passage est vérifié contre
-le texte.
+compose en Amiri penché les voix intérieures (Darshan qui appelle son père, ses pensées et
+celles de Julie), le mot « mudrā » et « Angelo mio ». ITALIQUES les rétablit ; chaque
+passage est vérifié contre le texte.
 """
 import html
 import pathlib

@@ -173,7 +173,7 @@ verticale.*
 
 **1. Un ciel mouvant** (854 mots). Nuit sur un toit du seizième : la voûte tourne lentement
 autour du pôle, deux étoiles filantes se poursuivent (« Des étincelles passent et se
-chassent »), la voix du père s'écrit en lumière d'étoile. Le lecteur enjambe les tuiles
+chassent »), l'appel de Darshan à son père s'écrit en lumière d'étoile. Le lecteur enjambe les tuiles
 en rythme jusqu'au pigeonnier. Les lunettes vibrent, changent de couleur, fondent en clé ;
 la clé entre dans la serrure, le soleil de Kerala filtre par les jours de la porte ; un
 tour de poignet, la porte se déconsolide, on pousse : éblouissement, et la poussière

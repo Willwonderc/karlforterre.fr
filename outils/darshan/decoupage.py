@@ -288,7 +288,7 @@ TABLEAUX = [
       "La voûte tourne autour du pôle ; toits et tour Eiffel dessinés.",
       photos=[(27116682, "encre"), (24200555, "modèle"), (38570570, "modèle")],
       moments=[("Des étincelles passent et se chassent", "deux étoiles filantes se poursuivent"),
-               ("Papa, où es-tu", "la voix du père s'écrit en lumière d'étoile")],
+               ("Papa, où es-tu", "l'appel de Darshan à son père s'écrit en lumière d'étoile")],
       son="nuit", etat="fait"),
     T("1.2", "La danse sur les tuiles", (21, None), "Les toits", "Darshan", "encre",
       "Les tuiles de nuit, en perspective ; la ville s'approche à chaque bond.",

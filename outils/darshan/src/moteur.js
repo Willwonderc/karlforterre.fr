@@ -1261,7 +1261,7 @@
           etoiles.filer(80, 110, 0.42, 21, 900);
           etoiles.filer(640, 90, 0.62, 17, 2400);
         }
-        if (j === 3) { etoiles.eclat(0.95); scene.classList.add('voix-du-pere'); }
+        if (j === 3) { etoiles.eclat(0.95); scene.classList.add('appel-au-pere'); }
       },
       fin: function () { vivant = false; sceneSuivante(scene); }
     });

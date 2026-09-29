@@ -81,7 +81,7 @@ reconnaisse sans qu'on la lui explique.
 | **La porte** | Le pigeonnier, le local à kayaks, les toilettes du personnel à Pékin, la demeure, le placard, la porte du père | L'embrasure qui s'illumine | Pousser, tourner la clé, glisser sous la porte | Grincement, souffle | Chaque porte franchie devient une étoile du carnet |
 | **Les lunettes, la clé** | La fonte du chapitre 1, « elles plient l'espace » (3), la coquetterie (5), les binocles (6), les clés qui ne mènent nulle part (6), la serrure du local (7) | Gros plan ; la fonte visqueuse | Ôter, geste vif, tour de poignet | Fonte, tintement | L'objet principal ; sa fiche s'enrichit ; il meurt en poussière d'or |
 | **Les étoiles** | « Papa, où es-tu ? » sous la voûte (1), « Les astres peuvent s'éteindre tant que je peux t'étreindre » (7, la lettre), la nuit du désert (7), « les astres sont pris dans leurs cycles » (fin) | Voûte, filantes, constellation | Aucun : on les regarde | Nappe cosmique | Le carnet des portes est une carte du ciel ; ses étoiles s'éteignent quand Darshan devient mortel (la lettre l'avait dit) |
-| **La lumière du père** | La lanterne de bois aux motifs circulaires (3), le jour de la porte du pigeonnier (1), le linteau et la lanterne aux rayons pénétrants (7) | Lueur dorée, rayons | Tendre la main, poser la paume | Accord pur, le même à chaque fois | L'étoile à part, hors de la carte |
+| **La lumière du père** | La lanterne de bois aux motifs circulaires (3), le linteau et la lanterne aux rayons pénétrants (7) : la seule manifestation du père, sa porte | Lueur dorée, rayons | Tendre la main, poser la paume | Accord pur, le même à chaque fois | L'étoile à part, hors de la carte |
 | **L'encre** | Le monde dessiné de Darshan ; « une encre venue d'Asie » (ses toiles, 6) ; la calligraphie (3) ; « Les mots sont encrés : plus rien ne peut les effacer » (7) | Lavis, traits de pinceau | Écrire, essayer d'effacer | Pinceau, plume | La lettre est le seul objet d'encre qui passe dans le monde photographié de Julie |
 | **Le ruban rouge** | Le paquet de Julie (5, 6), « Son nœud vacille au vent comme son cœur », le paquet de Darshan (7), « Le ruban de satin s'affole » | Le seul rouge vermillon des photos | — | Claquement de satin | Le paquet, d'un sac à l'autre |
 | **Le cœur** | La chamade (2), le palpitant qui choisit la synchronie (5), le baiser (7) | Pulsation discrète du décor | Maintenir ; taper au rythme d'un autre cœur | Battements | — |
@@ -187,11 +187,12 @@ bouche d'un personnage), le geste suit.
   soit écrit.
 - **Deux mondes** : chez Darshan, le vent, l'eau, le tanpura, les nappes du cosmos ; chez
   Julie, la ville, le métro, l'hôpital, le vibreur du téléphone.
-- **Motifs sonores** : le **père** a son accord (pur, lumineux), le même au chapitre 1 (le
-  jour de la porte, réponse à l'appel « Papa, où es-tu ? »), au chapitre 3 (la lanterne) et
-  au chapitre 7 (le linteau) ;
+- **Motifs sonores** : l'**appel** de Darshan (« Papa, où es-tu ? », 1.1) est une quinte à
+  vide, une question sans réponse ; le **père** a son accord entier (pur, lumineux), qu'on
+  n'entend qu'avec sa porte : la lanterne de la vision (3.10) et le linteau de la rue de
+  Rungis (7.12) ;
   l'**amour** a sa mélodie (la ballade, composée pour le livre, jamais un air existant), qui
-  revient au baiser.
+  naît par fragments et revient entière au baiser (voir les arbitrages, section 12).
 - **Le silence est un événement** : « Le contact de leurs corps éclipse tout Paris » (7.11),
   la porte du père (7.13), la prière (7.14). Puis un choc sourd (7.15), puis rien.
 
@@ -275,3 +276,40 @@ Rimes : avec quelles scènes elle dialogue.
 - **La ligne de Karl** : rien qui puisse passer pour une sympathie monarchiste ou
   conservatrice ; un lieu chargé d'histoire se montre par ce qu'il a de populaire ou de
   républicain.
+
+## 12. Arbitrages de la direction
+
+Décisions prises à la lecture des premiers traitements ; elles valent pour tous les chapitres.
+
+1. **Le père ne répond jamais.** Ni à « Papa, où es-tu ? » (1.1), ni à l'appel de 6.11
+   (« Rien ne se passe. »). Il ne se montre que par sa porte, celle de la lanterne : dans la
+   vision (3.10, 3.11), puis rue de Rungis (7.12 à 7.14). Son accord ne sonne entier
+   qu'avec elle ; avant 3.10, on n'entend que la quinte à vide de l'appel. La lumière du
+   pigeonnier (1.3) est celle de l'autre côté de la porte, le soleil d'Aluva : elle a son
+   propre son, jamais l'accord du père.
+2. **La ballade naît par fragments** : quelques notes étouffées quand Darshan parle de Paris
+   (1.7) et sur le seuil (2.9) ; entière pour la première fois dans la vidéo du téléphone de
+   Julie (5.7), la seule fois où quelqu'un la chante dans le livre ; puis au baiser (7.10).
+   Nulle part ailleurs.
+3. **Les clés se tournent du même geste** : la mécanique `tourner` (un quart de tour du doigt
+   autour de la clé, sur un cercle d'au moins 250 unités de rayon, pour rester facile sur un
+   téléphone), au pigeonnier (1.3), au placard (6.13) et à la serrure du local (7.8). Même
+   consigne, même son.
+4. **La place du texte suit l'image** : le panneau se pose là où l'image laisse de la place
+   (ciel, ombre, mur) ; son fond suit la lumière de l'image (clair sur une image claire,
+   sombre sur une image sombre). Dans une suite de pages au même lieu (Aluva de 1.4 à 1.9,
+   l'appartement du chapitre 6), il ne change pas de place sans raison.
+5. **Gestes et tour de page** : tant que l'essai dans Apple Books n'est pas fait, aucun geste
+   ne demande un long mouvement horizontal ; un tracé reste compact (moins de 250 unités de
+   large) ou vertical, et les glissements sont verticaux.
+6. **Le carnet** : l'étoile d'une porte naît quand le passage s'achève à l'image (la lumière
+   de l'embrasure a gagné l'écran), pas avant.
+7. **L'image ne contredit jamais le texte** : on ne montre pas ce que le texte dit invisible
+   (« disparaît loin de la vue de Jivan » interdit de montrer Jivan le regarder partir).
+   Une photo prise ailleurs que le lieu du texte convient pour un reflet, un souvenir, un
+   rêve ou une matière ; pour un lieu nommé et montré en plan large (Paris, la rue
+   Rousseau, Montsouris), on préfère une photo de Karl prise là, ou un repérage.
+8. **Les deux paquets** : le paquet de Darshan (7.9) porte le même nom et le même ruban que
+   celui de Julie ; quand Julie le prend (7.11), il n'en reste qu'un dans son sac. Le livre
+   ne dit pas si c'est le même paquet ; l'interface non plus.
+

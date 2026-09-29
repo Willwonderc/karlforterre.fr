@@ -181,7 +181,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 - **Décor** : La voûte tourne autour du pôle ; toits et tour Eiffel dessinés.
 - **Photos de Karl** : [27116682](https://photos.karlforterre.fr/photo/27116682/) « Un ciel nocturne sombre et immense, empli d'innombrables étoiles et de la voie lactée » (encre) ; [24200555](https://photos.karlforterre.fr/photo/24200555/) « Ciel étoilé » (modèle) ; [38570570](https://photos.karlforterre.fr/photo/38570570/) « Pleine lune se levant derrière des cheminées, ciel nocturne violet » (modèle)
 - **Moment** : « Des étincelles passent et se chassent » → deux étoiles filantes se poursuivent
-- **Moment** : « Papa, où es-tu » → la voix du père s'écrit en lumière d'étoile
+- **Moment** : « Papa, où es-tu » → l'appel de Darshan à son père s'écrit en lumière d'étoile
 - **Son** : nuit
 
 ### 1.2 La danse sur les tuiles
