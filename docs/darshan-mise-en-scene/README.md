@@ -25,7 +25,7 @@ l'ordre, sans un mot changé ni ajouté. Les seuls mots nouveaux sont les textes
 | Chapitre | Traitement | Relecture critique | Révision |
 |---|---|---|---|
 | 1 (et l'ouverture) | fait | faite : 32 notes, dont 13 à corriger | faite (section 9 du chapitre) |
-| 2 | fait | à faire | — |
+| 2 | fait | faite : 29 notes, dont 15 à corriger | en cours |
 | 3 | fait | faite : 30 notes, dont 16 à corriger | en cours |
 | 4 | fait | faite : 31 notes, dont 17 à corriger | faite (section 9 du chapitre) |
 | 5 | fait | à faire | — |
@@ -83,7 +83,7 @@ réponse. Le père ne se manifeste que par des signes : la lumière, la lanterne
 |---|---|---|---|---|---|---|---|
 | Ouverture | — | — | Il franchit le seuil du livre (« Ouvrir » est la première porte). | Attente | Nuit étoilée | Cosmos | Lent |
 | 1. Un ciel mouvant | Libre et seul, il appelle son père sous les étoiles, danse sur les toits, ouvre une porte vers le Kerala ; Jivan, l'ami qui vieillit. | Pas encore là : « la même délicieuse enfant ». | Apprenti magicien : premier objet, première métamorphose, première porte. | Émerveillement, solitude | Bleu royal, puis blanc et or d'Aluva | Vent des toits, puis fleuve et tanpura | Contemplatif, puis vif |
-| 2. Un pain perdu… | Amoureux, maladroit, menteur par omission (ni travail, ni téléphone, ni chez-soi). | Séduite, lucide : « Tu es étrange par moments ». | Témoin du rendez-vous ; il sent la chamade. | Tendresse, comédie ; le premier nuage | Chaleurs d'automne, restaurant, parc | Salle de restaurant, cœur, merle | Comédie de dialogue |
+| 2. Un pain perdu… | Amoureux, maladroit, menteur par omission (ni travail, ni téléphone, ni chez-soi). | Séduite, lucide : « Tu es étrange par moments ». | Il vit le rendez-vous par les mains de Darshan ; il sent la chamade. | Tendresse, comédie ; le premier nuage | Chaleurs d'automne, restaurant, parc | Salle de restaurant, cœur, merle | Comédie de dialogue |
 | 3. Entre deux mondes | La légende : né de l'idée de porte, immortel sans place ; la quête ; le poème ; la vision de la porte du père ; la règle (le véritable amour). | Absente, et pourtant l'enjeu. | Il comprend : les lunettes plient l'espace, la porte du père s'inscrit à part dans le carnet. | Mystère, révélation, fièvre | Cosmos, or ; noir, puis couleur | Cosmos, bibliothèque, souffle, silence | Solennel, puis fiévreux |
 | 4. Amélie et Julie | Vu par elle : « cet énergumène », un prince peut-être. | Sa voix : métro, hôpital, fatigue, solitude, envie de partir. | Dans ses chaussures : son téléphone, l'échelle de douleur, le trajet ; aucune magie. | Fatigue, solitude, désir | Néons froids, métro ; le vert de la campagne rêvée | Métro, hôpital, rue | Monologue lourd, puis éclaircie |
 | 5. Douceurs et confettis | Préparatifs extravagants, un appartement emprunté (le mensonge grandit). | Doute, puis choix d'aimer ; la Charlotte. | Il va d'un monde à l'autre ; les objets s'accumulent. | Impatience, douceur, humour | Pastels, sucre, lune | Marché, chambre, ballade, cœur | Alternance vive |
