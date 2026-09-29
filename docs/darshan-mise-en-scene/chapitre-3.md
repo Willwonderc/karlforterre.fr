@@ -71,74 +71,64 @@ dessiner une porte ; la barque n'est qu'un trait d'encre minuscule, qu'on remarq
   n'est pas un corps, il est ce que dessinent les étoiles.
 - **Temps** : le titre claque sur les bandes (« Entre deux mondes »), puis deux temps, une phrase
   chacun.
-- **Image** : `cosmos` : la Voie lactée de Galice de Karl (39595391), telle quelle, recadrée haut,
-  sans l'horizon orangé ni l'arbre, les bords bleuis vers l'encre ; par-dessus, en or, une
-  trentaine d'étoiles-portes, minuscules embrasures lumineuses du même dessin que les étoiles du
-  carnet. Pas de papier : c'est la nuit. Raccord d'entrée : les bandes du chapitre. Raccord de
-  sortie : la porte d'étoiles, au centre, dont le cadre épouse celui de la première porte de 3.2.
+- **Image** : `cosmos` : la Voie lactée de Galice de Karl (39595391), telle quelle, sans horizon
+  ni arbre ; par-dessus, en or, une trentaine d'étoiles-portes, minuscules embrasures du même
+  dessin que les étoiles du carnet ; pas de papier. Raccords : les bandes du chapitre à l'entrée ;
+  à la sortie, la porte d'étoiles, dont le cadre épouse celui de la première porte de 3.2.
 - **Geste** : aucun. Le conte parle, le lecteur écoute ; les deux gestes de la légende sont gardés
   pour la naissance (3.2) et le pli (3.4).
-- **Effets** : « mène sa barque au gré des courants de la providence » : une barque minuscule (un
-  seul trait d'encre, une étincelle d'or à la proue) dérive le long de la Voie lactée, du haut à
-  droite vers le bas à gauche, en une minute. « Ce Bohème est né de l'alignement… » : sept
-  étoiles-portes quittent leur place, glissent (2,4 s) et s'alignent en une verticale, puis la
-  ligne se plie en deux montants et un linteau cintré : une porte de 360 × 620 unités, au centre,
-  qui palpite une fois et reste. En mouvement réduit, la barque est posée et les étoiles
-  paraissent à leur place finale.
-- **Son** : cosmos (les quintes la-mi du prototype) ; à l'alignement, un tintement par étoile qui
-  prend sa place, en montant.
-- **Objets et interface** : rien ne change. Le panneau de texte prend la teinte du papier (style
-  « conte », voir 6) : c'est la voix du conte, jusqu'à 3.5. Les étoiles du ciel ont le dessin de
-  celles du carnet : le lecteur reconnaît son carnet dans le ciel de la légende.
+- **Effets** : « mène sa barque au gré des courants de la providence » : une barque minuscule, un
+  trait d'encre et une étincelle d'or, dérive une minute le long de la Voie lactée. « Ce Bohème
+  est né de l'alignement… » : sept étoiles glissent (2,4 s) et s'alignent, puis la ligne se plie
+  en deux montants et un linteau cintré : une porte d'étoiles, au centre, qui palpite une fois et
+  reste. En mouvement réduit, la barque est posée, les étoiles paraissent à leur place finale.
+- **Son** : cosmos ; un tintement montant pour chaque étoile qui prend sa place.
+- **Objets et interface** : rien ne change ; les étoiles ont le dessin de celles du carnet, que le
+  lecteur reconnaît dans le ciel de la légende. Le panneau de texte prend la teinte du papier
+  (style « conte », voir 6), jusqu'à 3.5.
 - **Rimes** : le poème d'ouverture (« la course des astres ») : même voix, celle du conte ; la
   petite barque du Periyar, dans le décor des scènes de Jivan (1.5 à 1.9) ; « les astres sont
-  pris dans leurs cycles » (7.16) ;
-  les étoiles du carnet, qui s'éteindront en 7.14.
+  pris dans leurs cycles » (7.16) ; les étoiles du carnet, qui s'éteindront en 7.14.
 - **À valider par Karl** : la Voie lactée de Galice pour le ciel de la légende, plutôt que le ciel
   du poème d'ouverture, dont la Voie lactée est trop pâle pour porter la barque.
 
 ### 3.2 Le trou dans le mur
 
-**Table ronde** : le directeur artistique proposait un défilé chronologique, de la porte la plus
-ancienne à la plus récente. Le dramaturge remarque que le texte fait l'inverse : il part des murs
-et des portes « et leur infinité de déclinaisons » pour remonter à l'instant d'origine. Décision :
-les portes de Karl défilent en remontant le temps, de plus en plus vite, jusqu'au mur de terre et
-de paille ; c'est le lecteur, d'un toucher, qui voit dans le trou une entrée. Le trèfle ajouré de
-Karl, magnifique, a été discuté comme dernier plan : il est taillé dans une planche, pas dans la
-terre et la paille ; il devient l'avant-dernière image, le trou qui annonce le trou.
+**Table ronde** : le directeur artistique proposait un défilé chronologique ; le dramaturge
+remarque que le texte fait l'inverse : il part des murs et des portes « et leur infinité de
+déclinaisons » pour remonter à l'instant d'origine. Décision : les portes de Karl défilent en
+remontant le temps, de plus en plus vite, jusqu'au mur de terre et de paille, et c'est le lecteur,
+d'un toucher, qui voit dans le trou une entrée. Le trèfle ajouré de Karl, discuté comme dernier
+plan, est taillé dans une planche, pas dans la terre et la paille : il devient l'avant-dernière
+image, le trou qui annonce le trou.
 
 - **Intention** : faire du lecteur l'homme du texte, celui qui, pour la première fois, voit une
   entrée là où il n'y avait qu'un trou. Son regard fait naître Darshan.
 - **Phrase-clé** : « Sa conscience prend racine au moment où l’on a cessé de voir simplement un trou dans un mur de terre et de paille, mais une entrée, quelque chose nous éloignant de notre point de départ, une séparation qui paradoxalement connecte. »
-- **Point de vue et plan** : plans rapprochés et frontaux, une porte plein cadre à chaque fois ;
-  chacune grandit un peu en se fondant dans la suivante, comme si l'on passait au travers pour
-  atteindre la plus ancienne. Dernier plan : le mur, de face, le trou un peu au-dessus du milieu.
-- **Temps** : quatre temps, un par phrase : « Vous les connaissez… » sur la porte bleue, immobile ;
-  « La peur des prédateurs… », pendant le défilé ; « Sans même le savoir… », sur le mur au trou
-  noir ; puis le geste ; enfin la phrase-clé, seule.
-- **Image** : la remontée des âges, sept plans : `portes-4` (32429264, « Porte bleue ») →
-  `portes-5` (32429190, « Une porte », son rouge ramené vers la brique pour que le vermillon reste
-  celui de l'amour) → `portes-2` (27046156, « Porte forgée ») → `portes-3` (27025911, « Le
-  portail », vu à travers la volute d'une grille : déjà un trou qui ouvre sur un passage) →
-  `portes-1` (34762346, « Porte en bois rustique et sa lanterne, charme d'autrefois ») →
-  `porte-trefle` (27046110, « Trèfle », nouveau) → `mur-terre` (un mur de torchis dessiné, en
-  attendant la photo de Karl, repérage 1). `portes-6`, la porte verte d'Irun, sort du défilé : elle
-  devient la porte du père, que Darshan « ne connaît pas » (3.11), et ne peut donc pas figurer
-  parmi les portes qu'il est. Raccord d'entrée : fondu de la porte d'étoiles de 3.1 dans
-  l'encadrement de la porte bleue. Raccord de sortie : le trou lumineux ; 3.3 s'ouvre en fondu.
-- **Geste** : toucher le trou (halo d'or sur son bord ; consigne « Touchez le trou : il devient
-  entrée »). Un toucher léger suffit : la lumière passe aussitôt de l'autre côté, un souffle d'air
-  traverse le mur, des poussières dorées flottent dans le faisceau. Le lecteur voit l'entrée, et
-  c'est de ce regard que Darshan naît ; la phrase-clé le lui confirme. Équivalent : Entrée, ou le
-  bouton « Faire le geste » après 8 s.
-- **Effets** : « La peur des prédateurs » : le défilé en remontée (2 s, 1,6 s, 1,3 s, 1 s, puis
-  0,8 s par porte ; en mouvement réduit, des fondus simples à intervalles égaux). « Sans même le
-  savoir » : le mur paraît, le trou est noir. Au toucher : un frisson au bord du trou, puis
-  l'entrée (1,8 s : la lumière emplit le trou, six rayons doux, poussières dans le faisceau).
+- **Point de vue et plan** : plans frontaux, une porte plein cadre à chaque fois ; chacune grandit
+  un peu en se fondant dans la suivante, comme si l'on passait au travers. Dernier plan : le mur,
+  le trou un peu au-dessus du milieu.
+- **Temps** : quatre temps, un par phrase ; le geste avant la phrase-clé, qui reste seule.
+- **Image** : la remontée des âges : `portes-4` (32429264, « Porte bleue ») → `portes-5`
+  (32429190, « Une porte », rouge ramené vers la brique : le vermillon reste à l'amour) →
+  `portes-2` (27046156, « Porte forgée ») → `portes-3` (27025911, « Le portail », vu à travers la
+  volute d'une grille : déjà un trou) → `portes-1` (34762346, la porte rustique à la lanterne) →
+  `porte-trefle` (27046110, « Trèfle », nouveau) → `mur-terre` (dessiné en attendant la photo de
+  Karl, repérage 1). `portes-6`, la porte verte d'Irun, sort du défilé : devenue la porte du père,
+  que Darshan « ne connaît pas » (3.11), elle ne peut figurer parmi les portes qu'il est.
+  Raccords : la porte d'étoiles de 3.1 se fond dans l'encadrement de la porte bleue ; à la sortie,
+  le trou lumineux.
+- **Geste** : toucher le trou (halo d'or sur son bord). La lumière passe aussitôt de l'autre côté,
+  un souffle d'air traverse le mur, des poussières dorées flottent dans le faisceau : le lecteur a
+  vu l'entrée, et c'est de ce regard que Darshan naît ; la phrase-clé le confirme. Équivalent :
+  Entrée, ou « Faire le geste » après 8 s.
+- **Effets** : « La peur des prédateurs » : le défilé en remontée (2 s, 1,6 s, 1,3 s, 1 s, 0,8 s ;
+  en mouvement réduit, des fondus à intervalles égaux). « Sans même le savoir » : le mur, le trou
+  noir. Au toucher : un frisson au bord du trou, puis l'entrée (1,8 s : la lumière emplit le trou,
+  six rayons doux, des poussières).
 - **Son** : cosmos, très bas ; sous le défilé, un souffle qui s'inverse, comme une bande qu'on
-  rembobine ; sur le mur, presque le silence ; au toucher, le souffle de l'air qui passe, et la
-  nappe du cosmos revient. L'accord du père n'est pas joué : il reste à sa lumière (1.3, 3.10,
-  7.12).
+  rembobine ; au toucher, le souffle de l'air qui passe, et la nappe revient. Pas l'accord du
+  père : il reste à sa lumière (1.3, 3.10, 7.12).
 - **Objets et interface** : rien dans les sacs ; ce trou n'est pas une porte franchie par Darshan,
   il ne va pas au carnet.
 - **Rimes** : le poème d'ouverture, « Les portes s'ouvrent sous les mains des plus modestes » : la
@@ -186,7 +176,7 @@ bouge, la poussière.
 ### 3.4 Des lunettes qui plient l'espace
 
 **Table ronde** : le découpage faisait pincer l'écran à deux doigts. Le designer d'interaction
-rappelle que, dans Apple Books, pincer agrandit la page : la liseuse avalerait le geste. Décision :
+rappelle que, dans Apple Books, pincer agrandit la page : la liseuse risque d'avaler le geste. Décision :
 le pli se fait d'un glissement vers le haut, comme on replie une carte, et la clé est la charnière
 du pli. Le dramaturge demande que la dernière phrase donne au lecteur un pouvoir nouveau, celui qui
 donne son titre au livre : le regard.
@@ -231,40 +221,36 @@ donne son titre au livre : le regard.
 
 ### 3.5 Croire
 
-**Table ronde** : deux images étaient possibles pour « entre les parvis » : les flèches de
-Saint-André au-dessus de Niort (le découpage actuel), ou un vrai parvis, vu depuis le sol, devant
-les portails. Décision : le parvis vu d'en bas, comme par celui qui y vit, au matin : la cathédrale
-de Poitiers de Karl. Le directeur artistique voulait finir sur une page de papier blanc ; le
-monteur la réserve à la fin du livre, quand l'encre se retire du monde : ici, la dernière phrase
-reste seule, et l'on entend une plume. Le dramaturge proposait qu'une étoile brille sur « où
-es-tu ? » ; refusé : le père ne parle jamais et ne répond pas à cet appel ; la question reste dans
-le ciel du matin, sans rien qui lui réponde.
+**Table ronde** : pour « entre les parvis », les flèches de Saint-André au-dessus de Niort (le
+découpage actuel), ou un vrai parvis, vu du sol ? Décision : le parvis vu d'en bas, comme par
+celui qui y vit, au matin : la cathédrale de Poitiers de Karl. La page blanche proposée pour la
+dernière phrase est réservée à la fin du livre, quand l'encre se retire du monde : ici, la phrase
+fait un temps à elle seule, avec le bruit d'une plume. Une étoile qui brillerait sur « où es-tu ? » est refusée :
+le père ne parle jamais, la question reste sans réponse.
 
 - **Intention** : au sommet de la légende, la foi de Darshan et sa solitude ; le conte lui cède la
-  parole, et sa première question est celle du toit de Paris : où es-tu ?
+  parole, et il pose la question du toit de Paris : où es-tu ?
 - **Phrase-clé** : « Mes frères les hommes me rejettent, je vis donc entre les parvis. C’est ici que j’écris ma vie. »
-- **Point de vue et plan** : contre-plongée depuis le parvis : la rose et le portail central ; l'œil
-  d'un homme assis sur les marches.
-- **Temps** : découpage naturel, avec des coupes dans le dernier paragraphe : « Volais-je… ? »,
-  puis « Quand je dors… où es-tu ? », puis « Mes frères les hommes… », puis « C'est ici que
-  j'écris ma vie. », seule.
-- **Image** : `parvis` : « Cathédrale au matin » (18890798), à l'encre, recadrée sur la rose et le
-  portail central ; le soleil du matin arrive par la droite. Remplace les flèches de Niort
-  (23414381), vue de ville plutôt que parvis. Raccord d'entrée : fondu de la nuit de 3.4 vers le
-  jour. Raccord de sortie : les coups de pinceau de la transition encre (3.6) : la vie s'écrit.
+- **Point de vue et plan** : contre-plongée depuis le parvis, l'œil d'un homme assis sur les
+  marches.
+- **Temps** : huit temps ; dans le dernier paragraphe, la question « où es-tu ? » finit son temps,
+  et « C'est ici que j'écris ma vie. » fait un temps à elle seule.
+- **Image** : `parvis` : « Cathédrale au matin » (18890798), à l'encre, cadrée sur la rose et le
+  portail central, le soleil du matin à droite ; elle remplace les flèches de Niort (23414381),
+  vue de ville plutôt que parvis. Raccords : fondu de la nuit de 3.4 vers le jour ; à la sortie,
+  les coups de pinceau de la transition encre : la vie s'écrit.
 - **Geste** : aucun.
-- **Effets** : « Croire aux lendemains qui chantent » : l'aube monte sur la façade (le même effet
-  qu'au dernier vers du poème d'ouverture) ; une seule étoile reste dans le ciel pâle, l'étoile du
+- **Effets** : « Croire aux lendemains qui chantent » : l'aube monte sur la façade (comme au
+  dernier vers du poème d'ouverture) ; une seule étoile reste dans le ciel pâle, l'étoile du
   matin, et s'efface lentement dans le jour (20 s). « où es-tu ? » : rien ; la coupe laisse la
   question seule au bout de son temps. « C'est ici que j'écris ma vie » : rien à l'image.
 - **Son** : cosmos, qui s'éclaircit ; un oiseau, une phrase de trois notes, à l'aube ; une plume qui
   gratte le papier (0,8 s) sur la dernière phrase.
 - **Objets et interface** : rien.
 - **Rimes** : l'appel de Darshan à son père, toujours sans réponse : « Papa, où es-tu ? » (1.1),
-  « où es-tu ? » ici, « Tu es là ! » devant la porte (3.11) ; l'aube du poème d'ouverture ;
-  l'étoile du matin, dont Darshan fera le nom de Julie : « Julie est mon nord, mon étoile du
-  matin » (5.3) ; « celui qui a fait mon sort », à qui il dira enfin « Père, je suis sûr que vous
-  m'entendez » (7.14).
+  « où es-tu ? » ici, « Tu es là ! » devant la porte (3.11) ; l'étoile du matin, dont Darshan
+  fera le nom de Julie : « Julie est mon nord, mon étoile du matin » (5.3) ; « celui qui a fait
+  mon sort », à qui il dira enfin « Père, je suis sûr que vous m'entendez » (7.14).
 - **À valider par Karl** : la cathédrale de Poitiers pour les parvis ; l'aube et l'oiseau pour
   les « lendemains qui chantent », qu'il reconnaîtra ; l'étoile du matin, qui annonce 5.3.
 
@@ -274,7 +260,7 @@ le ciel du matin, sans rien qui lui réponde.
 livres réels ; souffler la poussière les mettrait en vedette. Décision : la tranche d'une pile de
 vieux livres, sans titre. Pour Pékin, le dessin prévu cède la place à une photo de Karl : la
 bibliothèque aux étagères de verre de la Laboral de Gijón, toute en droites. Des lignes d'or qui
-tireraient les droites du lieu ont été proposées ; l'encre les montre déjà : abandonnées.
+tireraient les droites du lieu : inutiles, l'encre les montre déjà.
 
 - **Intention** : la patience de la fourmi : le lecteur fait le petit geste obstiné de Darshan,
   puis le lieu s'ouvre, immense et ordonné : le jour exceptionnel commence.
@@ -288,9 +274,9 @@ tireraient les droites du lieu ont été proposées ; l'encre les montre déjà 
   rayonnages en perspective, le sol blanc. Raccord d'entrée : encre. Raccord de sortie : même plan
   en 3.7.
 - **Geste** : « Soufflez la poussière : glissez vers le haut » sur la tranche des livres : la
-  poussière grise s'envole et se disperse ; dessous revient le jaune chaud du vieux papier.
-  Sensation : un souffle donné du doigt, léger. Sens : l'indifférence se soulève ; la poussière
-  que le lecteur a vue retomber en 3.3 s'envole enfin. Équivalent : un toucher ; Entrée.
+  poussière grise s'envole ; dessous revient le jaune chaud du vieux papier. Un souffle donné du
+  doigt : l'indifférence se soulève, et la poussière vue retomber en 3.3 s'envole enfin.
+  Équivalent : un toucher ; Entrée.
 - **Effets** : au geste, la poussière qui s'envole. « Les avancées sont rares » : l'allée de Pékin.
   « Leur nombre suscite vertige » : le regard file lentement dans l'allée (3 s, un zoom de 6 %),
   vertige doux, supprimé en mouvement réduit.
@@ -332,7 +318,7 @@ lettre de Darshan. Décision : pas de geste ; c'est le moment typographique du c
   pinceau, par groupes de lettres.
 - **Objets et interface** : rien encore : les vers entreront au sac avec le recueil (3.8) ; le
   second est déjà une phrase de la fiche de la clé (`objets.ini`).
-- **Rimes** : la lettre écrite du doigt (7.7) : la sincérité qui lui aura manqué ; le mensonge du
+- **Rimes** : la lettre écrite du doigt (7.7) : la sincérité, enfin ; le mensonge du
   chapitre 6, quand la clé de la sincérité manque et que les clés n'ouvrent sur rien (6.11,
   6.12) ; « Julie aime Darshan et Darshan aime Julie » (7.11) : la réciprocité, dite en miroir,
   l'autre moment typographique du livre ; « une encre venue d'Asie » (6.6).
@@ -408,13 +394,11 @@ Dhyana mudrā. Décision : le geste précède la phrase. Jivan ne se voit pas : 
 ### 3.10 Du noir vient la couleur
 
 **Table ronde** : le directeur artistique voulait peindre la vision ; le dramaturge rappelle que le
-texte en donne lui-même l'ordre, phrase après phrase : relâchement, souffle, absence, battement,
-bascule, noir, couleurs, lanterne, lumière, ornements, bois et pierre. Décision : suivre cet ordre
-à la lettre, un temps par phrase, dans une scène écrite à la main (« vision »). Le noir n'est pas
-un fond uni : c'est une photo de Karl, une nuit de Galice où ne brille qu'une lumière orange ; elle
-devient la flamme de la lanterne. La porte est la porte verte d'Irun de Karl, rendue en lumière. Le
-designer sonore impose le silence d'un espace « dépourvu d'air » : seul s'y entend l'accord du
-père, celui du jour de la porte du pigeonnier.
+texte en donne lui-même l'ordre, phrase après phrase. Décision : le suivre à la lettre, un temps par
+phrase, dans une scène écrite à la main (« vision »). Le noir est une photo de Karl, une nuit de
+Galice où ne brille qu'une lumière orange, qui devient la flamme de la lanterne ; la porte est sa
+porte verte d'Irun, rendue en lumière. Le designer sonore impose le silence d'un espace « dépourvu
+d'air » : seul s'y entend l'accord du père, celui du jour de la porte du pigeonnier.
 
 - **Intention** : l'extase : le lecteur respire avec Darshan, quitte le monde et voit naître de la
   nuit la lumière qu'il cherche depuis toujours.
@@ -422,25 +406,22 @@ père, celui du jour de la porte du pigeonnier.
 - **Point de vue et plan** : subjectif. Le fleuve du soir ; un halo d'ombre qui se referme ; le
   regard qui bascule vers le haut et flotte ; le noir ; un point de couleur ; la lanterne, en haut
   (600, 300) ; la porte dessous, qui naît de sa lumière.
-- **Temps** : dix temps, un par phrase : « Les poignets de Darshan se relâchent. » ; le geste ;
-  « Son inspiration… L'expiration… » ; « La force de son âme… » ; « La vie palpite en Darshan. » ;
-  « Il bascule en arrière… » ; « Du noir vient la couleur. », seule ; « Des couleurs, ils en
-  approchent… » ; « Elle s'allume. », seule ; « Son rayonnement… » ; « Ils s'inscrivent… ».
-- **Image** : `periyar-soir` → `noir-lueur` : « Photo de nuit abstraite et minimaliste, une seule
-  lumière orange » (39575545), telle quelle, cadrée pour que la lumière tombe exactement où
-  naîtra la lanterne → la lanterne, dessinée par le moteur : une lanterne de bois à six pans,
-  ajourée de cercles (d'après le vitrail aux arcs de cercle de Karl, 34849711), d'abord en
-  traits de couleur puis en bois éclairé du dedans → `porte-pere` : la porte à deux battants
-  d'Irun (39434691), rendue comme en vision : ses sculptures en traits d'or (`porte-pere-traits`),
-  son bois vert-bleu en lavis sombre, sa pierre qui se fond dans le noir ; le haut de la photo
-  seulement, ni le cycliste ni la plaque « 2 ». Pas de papier : c'est la seule page du livre qui
-  n'est ni encre sur papier ni photo reconnaissable.
+- **Temps** : dix temps, un par phrase (les deux phrases du souffle ensemble) ; le geste vient
+  après « Les poignets de Darshan se relâchent. » ; « Du noir vient la couleur. » et « Elle
+  s'allume. » font chacune un temps à elles seules.
+- **Image** : `periyar-soir` → `noir-lueur` (39575545, la nuit de Galice, telle quelle, cadrée pour
+  que sa lumière tombe où naîtra la lanterne) → la lanterne, dessinée par le moteur : bois à six
+  pans ajourés de cercles (d'après le vitrail aux arcs de cercle de Karl, 34849711), d'abord en
+  traits de couleur, puis éclairée du dedans → `porte-pere` : la porte à deux battants d'Irun
+  (39434691), sculptures en traits d'or (`porte-pere-traits`), bois vert-bleu en lavis sombre,
+  pierre qui se fond dans le noir ; le haut de la photo seulement, ni le cycliste ni la plaque
+  « 2 ». Pas de papier : la seule page du livre qui n'est ni encre sur papier ni photo
+  reconnaissable.
 - **Geste** : « Inspirez : maintenez. Expirez : lâchez. », trois fois, avant la phrase qui le
-  raconte. Maintenir : des braises montent du bas de l'image, une lueur orangée gagne ; lâcher :
-  elles s'éteignent et s'envolent, le fleuve s'assombrit d'un cran. Une inspiration compte si elle
-  dure au moins 1,2 s. Sensation : la lenteur du souffle. Équivalent : un toucher lance trois
-  respirations guidées (un anneau qui grandit puis diminue, 4 s chacune) ; Espace maintenu ; en
-  mouvement réduit, la lueur varie sans particules.
+  raconte. Maintenir (1,2 s au moins) : des braises montent du bas de l'image ; lâcher : elles
+  s'éteignent et s'envolent, le fleuve s'assombrit d'un cran. La lenteur du souffle, rien d'autre.
+  Équivalent : un toucher lance trois respirations guidées (un anneau qui grandit puis diminue,
+  4 s chacune) ; Espace maintenu ; en mouvement réduit, la lueur varie sans particules.
 - **Effets** : « La force de son âme… » : un halo d'ombre se referme des bords vers le centre
   (2,5 s) et le son du fleuve s'éteint : plus d'air. « La vie palpite en Darshan. » : l'image bat
   une fois. « Il bascule en arrière… » : le regard pivote vers le haut, le fleuve sort du cadre
@@ -472,8 +453,10 @@ père, celui du jour de la porte du pigeonnier.
 près qu'il peut » : la limite n'est pas une porte qui fuit, c'est Darshan qui ne peut aller plus
 loin. Décision : la porte ne bouge pas ; la main s'arrête à un doigt du bois, et l'air devant la
 porte frémit comme l'eau du Periyar quand on la remue : le lecteur insiste, rien ne cède. C'est le
-premier geste impossible du livre. Le designer sonore : les pensées de Darshan « n'atteindront pas
-le stade de murmure » ; aucun son ne les accompagne.
+premier geste impossible du livre. Le directeur artistique voulait éclairer d'or la pensée « Tu es
+là ! », comme l'appel de 1.1 ; le gardien du texte refuse : le chapitre garde un seul moment
+typographique, les vers de 3.7, et ces pensées « n'atteindront pas le stade de murmure » : rien ne
+les grandit, ni éclat ni son.
 
 - **Intention** : le désir et la perte : la porte est là, il sait où elle mène, il ne peut pas la
   toucher ; puis elle s'éteint. Le lecteur en garde une étoile.
@@ -481,21 +464,20 @@ le stade de murmure » ; aucun son ne les accompagne.
 - **Point de vue et plan** : subjectif, face à la porte (le dernier plan de 3.10) ; la main droite
   de Darshan, dessinée d'un trait d'or, entre par le bas quand le lecteur la tend.
 - **Temps** : six temps ; le geste avant « Son bras porte sa main… » ; la pensée et la phrase qui
-  la suit, chacune seule ; le dernier paragraphe en deux temps.
+  la suit, un temps chacune ; le dernier paragraphe en deux temps.
 - **Image** : `porte-pere`, sa lanterne allumée. À la fin : le noir, une étincelle.
 - **Geste** : « Tendez la main vers la porte » : glisser vers le haut, du bas de la page vers la
   porte ; la main d'or suit le doigt, de plus en plus lentement, et s'arrête à un doigt du bois ;
   la main s'éclaire à mesure qu'elle approche de la lanterne ; si le lecteur insiste, l'air devant
   la porte ondule en cercles, et rien ne cède ; la porte ne répond pas ; au lâcher, la main
-  redescend. Équivalent : un toucher fait
-  monter la main seule jusqu'à la limite ; Entrée ; en mouvement réduit, la main paraît à la
-  limite, sans ondes.
-- **Effets** : « Tu es là » : la pensée, en italique, s'éclaire d'or, comme « Papa, où es-tu ? »
-  en 1.1 ; pas un son. « La lueur de la lanterne faiblit » : la lanterne faiblit (2,5 s), puis la
+  redescend. Équivalent : un toucher fait monter la main seule jusqu'à la limite ; Entrée ; en
+  mouvement réduit, la main paraît à la limite, sans ondes.
+- **Effets** : « Tu es là ! » : rien ; la pensée reste dans l'italique du livre, petite, sans un
+  son. « La lueur de la lanterne faiblit » : la lanterne faiblit (2,5 s), puis la
   porte s'en va « en se drapant de l'inconnu » : un voile noir descend sur elle de haut en bas
   (2 s), les traits d'or s'éteignent les derniers ; il ne reste que la flamme, le point orange du
-  début. « Darshan se voit happé… » : ce point file vers le bouton Carnet (0,6 s) et s'y range, en haut, hors de la
-  carte : l'étoile à part ; au même instant, l'air revient d'un coup.
+  début. « Darshan se voit happé… » : ce point file vers le bouton Carnet (0,6 s) et s'y range,
+  en haut, hors de la carte : l'étoile à part ; au même instant, l'air revient d'un coup.
 - **Son** : l'accord du père, tenu, égal : il ne réagit ni à la main ni aux pensées ; pendant les
   pensées, rien d'autre ; l'accord s'éteint avec la lanterne (3 s), la note haute la dernière ;
   « happé » : une aspiration d'air brusque (0,6 s) : l'air revient.
@@ -525,8 +507,8 @@ réponse. Le monteur garde le décor du soir de 3.9 : on revient exactement où 
 - **Image** : `periyar-soir`. Raccord d'entrée : iris : le cercle se referme sur l'étincelle de
   3.11 et s'ouvre sur le fleuve. Raccord de sortie : même plan.
 - **Geste** : aucun ; les répliques avancent au toucher.
-- **Effets** : à l'entrée, flou puis net (1,2 s ; en mouvement réduit, net d'emblée). « Je sais ! »
-  : une gerbe d'étincelles d'or jaillit du bas de l'image, les « gerbes d'enthousiasme ».
+- **Effets** : à l'entrée, flou puis net (1,2 s ; en mouvement réduit, net d'emblée). Sur « Je
+  sais ! », une gerbe d'étincelles d'or jaillit du bas de l'image, les « gerbes d'enthousiasme ».
 - **Son** : le Periyar du soir ; le couteau de Jivan (un coup toutes les 0,7 s), qui s'arrête au
   cri et reprend à « Le chemin vers ton père ? ».
 - **Objets et interface** : rien ; la barre de boutons revient.
@@ -568,8 +550,8 @@ bouton Carnet luit une fois.
 
 **Table ronde** : semer aux quatre coins de la page, comme le prévoyait le découpage, risquait de
 tourner la page : certaines liseuses tournent quand on touche les bords. Décision : une rose des
-vents dessinée en or au milieu du ciel, quatre points bien à l'intérieur de la page ; chaque toucher y sème une
-graine que le vent emporte vers le bord. Les « quatre jours » se posent en haut de la page : Julie
+vents dessinée en or au milieu du ciel, quatre points bien à l'intérieur de la page ; chaque
+toucher y sème une graine que le vent emporte vers le bord. Les « quatre jours » se posent en haut de la page : Julie
 tient le même compte au chapitre suivant.
 
 - **Intention** : l'élan joyeux et un peu fou de Darshan ; le temps se met à compter.
@@ -702,6 +684,7 @@ son casque, reste hors du cadre retenu : à vérifier sur la planche des décors
 - `sceau` (3.9) : l'ovale d'or du mudrā, qui reste en filigrane.
 - `braises`, `absence`, `palpite`, `bascule`, `lanterne` (`tracer`, `allumer`), `ornements`,
   `draper` et `happe` (3.10, 3.11) : décrits dans les tableaux ; ils forment la scène « vision ».
+  L'effet `voix` n'y est pas employé : un seul moment typographique par chapitre, les vers de 3.7.
 
 **Scènes écrites à la main**
 - « plier » (3.4) : le ciel, les deux étoiles et leur fil d'or, les lunettes et la clé en or
@@ -739,7 +722,7 @@ son casque, reste hors du cadre retenu : à vérifier sur la planche des décors
   braises, battement. Nouvelle couche : couteau (un coup toutes les 0,7 s, plus lent sur demande).
 - Ambiances : « bibliothèque » (silence habité, pages lointaines, pas feutrés) ; « vision » : elle
   commence comme le Periyar du soir et s'éteint à l'effet `absence` ; ensuite le silence, où seul
-  s'entend l'accord ; le Periyar « du soir » (moins d'oiseaux, des grillons), que le décor
+  s'entend l'accord ; le Periyar du soir (moins d'oiseaux, des grillons), que le décor
   `periyar-soir` pourrait appeler de lui-même.
 - Sous-titres des sons (chantier I4) : seul l'accord du père porte du sens dans ce chapitre ; il
   est toujours doublé par la lumière de la lanterne.
@@ -827,8 +810,7 @@ SCENES_CH3 = {
                        E("decor", i=2, fondu=2400)]),
     "3.11": S("porte-pere", special="vision",
               gestes=[G("tendre", depart=[600, 1300], cible=[600, 760], arret=1000)],
-              moments=[E("voix"),
-                       [E("lanterne-eteinte"), E("draper")],
+              moments=[[E("lanterne-eteinte"), E("draper")],
                        [E("happe"), E("porte", id="pere")]]),
     "3.12": S("periyar-soir", debut=[E("net", depuis="flou", duree=1200), E("couche", couche="couteau", oui=True)],
               extra={"Le chemin vers ton père": E("couche", couche="couteau", oui=True)},
@@ -842,8 +824,10 @@ SCENES_CH3 = {
 }
 ```
 
-Retoucher aussi, dans `decors.py`, `RETOUCHES_ENCRE["portes-5"]` (saturation vers 0,9 : un rouge
-brique, pas vermillon). Le décor `porte-pere` change de nature : il sert aussi au chapitre 7.
+Dans `decors.py` : `RETOUCHES_ENCRE["portes-5"]` (saturation vers 0,9 : un rouge brique, pas
+vermillon) ; `PAPIER_DESSIN` à 0 pour `cosmos`, `porte-pere` et `porte-pere-traits` (la nuit et la
+vision n'ont pas de papier) ; l'enregistrement en WebP avec couche alpha pour les deux calques de
+la porte. Le décor `porte-pere` change de nature : il sert aussi au chapitre 7.
 
 ### 7.2 `outils/darshan/decoupage.py` : ce qui change
 
@@ -930,7 +914,7 @@ TABLEAUX_CH3 = [
       "Le parvis de la cathédrale de Poitiers, vu d'en bas, au matin ; l'aube monte, l'étoile du matin pâlit.",
       photos=[(18890798, "encre")],
       moments=[("Croire aux lendemains qui chantent", "l'aube monte sur la façade ; l'étoile du matin pâlit ; un oiseau chante"),
-               ("C’est ici que j’écris ma vie", "la phrase seule à l'écran ; une plume gratte le papier")],
+               ("C’est ici que j’écris ma vie", "la phrase, un temps à elle seule ; une plume gratte le papier")],
       note="À « où es-tu ? », rien ne répond : le père ne parle jamais.",
       son="cosmos ; oiseau, plume"),
     T("3.6", "Les bibliothèques", (72, None), "Bibliothèques, musées, marchés ; puis Pékin", "Darshan", "encre",
@@ -993,8 +977,7 @@ TABLEAUX_CH3 = [
       photos=[(39434691, "encre")],
       gestes=[("Son bras porte sa main au plus près qu’il peut de cette ouverture",
                "tendre la main : glisser vers la porte ; la main s'arrête à un doigt du bois, l'air ondule", "toucher")],
-      moments=[("Tu es là", "la pensée s'éclaire d'or, sans un son"),
-               ("La lueur de la lanterne faiblit", "la lanterne s'éteint, la porte se drape de noir, l'accord s'éteint"),
+      moments=[("La lueur de la lanterne faiblit", "la lanterne s'éteint, la porte se drape de noir, l'accord s'éteint"),
                ("Darshan se voit happé", "la dernière lueur file au carnet : l'étoile à part ; l'air revient")],
       objets=["carnet : la porte du père, étoile à part, hors de la carte (vue, non franchie)"],
       son="vision ; accord du père, souffle",
@@ -1064,10 +1047,10 @@ Inchangées : 3.2.1, 3.8.1, 3.10.1, 3.11.1, et les libellés `[portes]` (`pekin`
     sincérité et sa porte la réciprocité. » ; puis « Darshan ne connaît pas cette porte qui lui
     fait face. » ; « Il sait instantanément où elle mène. » ; « Cette porte s’ouvrira à moi quand
     j’aurai trouvé le véritable amour. » L'équipe du chapitre 7 y ajoutera les siennes.
-- **`son.js`** : `pere` = `jour` (l'accord du père), en version tenue ; les sons et la couche du
-  6 ; l'ambiance « vision ».
-- **`build.py`** : `POINTS_D_ENTREE` : « 3.4 » en (600, 800), sur les verres ; « 3.10 » à retirer
-  (même plan) ; « 3.12 » inchangé ; « 3.9 » en (600, 900), l'embrasure de la cabane.
+- **`son.js`** : `pere` = `jour` (l'accord du père), en version tenue ; les sons et la couche
+  décrits en 6 ; l'ambiance « vision ».
+- **`build.py`** : dans `POINTS_D_ENTREE`, 3.4 en (600, 800), sur les verres ; 3.9 en (600, 900),
+  l'embrasure de la cabane ; 3.10 à retirer (même plan) ; 3.12 inchangé.
 - **`objets.ini`** : rien à changer ; les phrases utiles au chapitre y sont déjà (lunettes, clé,
   recueil).
 - **Pour le chapitre 7** : la porte du père est désormais la porte d'Irun, en calques transparents
@@ -1086,8 +1069,8 @@ les entrées de 7.2 ; le bloc de 7.1 s'évalue avec les aides de `livre.py` ; `b
 ancre chaque geste et chaque moment et découpe les temps comme décrit plus haut, et
 `build.etats()` passe sur tout le livre (sacs et carnet : le recueil entre en 3.8, la clé redevient
 lunettes en 3.9, l'étoile `pere` est au carnet dès 3.12) ; toutes les phrases-clés sont mot pour mot
-dans le livre ; tous les numéros de photo sont dans `vitrine/photos.txt` ; toutes les consignes
-ont huit mots au plus.
+dans le livre ; tous les numéros de photo sont dans `vitrine/photos.txt` du dépôt PexelsWillwonder ;
+toutes les consignes ont huit mots au plus.
 
 ## 8. Questions pour Karl
 
