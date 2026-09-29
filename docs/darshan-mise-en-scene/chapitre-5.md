@@ -77,22 +77,20 @@ chapitre. Sortie : sous l'encre de 5.2, les cheminées deviennent les stipes des
 
 **Effets** : sur la première phrase, le compte à rebours (`compte`) : en haut de page, là où un
 téléphone affiche l'heure, « quatre jours » (les mots de 4.7) se défont et deviennent
-« soixante-douze heures ». L'impatience affine l'unité : les jours deviennent des heures, les heures
-deviendront des heures d'horloge (5.11). Les bandes d'ouverture prennent les couleurs du chapitre,
-lilas du crépuscule, rose et or de Darshan, et leur trame de points devient une pluie de confettis :
-le titre les annonce, Darshan les achètera en 5.5.
+« soixante-douze heures ». L'impatience affine l'unité : les jours deviennent des heures, puis des
+heures d'horloge (5.11). Les bandes d'ouverture prennent les couleurs du chapitre, et leur trame de
+points devient une pluie de confettis : le titre les annonce, Darshan les achètera en 5.5.
 
-**Son** : ambiance « chambre » (pièce calme, rue étouffée). Au temps de la fenêtre, la rue
-s'entrouvre : des martinets, une voiture au loin. Sous la dernière phrase monte déjà le bourdon du
-tanpura d'Aluva : le son de Darshan précède son image, le montage alterné s'annonce à l'oreille.
+**Son** : ambiance « chambre » ; au temps de la fenêtre, la rue s'entrouvre (des martinets, une
+voiture au loin). Sous la dernière phrase monte déjà le bourdon du tanpura d'Aluva : le son de
+Darshan précède son image.
 
 **Objets et interface** : sac de Julie : le téléphone (depuis 4.7). Compte à rebours :
 « soixante-douze heures ».
 
-**Rimes** : 4.7 (même chambre, « dans quatre jours je serai chez lui ») ; 1.1 et 1.2 (les toits où
-Darshan s'étend puis danse) ; 5.4 (« Le toit du monde est celui de ta maison ») ; 5.9 (la même
-fenêtre, le même soir de croissant) ; 6.7 (Julie à une autre fenêtre, qui « ne reconnaît pas la rue
-Rousseau »).
+**Rimes** : 4.7 (la même chambre) ; 1.1 et 1.2 (les toits où Darshan s'étend puis danse) ; 5.4 (« Le
+toit du monde est celui de ta maison ») ; 5.9 (la même fenêtre, le même soir) ; 6.7 (une autre
+fenêtre, où Julie « ne reconnaît pas la rue Rousseau »).
 
 **À valider par Karl** : la photo des toits ; le compte à rebours en mots du livre, en haut de page ;
 les bandes aux couleurs du chapitre.
@@ -120,36 +118,27 @@ voit jamais, on l'entend marcher.
 geste ; l'acquisition, que le texte confirme ; « Le soleil d’orient […] » seul, pour que « Jivan
 s’essouffle » tombe comme un gag ; puis la réplique de Jivan (« Lève le pied, je te prie. »).
 
-**Image** : `marche-aluva`, décor nouveau. Le fond : le « Jardin tropical » à l'encre et à
-l'aquarelle, lumière d'or (palmes en haut, stipes, allée au centre). Dessinés à l'encre par-dessus :
-des auvents de toile (safran, indigo délavé, rose passé) sur des perches de bambou ; trois ou quatre
-marchands en silhouettes de pinceau, tournés vers leurs affaires (« Chacun vaque à ses
-occupations ») ; au premier plan à droite, l'étal de fruits (bananes, jacquier, mangues). Les cinq
-marchandises sont des calques à part, pour disparaître quand on les achète : les thés (sacs de jute
-ouverts, feuilles sombres, d'après le « Tapis » de Karl, 29136749), le curcuma (un cône jaune safran
-sur un plateau), l'encens (des bâtonnets dans un pot, un fil de fumée), les jarres (trois terres
-cuites de tailles différentes), les tapisseries (suspendues à l'auvent de gauche, zigzags et
-paillettes qui chatoient, d'après la couverture tissée de 35104311). Raccord d'entrée : les cheminées
-de 5.1 deviennent les stipes.
+**Image** : `marche-aluva`, décor nouveau : le « Jardin tropical » à l'encre et à l'aquarelle, dans
+une lumière d'or (palmes, stipes, une allée), et dessinés par-dessus des auvents de toile, trois ou
+quatre marchands en silhouettes de pinceau tournés vers leurs affaires (« Chacun vaque à ses
+occupations »), l'étal de fruits au premier plan, et les cinq marchandises, chacune sur son calque
+pour disparaître une fois achetée (détail en section 6). Raccord d'entrée : les cheminées de 5.1
+deviennent les stipes.
 
-**Geste** : `etals`. Chaque marchandise a son reflet ; le lecteur les touche dans l'ordre qu'il veut.
-L'objet saute, vole en arc jusqu'au bouton « Objets », dont le compteur grimpe ; à chaque achat,
-l'allée avance d'un pas (on cavale). Premier achat : le bandeau « Nouvel objet » ; les quatre
-suivants : un envol court, sans bandeau. Au cinquième, le bouton « Objets » ploie un instant, lesté.
-Sans geste : cinq touchers n'importe où (chacun achète la marchandise suivante, dans l'ordre du
-texte) ; au clavier, Tab d'une marchandise à l'autre (VoiceOver dit leur nom, celui d'objets.ini),
-Entrée ; bouton « Faire le geste » après 8 s. Mouvement réduit : ni arc ni avancée, l'objet s'efface
-et le compteur monte.
+**Geste** : `etals`. Chaque marchandise a son reflet ; le lecteur les touche dans l'ordre qu'il veut :
+l'objet saute et vole jusqu'au bouton « Objets », dont le compteur grimpe, et l'allée avance d'un
+pas (on cavale). Le bandeau « Nouvel objet » n'annonce que le premier achat ; au cinquième, le
+bouton « Objets » ploie un instant, lesté. Sans geste : cinq touchers n'importe où (dans l'ordre du
+texte), ou Tab et Entrée (VoiceOver dit le nom de chaque marchandise) ; bouton « Faire le geste »
+après 8 s ; mouvement réduit : ni arc ni avancée.
 
 **Effets** : avancée de l'allée à chaque achat ; sur « Le soleil d’orient […] », les pas de Jivan
 traînent derrière (effet `son`).
 
-**Son** : ambiance « marché », sans aucune voix : le bourdon du tanpura d'Aluva (la continuité avec
-« kerala »), tintements de gobelets et de balances de laiton, étoffes froissées, une sonnette de
-vélo, des corneilles. Chaque achat a son bruit : feuilles de thé versées dans du papier, poudre qui
-glisse, allumette et crépitement, « toc » creux de la terre cuite, claquement d'étoffe. Les pas de
-Jivan, lourds et irréguliers, décrochent derrière ; à sa réplique, un fruit roule sur l'étal où il
-s'appuie.
+**Son** : ambiance « marché », sans aucune voix : le bourdon du tanpura (la continuité avec « kerala
+»), du laiton qui tinte, des étoffes, une sonnette de vélo, des corneilles ; à chaque achat, son
+bruit (thé versé, poudre, allumette, « toc » de la terre cuite, étoffe qui claque). Les pas de
+Jivan, lourds, décrochent derrière ; à sa réplique, un fruit roule sur l'étal où il s'appuie.
 
 **Objets et interface** : sac de Darshan : + thés, + curcuma, + encens, + jarres, + tapisseries. Le
 compte à rebours reste en haut de page, à l'encre d'or dans ce monde-ci.
@@ -201,11 +190,10 @@ pour l'étoile du matin, une note claire et aiguë (jamais l'accord du père, r�
 **Objets et interface** : le carnet gagne son aiguille ; aucun texte nouveau.
 
 **Rimes** : 6.7 (« Elle a perdu le nord se dit-elle ») et 6.15 (« Julie seule et déboussolée ») :
-l'aiguille pourrait s'y affoler de nouveau ; 7.14 : quand les étoiles du carnet s'éteignent,
-l'aiguille pourrait être la dernière lumière à partir (à décider avec les équipes des chapitres 6
-et 7). Le carnet a désormais deux pôles : la porte du père, à part, et Julie, le nord ; ce sont les
-deux quêtes que Darshan nommait en 1.8 (« Je ne souhaite que m’éprendre du véritable amour et plus
-encore rejoindre mon aïeul. »).
+l'aiguille pourra s'y affoler ; en 7.14, elle pourrait être la dernière lumière du carnet à
+s'éteindre (à décider avec les équipes des chapitres 6 et 7). Le carnet a désormais deux pôles, la
+porte du père et Julie : les deux quêtes de 1.8 (« m’éprendre du véritable amour et plus encore
+rejoindre mon aïeul »).
 
 **À valider par Karl** : la boussole du carnet (une idée d'interface, née de la phrase) ; l'effet
 d'essoufflement.
@@ -242,20 +230,21 @@ revenue. Mouvement réduit : l'image s'assombrit un instant.
 
 **Rimes** : 2.10 (le premier nuage : « Darshan vit en vagabond et ne sait pas encore ou il va
 recevoir Julie ») ; 1.1 (le toit parisien, la voûte) ; 5.1 (les toits vus de la fenêtre de Julie).
-« je n’ai point laissé le soin à mon père de jouer aux dés » nomme le père en plaisantant : sa
-lumière et son accord restent réservés à sa présence (1.1, 3.10, 7.12).
+Avec « je n’ai point laissé le soin à mon père de jouer aux dés », Darshan parle de son père en
+plaisantant ; le père, lui, ne parle jamais : son accord et sa lumière restent réservés à ses signes
+(le jour de la porte du pigeonnier, 1.3 ; la lanterne, 3.10 ; le linteau, 7.12). Aucune lumière d'or
+ici.
 
 **À valider par Karl** : rien de nouveau.
 
 ### 5.5 Le quartier Foch
 
-**Table ronde** : deux débats. La façade, d'abord : la montrer comme un lieu (un décor), ou comme une
-parole ? Décision : elle se dessine dans le ciel du marché pendant que Darshan parle, trait après
-trait, puis se lave de couleur de lait : le lecteur voit un mensonge se construire, et c'est Jivan,
-en levant les yeux au ciel, qui le dissipe. Les confettis, ensuite : le découpage les faisait éclater ;
-or le livre dit « un paquet de confettis qui rejoint promptement ses fournitures » : le paquet reste
-fermé. Décision : trois confettis s'en échappent, pas plus. Ils ne serviront jamais : la fête promise
-n'aura pas lieu.
+**Table ronde** : deux débats. La façade : un lieu, ou une parole ? Décision : elle se dessine dans
+le ciel du marché pendant que Darshan parle, et s'évapore quand Jivan lève les yeux au ciel : le
+lecteur voit un mensonge se construire, puis se dissiper. Les confettis : le découpage les faisait
+éclater ; or le livre dit « un paquet de confettis qui rejoint promptement ses fournitures ».
+Décision : le paquet reste fermé, trois confettis s'en échappent. Ils ne serviront jamais : la fête
+promise n'aura pas lieu.
 
 **Intention** : le mensonge grandit, en beauté ; l'euphorie d'enfant de Darshan ; l'ironie de Jivan.
 
@@ -280,10 +269,9 @@ suivante ; ils tombent en voletant. Le lecteur s'enthousiasme avec Darshan, puis
 confirme. Sans geste : toucher n'importe où, Entrée ; mouvement réduit : trois confettis immobiles,
 qui s'effacent.
 
-**Effets** : `vignette` tracée (2,5 s : les traits d'encre, puis le lavis couleur de lait) sur « Elle
-va passer la porte marbrée » ; elle reste pendant « un artiste peintre en vue » et « Il a bon goût » ;
-sur « Jivan lève les yeux au ciel », elle s'évapore vers le haut (1,5 s), là où il regarde.
-`confettis` (trois).
+**Effets** : `vignette` tracée (les traits d'encre, puis le lavis couleur de lait, 2,5 s) sur « Elle
+va passer la porte marbrée » ; elle reste jusqu'à « Jivan lève les yeux au ciel », où elle s'évapore
+vers le haut (1,5 s), là où il regarde. `confettis` (trois).
 
 **Son** : marché ; un pinceau pendant que la façade se dessine ; un souffle de vent quand elle
 s'évapore ; le paquet secoué, un froissement de papier.
@@ -321,16 +309,15 @@ page devient son téléphone.
 patinoire, sur « le cliché voisin ») ; le croque-monsieur.
 
 **Image** : entrée par l'obturateur sur `lit-telephone` (38256669 : coussin fleuri, téléphone, drap
-défait, en noir et blanc). Au geste, l'écran monte du bas et remplit la page : fond noir (le mode nuit
-d'un téléphone), une barre d'état où se lit, à la place de l'heure, « soixante-douze heures », et une
-grille de vignettes carrées, trois par rangée, en couleurs. La grille ne contient que les clichés du
-livre. Rangée 1 : les bonbons (29360492), la patinoire (repérage ; en attendant, 29630257, les
-lumières d'une nuit d'hiver), le croque-monsieur (6858270). Rangée 2, pour 5.7 : le selfie, les
-lunettes (repérage), la Seine. Plus bas, seule : la vidéo. Un cliché qui s'ouvre glisse de sa vignette
-jusqu'aux deux tiers hauts de la page (transition `glissement`) ; le suivant le remplace. Le « cliché
-voisin » se voit : les bonbons regagnent la grille, et la vignette d'à côté s'éclaire d'un liseré de
-lumière et grandit un peu. Aucune date, aucun nom d'album, aucun visage ; les images sont
-décoratives pour les lecteurs d'écran (le texte les décrit).
+défait, en noir et blanc). Au geste, l'écran monte du bas et remplit la page : fond noir (le mode
+nuit d'un téléphone), une barre d'état où se lit, à la place de l'heure, « soixante-douze heures »,
+et une grille de vignettes carrées, trois par rangée, en couleurs, qui ne contient que les clichés
+du livre : les bonbons (29360492), la patinoire (repérage ; en attendant, 29630257, des lumières
+d'hiver), le croque-monsieur (6858270) ; puis, pour 5.7, le selfie, les lunettes (repérage), la
+Seine et, plus bas, la vidéo. Un cliché qui s'ouvre glisse de sa vignette aux deux tiers hauts de la
+page (`glissement`). Le « cliché voisin » se voit : les bonbons regagnent la grille, et la vignette
+d'à côté s'éclaire d'un liseré de lumière. Aucune date, aucun nom d'album, aucun visage ; pour les
+lecteurs d'écran, les images sont décoratives (le texte les décrit).
 
 **Geste** : `galerie`. Après le premier temps, glisser vers le haut sur le téléphone : la galerie
 s'ouvre. Ensuite, chaque avancée de lecture fait défiler la grille jusqu'au cliché suivant. Sans
@@ -375,18 +362,16 @@ contre-jour de la lune une ballade romantique en italien. »
 **Temps** : quatre temps : le selfie (« L’angle du téléphone les rapetisse. » et le regard
 couleur terre) ; les lunettes ; le chevalet ; la vidéo, puis le geste.
 
-**Image** : entrée par `glissement` depuis la grille de 5.6. Le selfie s'ouvre : `deux-flous`
-(34876053), deux silhouettes floues dans une lumière chaude : un selfie pris trop près, trop tard le soir, bougé ;
-la couleur même de la photo est « couleur terre », et personne n'y est reconnaissable. Sur « elles
-changent assez régulièrement », la grille défile vite vers le bas et remonte, comme on parcourt des
-photos ; quand Karl aura fait les trois photos de lunettes, leurs vignettes s'allumeront une à une.
-La Seine : `reflet-paris` (38279684), un lampadaire et des fleurs renversés dans l'eau, déjà comme
-peints ; le chevalet reste hors champ en attendant son repérage. Plus bas, seule sur sa rangée, la
-vignette de la vidéo : un triangle de lecture blanc sur la pleine lune. Au toucher, la vidéo s'ouvre en
-largeur, bandes noires en haut et en bas, comme sur un téléphone tenu droit (`video-lune`, 38570570 :
-une cheminée, une antenne râteau, la pleine lune, des nuages violets) ; l'image tremble à peine
-(« Elle tient péniblement son téléphone pour filmer la scène », dira 5.8) ; une fine barre de lecture
-avance.
+**Image** : entrée par `glissement` depuis la grille. Le selfie : `deux-flous` (34876053), deux
+silhouettes floues dans une lumière chaude, un selfie pris trop près, bougé ; sa couleur même est
+« couleur terre », et personne n'y est reconnaissable. Sur « elles changent assez régulièrement », la
+grille défile vite et remonte, comme on parcourt des photos (les vignettes des lunettes s'y
+allumeront quand Karl les aura faites). La Seine : `reflet-paris` (38279684), un lampadaire et des
+fleurs renversés dans l'eau, déjà comme peints ; le chevalet, hors champ, attend son repérage. Plus
+bas, seule sur sa rangée, la vignette de la vidéo, un triangle de lecture sur la pleine lune. Au
+toucher, la vidéo s'ouvre en largeur, bandes noires en haut et en bas comme sur un téléphone tenu
+droit (`video-lune`, 38570570 : une cheminée, une antenne râteau, la pleine lune, des nuages
+violets) ; l'image tremble à peine ; une fine barre de lecture avance.
 
 **Geste** : toucher la vidéo, après la dernière phrase : elle se lance. Sans geste : toucher n'importe
 où, Entrée ; bouton « Faire le geste » ; dans la fiche du téléphone, « Lancer la vidéo ». Mouvement
@@ -398,12 +383,10 @@ phrase (déjà dans objets.ini), et, si Karl l'accepte, « Il met en valeur le r
 perce les lunettes du révolu don Juan. » ; `video-lune`. Tant que la ballade joue, une petite note ♪
 bat près de la vidéo : ce qui passe par le son se voit aussi.
 
-**Son** : chambre ; au toucher, la ballade, pour la première fois du livre, par le haut-parleur du
-téléphone : aigus serrés, sans grave, un peu de souffle et de vent, la rumeur d'une rue la nuit, sans
-une parole. La ballade est composée pour le livre et jouée sans voix : huit mesures à 6/8, une
-mélodie simple, chantable en onomatopées, de la couleur d'une sérénade italienne (une barcarolle),
-confiée à un timbre chantant (une flûte, ou une onde douce avec vibrato). Le livre dit « en italien » :
-le son le dit par la couleur de l'air, jamais par des mots.
+**Son** : chambre ; au toucher, la ballade, pour la première fois du livre, par le petit
+haut-parleur (aigus serrés, sans grave, un peu de vent et de rue), sans une parole. Composée pour le
+livre et jouée sans voix (section 6), elle a la couleur d'une sérénade italienne : le livre dit « en
+italien », le son le dit par l'air, jamais par des mots.
 
 **Objets et interface** : dans le sac de Darshan, les lunettes frémissent ; la fiche du téléphone
 gagne la phrase de la vidéo.
@@ -451,13 +434,11 @@ incroyable. », retour à la chambre en noir et blanc (`lit-telephone`), le tél
 **Effets** : `video-lune` agrandie à l'ouverture ; `approche` ; `decor`. Mouvement réduit : pas
 d'agrandissement ni de travelling, des fondus.
 
-**Son** : la ballade sort du haut-parleur et devient pleine et proche : c'est le souvenir. Ambiance
-« rue » la nuit : des pas qui ralentissent et s'arrêtent, qui s'attroupent (« les passants se
-rassemblent »), sans une voix. Sur « Il est incroyable. », la rue s'éteint, la ballade se réduit à un
-bourdonnement, comme entendue à travers un mur. Sur « L’air électrique d’une mélodie trotte […] », elle
-s'anime : même mélodie, plus vive, piquée, et un pied qui bat la mesure (un petit choc sourd sur les
-deux temps forts). Au dernier temps, elle s'amenuise, usée comme par « l’érosion du temps », et
-redevient bourdonnement.
+**Son** : la ballade sort du haut-parleur et devient pleine, proche : le souvenir ; ambiance « rue »
+la nuit, des pas qui s'attroupent, sans une voix. Sur « Il est incroyable. », la rue s'éteint et la
+ballade n'est plus qu'un bourdonnement, comme à travers un mur ; sur « L’air électrique d’une
+mélodie trotte […] », elle s'anime, plus vive, piquée, un pied battant la mesure ; au dernier temps,
+elle s'use comme par « l’érosion du temps » et redevient bourdonnement.
 
 **Objets et interface** : la note ♪ reste visible tant que la mélodie joue.
 
@@ -470,21 +451,22 @@ pour Amélie » ; ici, ses mains filment).
 ### 5.9 Je l'aime
 
 **Table ronde** : le découpage faisait taper au rythme d'un second cœur. Le designer d'interaction
-plaide pour « maintenir » : les gestes du cœur se font lentement et ne sont pas des épreuves
-d'adresse ; et la direction veut que la chamade (2.2), la synchronie (5.9) et le baiser (7.10)
-partagent la même mécanique. Décision : maintenir. En 2.2, un cœur battait seul sous le doigt ; ici,
-deux cœurs cherchent leur rythme et le trouvent ; en 7.10, ils n'en auront plus qu'un. L'idée d'un
-électrocardiogramme (Julie est soignante, « l’arythmie » est son mot) est écartée : trop clinique pour
-un aveu ; il viendra, bien réel, en 7.5. Le monteur isole « Je l’aime et je vais lui dire. » et le
-laisse nu : aucun effet sur l'aveu, l'éclair vient après.
+plaide pour « maintenir » : les gestes du cœur se font lentement, sans épreuve d'adresse, et la
+direction veut que la chamade (2.2), la synchronie (5.9) et le baiser (7.10) partagent la même
+mécanique. Décision : maintenir. En 2.2, un cœur battait seul sous le doigt ; ici, deux cœurs
+cherchent leur rythme ; en 7.10, ils n'en auront plus qu'un. Un électrocardiogramme (Julie est
+soignante, « l’arythmie » est son mot) est écarté : trop clinique pour un aveu. Le monteur laisse
+« Je l’aime et je vais lui dire. » seul et nu : l'éclair vient après.
 
 **Intention** : le sommet du chapitre : le doute se tait, Julie choisit d'aimer, et la foudre est
 douce. Le lecteur sent deux cœurs s'accorder sous son doigt.
 
 **Phrase-clé** : « Je l’aime et je vais lui dire. »
 
-**Point de vue et plan** : la chambre en noir et blanc, le téléphone posé ; puis en couleurs ; puis, par
-la fenêtre, la lune, dont on s'approche.
+**Point de vue et plan** : la chambre en noir et blanc, le téléphone posé ; puis en couleurs ; puis,
+par la fenêtre, la lune, dont on s'approche. La voix intérieure de Julie est en italique, comme dans
+le livre imprimé, sans autre effet : c'est elle qui se parle (« La fille que tu étais […] »), et
+c'est elle qui tranche.
 
 **Temps** : huit temps : « La fille que tu étais […] » et « Oui c’est vrai, j’ai toujours rêvé de
 lui. » ; « Le voir et me tenir à son bras me dépasse […] » ; « Je l’aime et je vais lui dire. », seul ;
@@ -498,24 +480,23 @@ croissant du même soir que les toits de 5.1, une photo en hauteur, sans recadra
 travelling avant de neuf secondes jusqu'à `lune-proche` (zoom 3). C'est la décision prise sur la lune
 trop petite de sa photo : sa petitesse est celle d'un souhait lointain, et le souhait l'approche.
 
-**Geste** : `maintenir`, à deux cœurs. Sous le doigt, deux anneaux battent : l'un irrégulier (Julie,
-« l’arythmie »), l'autre régulier et vif (le cœur fébrile de la chamade, au même tempo qu'en 2.2).
-Tant que le doigt reste posé, leurs battements se rapprochent, en quatre secondes environ, jusqu'à
-l'unisson : les deux anneaux n'en font plus qu'un, et le décor pulse doucement au rythme commun.
-Lâcher ne fait rien perdre : on reprend où l'on en était. Sans geste : un toucher lance l'accord tout
-seul ; au clavier, Espace maintenue ; bouton « Faire le geste » après 8 s. Mouvement réduit : deux
-cercles immobiles qui se fondent en un ; le son ne change pas. Consigne : « Maintenez : deux cœurs
-battent » (en écho à celle de 2.2, « Maintenez : la chamade bat »).
+**Geste** : `maintenir`, à deux cœurs. Sous le doigt, deux anneaux battent, l'un irrégulier (Julie,
+« l’arythmie »), l'autre régulier et vif (le cœur fébrile de la chamade, au tempo de 2.2) ; tant que
+le doigt reste, ils se rapprochent, en quatre secondes environ, jusqu'à l'unisson : un seul anneau,
+et le décor pulse doucement au rythme commun. Lâcher ne fait rien perdre. Sans geste : un toucher
+lance l'accord tout seul ; Espace maintenue ; bouton « Faire le geste » après 8 s ; mouvement réduit :
+deux cercles immobiles qui se fondent en un. Consigne : « Maintenez : deux cœurs battent », en
+écho à 2.2 (« Maintenez : la chamade bat »).
 
 **Effets** : `eclair` doux : 0,9 s de montée, 2 s de retrait, luminosité plafonnée, un seul éclair,
 aucun clignotement ; le noir et blanc passe à la couleur sous la lumière. Mouvement réduit : un fondu
 de 600 ms. `approche` vers la lune.
 
-**Son** : le bourdonnement de 5.8 sous la voix intérieure ; sur l'aveu, rien d'autre. La foudre : pas
-de tonnerre, une nappe chaude qui s'enfle et retombe. « s’est mué en clairon clair et limpide » : les
-deux premières mesures de la ballade, une seule fois, claires et brillantes, un timbre de cuivre doux
-(pas une sonnerie militaire). Puis un cœur, irrégulier ; au geste, le second, puis l'unisson (couche
-« battements ») ; sur la lune, les battements s'apaisent sous l'ambiance de la chambre.
+**Son** : le bourdonnement de 5.8 sous la voix intérieure ; sur l'aveu, rien d'autre. La foudre :
+pas de tonnerre, une nappe chaude qui s'enfle et retombe. Au « clairon clair et limpide », les deux
+premières mesures de la ballade, une fois, claires (un cuivre doux, jamais une sonnerie militaire).
+Puis un cœur irrégulier ; au geste, le second, puis l'unisson ; sur la lune, les battements
+s'apaisent.
 
 **Objets et interface** : rien ; aucune fiche ne s'ouvre pendant ce temps fort.
 
@@ -598,20 +579,19 @@ de satin vermillon (repérage) ; en attendant, `dessert` (29188525, la tarte aux
 cercle rouge dans sa pâte). Sur « À sa surface […] », lent rapprochement de six secondes (`dessert-proche`)
 vers les feuilles de sucre, où les gouttes accrochent la lumière.
 
-**Geste** : `essuyer`. Le doigt laisse une trace nette dans la buée (un pinceau large de 90 unités) ;
-quand 40 % de la vitre est essuyée, le reste de la buée se dissipe seul en 1,2 s : on n'a pas à tout
-frotter. Sensation : une résistance douce, puis la couleur. Sans geste : trois touchers, chacun essuie
-une bande ; au clavier, Entrée trois fois ; bouton « Faire le geste ». Mouvement réduit : chaque
-toucher éclaircit un tiers de la vitre, sans traînée. Consigne inchangée : « Essuyez la buée du
-doigt ».
+**Geste** : `essuyer`. Le doigt laisse une trace nette dans la buée ; passé 40 % de la vitre, le
+reste se dissipe seul en 1,2 s : on n'a pas à tout frotter. Sensation : une résistance douce, puis
+la couleur. Sans geste : trois touchers (chacun essuie une bande), Entrée trois fois, ou « Faire le
+geste » ; mouvement réduit : chaque toucher éclaircit un tiers de la vitre. Consigne inchangée :
+« Essuyez la buée du doigt ».
 
 **Effets** : `buee` (quatre secondes, du bas vers le haut) ; `approche` ; `objet+` : le ticket
 (bandeau « Nouvel objet », à la manière de Julie) ; `compte` : « soixante-douze heures » laisse la
 place à deux mots du livre, « onze heures » (le gâteau) et « treize heures » (le rendez-vous).
 
-**Son** : « pâtisserie » : le ronron réfrigéré ; la buée essuyée, un crissement doux du doigt sur le
-verre ; à la révélation, rien, le silence de la vitrine ; le ticket, un froissement de papier ; le
-compte, un tic d'horloge.
+**Son** : « pâtisserie » : le ronron réfrigéré ; un crissement doux du doigt sur le verre ; à la
+révélation, le silence de la vitrine ; le ticket, un froissement de papier ; le compte, un tic
+d'horloge.
 
 **Objets et interface** : sac de Julie : + ticket. Fin du chapitre : deux sacs pleins, l'un de six
 marchandises, l'autre d'un ticket. La fiche du ticket peut garder la Charlotte (section 7.4).
@@ -753,8 +733,14 @@ réduit.
 - **`frisson`, avec `objet` et `bouton=True`** (5.7) : le frisson joue sur le bouton « Objets » quand
   un objet de l'autre sac gagne une phrase.
 - **Décors** : `photo(..., format="paysage")` (une image en largeur, pour la vidéo) ;
-  `dessin("marche_aluva", photo=34342144)`, dessiné en calques (le fond et les étals ; puis une
-  marchandise par calque, en PNG transparent) ; les bandes d'ouverture du chapitre dans sa palette
+  `dessin("marche_aluva", photo=34342144)`, dessiné en calques : le fond (le « Jardin tropical » à l'encre
+  dans une lumière d'or ; des auvents de toile safran, indigo délavé et rose passé sur des perches de
+  bambou ; trois ou quatre marchands en silhouettes de pinceau, sans visage ; au premier plan à droite,
+  l'étal de fruits, bananes, jacquier, mangues), puis une marchandise par calque, en PNG transparent :
+  les thés (sacs de jute ouverts, feuilles sombres, d'après 29136749), le curcuma (un cône jaune safran
+  sur un plateau), l'encens (des bâtonnets dans un pot, un fil de fumée), les jarres (trois terres cuites
+  de tailles différentes), les tapisseries (suspendues à l'auvent de gauche, zigzags et paillettes qui
+  chatoient, d'après la couverture tissée de 35104311) ; les bandes d'ouverture du chapitre dans sa palette
   (lilas `#b9a3d6`, rose `#f2b8c6`, or `#f4c56a`), leur trame de points remplacée par des confettis.
 
 ## 7. Fiche de production
@@ -1079,8 +1065,9 @@ plus haut est celui qu'il produit) et que `build.etats()` calcule les sacs (à l
 lunettes, montre, recueil, thés, curcuma, encens, jarres, tapisseries, confettis pour Darshan ;
 téléphone et ticket pour Julie) ; que chaque phrase-clé et chaque citation entre guillemets de ce
 document figure mot pour mot dans le livre (espaces insécables et apostrophes ramenées à une forme),
-les autres guillemets étant des textes d'interface ou des titres de photos ; que les dix-sept numéros
-de photos sont dans `vitrine/photos.txt` ; que les consignes font huit mots au plus.
+les autres guillemets étant des textes d'interface, des titres de photos ou des noms techniques ;
+que les dix-sept numéros de photos sont dans `vitrine/photos.txt` ; que les consignes font huit mots
+au plus.
 
 ## 8. Questions pour Karl
 
