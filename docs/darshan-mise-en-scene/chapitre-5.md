@@ -50,7 +50,7 @@ de l'hésitation (5.10) se lisent sans geste.
 ### 5.1 Soixante-douze heures
 
 **Table ronde** : le découpage faisait toucher la vitre pour qu'une lueur d'or passe dehors. Le
-dramaturge s'y oppose : Julie « sent » une présence, le livre n'en fait pas un fait ; la magie
+dramaturge s'y oppose : Julie pense « je sens sa présence », le livre n'en fait pas un fait ; la magie
 n'entre chez Julie qu'en événement (la porte de la demeure, au chapitre 6) ; et Darshan est à Aluva
 dès la page suivante. Décision : pas de geste. Par la fenêtre, les toits de Paris au crépuscule, là
 où le lecteur a vu Darshan danser ; et le compte à rebours change d'unité.
@@ -117,7 +117,7 @@ s'enfonce vers le soleil, les étals à portée de main. Jivan est derrière lui
 voit jamais, on l'entend marcher.
 
 **Temps** : cinq temps. La cavale et l'indifférence des passants ; les fossettes aux marchands ; le
-geste ; l'acquisition, que le texte confirme ; « Le soleil d’orient… » seul, pour que « Jivan
+geste ; l'acquisition, que le texte confirme ; « Le soleil d’orient […] » seul, pour que « Jivan
 s’essouffle » tombe comme un gag ; puis la réplique de Jivan (« Lève le pied, je te prie. »).
 
 **Image** : `marche-aluva`, décor nouveau. Le fond : le « Jardin tropical » à l'encre et à
@@ -141,7 +141,7 @@ texte) ; au clavier, Tab d'une marchandise à l'autre (VoiceOver dit leur nom, c
 Entrée ; bouton « Faire le geste » après 8 s. Mouvement réduit : ni arc ni avancée, l'objet s'efface
 et le compteur monte.
 
-**Effets** : avancée de l'allée à chaque achat ; sur « Le soleil d’orient… », les pas de Jivan
+**Effets** : avancée de l'allée à chaque achat ; sur « Le soleil d’orient […] », les pas de Jivan
 traînent derrière (effet `son`).
 
 **Son** : ambiance « marché », sans aucune voix : le bourdon du tanpura d'Aluva (la continuité avec
@@ -180,7 +180,7 @@ le ciel du marché, en haut à gauche, comme tracée par ses mots.
 
 **Temps** : cinq temps. La boussole affolée (« nous sommes à l’aube d’un monde nouveau qui se verrait
 doté d’une boussole ») ; le nord ; la réplique de Jivan d'un seul temps ; la réponse de Darshan en
-deux (« Elle, dis-tu ? », puis « Celle qui emporte la vacuité du monde… »).
+deux (« Elle, dis-tu ? », puis « Celle qui emporte la vacuité du monde […] »).
 
 **Image** : `marche-aluva`, plan fixe ; une boussole à l'encre d'or, un cercle et une rose des vents à
 peine tracés, l'aiguille à pointe vermillon (la couleur de l'amour).
@@ -226,15 +226,15 @@ une palanquée de légendes, mais je doute que tu souhaites la recevoir à la be
 **Point de vue et plan** : le même plan.
 
 **Temps** : quatre temps, une réplique chacun, sauf celle de Jivan coupée en deux : sa question, puis
-« Le toit du monde… » seul, sur lequel passe l'ombre.
+« Le toit du monde […] » seul, sur lequel passe l'ombre.
 
 **Image** : `marche-aluva`.
 
 **Geste** : aucun.
 
-**Effets** : `nuage` : l'ombre d'un nuage balaie l'allée en trois ou quatre secondes, comme en 2.10,
-et la lumière d'or revient avec « Pour ne rien te cacher, tout est finement programmé ». Mouvement
-réduit : l'image s'assombrit un instant.
+**Effets** : `nuage` : l'ombre d'un nuage balaie l'allée en trois ou quatre secondes, comme en 2.10 ;
+quand Darshan répond (« Pour ne rien te cacher, tout est finement programmé »), la lumière d'or est
+revenue. Mouvement réduit : l'image s'assombrit un instant.
 
 **Son** : marché ; sous l'ombre, le marché baisse d'un ton, puis revient.
 
@@ -242,7 +242,7 @@ réduit : l'image s'assombrit un instant.
 
 **Rimes** : 2.10 (le premier nuage : « Darshan vit en vagabond et ne sait pas encore ou il va
 recevoir Julie ») ; 1.1 (le toit parisien, la voûte) ; 5.1 (les toits vus de la fenêtre de Julie).
-« Je n’ai point laissé le soin à mon père de jouer aux dés » nomme le père en plaisantant : sa
+« je n’ai point laissé le soin à mon père de jouer aux dés » nomme le père en plaisantant : sa
 lumière et son accord restent réservés à sa présence (1.1, 3.10, 7.12).
 
 **À valider par Karl** : rien de nouveau.
@@ -266,8 +266,8 @@ l’Élysée et de la Seine. »
 **Point de vue et plan** : le même plan ; la façade en surimpression dans le ciel, grande, sans cadre,
 aux bords déchirés comme une esquisse.
 
-**Temps** : sept temps : « Tu ne suis rien… Permets-moi de te conter ce qui l’attend. » ; la demeure,
-seule (la façade se dessine) ; Jivan ; « l’artiste peintre en vue » ; « Il a bon goût… », seul,
+**Temps** : sept temps : « Tu ne suis rien […] Permets-moi de te conter ce qui l’attend. » ; la demeure,
+seule (la façade se dessine) ; Jivan ; « un artiste peintre en vue » ; « Il a bon goût […] », seul,
 pour le sourire ; Jivan lève les yeux au ciel (la façade s'évapore) ; le geste, puis les confettis.
 
 **Image** : `marche-aluva` ; la vignette `facade` (33035628, « Style haussmannien », déjà passée à
@@ -281,7 +281,7 @@ confirme. Sans geste : toucher n'importe où, Entrée ; mouvement réduit : troi
 qui s'effacent.
 
 **Effets** : `vignette` tracée (2,5 s : les traits d'encre, puis le lavis couleur de lait) sur « Elle
-va passer la porte marbrée » ; elle reste pendant « l’artiste peintre en vue » et « Il a bon goût » ;
+va passer la porte marbrée » ; elle reste pendant « un artiste peintre en vue » et « Il a bon goût » ;
 sur « Jivan lève les yeux au ciel », elle s'évapore vers le haut (1,5 s), là où il regarde.
 `confettis` (trois).
 
@@ -291,7 +291,7 @@ s'évapore ; le paquet secoué, un froissement de papier.
 **Objets et interface** : sac de Darshan : + confettis (six marchandises en tout).
 
 **Rimes** : 6.3 à 6.5 (la vraie demeure, sa porte, « la clé est dans ma poche ») ; 6.9 (« Théo est un
-ami » : le peintre en vue) ; 6.12 (« la vérité s’expose ») ; 5.11 (les « douceurs » du titre : les
+ami » : le peintre en vue) ; 6.12 (« la vérité s’expose ») ; 5.11 (les « Douceurs » du titre : les
 confettis en sont l'autre moitié) ; 5.1 (la trame de confettis des bandes du titre).
 
 **À valider par Karl** : la façade dessinée dans le ciel ; les trois confettis ; qu'aucune scène ne
@@ -300,8 +300,8 @@ sont ici qu'une vantardise ; l'image ne montre qu'une façade, que le regard de 
 
 ### 5.6 La galerie
 
-**Table ronde** : la galerie est le moment clé du monde de Julie, le seul où l'on « voit » Darshan du
-dehors. Trois débats. Montrer qui ? Aucun visage : la galerie ne montre que ce que le livre décrit,
+**Table ronde** : la galerie est le moment clé du monde de Julie, le seul où l'on aperçoit Darshan
+du dehors. Trois débats. Montrer qui ? Aucun visage : la galerie ne montre que ce que le livre décrit,
 par des objets, des lieux, des détails. Galerie libre ou guidée ? Le designer voulait qu'on la
 fouille ; le gardien du texte rappelle que l'ordre est celui du livre. Décision : un seul geste,
 ouvrir le téléphone en glissant vers le haut (le geste qui le déverrouille), puis la galerie suit la
@@ -317,7 +317,7 @@ photos qui mêlent la légèreté et la maladresse d’un duo d’hurluberlus qu
 **Point de vue et plan** : les yeux de Julie : le lit en plan rapproché, puis l'écran plein cadre ; la
 page devient son téléphone.
 
-**Temps** : quatre temps : le lit, puis le geste ; les bonbons ; « Il découvre la chimie… » (la
+**Temps** : quatre temps : le lit, puis le geste ; les bonbons ; « Il découvre la chimie […] » (la
 patinoire, sur « le cliché voisin ») ; le croque-monsieur.
 
 **Image** : entrée par l'obturateur sur `lit-telephone` (38256669 : coussin fleuri, téléphone, drap
@@ -325,9 +325,9 @@ défait, en noir et blanc). Au geste, l'écran monte du bas et remplit la page :
 d'un téléphone), une barre d'état où se lit, à la place de l'heure, « soixante-douze heures », et une
 grille de vignettes carrées, trois par rangée, en couleurs. La grille ne contient que les clichés du
 livre. Rangée 1 : les bonbons (29360492), la patinoire (repérage ; en attendant, 29630257, les
-lumières d'une nuit d'hiver), le croque-monsieur (6858270). Rangée 2, pour 5.7 : l'égoportrait, les
+lumières d'une nuit d'hiver), le croque-monsieur (6858270). Rangée 2, pour 5.7 : le selfie, les
 lunettes (repérage), la Seine. Plus bas, seule : la vidéo. Un cliché qui s'ouvre glisse de sa vignette
-jusqu'aux deux tiers hauts de la page (transition `glissement`) ; le suivant le remplace. « Le cliché
+jusqu'aux deux tiers hauts de la page (transition `glissement`) ; le suivant le remplace. Le « cliché
 voisin » se voit : les bonbons regagnent la grille, et la vignette d'à côté s'éclaire d'un liseré de
 lumière et grandit un peu. Aucune date, aucun nom d'album, aucun visage ; les images sont
 décoratives pour les lecteurs d'écran (le texte les décrit).
@@ -372,13 +372,13 @@ contre-jour de la lune une ballade romantique en italien. »
 
 **Point de vue et plan** : l'écran du téléphone, plein cadre.
 
-**Temps** : quatre temps : l'égoportrait (« L’angle du téléphone les rapetisse. » et le regard
+**Temps** : quatre temps : le selfie (« L’angle du téléphone les rapetisse. » et le regard
 couleur terre) ; les lunettes ; le chevalet ; la vidéo, puis le geste.
 
-**Image** : entrée par `glissement` depuis la grille de 5.6. L'égoportrait s'ouvre : `deux-flous`
-(34876053), deux silhouettes floues dans une lumière chaude, pris trop près, trop tard le soir, bougé ;
+**Image** : entrée par `glissement` depuis la grille de 5.6. Le selfie s'ouvre : `deux-flous`
+(34876053), deux silhouettes floues dans une lumière chaude : un selfie pris trop près, trop tard le soir, bougé ;
 la couleur même de la photo est « couleur terre », et personne n'y est reconnaissable. Sur « elles
-changent assez régulièrement », la grille défile vite vers le bas et remonte : on « parcourt » les
+changent assez régulièrement », la grille défile vite vers le bas et remonte, comme on parcourt des
 photos ; quand Karl aura fait les trois photos de lunettes, leurs vignettes s'allumeront une à une.
 La Seine : `reflet-paris` (38279684), un lampadaire et des fleurs renversés dans l'eau, déjà comme
 peints ; le chevalet reste hors champ en attendant son repérage. Plus bas, seule sur sa rangée, la
@@ -392,7 +392,7 @@ avance.
 où, Entrée ; bouton « Faire le geste » ; dans la fiche du téléphone, « Lancer la vidéo ». Mouvement
 réduit : l'image ne tremble pas. Consigne : « Touchez la vidéo ».
 
-**Effets** : `cliche` (l'égoportrait, le défilé, la Seine, la vignette de la vidéo) ; `frisson`
+**Effets** : `cliche` (le selfie, le défilé, la Seine, la vignette de la vidéo) ; `frisson`
 discret sur le bouton « Objets » quand Julie parle des lunettes : la fiche des lunettes gagne sa
 phrase (déjà dans objets.ini), et, si Karl l'accepte, « Il met en valeur le regard couleur terre qui
 perce les lunettes du révolu don Juan. » ; `video-lune`. Tant que la ballade joue, une petite note ♪
@@ -435,10 +435,10 @@ comme un air qu'on ne peut plus chasser.
 **Point de vue et plan** : dans le souvenir, les yeux de Julie derrière son téléphone ; la caméra
 avance vers la lune pendant qu'il avance vers elle. Puis la chambre.
 
-**Temps** : cinq temps : « Julie rougit… » et « Elle tient péniblement son téléphone pour filmer la
-scène. » ; « Malgré l’heure… » jusqu'à « sa démonstration vocale » ; « Il est incroyable. Pourquoi tu
+**Temps** : cinq temps : « Julie rougit […] » et « Elle tient péniblement son téléphone pour filmer la
+scène. » ; « Malgré l’heure […] » jusqu'à « sa démonstration vocale » ; « Il est incroyable. Pourquoi tu
 ne trouves pas de garçons normaux hein ? » et la fin de la réplique, en un seul temps ; la mélodie qui
-trotte ; « Difficile de distinguer les moments qu’elle a préférés… ».
+trotte ; « Difficile de distinguer les moments qu’elle a préférés […] ».
 
 **Image** : raccord : la page s'ouvre sur la vidéo en largeur de 5.7, qui s'agrandit jusqu'au plein
 cadre (`souvenir-lune`, 38570570 cadrée en hauteur : la mitre devant la pleine lune) : on entre dans
@@ -454,7 +454,7 @@ d'agrandissement ni de travelling, des fondus.
 **Son** : la ballade sort du haut-parleur et devient pleine et proche : c'est le souvenir. Ambiance
 « rue » la nuit : des pas qui ralentissent et s'arrêtent, qui s'attroupent (« les passants se
 rassemblent »), sans une voix. Sur « Il est incroyable. », la rue s'éteint, la ballade se réduit à un
-bourdonnement, comme entendue à travers un mur. Sur « L’air électrique d’une mélodie trotte… », elle
+bourdonnement, comme entendue à travers un mur. Sur « L’air électrique d’une mélodie trotte […] », elle
 s'anime : même mélodie, plus vive, piquée, et un pied qui bat la mesure (un petit choc sourd sur les
 deux temps forts). Au dernier temps, elle s'amenuise, usée comme par « l’érosion du temps », et
 redevient bourdonnement.
@@ -462,8 +462,8 @@ redevient bourdonnement.
 **Objets et interface** : la note ♪ reste visible tant que la mélodie joue.
 
 **Rimes** : 2.2 (« cet électrochoc si doux » de la rencontre ; ici « L’air électrique ») ; 5.9 (le
-bourdonnement devient clairon) ; 7.10 et 7.16 (la ballade reviendra) ; 4.3 (Julie qui « pianote »
-des messages ; ici elle filme).
+bourdonnement devient clairon) ; 7.10 et 7.16 (la ballade reviendra) ; 4.3 (« mes mains pianotent des messages
+pour Amélie » ; ici, ses mains filment).
 
 **À valider par Karl** : qui dit « Il est incroyable. » ? (Question 1.) Pas de geste sur cette page.
 
@@ -486,8 +486,8 @@ douce. Le lecteur sent deux cœurs s'accorder sous son doigt.
 **Point de vue et plan** : la chambre en noir et blanc, le téléphone posé ; puis en couleurs ; puis, par
 la fenêtre, la lune, dont on s'approche.
 
-**Temps** : huit temps : « La fille que tu étais… » et « Oui c’est vrai, j’ai toujours rêvé de
-lui. » ; « Le voir et me tenir à son bras me dépasse… » ; « Je l’aime et je vais lui dire. », seul ;
+**Temps** : huit temps : « La fille que tu étais […] » et « Oui c’est vrai, j’ai toujours rêvé de
+lui. » ; « Le voir et me tenir à son bras me dépasse […] » ; « Je l’aime et je vais lui dire. », seul ;
 la foudre ; le clairon ; le palpitant et « l’arythmie d’une vie suffisante » ; le geste, puis « Il
 choisit la synchronie d’une dépendance à deux. » ; la locomotive et la lune.
 
@@ -496,7 +496,7 @@ monte de la fenêtre, caresse la page et se retire : la chambre est en couleurs 
 plus chaude qu'en 5.1. Sur « Devenir la locomotive de l’autre », la lune (`lune`, 38674516 : le fin
 croissant du même soir que les toits de 5.1, une photo en hauteur, sans recadrage), puis un lent
 travelling avant de neuf secondes jusqu'à `lune-proche` (zoom 3). C'est la décision prise sur la lune
-« trop petite » : sa petitesse est celle d'un souhait lointain, et le souhait l'approche.
+trop petite de sa photo : sa petitesse est celle d'un souhait lointain, et le souhait l'approche.
 
 **Geste** : `maintenir`, à deux cœurs. Sous le doigt, deux anneaux battent : l'un irrégulier (Julie,
 « l’arythmie »), l'autre régulier et vif (le cœur fébrile de la chamade, au même tempo qu'en 2.2).
@@ -541,7 +541,7 @@ d'un visage à l'autre (le flou de 2.3, dans une autre main). Le calembour de Ka
 
 **Point de vue et plan** : les yeux de Julie : la rue qui se brouille, puis la vitrine en gros plan.
 
-**Temps** : cinq temps : la sortie ; « La rue se fait floue… » jusqu'aux « affects de l’âme » ; « Quel
+**Temps** : cinq temps : la sortie ; « La rue se fait floue […] » jusqu'aux « affects de l’âme » ; « Quel
 serait son meilleur ambassadeur ? » et l'éclair ; « Le chocolat, le café sont-ils des arômes dignes
 de l’amour ? » ; les « autres rivages » et le baba au rhum.
 
@@ -555,7 +555,9 @@ une photo, la métaphore reste au texte.
 **Geste** : aucun. Le lecteur garde son geste pour la buée.
 
 **Effets** : `flou` (la rue) ; `assourdi` (le son de la rue) ; `decor` (la vitrine, après 1,2 s) ; puis
-`flou` par zone, trois fois. Mouvement réduit : chaque mise au point devient un fondu.
+`flou` par zone, trois fois ; sur l'éclair, quand la mise au point s'y pose, un reflet glisse sur son
+glaçage (le clin d'œil à « La foudre »). Mouvement réduit : chaque mise au point devient un fondu,
+sans reflet.
 
 **Son** : « rue » : les pas pressés de Julie ; au flou, le son s'assourdit ; la clochette de la porte,
 et l'ambiance « pâtisserie » : le ronron de la vitrine réfrigérée.
@@ -586,14 +588,14 @@ rouge du monde de Julie, qui ne la quittera plus.
 perlées.
 
 **Temps** : six temps : « Julie s’égare dans ses songes. » (la buée monte) ; le geste, puis « Son
-imagination… cerclé de boudoirs » ; « À sa surface se perdent trois feuilles de sucres… » ; l'habit de
+imagination […] cerclé de boudoirs » ; « À sa surface se perdent trois feuilles de sucres […] » ; l'habit de
 soirée et l'étendard ; le ticket ; « Elle le récupérera à onze heures et son rendez-vous est à treize
 heures. »
 
 **Image** : le même plan que la fin de 5.10, la vitrine. La buée monte du bas et voile tout ; sous la
 buée essuyée, la Charlotte : un cercle de framboises, des boudoirs, trois feuilles de sucre, un ruban
 de satin vermillon (repérage) ; en attendant, `dessert` (29188525, la tarte aux pommes de Karl, un
-cercle rouge dans sa pâte). Sur « À sa surface… », lent rapprochement de six secondes (`dessert-proche`)
+cercle rouge dans sa pâte). Sur « À sa surface […] », lent rapprochement de six secondes (`dessert-proche`)
 vers les feuilles de sucre, où les gouttes accrochent la lumière.
 
 **Geste** : `essuyer`. Le doigt laisse une trace nette dans la buée (un pinceau large de 90 unités) ;
@@ -631,7 +633,7 @@ reconnaissable.
 |---|---|---|---|---|---|
 | 5.1, 5.9 | 10879428 | Couette blanche sur un lit devant des rideaux gris | photo (`chambre`, existant) | x 0,45 | la chambre de 4.7 : raccord ; la couleur qui revient après l'éclair |
 | 5.1 | 38674517 | Silhouettes de toits et d'antennes télé sur un ciel pastel au crépuscule | photo (`toits-fenetre`, nouveau) | x 0,55 | une vraie vue de fenêtre (le montant flou au bord) ; les toits où danse Darshan ; le pastel du chapitre |
-| 5.2 à 5.5 | 34342144 | Jardin tropical | encre, fond du dessin `marche-aluva` | x 0,5 | une allée sous les palmes, « chatoyant » : Aluva plutôt que Niort |
+| 5.2 à 5.5 | 34342144 | Jardin tropical | encre, fond du dessin `marche-aluva` | x 0,5 | une allée sous les palmes, lumineuse et colorée : Aluva plutôt que Niort |
 | 5.2 | 35104311 | Gros plan d'une tête de chameau au licol de cuir près d'une couverture tissée colorée | modèle (la couverture seule) | — | zigzags et paillettes : les « tapisseries aux couleurs chatoyantes » |
 | 5.2 | 29136749 | Tapis | modèle | — | des feuilles séchées : le thé en vrac |
 | 5.5 | 33035628 | Style haussmannien | encre (`facade`, existant) | x 0,2 | la façade « couleur du lait », dessinée dans le ciel |
@@ -639,7 +641,7 @@ reconnaissable.
 | 5.6 | 29360492 | Bonbon vosgien | photo (`bonbons`), vignette carrée | x 0,5 | bariolés et sucrés (des éclats plutôt que des sphères : repérage facultatif) |
 | 5.6 | 29630257 | Nuit de décembre | photo (`patinoire`, provisoire) | x 0,5 | des lumières d'hiver, en attendant la patinoire |
 | 5.6 | 6858270 | Sandwich baguette jambon-fromage sur une assiette en céramique grise | photo (`croque`, existant) | x 0,5 | le croque-monsieur partagé |
-| 5.7 | 34876053 | Silhouettes floues et abstraites de deux personnages dans une lumière chaude tamisée | photo (`deux-flous`, existant) | — | l'égoportrait trop proche, couleur terre ; rime avec 2.3 |
+| 5.7 | 34876053 | Silhouettes floues et abstraites de deux personnages dans une lumière chaude tamisée | photo (`deux-flous`, existant) | — | le selfie trop proche, couleur terre ; rime avec 2.3 |
 | 5.7 | 38279684 | Reflet artistique de fleurs et d'un lampadaire dans l'eau, effet onirique sous un ciel dégagé | photo (`reflet-paris`, existant) | x 0,5 | la Seine, déjà comme peinte ; le Paris que Darshan voyait dans le Periyar (1.7) ; en attendant le chevalet |
 | 5.7, 5.8 | 38570570 | Pleine lune se levant derrière des cheminées, ciel nocturne violet | photo (`video-lune` en largeur ; `souvenir-lune`, `souvenir-lune-proche`) | largeur entière ; x 0,42 ; x 0,42, y 0,55, zoom 2,2 | « à contre-jour de la lune » : la mitre en silhouette devant la lune |
 | 5.9 | 38674516 | Fin croissant de lune brillant dans un ciel bleu crépusculaire vertical | photo (`lune`, qui remplace 13102252 ; `lune-proche`) | photo entière ; x 0,67, y 0,30, zoom 3 | le même soir que les toits de 5.1 ; en hauteur, sans perte ; un croissant assez grand pour qu'on s'en approche |
@@ -738,7 +740,8 @@ réduit.
   cadrage du décor `i` (la même photo, plus serrée), en `duree` ; à la fin, le décor `i`, net, remplace
   l'image agrandie. Mouvement réduit : un fondu.
 - **`flou`, avec `zone`** (5.10) : la photo nette seulement dans un cercle [x, y, rayon], le reste
-  flou ; d'une zone à l'autre, la mise au point glisse en 0,8 s. **`decor`, avec `delai`** : le plan
+  flou ; d'une zone à l'autre, la mise au point glisse en 0,8 s ; `reflet=True` : un reflet de lumière
+  glisse sur la zone nette quand la mise au point s'y pose (0,6 s). **`decor`, avec `delai`** : le plan
   suivant vient après `delai` millisecondes.
 - **`buee`, nouveau, et `essuyer`, précisé** (5.11) : la buée monte du bas en 4 s sur le décor
   courant ; `essuyer` : le doigt efface la buée sur un pinceau de 90 unités et découvre le décor
@@ -835,7 +838,7 @@ SCENES_CH5 = {
                             "Il faut peut-être chercher"]},
               moments=[[E("flou"), E("assourdi"), E("decor", i=1, delai=1200),
                         E("son", ambiance="patisserie", effet="clochette", delai=1200)],
-                       E("flou", zone=[420, 640, 170]),
+                       E("flou", zone=[420, 640, 170], reflet=True),
                        E("flou", zone=[820, 760, 170]),
                        E("flou", zone=[600, 1000, 190])]),
     "5.11": S(["canneles", "dessert", "dessert-proche"],
@@ -924,12 +927,12 @@ TABLEAUX_CH5 = [
       note="Seul endroit où l'on voit Darshan, par ce qui l'entoure (bonbons, glace, croque-monsieur), jamais son "
            "visage ; la galerie ne montre que les clichés que le livre décrit. 29630257 en attendant la patinoire."),
     T("5.7", "Le révolu don Juan", (124, "L’angle du téléphone"), "La galerie du téléphone", "Julie", "glissement",
-      "L'égoportrait flou ; les lunettes qui changent ; la Seine ; la vidéo sous la pleine lune.",
+      "Le selfie flou ; les lunettes qui changent ; la Seine ; la vidéo sous la pleine lune.",
       photos=[(34876053, "photo"), (38279684, "photo"), (38570570, "photo")],
       gestes=[("une vidéo montre Darshan chanter à contre-jour de la lune",
                "toucher la vidéo : elle se lance, la ballade naît dans le haut-parleur du téléphone", "toucher")],
       moments=[("L’angle du téléphone les rapetisse",
-                "l'égoportrait s'ouvre : deux silhouettes floues dans une lumière couleur terre"),
+                "le selfie s'ouvre : deux silhouettes floues dans une lumière couleur terre"),
                ("elles changent assez régulièrement", "la galerie défile vite ; dans le sac de Darshan, les lunettes frémissent"),
                ("Darshan est représenté face à un chevalet le long de la Seine", "le cliché de la Seine s'ouvre"),
                ("Plus loin dans la galerie du téléphone", "la vignette de la vidéo paraît : la pleine lune derrière les cheminées")],
@@ -964,7 +967,7 @@ TABLEAUX_CH5 = [
       "La rue le soir, qui se brouille ; la vitrine des gâteaux, où la mise au point hésite.",
       photos=[(16592454, "photo"), (10369144, "photo")],
       moments=[("La rue se fait floue", "la rue se brouille, le bruit s'assourdit ; les gâteaux restent nets"),
-               ("L’éclair a-t-il la carrure de porter ses sentiments", "mise au point sur l'éclair"),
+               ("L’éclair a-t-il la carrure de porter ses sentiments", "mise au point sur l'éclair ; un reflet glisse sur son glaçage"),
                ("Le chocolat, le café sont-ils des arômes dignes de l’amour",
                 "la mise au point glisse vers le chocolat et le café"),
                ("Un baba au rhum doté d’un parfum d’Antilles", "la mise au point cherche plus loin : le baba au rhum")],
@@ -1012,8 +1015,9 @@ A_CONSTRUIRE_CH5 = [
 ```
 
 Chaque phrase citée par un geste ou un moment figure mot pour mot dans le texte de son tableau
-(vérifié) ; la note de 5.1 et celle de 5.3 citent des mots du livre (« quatre jours »,
-« soixante-douze heures », « Oui… Oui… Tu… Elle… »).
+(vérifié) ; les descriptions des moments de 5.1 et 5.11 et la note de 5.3 citent des mots du livre
+(« quatre jours », « soixante-douze heures », « onze heures », « treize heures », « Oui… Oui… Tu…
+Elle… »).
 
 ### 7.3 `outils/darshan/interface.ini`
 
