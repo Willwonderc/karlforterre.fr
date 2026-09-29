@@ -64,8 +64,10 @@ dans le dépôt Willwonderc/PexelsWillwonder.
   chantiers I1 à I6 dans `docs/plan-darshan-interface.md` ; découpage de tout le livre en
   85 tableaux (gestes, objets, transitions, photos de Karl, repérages) dans
   `docs/darshan-decoupage.md`, écrit par `outils/darshan/decoupage.py` (modifier le
-  programme, jamais le document) ; prototype (extrait jouable, EPUB et web, banc d'essai des
-  transitions) dans `outils/darshan/`, relié à aucune page. Le texte y est lu dans
+  programme, jamais le document) ; mise en scène (direction de création, puis traitement
+  narratif de chaque scène par une équipe créative) dans `docs/darshan-mise-en-scene/` ;
+  prototype (extrait jouable, EPUB et web, banc d'essai des transitions) dans
+  `outils/darshan/`, relié à aucune page. Le texte y est lu dans
   `livres/darshan.epub`, jamais recopié ni modifié ; les coquilles de l'annexe A attendent
   l'accord de Karl.
 - Section Photographie : elle lit à chaque visite `https://photos.karlforterre.fr/apercu.json`,
