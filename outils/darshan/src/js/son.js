@@ -164,11 +164,11 @@
         }, 2700);
         ambiance = null;
       }
-      if (!nom || !ambiances[nom]) return;
+      if (!nom || !ambiances.hasOwnProperty(nom)) return;
       var g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.connect(monde);
       g.gain.linearRampToValueAtTime(1, t + 3);
       ambiance = { nom: nom, gain: g, arrets: [] };
-      try { ambiance.arrets = ambiances[nom](g) || []; } catch (e) { /* une ambiance ratée se tait */ }
+      try { var r = ambiances[nom](g); if (r && r.forEach) ambiance.arrets = r; } catch (e) { /* une ambiance ratée se tait */ }
     }
     function appliquerFiltre(nom, duree) {
       var t = ctx.currentTime, f = nom === 'assourdi' ? ASSOURDI : OUVERT;
