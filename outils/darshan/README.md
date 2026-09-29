@@ -28,6 +28,12 @@ des fondations, à la demande de Karl. Ce qui est en place :
 | `build.py` | Réécrit pour les 85 pages : 377 temps, 67 gestes, effets, sacs et portes calculés page après page, vérifications. Il attend le nouveau moteur. |
 | `src/js/` | Le nouveau moteur, en fragments : seul `base.js` est écrit. |
 | `decors.py` | Fait. Fabrique les décors en 1600 × 2400 (WebP) : `python3 outils/darshan/decors.py [noms]`, ou `couverture`. 63 décors sur 72 sont dans `src/img/decors/` (20 Mo) : toutes les photos et toutes les encres. |
+| `classique.py` | Fait, à vérifier. L'EPUB classique (refusionnable), aux mentions de Karl, texte vérifié au caractère près. Il attend la couverture `src/img/couverture.jpg` ; ensuite : EPUBCheck, Ace, captures. Son en-tête dit où il en est et ce que Karl doit trancher (colophon, libellés, « nouvelle » ou « novella », langue de दर्शन, date d'édition, ISBN). |
+
+À corriger pour les deux éditions : les polices allégées de `src/fonts/` n'ont pas le
+« ā » de « mudrā » (U+0101, vérifié le 29 septembre ; il manquait déjà dans l'EPUB de
+2023). Refaire l'allègement d'Amiri (romain et italique) en l'ajoutant ; penser aussi à
+des versions TTF pour les liseuses qui ignorent le WOFF2.
 
 Pour les décors, il reste :
 - **les 9 dessins** de `art.py` (local-nuit, mur-terre, cosmos, pekin, desert-nuit,
