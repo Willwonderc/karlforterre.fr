@@ -96,7 +96,9 @@ def source(numero):
     cible = IMG / f"pexels-{numero}.jpg"
     if cible.exists():
         with Image.open(cible) as im:
-            if min(im.size) >= 2400:
+            # trop petit seulement s'il vient d'images.py (2 000 pixels de haut ou de large) ;
+            # une photo petite à l'origine reste telle quelle
+            if min(im.size) >= 2400 or 2000 not in im.size:
                 return cible
         cible = IMG / f"pexels-{numero}-h3600.jpg"
         if cible.exists():

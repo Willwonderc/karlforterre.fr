@@ -27,6 +27,39 @@ des fondations, à la demande de Karl. Ce qui est en place :
 | `interface.ini` | Fait, à valider par Karl. Tous les textes d'interface : consignes des 67 gestes, boutons, menu, carnet des portes. |
 | `build.py` | Réécrit pour les 85 pages : 377 temps, 67 gestes, effets, sacs et portes calculés page après page, vérifications. Il attend le nouveau moteur. |
 | `src/js/` | Le nouveau moteur, en fragments : seul `base.js` est écrit. |
+| `decors.py` | Fait. Fabrique les décors en 1600 × 2400 (WebP) : `python3 outils/darshan/decors.py [noms]`, ou `couverture`. 63 décors sur 72 sont dans `src/img/decors/` (20 Mo) : toutes les photos et toutes les encres. |
+
+Pour les décors, il reste :
+- **les 9 dessins** de `art.py` (local-nuit, mur-terre, cosmos, pekin, desert-nuit,
+  desert-jour, papier-lettre, toiles, fenetre) ; `decors.py` les attend sous les noms de
+  fonctions de `livre.py`, et passe à `fenetre` l'adresse de la photo par `image=` ;
+- **la couverture** (code écrit, jamais lancé) ;
+- **des recadrages à corriger dans `livre.py`**, puis refaire ces décors. Rappel : x et y
+  placent le cadre dans la photo (0 : bord gauche ou haut, 0,5 : centre, 1 : bord droit
+  ou bas). Corrections proposées :
+
+  | Décor | x actuel → proposé | Pourquoi |
+  |---|---|---|
+  | portes-3 | 0,5 → 0,2 | la porte de la cour est coupée |
+  | phare | 0,5 → 0,17 | le phare est coupé en deux |
+  | amoureux | 0,32 → 0,15 | l'homme au pull rouge est hors cadre |
+  | lit-telephone | 0,5 → 0,2 | le téléphone est coupé |
+  | banquise | 0,55 → 0,84 | le voilier est coupé |
+  | rochers | 0,5 → 0,75 | l'empilement de rochers est coupé |
+  | rocaille | 0,62 → 0,45 | pour centrer l'arche |
+  | parvis | 0,55 → 0,4 | les flèches touchent le bord |
+  | marche | 0,5 → 0,62 | pour centrer le pignon vitré |
+  | rue-vide | 0,72 → 0,45 (facultatif) | pour centrer la rue |
+
+  « graffiti » : « je t'aime » ne tient pas en 2:3 (x = 0,95 montre « aime ») : à décider
+  avec Karl. « lune » : le croissant est minuscule ; zoom d'environ 1,8 à centrer sur lui.
+- **les points chauds** des gestes à relever sur les images : seule la porte du père est
+  relevée (lanterne vers (360, 850), porte de x 340 à 808 et de y 695 à 1680, poignée vers
+  (760, 1200)) ; la cible de 6.4 sur « porte-bleue » semble trop à droite ;
+- **des retouches** : « portes-3 » trop sombre (l'éclaircir avant l'encre, dictionnaire
+  `RETOUCHES_ENCRE`) ; « periyar-soir » trop brun (plus de rose et de violet) ; neuf
+  photos dépassent 450 Ko (campagne, banc, villandry, rocaille, pave, fantomes, graffiti,
+  verdure, amoureux) : baisser leur qualité vers 75, ou les accepter.
 
 Tant qu'un fragment du moteur manque, `build.py` s'arrête sur un message clair.
 L'extrait jouable du 28 septembre se refabrique avec la version précédente du programme
