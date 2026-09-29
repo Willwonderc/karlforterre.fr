@@ -21,10 +21,12 @@ pouvoirs prennent un sens : son toucher fait naître Darshan (3.2) ; il plie l'e
 reçoit le regard (3.4) ; il fait de ses deux pouces le sceau du mudrā (3.9), respire avec Darshan
 (3.10) et tend la main vers la seule porte qu'il ne sait pas ouvrir (3.11). Deux choses naissent :
 au carnet, l'étoile de la porte du père, à part, hors de la carte ; au son, l'accord du père,
-entendu une première fois au jour de la porte du pigeonnier (1.3), qui se révèle ici comme la voix
-de cette lumière et reviendra au chapitre 7. L'émotion va de la solennité émerveillée à la patience
-et au rire, puis à l'extase et à la perte, enfin à la fièvre et à la candeur. Rimes : l'appel
-« Papa, où es-tu ? » (1.1) trouve son « Tu es là ! » (3.11) ; les deux vers annoncent l'échec du
+entendu une première fois au jour de la porte du pigeonnier (1.3), qui se révèle ici comme le son
+de cette lumière et reviendra au chapitre 7. Le père, lui, ne dit rien : il ne se montre que par sa
+lumière, sa lanterne et sa porte. L'émotion va de la solennité émerveillée à la patience et au
+rire, puis à l'extase et à la perte, enfin à la fièvre et à la candeur. Rimes : l'appel de Darshan à
+son père, « Papa, où es-tu ? » (1.1), resté sans réponse, devient devant la porte « Tu es là ! »
+(3.11), que Darshan pense et que personne ne dit ; les deux vers annoncent l'échec du
 chapitre 6 (la clé de la sincérité manque) et le « Julie aime Darshan et Darshan aime Julie » de
 7.11 (la réciprocité) ; la porte, sa lanterne et son accord reviennent quand la porte perce le
 trottoir de la rue de Rungis (7.12) ; les « quatre jours » de Darshan (3.14) sont ceux de Julie
@@ -89,7 +91,8 @@ dessiner une porte ; la barque n'est qu'un trait d'encre minuscule, qu'on remarq
   « conte », voir 6) : c'est la voix du conte, jusqu'à 3.5. Les étoiles du ciel ont le dessin de
   celles du carnet : le lecteur reconnaît son carnet dans le ciel de la légende.
 - **Rimes** : le poème d'ouverture (« la course des astres ») : même voix, celle du conte ; la
-  petite barque du Periyar, dans le décor des scènes de Jivan (1.5 à 1.9) ; « les astres sont pris dans leurs cycles » (7.16) ;
+  petite barque du Periyar, dans le décor des scènes de Jivan (1.5 à 1.9) ; « les astres sont
+  pris dans leurs cycles » (7.16) ;
   les étoiles du carnet, qui s'éteindront en 7.14.
 - **À valider par Karl** : la Voie lactée de Galice pour le ciel de la légende, plutôt que le ciel
   du poème d'ouverture, dont la Voie lactée est trop pâle pour porter la barque.
@@ -233,7 +236,9 @@ Saint-André au-dessus de Niort (le découpage actuel), ou un vrai parvis, vu de
 les portails. Décision : le parvis vu d'en bas, comme par celui qui y vit, au matin : la cathédrale
 de Poitiers de Karl. Le directeur artistique voulait finir sur une page de papier blanc ; le
 monteur la réserve à la fin du livre, quand l'encre se retire du monde : ici, la dernière phrase
-reste seule, et l'on entend une plume.
+reste seule, et l'on entend une plume. Le dramaturge proposait qu'une étoile brille sur « où
+es-tu ? » ; refusé : le père ne parle jamais et ne répond pas à cet appel ; la question reste dans
+le ciel du matin, sans rien qui lui réponde.
 
 - **Intention** : au sommet de la légende, la foi de Darshan et sa solitude ; le conte lui cède la
   parole, et sa première question est celle du toit de Paris : où es-tu ?
@@ -249,17 +254,17 @@ reste seule, et l'on entend une plume.
   jour. Raccord de sortie : les coups de pinceau de la transition encre (3.6) : la vie s'écrit.
 - **Geste** : aucun.
 - **Effets** : « Croire aux lendemains qui chantent » : l'aube monte sur la façade (le même effet
-  qu'au dernier vers du poème d'ouverture). « où es-tu » : dans le ciel encore pâle, l'étoile du
-  matin brille une fois, quand le lecteur arrive à la question (2,5 s après l'ouverture du temps),
-  puis s'efface dans le jour, comme une étoile répondait au « Papa, où es-tu ? » de 1.1. « C'est
-  ici que j'écris ma vie » : rien à l'image.
+  qu'au dernier vers du poème d'ouverture) ; une seule étoile reste dans le ciel pâle, l'étoile du
+  matin, et s'efface lentement dans le jour (20 s). « où es-tu ? » : rien ; la coupe laisse la
+  question seule au bout de son temps. « C'est ici que j'écris ma vie » : rien à l'image.
 - **Son** : cosmos, qui s'éclaircit ; un oiseau, une phrase de trois notes, à l'aube ; une plume qui
   gratte le papier (0,8 s) sur la dernière phrase.
 - **Objets et interface** : rien.
-- **Rimes** : « Papa, où es-tu ? » (1.1), puis « Tu es là ! » (3.11) : l'appel, trois fois dans le
-  livre ; l'aube du poème d'ouverture ; l'étoile du matin, que Darshan nommera : « Julie est mon
-  nord, mon étoile du matin » (5.3) ; « celui qui a fait mon sort », à qui il dira enfin « Père, je
-  suis sûr que vous m'entendez » (7.14).
+- **Rimes** : l'appel de Darshan à son père, toujours sans réponse : « Papa, où es-tu ? » (1.1),
+  « où es-tu ? » ici, « Tu es là ! » devant la porte (3.11) ; l'aube du poème d'ouverture ;
+  l'étoile du matin, dont Darshan fera le nom de Julie : « Julie est mon nord, mon étoile du
+  matin » (5.3) ; « celui qui a fait mon sort », à qui il dira enfin « Père, je suis sûr que vous
+  m'entendez » (7.14).
 - **À valider par Karl** : la cathédrale de Poitiers pour les parvis ; l'aube et l'oiseau pour
   les « lendemains qui chantent », qu'il reconnaîtra ; l'étoile du matin, qui annonce 5.3.
 
@@ -412,7 +417,7 @@ designer sonore impose le silence d'un espace « dépourvu d'air » : seul s'y e
 père, celui du jour de la porte du pigeonnier.
 
 - **Intention** : l'extase : le lecteur respire avec Darshan, quitte le monde et voit naître de la
-  nuit la lumière qui l'attend depuis toujours.
+  nuit la lumière qu'il cherche depuis toujours.
 - **Phrase-clé** : « Du noir vient la couleur. »
 - **Point de vue et plan** : subjectif. Le fleuve du soir ; un halo d'ombre qui se referme ; le
   regard qui bascule vers le haut et flotte ; le noir ; un point de couleur ; la lanterne, en haut
@@ -480,24 +485,26 @@ le stade de murmure » ; aucun son ne les accompagne.
 - **Image** : `porte-pere`, sa lanterne allumée. À la fin : le noir, une étincelle.
 - **Geste** : « Tendez la main vers la porte » : glisser vers le haut, du bas de la page vers la
   porte ; la main d'or suit le doigt, de plus en plus lentement, et s'arrête à un doigt du bois ;
-  si le lecteur insiste, l'air devant la porte ondule en cercles, les ornements les plus proches
-  brillent davantage, rien ne cède ; au lâcher, la main redescend. Équivalent : un toucher fait
+  la main s'éclaire à mesure qu'elle approche de la lanterne ; si le lecteur insiste, l'air devant
+  la porte ondule en cercles, et rien ne cède ; la porte ne répond pas ; au lâcher, la main
+  redescend. Équivalent : un toucher fait
   monter la main seule jusqu'à la limite ; Entrée ; en mouvement réduit, la main paraît à la
   limite, sans ondes.
 - **Effets** : « Tu es là » : la pensée, en italique, s'éclaire d'or, comme « Papa, où es-tu ? »
   en 1.1 ; pas un son. « La lueur de la lanterne faiblit » : la lanterne faiblit (2,5 s), puis la
   porte s'en va « en se drapant de l'inconnu » : un voile noir descend sur elle de haut en bas
-  (2 s), les traits d'or s'éteignent les derniers ; il ne reste que la flamme, le point orange du début. « Darshan se
-  voit happé… » : ce point file vers le bouton Carnet (0,6 s) et s'y range, en haut, hors de la
+  (2 s), les traits d'or s'éteignent les derniers ; il ne reste que la flamme, le point orange du
+  début. « Darshan se voit happé… » : ce point file vers le bouton Carnet (0,6 s) et s'y range, en haut, hors de la
   carte : l'étoile à part ; au même instant, l'air revient d'un coup.
-- **Son** : l'accord du père, tenu ; quand la main atteint sa limite, sa note la plus haute enfle un
-  peu ; pendant les pensées, rien ; l'accord s'éteint avec la lanterne (3 s), la note haute la
-  dernière ; « happé » : une aspiration d'air brusque (0,6 s) : l'air revient.
+- **Son** : l'accord du père, tenu, égal : il ne réagit ni à la main ni aux pensées ; pendant les
+  pensées, rien d'autre ; l'accord s'éteint avec la lanterne (3 s), la note haute la dernière ;
+  « happé » : une aspiration d'air brusque (0,6 s) : l'air revient.
 - **Objets et interface** : carnet : + la porte du père, étoile à part, cerclée (vue, pas
   franchie), sans lieu ; sa fiche porte le libellé déjà prévu, « Une porte inconnue, à la lanterne
   de bois », et les phrases déjà lues (voir 7.4).
-- **Rimes** : « Papa, où es-tu ? » (1.1) → « Tu es là ! » ; l'appel sans réponse (6.11 : « Rien ne
-  se passe. ») ; la paume posée sur l'éternel bois (7.13) : là, il touche ; les étoiles du carnet,
+- **Rimes** : « Papa, où es-tu ? » (1.1) → « Tu es là ! » : Darshan, les deux fois ; le père ne
+  répond que par sa lumière, et elle s'éteint ; l'appel sans réponse (6.11 : « Rien ne se
+  passe. ») ; la paume posée sur l'éternel bois (7.13) : là, il touche ; les étoiles du carnet,
   qui s'éteindront en 7.14, celle-ci avec elles.
 - **À valider par Karl** : la main qui s'arrête à un doigt du bois, plutôt que la porte qui recule ;
   l'étoile à part, cerclée.
@@ -530,34 +537,38 @@ réponse. Le monteur garde le décor du soir de 3.9 : on revient exactement où 
 
 ### 3.13 Le véritable amour
 
-**Table ronde** : la règle de tout le livre est dite ici. Le designer d'interaction voulait faire
-battre l'étoile du père au carnet ; le directeur artistique préfère une image dans le monde : la
-première étoile du soir paraît au-dessus du Periyar, en haut au milieu, comme l'étoile du père en
-haut du carnet. Décision : l'étoile du soir ; la fiche de la porte du père reçoit la phrase sans
-bruit.
+**Table ronde** : la règle de tout le livre est dite ici, « avec candeur » : c'est la lecture que
+Darshan fait du poème et de sa vision, et Jivan en doute. Le directeur artistique proposait qu'une
+première étoile du soir paraisse sur la phrase ; refusé : ce serait un signe du père qui confirme
+la règle, alors que le père ne se montre que par la lumière de sa lanterne et sa porte, et que le
+livre laisse la règle à la candeur de Darshan (la prière de 7.14 la renversera). Décision : aucun
+effet à l'image ; la règle entre sans bruit au carnet, dans la fiche de la porte du père, et le
+bouton Carnet luit une fois.
 
-- **Intention** : la promesse, dite avec candeur ; le lecteur tient désormais l'enjeu du livre :
-  l'amour ouvrira la porte.
+- **Intention** : la promesse, dite avec candeur ; le lecteur tient désormais l'enjeu du livre, tel
+  que Darshan le comprend : l'amour ouvrira la porte.
 - **Phrase-clé** : « Cette porte s’ouvrira à moi quand j’aurai trouvé le véritable amour. »
 - **Point de vue et plan** : le même plan ; le ciel du soir.
 - **Temps** : les répliques ; la phrase-clé est un temps à elle seule.
 - **Image** : `periyar-soir`.
 - **Geste** : aucun.
-- **Effets** : « Cette porte s'ouvrira à moi… » : une étoile paraît dans le ciel orangé (2 s) et
-  reste jusqu'à la fin du chapitre : la même que l'étoile du matin de 3.5.
+- **Effets** : « Cette porte s'ouvrira à moi… » : le bouton Carnet luit une fois (0,6 s) : la fiche
+  de la porte du père a reçu la phrase. Rien d'autre : ni étoile ni accord ; le père ne confirme
+  rien.
 - **Son** : le Periyar du soir, les grillons ; le couteau, plus lent.
-- **Objets et interface** : la fiche de la porte du père reçoit la règle, une fois lue.
+- **Objets et interface** : la fiche de la porte du père reçoit la règle, une fois lue ; le lecteur
+  qui ouvre le carnet la trouve sous l'étoile à part.
 - **Rimes** : « Je ne souhaite que m'éprendre du véritable amour et plus encore rejoindre mon
   aïeul » (1.8) ; la prière (7.14), qui renverse la règle : il ne demandera plus à quitter le
-  monde, mais à y rester, mortel ; l'étoile du matin (3.5) et « mon étoile du matin » (5.3) ;
-  « près de vingt, non de trente ans » : Jivan vieillit (1.8).
-- **À valider par Karl** : l'étoile du soir.
+  monde, mais à y rester, mortel, et remerciera son père de lui avoir accordé « ce dont j'avais
+  besoin et non ce dont je rêvais » ; « près de vingt, non de trente ans » : Jivan vieillit (1.8).
+- **À valider par Karl** : la règle au carnet, sans autre signe.
 
 ### 3.14 Quatre jours
 
 **Table ronde** : semer aux quatre coins de la page, comme le prévoyait le découpage, risquait de
-tourner la page : certaines liseuses tournent quand on touche les bords. Décision : une rose des vents dessinée
-en or au milieu du ciel, quatre points bien à l'intérieur de la page ; chaque toucher y sème une
+tourner la page : certaines liseuses tournent quand on touche les bords. Décision : une rose des
+vents dessinée en or au milieu du ciel, quatre points bien à l'intérieur de la page ; chaque toucher y sème une
 graine que le vent emporte vers le bord. Les « quatre jours » se posent en haut de la page : Julie
 tient le même compte au chapitre suivant.
 
@@ -565,7 +576,7 @@ tient le même compte au chapitre suivant.
 - **Phrase-clé** : « Ainsi l’extraordinaire arpenteur de l’humanité sema aux quatre vents les graines de sa libération sans attendre. »
 - **Point de vue et plan** : le même plan ; au dernier temps, la rose des vents d'or s'y dessine.
 - **Temps** : les répliques ; le geste avant la dernière phrase.
-- **Image** : `periyar-soir`, l'étoile du soir déjà là.
+- **Image** : `periyar-soir`, le soir plus sombre.
 - **Geste** : « Semez aux quatre vents » : quatre points d'or, au nord, à l'est, au sud et à
   l'ouest de la rose ; à chaque toucher, une graine d'or part vers le bord correspondant, portée
   par une rafale ; dans n'importe quel ordre, vite, « sans attendre ». Équivalent : quatre touchers
@@ -676,9 +687,11 @@ son casque, reste hors du cadre retenu : à vérifier sur la planche des décors
 - `lentilles` et `regard` (3.4) : deux décors existants (`toits`, `periyar`) paraissent en fondu
   dans les deux verres ; le bouton Objets luit une fois ; la fiche des lunettes gagne « Regarder à
   travers ».
-- `astre` (3.5, 3.13, 3.14) : une étoile blanc-or à quatre branches ; `eclat` : elle brille une
-  fois et s'efface (0,8 s) ; `paraitre` : elle s'allume (2 s) et reste ; `discret` : elle est déjà
-  là ; `delai` : attente avant l'effet, le temps de lire jusqu'à la phrase.
+- `aube` avec `etoile` (3.5) : l'aube du poème d'ouverture ; une seule étoile blanc-or, l'étoile
+  du matin, reste au point donné et s'efface en 20 s. Aucun effet n'accompagne « où es-tu ? » :
+  la question reste sans réponse.
+- `carnet` (3.13) : le bouton Carnet luit une fois (0,6 s), sans son : la fiche d'une porte a reçu
+  une phrase.
 - `son` : un son ponctuel, rattaché à une phrase (`effet="plume"`…). `couche` : une couche sonore
   qu'on allume ou éteint à une phrase (`couche="couteau"`, `couche="vent"`).
 - `calligraphie` (3.7) : le paragraphe quitte le panneau et s'écrit sur le décor, au pinceau, de
@@ -786,8 +799,7 @@ SCENES_CH3 = {
              moments=[E("fonte", objet="lunettes", legende=True),
                       [E("lentilles", gauche="toits", droite="periyar"), E("regard")]]),
     "3.5": S("parvis", texte="bas conte", coupes={71: ["Quand je dors", "Mes frères les hommes", "C’est ici que j’écris ma vie"]},
-             moments=[[E("aube"), E("son", effet="oiseau")],
-                      E("astre", x=930, y=260, eclat=True, delai=2500),
+             moments=[[E("aube", etoile=[930, 260]), E("son", effet="oiseau")],
                       E("son", effet="plume")]),
     "3.6": S(["livres-poussiere", "pekin"],
              gestes=[G("glisser", sens="haut", effets=[E("poussiere", envol=True)])],
@@ -822,8 +834,8 @@ SCENES_CH3 = {
               extra={"Le chemin vers ton père": E("couche", couche="couteau", oui=True)},
               moments=[[E("etincelles"), E("couche", couche="couteau", oui=False)]]),
     "3.13": S("periyar-soir", debut=[E("couche", couche="couteau", oui=True, lent=True)],
-              moments=[E("astre", x=600, y=240, paraitre=True)]),
-    "3.14": S("periyar-soir", debut=[E("astre", x=600, y=240, discret=True), E("couche", couche="couteau", oui=True)],
+              moments=[E("carnet", id="pere")]),
+    "3.14": S("periyar-soir", debut=[E("couche", couche="couteau", oui=True)],
               gestes=[G("semer", cibles=[[600, 360, 110], [960, 720, 110], [600, 1080, 110], [240, 720, 110]],
                         effets=[E("couche", couche="vent", oui=True)])],
               moments=[E("compte", valeur="quatre jours")]),
@@ -862,7 +874,7 @@ D4_A_CONSTRUIRE = [
     "ciel de la légende : étoiles-portes, barque qui dérive, étoiles qui s'alignent en porte",
     "remontée des âges : les portes de Karl de plus en plus vite ; trou qui devient entrée",
     "scène « plier » : lunettes qui fondent en clé, ciel qui se plie, Paris et le Periyar dans les verres",
-    "aube, étoile du matin, étoile du soir",
+    "aube et étoile du matin",
     "poussière qui retombe (3.3), poussière qu'on souffle (3.6)",
     "calligraphie des deux vers au pinceau",
     "porte battante qui bat deux fois",
@@ -915,11 +927,11 @@ TABLEAUX_CH3 = [
       son="cosmos ; fonte, papier, tinte",
       note="Scène spéciale « plier ». Pas de pincement : Apple Books le prend pour le zoom de la page."),
     T("3.5", "Croire", (68, None), "Les parvis", "légende", "fondu",
-      "Le parvis de la cathédrale de Poitiers, vu d'en bas, au matin ; l'aube monte ; l'étoile du matin brille une fois.",
+      "Le parvis de la cathédrale de Poitiers, vu d'en bas, au matin ; l'aube monte, l'étoile du matin pâlit.",
       photos=[(18890798, "encre")],
-      moments=[("Croire aux lendemains qui chantent", "l'aube monte sur la façade ; un oiseau chante"),
-               ("où es-tu", "l'étoile du matin brille une fois"),
+      moments=[("Croire aux lendemains qui chantent", "l'aube monte sur la façade ; l'étoile du matin pâlit ; un oiseau chante"),
                ("C’est ici que j’écris ma vie", "la phrase seule à l'écran ; une plume gratte le papier")],
+      note="À « où es-tu ? », rien ne répond : le père ne parle jamais.",
       son="cosmos ; oiseau, plume"),
     T("3.6", "Les bibliothèques", (72, None), "Bibliothèques, musées, marchés ; puis Pékin", "Darshan", "encre",
       "La tranche poussiéreuse d'une pile de vieux livres ; puis l'allée d'une bibliothèque toute en lignes droites.",
@@ -992,10 +1004,10 @@ TABLEAUX_CH3 = [
       photos=[(10220497, "encre")],
       moments=[("Je sais", "une gerbe d'étincelles d'or ; le couteau de Jivan s'arrête")],
       son="kerala ; couteau, étincelles"),
-    T("3.13", "Le véritable amour", (93, None), "Aluva", "Darshan", "—", "Le même plan ; la première étoile du soir.",
+    T("3.13", "Le véritable amour", (93, None), "Aluva", "Darshan", "—", "Le même plan ; le soir tombe.",
       photos=[(10220497, "encre")],
       moments=[("Cette porte s’ouvrira à moi quand j’aurai trouvé le véritable amour",
-                "la première étoile du soir paraît au-dessus du fleuve")],
+                "la règle entre au carnet, dans la fiche de la porte du père : le bouton Carnet luit une fois")],
       objets=["carnet : la fiche de la porte du père reçoit la règle"],
       son="kerala ; couteau"),
     T("3.14", "Quatre jours", (96, None), "Aluva", "Darshan", "—", "Le même plan ; une rose des vents d'or ; le vent se lève.",
@@ -1092,8 +1104,9 @@ ont huit mots au plus.
    oui, elles sortent du défilé des âges.
 5. **Les « lendemains qui chantent ».** L'aube et un oiseau : juste ce qu'il faut, ou trop
    appuyé ?
-6. **L'étoile du matin et du soir** (3.5, 3.13), qui annonce « Julie est mon nord, mon étoile du
-   matin » (5.3) : belle rime, ou trop d'interprétation ?
+6. **L'étoile du matin** (3.5), seule dans le ciel de l'aube, qui annonce « Julie est mon nord, mon
+   étoile du matin » (5.3) : belle rime, ou trop d'interprétation ? (Elle ne répond pas à « où
+   es-tu ? » : le père ne parle jamais.)
 7. **Les vers au pinceau.** Écrits en français, sans une lettre de sanskrit inventée : d'accord ?
    Une écriture de pinceau particulière, ou l'Amiri du livre tracée ?
 8. **Le regard.** Le faire naître en 3.4, sur « Elles portent sa vue plus loin », avec « Regarder à
