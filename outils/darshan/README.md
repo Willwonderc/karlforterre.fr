@@ -26,7 +26,8 @@ des fondations, à la demande de Karl. Ce qui est en place :
 | `objets.ini` | Fait, à relire par Karl. Les 17 objets, leur nom, et les phrases du livre qui en parlent (vérifiées mot pour mot). |
 | `interface.ini` | Fait, à valider par Karl. Tous les textes d'interface : consignes des 67 gestes, boutons, menu, carnet des portes. |
 | `build.py` | Réécrit pour les 85 pages : 377 temps, 67 gestes, effets, sacs et portes calculés page après page, vérifications. Il attend le nouveau moteur. |
-| `src/js/` | Le nouveau moteur, en fragments : seul `base.js` est écrit. |
+| `src/js/` | Le nouveau moteur, en fragments : `base.js` et `son.js` sont écrits. |
+| `src/js/son.js` | Interface complète (ambiance, effet, couche, filtre, volumes, deux bus) avec les sons du prototype, repris tels quels ; les sons pas encore faits sont des appels sans effet. Restent 14 ambiances (vent, restaurant, rue, parc, bibliotheque, vision, metro, hopital, chambre, marche, patisserie, appartement, desert, pluie), 6 couches (battements, pluie, feu, tele, melodie, vibration), 39 effets (pas, toc, page, battement, clochette, vibreur, message, bip, the, confettis, tonnerre, eclair, goutte, etincelles, plume, ruban, porte, brise, chute, desenchantement, lanterne, eteindre, eclabousse, mousse, inspire, expire, graine, cran, avance, nuage, aube, lueur, boussole, velours, paume, perce, pli, entree, fonte-courte), l'équilibrage (« tour » écrête à +2,6 dBFS depuis le prototype ; « nuit », « papier », « grince » trop bas) et l'arrêt commun des minuteries d'une ambiance. |
 | `decors.py` | Fait. Fabrique les décors en 1600 × 2400 (WebP) : `python3 outils/darshan/decors.py [noms]`, ou `couverture`. 63 décors sur 72 sont dans `src/img/decors/` (20 Mo) : toutes les photos et toutes les encres. |
 | `classique.py` | Fait, à vérifier. L'EPUB classique (refusionnable), aux mentions de Karl, texte vérifié au caractère près. Il attend la couverture `src/img/couverture.jpg` ; ensuite : EPUBCheck, Ace, captures. Son en-tête dit où il en est et ce que Karl doit trancher (colophon, libellés, « nouvelle » ou « novella », langue de दर्शन, date d'édition, ISBN). |
 
@@ -67,7 +68,7 @@ Pour les décors, il reste :
   photos dépassent 450 Ko (campagne, banc, villandry, rocaille, pave, fantomes, graffiti,
   verdure, amoureux) : baisser leur qualité vers 75, ou les accepter.
 
-Tant qu'un fragment du moteur manque, `build.py` s'arrête sur un message clair.
+Tant qu’un fragment du moteur manque, `build.py` s’arrête sur un message clair.
 L'extrait jouable du 28 septembre se refabrique avec la version précédente du programme
 (commit `e6921d2`).
 
