@@ -234,9 +234,30 @@ def faire_encre(nom):
     return encre(photo, **r)
 
 
+def etendre(im, part):
+    """Prolonge la photo en haut et en bas de `part` de sa hauteur, par le reflet de ses bords, de
+    plus en plus flou en s'éloignant de la couture : un cadre 2:3 peut alors être un peu plus large
+    que la photo n'est haute. Retouche minime, réservée aux sujets plus larges qu'un cadre en hauteur
+    (le graffiti « aime ») et aux bords sans sujet (un fond uni)."""
+    h = round(im.height * part)
+    toile = Image.new("RGB", (im.width, im.height + 2 * h))
+    toile.paste(im, (0, h))
+    for bande, y in ((im.crop((0, 0, im.width, h)), 0), (im.crop((0, im.height - h, im.width, im.height)), h + im.height)):
+        reflet = ImageOps.flip(bande)
+        flou = reflet.filter(ImageFilter.GaussianBlur(max(4, h // 12)))
+        masque = Image.linear_gradient("L").resize((im.width, h))      # 0 en haut, 255 en bas
+        if y > 0:
+            masque = ImageOps.flip(masque)                              # net contre la photo, flou au loin
+        toile.paste(Image.composite(reflet, flou, ImageOps.invert(masque) if y == 0 else masque), (0, y))
+    return toile
+
+
 def faire_photo(nom):
     d = reglages(nom)
-    return recadrer(ouvrir(d["photo"]), d["x"], d["y"], d["zoom"])
+    im = ouvrir(d["photo"])
+    if d.get("marge"):
+        im = etendre(im, d["marge"])
+    return recadrer(im, d["x"], d["y"], d["zoom"])
 
 
 # ---------------------------------------------------------------- les dessins, photographiés par Chromium

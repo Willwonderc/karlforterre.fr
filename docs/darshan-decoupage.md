@@ -869,7 +869,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 - **Moment** : « mais elles ne mènent nulle part » → les portes ne s'ouvrent sur rien
 - **Objet** : lunettes → clés (éclat brisé)
 - **Son** : appartement ; puis silence
-- **Note** : Option : le graffiti « je t'aime » de Karl, un instant, quand Julie le dit.
+- **Note** : Le graffiti « je t'aime » de Karl, recadré sur « aime », un instant, quand Julie le dit (choix de Karl, 29 septembre).
 
 ### 6.12 Des paysages dépourvus de sens
 

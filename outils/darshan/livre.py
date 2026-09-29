@@ -120,7 +120,9 @@ DECORS = {
     "appartement": photo(35136159, x=0.55),
     "fenetre": dessin("fenetre", photo=12443176),
     "the": photo(37296469),
-    "graffiti": photo(38570603, x=0.4),
+    # « je t'aime » ne tient pas en hauteur : le cadre garde « aime » (choix de Karl, 29 septembre) ;
+    # le mot est un peu plus large qu'un cadre 2:3, d'où la marge (voir decors.etendre)
+    "graffiti": photo(38570603, x=0.878, marge=0.08),
     "phare": photo(34894953, x=0.5),
     "mont-saint-michel": photo(34849705),
     "villandry": photo(38694057, x=0.5),
@@ -161,7 +163,8 @@ PORTES = {                     # porte : (lieu de départ, lieu d'arrivée)
 # ---------------------------------------------------------------- les tableaux
 def S(decor, texte="bas", special=None, gestes=(), moments=(), extra=None, debut=(), coupes=None, bilan=()):
     """Réglages d'un tableau.
-    decor : un nom de DECORS, ou une liste (le premier d'abord ; l'effet « decor » passe aux suivants).
+    decor : un nom de DECORS, ou une liste (le premier d'abord ; l'effet « decor » passe aux suivants,
+    et revient au précédent après `duree` millisecondes si elle est donnée).
     texte : place et ton du panneau de texte (« bas », « haut », « bas clair », « nu », « lettre »…).
     special : scène écrite à la main dans le moteur (le prototype, quelques temps forts).
     gestes : un G par geste du découpage, dans l'ordre. moments : un E (ou une liste, ou None)
@@ -314,7 +317,8 @@ SCENES = {
              moments=[E("decor", i=1)]),
     "6.9": S("appartement"),
     "6.10": S("appartement", gestes=[G("maintenir", duree=1500)]),
-    "6.11": S("appartement", gestes=[G("attendre", duree=10000, apres=True)],
+    "6.11": S(["appartement", "graffiti"], extra={"Je dirais même pour ma part que je t’aime": E("decor", i=1, duree=2400)},
+              gestes=[G("attendre", duree=10000, apres=True)],
               moments=[None, E("eclat-brise", objet="cle"), E("portes-vides")]),
     "6.12": S("appartement", gestes=[G("portes", images=["phare", "campagne", "mont-saint-michel", "villandry", "banquise", "rochers"])],
               moments=[E("fonte")]),

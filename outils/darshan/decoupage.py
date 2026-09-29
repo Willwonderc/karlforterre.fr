@@ -633,7 +633,8 @@ TABLEAUX = [
                ("mais elles ne mènent nulle part", "les portes ne s'ouvrent sur rien")],
       objets=["lunettes → clés (éclat brisé)"],
       son="appartement ; puis silence",
-      note="Option : le graffiti « je t'aime » de Karl, un instant, quand Julie le dit."),
+      note="Le graffiti « je t'aime » de Karl, recadré sur « aime », un instant, quand Julie le dit "
+           "(choix de Karl, 29 septembre)."),
     T("6.12", "Des paysages dépourvus de sens", (161, None), "L'appartement", "les deux", "—",
       "La fonte visqueuse vue par Julie ; derrière chaque porte, un paysage de Karl, sans rapport avec le suivant.",
       photos=[(34894953, "photo"), (13087478, "photo"), (34849705, "photo"), (38694057, "photo"),
