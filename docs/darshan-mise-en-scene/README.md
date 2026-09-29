@@ -46,6 +46,10 @@ paradoxalement connecte »).
 - **Julie** : sa voix intérieure, en italique, et tout le chapitre 4 à la première
   personne. Son registre : la photographie.
 
+**Le père ne parle jamais.** Les paragraphes en italique sont les voix intérieures de
+Darshan et de Julie : « Papa, où es-tu ? » (1.1) est Darshan qui parle à son père, sans
+réponse. Le père ne se manifeste que par des signes : la lumière, la lanterne, la porte.
+
 ## 2. Les arcs
 
 | Chapitre | Darshan | Julie | Le lecteur | Émotion dominante | Couleur | Son | Tempo |
@@ -149,8 +153,8 @@ bouche d'un personnage), le geste suit.
   l'écran).
 - Le texte n'est jamais caché durablement, jamais réordonné. Le réglage « Lecture » l'affiche
   toujours en entier, sans animation.
-- **Moments typographiques, rares** : les vers sanskrits écrits au pinceau (3.7), la voix
-  du père dans la lumière des étoiles (1.1), la lettre de Darshan en écriture tracée à
+- **Moments typographiques, rares** : les vers sanskrits écrits au pinceau (3.7), l'appel de
+  Darshan à son père écrit en lumière d'étoiles (1.1), la lettre de Darshan en écriture tracée à
   l'encre (7.7), « Julie aime Darshan et Darshan aime Julie » (7.11). Pas plus d'un par
   chapitre.
 - Les dialogues s'affichent une réplique à la fois, comme dans un roman visuel ; on ne
@@ -183,8 +187,9 @@ bouche d'un personnage), le geste suit.
   soit écrit.
 - **Deux mondes** : chez Darshan, le vent, l'eau, le tanpura, les nappes du cosmos ; chez
   Julie, la ville, le métro, l'hôpital, le vibreur du téléphone.
-- **Motifs sonores** : le **père** a son accord (pur, lumineux), le même au chapitre 1 (la
-  voix, le jour de la porte), au chapitre 3 (la lanterne) et au chapitre 7 (le linteau) ;
+- **Motifs sonores** : le **père** a son accord (pur, lumineux), le même au chapitre 1 (le
+  jour de la porte, réponse à l'appel « Papa, où es-tu ? »), au chapitre 3 (la lanterne) et
+  au chapitre 7 (le linteau) ;
   l'**amour** a sa mélodie (la ballade, composée pour le livre, jamais un air existant), qui
   revient au baiser.
 - **Le silence est un événement** : « Le contact de leurs corps éclipse tout Paris » (7.11),

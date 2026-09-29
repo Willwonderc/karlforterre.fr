@@ -20,7 +20,7 @@ Aluva, au bord du Periyar, un vieil homme qui n'a pas encore de nom parle avec l
 « délicieuse enfant », de Paris et du temps : « je te quitterai avant lui ». La lumière
 vieillit pendant la question ; Darshan esquive, s'habille, regarde sa montre et disparaît par
 une porte. Pour la seule fois, la caméra reste derrière lui, avec le vieil homme qui reçoit
-enfin son nom, Jivan (en sanskrit, *jīvan*, la vie), et « range patiemment son filet ».
+enfin son nom, Jivan (जीवन : la vie), et « range patiemment son filet ».
 L'immortel est pressé, le mortel patient : le chapitre finit sur ce paradoxe, que le livre
 entier va résoudre. L'émotion va de l'attente à l'émerveillement, puis à la tendresse et à la
 mélancolie ; la couleur, du bleu royal au blanc puis à l'or d'Aluva ; le son, du vent des toits
@@ -183,8 +183,8 @@ si le ciel se mettait en marche. Pas d'accord du père : il est gardé pour la p
 **Objets et interface.** Rien.
 
 **Rimes.** « les mains des plus modestes » : celles du lecteur, qui ouvriront toutes les portes,
-et celles de Jivan, « le modeste pêcheur » (3.13), qui garde près de « son modeste cabanon à
-kayaks » (7.8) la porte de Darshan. La poussière : celle qu'on secoue (1.2), celle d'où l'on
+et celles de Jivan, « le modeste pêcheur » (3.13) ; à Aluva, la porte de Darshan est « son
+modeste cabanon à kayaks » (7.8). La poussière : celle qu'on secoue (1.2), celle d'où l'on
 « affleure » (1.4), celle où la clé se défera (7.14). « la course des astres » : « les astres
 sont pris dans leurs cycles » (7.16). Le fil d'or : les jours du pigeonnier (1.3),
 l'entrebâillement du local (7.8), le linteau (7.12). Les deux poèmes du conte se répondent
@@ -284,7 +284,7 @@ referme sur le pigeonnier, là où la danse a mené (prototype).
 immédiate. Nouveau : une pulsation proposée, le halo battant à 100 à la minute. Toucher avec elle
 donne un bond plus ample, toucher à côté un bond ordinaire : jamais d'échec. Chaque toucher est
 une enjambée, un choc de tuile et une note ; les cinq notes montent (la gamme pentatonique de
-la, celle de l'accord du père) et la cinquième arrive devant le pigeonnier. Équivalents :
+la majeur, la tonalité de l'accord du père) et la cinquième arrive devant le pigeonnier. Équivalents :
 Espace, Entrée, « Faire le geste ». Mouvement réduit : le cadre avance par paliers, sans rebond.
 
 **Effets.** Poussière (une poignée, 1,5 s) ; les lunettes : bandeau « Nouvel objet », envol
@@ -478,8 +478,7 @@ seule à dire qui parle : le tiret, l'incise et l'alignement le disent aussi.
 
 **Rimes.** « Jivan a remarqué le retour de son ami. » (3.9) : il veille sur le mudrā. Jivan qui
 découpe des légumes (3.12). « Il partage avec lui ses prises le long du Periyar. » (7.4). Le feu
-des sardines (7.6). Et Julie, qui dira à Darshan ce que le vieil homme pense : « Tu es étrange par
-moments » (2.5).
+des sardines (7.6).
 
 **À valider par Karl.** Le titre « Le vieil homme » ; un jardin tropical de France, passé à
 l'encre, pour le Kerala.
@@ -650,7 +649,8 @@ patiemment son filet. »
 
 **Point de vue et plan.** 1. Caméra subjective : la montre en gros plan, dans la main ; au salut,
 la vue s'incline un instant. 2. Contrechamp : la vue de Jivan ; Darshan, de dos, petit, au bout
-d'une passerelle sous des saules dorés. 3. Le filet, au crépuscule : Jivan ne lève pas les yeux.
+d'une passerelle sous des saules dorés. 3. Le filet, au crépuscule : Jivan est retourné à son
+ouvrage.
 
 **Temps.** Trois temps. Coupe nouvelle au milieu de la phrase, avant « avant de tourner ses talons
 vers la cabane à kayaks. » : c'est là que la caméra quitte Darshan.
@@ -660,14 +660,14 @@ doré, le blanc et l'or d'Aluva. « passerelle » : encre de 36652487, palette d
 les bras posés sur les garde-corps, sous les saules. « filet-soir » : le filet de 1.5, dans la
 palette du soir. Entrée : fondu au blanc, qui continue le lin de la chemise.
 
-**Geste.** « Il se défait de ses lunettes » : toucher la silhouette, ou n'importe où. Un éclat d'or
-à sa tête ; dans l'interface, l'éclat court (les lunettes deviennent clé, le nom seul, sans
-bandes : la métamorphose est connue) ; puis la lumière s'ouvre au bout de la passerelle, et la
-silhouette y disparaît. C'est le premier éclat court du livre : le lecteur refait seul, en un
-geste, ce qu'il a appris en cinq. Il le fait de loin, comme le verrait Jivan : la magie vue du
-dehors, pour la première fois, par quelqu'un qui en a l'habitude et ne lève même pas les yeux.
-Équivalents : toucher, Entrée, « Ôter les lunettes » dans la fiche. Mouvement réduit : la
-silhouette s'efface en fondu.
+**Geste.** « Il se défait de ses lunettes » : toucher la silhouette, ou n'importe où. Un éclat
+d'or à sa tête ; dans l'interface, l'éclat court (les lunettes deviennent clé, le nom seul, sans
+bandes : la métamorphose est connue) ; puis la lumière s'ouvre au bout de la passerelle, là où
+l'on devine la cabane à kayaks, et la silhouette y disparaît. C'est le premier éclat court du
+livre : le lecteur refait seul, en un geste, ce qu'il a appris en cinq. Il le fait de loin, comme
+le verrait Jivan : la magie vue du dehors, pour la première fois, par quelqu'un qui en a
+l'habitude. Équivalents : toucher, Entrée, « Ôter les lunettes » dans la fiche. Mouvement
+réduit : la silhouette s'efface en fondu.
 
 **Effets.** « regards attentifs sur sa montre » : la montre rejoint les objets sans annonce, et son
 tic-tac commence. « Darshan s’incline auprès de son ami » : la vue s'incline (1,5 s après la
@@ -752,8 +752,8 @@ française à la place du Kerala ; le seul plan large reste le dessin d'Aluva.
 
 Chaque geste garde ses équivalents : toucher simple, Entrée ou Espace, « Faire le geste » après
 8 s, et, quand un objet est en jeu, le bouton de sa fiche. Au plus trois animations sur toile par
-page : c'est vérifié tableau par tableau (le plus chargé, 1.4, en a deux : la poussière et les
-éclaboussures sur une même toile, la chaleur sur une autre).
+page : le tableau le plus chargé, 1.4, en a deux (la poussière et les éclaboussures sur une même
+toile, la chaleur sur une autre).
 
 **Mécaniques**
 
@@ -767,13 +767,14 @@ page : c'est vérifié tableau par tableau (le plus chargé, 1.4, en a deux : la
   si une liseuse tournait malgré tout la page, le toucher simple suffit. Réglages : `centre`,
   `angle`.
 - **`rythme`**, précisé : `pulsation` (battements par minute ; le halo bat à ce tempo) et `notes`
-  (« montantes » : chaque toucher joue la note suivante de la gamme pentatonique de la, la, si, do
-  dièse, mi, fa dièse ; la cinquième arrive devant la porte). Avec la pulsation, un bond plus ample ;
+  (« montantes » : chaque toucher joue la note suivante de la gamme pentatonique de la majeur :
+  la, si, do dièse, mi, fa dièse ; la cinquième arrive devant la porte). Avec la pulsation, un bond plus ample ;
   à côté, un bond ordinaire ; jamais d'échec. Pour la course de Julie (7.9) : la même mécanique, avec
   des pas sur le trottoir.
 - **`remuer`**, précisé (1.7) : dans `zone`, le doigt fait des remous (anneaux qui s'élargissent,
   image qui ondule autour du doigt) ; les reflets déjà parus se mêlent ; après 2 s de mouvement ou
-  trois tours, le reflet final (`images`) se forme. Toucher : une ride, puis le reflet.
+  trois tours, le reflet final (`images`) se forme. Toucher : une ride, puis le reflet. Même
+  précaution que pour `tourner` : la zone de l'eau retient le doigt, et le toucher simple suffit.
 - **`tracer`**, précisé : `trait="mousse"`, un trait blanc, épais, bordé de bulles ; guide en
   pointillés d'or ; tolérance large ; les `effets` suivent (trois coups de coutelas).
 - **`porter`**, précisé : `fiche="cle"`, la fiche de l'objet se présente d'elle-même au début du
@@ -1175,16 +1176,16 @@ chaque consigne a huit mots au plus.
 
 ## 8. Questions pour Karl
 
-1. **Le Kerala.** Aucune de tes 919 photos n'a été prise en Inde. Si tu en as, même non publiées,
-   les mettre sur Pexels donnerait à Aluva sa vraie lumière ; sinon, l'encre, les palmes d'un
-   jardin de France et des plans serrés te conviennent-ils ?
+1. **Le Kerala.** Aucune des 919 photos de Karl n'a été prise en Inde. S'il en a, même non
+   publiées, les mettre sur Pexels donnerait à Aluva sa vraie lumière ; sinon, l'encre, les palmes
+   d'un jardin de France et des plans serrés lui conviennent-ils ?
 2. **« La voix du père ».** Le paragraphe en italique de 1.1 est la voix de Darshan qui parle à son
    père ; le père ne parle jamais dans le livre. D'accord pour corriger la direction (« la voix
    vers le père »), et pour garder l'accord du père pour la porte, la lanterne et le linteau ?
 3. **La dédicace.** Lue en silence sur la page de titre : d'accord ? Un fil vermillon au-dessus,
    oui ou non ? Et « une l’intensité inégalée » (annexe A) : on corrige ?
 4. **Jivan.** On ne le nomme pas avant la dernière phrase du chapitre, et la page 1.5 s'appelle
-   « Le vieil homme » : d'accord ? Son nom veut dire « la vie » : c'était voulu ? (On ne l'affiche
+   « Le vieil homme » : d'accord ? Son nom, जीवन, veut dire la vie : est-ce voulu ? (On ne l'affiche
    nulle part ; la mise en scène le laisse seulement porter la fin du chapitre.)
 5. **Le contrechamp de 1.9.** La seule fois où l'on voit Darshan dans son monde : de dos, de loin,
    par les yeux de Jivan. D'accord ? Qui est l'homme de la photo 36652487, et peut-il y figurer ?
@@ -1194,7 +1195,7 @@ chaque consigne a huit mots au plus.
 7. **La ballade.** Ses premières notes, sous l'eau, à « qu’un air que tous chantonnent… c’est
    l’amour » : d'accord pour qu'on l'entende dès le chapitre 1 ?
 8. **L'heure à Aluva.** Nuit à Paris, donc matin au Kerala à l'arrivée, puis la lumière d'or au
-   départ : est-ce ainsi que tu voyais la journée ?
+   départ : est-ce ainsi que Karl voit la journée ?
 9. **La chemise.** Enfilée par la tête (le lin passe de haut en bas devant les yeux) ou boutonnée ?
 10. **Les gestes retirés.** Le coutelas (1.4) et la montre (1.9) ne sont plus des gestes, pour
     laisser respirer l'arrivée et l'adieu. D'accord ?
