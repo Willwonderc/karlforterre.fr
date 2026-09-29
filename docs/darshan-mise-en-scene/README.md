@@ -25,7 +25,7 @@ l'ordre, sans un mot changé ni ajouté. Les seuls mots nouveaux sont les textes
 | Chapitre | Traitement | Relecture critique | Révision |
 |---|---|---|---|
 | 1 (et l'ouverture) | fait | faite : 32 notes, dont 13 à corriger | faite (section 9 du chapitre) |
-| 2 | fait | faite : 29 notes, dont 15 à corriger | en cours |
+| 2 | fait | faite : 29 notes, dont 15 à corriger | faite (section 9 du chapitre) |
 | 3 | fait | faite : 30 notes, dont 16 à corriger | faite (section 9 du chapitre) |
 | 4 | fait | faite : 31 notes, dont 17 à corriger | faite (section 9 du chapitre) |
 | 5 | fait | faite : 37 notes, dont 17 à corriger | en cours |
@@ -180,10 +180,12 @@ bouche d'un personnage), le geste suit.
   l'écran).
 - Le texte n'est jamais caché durablement, jamais réordonné. Le réglage « Lecture » l'affiche
   toujours en entier, sans animation.
-- **Moments typographiques, rares** : les vers sanskrits écrits au pinceau (3.7), l'appel de
-  Darshan à son père écrit en lumière d'étoiles (1.1), la lettre de Darshan en écriture tracée à
-  l'encre (7.7), « Julie aime Darshan et Darshan aime Julie » (7.11). Pas plus d'un par
-  chapitre.
+- **Moments typographiques, rares** : un par chapitre, deux au dernier. L'appel de Darshan
+  à son père écrit en lumière d'étoiles (1.1) ; la voix de Darshan pour Julie, écrite lettre
+  à lettre (2.3) ; les vers sanskrits au pinceau (3.7) ; les questions de l'hôpital devenues
+  vers (4.2) ; « aime », le graffiti de Karl (6.11) ; la lettre de Darshan tracée à l'encre
+  (7.7) et « Julie aime Darshan et Darshan aime Julie » (7.11). Au chapitre 5, « Je l'aime et
+  je vais lui dire. » reste seul à l'écran, sans effet.
 - Les dialogues s'affichent une réplique à la fois, comme dans un roman visuel ; on ne
   nomme jamais quelqu'un avant que le texte l'ait nommé.
 
@@ -316,8 +318,10 @@ Décisions prises à la lecture des premiers traitements ; elles valent pour tou
    propre son, jamais l'accord du père.
 2. **La ballade naît par fragments** : quelques notes étouffées quand Darshan parle de Paris
    (1.7) et sur le seuil (2.9) ; entière pour la première fois dans la vidéo du téléphone de
-   Julie (5.7), la seule fois où quelqu'un la chante dans le livre ; puis au baiser (7.10).
-   Nulle part ailleurs.
+   Julie (5.7), la seule fois où quelqu'un la chante dans le livre ; sa première mesure,
+   jouée par les pas de Julie qui court (7.9), l'amène au baiser (7.10), où elle revient
+   entière. Nulle part ailleurs. Dans les fiches de production, un seul nom : la couche
+   sonore `melodie`.
 3. **Les clés se tournent du même geste** : la mécanique `tourner` (un quart de tour du doigt
    autour de la clé, sur un cercle d'au moins 250 unités de rayon, pour rester facile sur un
    téléphone), au pigeonnier (1.3), au placard (6.13) et à la serrure du local (7.8). Même
