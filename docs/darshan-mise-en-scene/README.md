@@ -26,7 +26,7 @@ l'ordre, sans un mot changé ni ajouté. Les seuls mots nouveaux sont les textes
 |---|---|---|---|
 | 1 (et l'ouverture) | fait | faite : 32 notes, dont 13 à corriger | faite (section 9 du chapitre) |
 | 2 | fait | faite : 29 notes, dont 15 à corriger | en cours |
-| 3 | fait | faite : 30 notes, dont 16 à corriger | en cours |
+| 3 | fait | faite : 30 notes, dont 16 à corriger | faite (section 9 du chapitre) |
 | 4 | fait | faite : 31 notes, dont 17 à corriger | faite (section 9 du chapitre) |
 | 5 | fait | faite : 37 notes, dont 17 à corriger | en cours |
 | 6 | fait | à faire | — |

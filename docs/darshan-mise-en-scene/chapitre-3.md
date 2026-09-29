@@ -41,7 +41,7 @@ Julie (4.7).
 | 3.1 Le maître des portes | ●●●○○ | solennité |
 | 3.2 Le trou dans le mur | ●●●●○ | émerveillement : une naissance |
 | 3.3 L'immortel | ●●○○○ | mélancolie |
-| 3.4 Des lunettes qui plient l'espace | ●●●○○ | jubilation : on comprend |
+| 3.4 Des lunettes qui plient l'espace | ●●●●○ | jubilation : on comprend |
 | 3.5 Croire | ●●●○○ | espérance et solitude |
 | 3.6 Les bibliothèques | ●●○○○ | patience |
 | 3.7 Le recueil sanskrit | ●●●●○ | révélation |
@@ -54,50 +54,48 @@ Julie (4.7).
 | 3.14 Quatre jours | ●●●○○ | élan |
 
 Deux sommets, la naissance (3.2) et la vision (3.10 et 3.11), séparés par une vallée de patience
-et de rire (3.6 à 3.8). La légende (3.1 à 3.5) n'a que deux gestes, la naissance et le pli ; la
-quête en a six. Huit gestes en tout (neuf au découpage actuel).
+et de rire (3.6 à 3.8) ; entre eux, deux révélations, le pli (3.4) et les vers (3.7). La légende
+(3.1 à 3.5) n'a que deux gestes, la naissance et le pli ; la quête en a six. Huit gestes en tout
+(neuf au découpage actuel).
 
 ## 3. Le traitement, tableau par tableau
 
 ### 3.1 Le maître des portes
 
-**Table ronde** : le dramaturge veut qu'on voie la phrase « né de l'alignement de forces
-anciennes » ; le directeur artistique craint l'imagerie d'horoscope et une barque trop littérale.
-Décision : une seule image, le ciel de la légende, où des étoiles glissent et s'alignent jusqu'à
-dessiner une porte ; la barque n'est qu'un trait d'encre minuscule, qu'on remarque ou non. Le
-monteur donne à cette porte d'étoiles la place et la forme de la porte bleue par laquelle 3.2
-commence : c'est le raccord.
+**Table ronde** : le dramaturge veut qu'on voie « né de l'alignement de forces anciennes » ; le
+directeur artistique craint l'imagerie d'horoscope et une barque trop littérale. Décision : une
+seule image, le ciel de la légende, où des étoiles s'alignent jusqu'à dessiner une porte ; la barque
+n'est qu'un trait d'encre minuscule, qu'on remarque ou non. Le monteur donne à cette porte d'étoiles
+la place et la forme de la porte bleue par laquelle 3.2 commence : c'est le raccord.
 
 - **Intention** : le conte prend la parole. Le lecteur quitte la maison de lierre et le nuage de
   Paris pour un ciel hors du monde, et comprend que ce chapitre raconte une naissance.
 - **Phrase-clé** : « Ce Bohème est né de l’alignement de forces anciennes, d’un méli-mélo d’idées qu’a formulées l’homme. »
 - **Point de vue et plan** : plan large, fixe, hors du monde. Personne : dans la légende, Darshan
-  n'est pas un corps, il est ce que dessinent les étoiles.
+  est ce que dessinent les étoiles.
 - **Temps** : le titre claque sur les bandes (« Entre deux mondes »), puis deux temps, une phrase
   chacun.
-- **Image** : `cosmos` : la Voie lactée de Galice de Karl (39595391), telle quelle, sans horizon
-  ni arbre ; par-dessus, en or, une trentaine d'étoiles-portes, minuscules embrasures du même
-  dessin que les étoiles du carnet ; pas de papier. Le texte se pose à même le ciel, sans bandeau,
-  comme les vers de la voûte (0.2) : la voix du conte, en or sur la nuit. Raccords : les bandes du
-  chapitre à l'entrée ; à la sortie, la porte d'étoiles, à la place de la porte bleue de 3.2
-  (x 330 à 800, y 600 à 1 130, linteau droit).
-- **Geste** : aucun. Le conte parle, le lecteur écoute ; les deux gestes de la légende sont gardés
-  pour la naissance (3.2) et le pli (3.4).
+- **Image** : `cosmos` : la Voie lactée de Galice de Karl (39595391), sans horizon ni arbre ;
+  par-dessus, en or, une trentaine d'étoiles-portes, minuscules embrasures du même dessin que les
+  étoiles du carnet ; pas de papier. Le texte se pose à même le ciel, sans bandeau, comme les vers
+  de la voûte (0.2) : la voix du conte, en or sur la nuit. Raccords : les bandes du chapitre à
+  l'entrée ; à la sortie, la porte d'étoiles, à la place de la porte bleue de 3.2 (x 330 à 800,
+  y 600 à 1 130, linteau droit).
+- **Geste** : aucun. Le conte parle ; les deux gestes de la légende sont gardés pour la naissance
+  (3.2) et le pli (3.4).
 - **Effets** : « mène sa barque au gré des courants de la providence » : une barque minuscule, un
-  trait d'encre et une étincelle d'or, dérive une minute le long de la Voie lactée. « Ce Bohème
-  est né de l'alignement… » : sept étoiles glissent (2,4 s) et s'alignent, puis la ligne se plie
-  en deux montants et un linteau droit : une porte d'étoiles, qui palpite une fois et reste. En
-  mouvement réduit, la barque est posée, les étoiles paraissent à leur place finale.
-- **Son** : cosmos ; un tintement montant pour chaque étoile qui prend sa place, sur ré, mi, sol,
-  la, si, ré, mi, sans do dièse : rien ne doit annoncer l'accord du père avant 3.10.
-- **Objets et interface** : rien ne change ; les étoiles ont le dessin de celles du carnet, que le
-  lecteur reconnaît dans le ciel de la légende.
+  trait d'encre et une étincelle d'or, dérive une minute le long de la Voie lactée. « Ce Bohème est
+  né de l'alignement… » : sept étoiles glissent (2,4 s) et s'alignent, puis la ligne se plie en deux
+  montants et un linteau droit : une porte d'étoiles, qui palpite une fois et reste. En mouvement
+  réduit, tout paraît à sa place finale.
+- **Son** : cosmos ; un tintement montant par étoile qui prend sa place (ré, mi, sol, la, si, ré,
+  mi), sans do dièse : rien n'annonce l'accord du père avant 3.10.
+- **Objets et interface** : rien.
 - **Rimes** : le poème d'ouverture (« la course des astres ») : même voix, celle du conte, même or
-  sur la même nuit ; la petite barque du Periyar, dans le décor des scènes de Jivan (1.5 à 1.9) ;
-  « les astres sont pris dans leurs cycles » (7.16) ; les étoiles du carnet, qui s'éteindront en
-  7.14.
-- **À valider par Karl** : la Voie lactée de Galice pour le ciel de la légende, plutôt que le ciel
-  du poème d'ouverture, dont la Voie lactée est trop pâle pour porter la barque.
+  sur la même nuit ; la petite barque du Periyar (1.5 à 1.9) ; « les astres sont pris dans leurs
+  cycles » (7.16) ; les étoiles du carnet, qui s'éteindront en 7.14.
+- **À valider par Karl** : la Voie lactée de Galice pour le ciel de la légende ; celle du poème
+  d'ouverture est trop pâle pour porter la barque.
 
 ### 3.2 Le trou dans le mur
 
@@ -191,46 +189,45 @@ seulement bougent : le chemin, qu'on remonte très lentement, et la poussière.
 **Table ronde** : le découpage faisait pincer l'écran à deux doigts ; dans Apple Books, pincer
 agrandit la page, et la liseuse risque d'avaler le geste. La relecture a trouvé mieux qu'un geste
 nouveau : le geste vif du pigeonnier (1.3), que le lecteur a déjà fait. Décision : il le refait,
-avec la même consigne, et découvre ce qu'il faisait sans le savoir : du même mouvement, les
-lunettes fondent en clé et le ciel se plie, Aluva sur Paris ; « Dans le même temps », dit le
-texte. Le dramaturge demande que la dernière phrase donne au lecteur un pouvoir nouveau, celui qui
-donne son titre au livre : le regard.
+avec la même consigne, et découvre ce qu'il faisait sans le savoir : du même mouvement, les lunettes
+fondent en clé et le ciel se plie, Aluva sur Paris ; « Dans le même temps », dit le texte. Le
+dramaturge demande que la dernière phrase donne au lecteur un pouvoir nouveau, celui qui donne son
+titre au livre : le regard.
 
 - **Intention** : le lecteur comprend ce qu'il a fait au chapitre 1 : la clé n'ouvre pas seulement
   une porte, elle plie l'espace, et Paris touche Aluva. Il reçoit le regard.
 - **Phrase-clé** : « Dans le même temps qu’elles se plient, elles en font autant de l’espace, faisant plus que de vulgaires bottes de sept lieux. »
-- **Point de vue et plan** : gros plan sur les lunettes, dessinées en traits d'or (l'objet vu comme
-  dans une légende, gravé), posées sur l'axe du pli (y = 700), au milieu du ciel de 3.1 ; deux
-  étoiles du carnet, Paris en haut (600, 400) et Aluva plus bas (600, 1 000), reliées par un fil
-  d'or, avec leurs noms en petites capitales (« Paris », « Aluva », déjà dans `interface.ini`).
-  Tout reste au-dessus du texte, posé à même le ciel en bas de la page.
+- **Point de vue et plan** : gros plan sur les lunettes, dessinées en traits d'or, posées sur l'axe
+  du pli (y = 700), au milieu du ciel de 3.1 ; deux étoiles du carnet, Paris en haut (600, 400) et
+  Aluva plus bas (600, 1 000), reliées par un fil d'or, avec leurs noms en petites capitales
+  (« Paris », « Aluva », déjà dans `interface.ini`). Tout reste au-dessus du texte, posé à même le
+  ciel en bas de la page.
 - **Temps** : quatre temps ; le geste avant « Sa capacité à tordre la réalité subjugue ; ses
   lunettes… », et cette phrase et la suivante le confirment.
-- **Image** : `cosmos`, le même ciel qu'en 3.1 : le conte reprend sa voix ; le texte à même le
-  ciel, comme en 3.1. Scène écrite à la main, « plier » : les lunettes et la clé sont les dessins
-  de la scène du pigeonnier (1.3), rendus en or seulement. Raccord d'entrée : iris qui s'ouvre sur
-  les lunettes (600, 700). Raccord de sortie : fondu vers l'aube de 3.5.
+- **Image** : `cosmos`, le ciel de 3.1, et le texte à même le ciel : le conte reprend sa voix. Scène
+  écrite à la main, « plier » : les lunettes et la clé sont les dessins de la scène du pigeonnier
+  (1.3), rendus en or. Raccord d'entrée : iris qui s'ouvre sur les lunettes (600, 700). Raccord de
+  sortie : fondu vers l'aube de 3.5.
 - **Geste** : « Un geste vif : glissez vers le haut », la consigne de 1.3. Vif, c'est un
   claquement : les lunettes fondent en clé et, d'un coup, la moitié basse du ciel se replie vers le
   haut autour de l'axe où repose la clé, comme une page ; Aluva se pose sur Paris : un éclat, un
   tintement (« plus que de vulgaires bottes de sept lieux »). Lent, le pli suit le doigt, comme au
-  pigeonnier, où un glissement lent marche aussi. Au lâcher, le pli tient une seconde puis se
-  déplie (1,5 s). Sens : le lecteur découvre ce que faisait son geste de 1.3 : plier l'espace.
-  Équivalent : un toucher joue le tout ; Entrée ; le même geste est proposé dans la fiche des
-  lunettes, « Plier l'espace ». En mouvement réduit, la clé paraît, l'étoile d'Aluva glisse
+  pigeonnier, où un glissement lent marche aussi. Au lâcher, le pli tient une seconde puis se déplie
+  (1,5 s). Équivalent : un toucher joue le tout ; Entrée ; le même geste est proposé dans la fiche
+  des lunettes, « Plier l'espace ». En mouvement réduit, la clé paraît, l'étoile d'Aluva glisse
   jusqu'à Paris et s'y fond.
 - **Effets** : au geste, la fonte (celle de 1.3, rendue en or) et le pli. « Elles portent sa vue
   plus loin… » : la clé redevient lunettes ; dans le verre gauche paraît Paris (les toits), dans le
   droit le Periyar : un monde par verre, le titre du chapitre en image. Au même instant, le bouton
-  Objets luit une fois : la fiche des lunettes a reçu ses phrases et un geste nouveau, « Regarder
-  à travers » : le regard naît.
+  Objets luit une fois : la fiche des lunettes a reçu ses phrases et un geste nouveau, « Regarder à
+  travers » : le regard naît.
 - **Son** : cosmos ; la fonte ; un froissement de papier pendant le pli ; un tintement quand les
   étoiles se rejoignent.
 - **Objets et interface** : la fiche des lunettes reçoit ses phrases (automatique, une fois lues) ;
   le regard (appui maintenu sur les lunettes, ou « Regarder à travers » dans leur fiche) vaut à
-  partir d'ici et jusqu'au désenchantement (7.14) : il entre dans l'état des pages, comme la
-  magie. Il n'est jamais nécessaire pour avancer ; dans ce chapitre, il montre le jour de la porte
-  du personnel, au bout des rayonnages (3.6 à 3.8), et rien dans la vision.
+  partir d'ici et jusqu'au désenchantement (7.14) : il entre dans l'état des pages, comme la magie.
+  Il n'est jamais nécessaire pour avancer ; dans ce chapitre, il montre le jour de la porte du
+  personnel, au bout des rayonnages (3.6 à 3.8), et rien dans la vision.
 - **Rimes** : le geste vif du pigeonnier (1.3), même consigne, même geste, sens découvert ; la clé
   « au format pincé » (1.3) ; le fil Paris-Aluva du carnet, tiré par les portes du pigeonnier et du
   local ; « elles changent assez régulièrement » (5.7) ; la même fonte, vue par Julie (6.12) ; la
@@ -240,46 +237,41 @@ donne son titre au livre : le regard.
 
 ### 3.5 Croire
 
-**Table ronde** : pour « entre les parvis », les flèches de Saint-André au-dessus de Niort (le
-découpage actuel), ou un vrai parvis, vu du sol ? Décision : le parvis vu d'en bas, comme par
-celui qui y vit, au matin : la cathédrale de Poitiers de Karl. Autour de la seule question du
-chapitre, on avait mis une étoile du matin, un oiseau, une plume ; sur elle, rien. La relecture a
-retourné la chose : une étoile seule au-dessus d'une cathédrale, pendant qu'un fils appelle
-« celui qui a fait mon sort », se lirait comme un signe du ciel ; et le livre donne déjà son son à
-l'appel, la quinte à vide de « Papa, où es-tu ? » (1.1). Décision : l'aube et son chœur, lointain,
-sans rien d'autre ; sur la question, le chœur se tait et la quinte sonne, seule, sans réponse. La
-page blanche proposée pour la dernière phrase reste à la fin du livre, quand l'encre se retire du
-monde : ici, la phrase fait un temps à elle seule, et les trois coups de pinceau de la sortie
-écrivent déjà la vie.
+**Table ronde** : pour « entre les parvis », les flèches de Saint-André au-dessus de Niort, ou un
+vrai parvis, vu du sol ? Décision : le parvis vu d'en bas, au matin : la cathédrale de Poitiers de
+Karl. Autour de la seule question du chapitre, on avait mis une étoile du matin, un oiseau, une
+plume. Mais une étoile seule au-dessus d'une cathédrale, pendant qu'un fils appelle « celui qui a
+fait mon sort », se lirait comme un signe du ciel ; et l'appel a déjà son son, la quinte à vide de
+« Papa, où es-tu ? » (1.1). Décision : l'aube et son chœur, lointain ; sur la question, le chœur se
+tait et la quinte sonne seule, sans réponse. La dernière phrase fait un temps à elle seule : les
+coups de pinceau de la sortie écrivent déjà la vie.
 
 - **Intention** : au sommet de la légende, la foi de Darshan et sa solitude ; le conte lui cède la
-  parole, et il pose la question du toit de Paris, qui sonne comme sur le toit : où es-tu ?
+  parole, et il pose la question du toit de Paris : où es-tu ?
 - **Phrase-clé** : « Mes frères les hommes me rejettent, je vis donc entre les parvis. C’est ici que j’écris ma vie. »
 - **Point de vue et plan** : contre-plongée depuis le parvis, l'œil d'un homme assis sur les
   marches.
-- **Temps** : huit temps ; dans le dernier paragraphe, la question « où es-tu ? » finit son temps,
-  et « C'est ici que j'écris ma vie. » fait un temps à elle seule.
+- **Temps** : huit temps ; la question « où es-tu ? » finit le sien, et « C'est ici que j'écris ma
+  vie. » est seule dans le dernier.
 - **Image** : `parvis` : « Cathédrale au matin » (18890798), à l'encre, cadrée sur la rose et le
-  portail central ; elle remplace les flèches de Niort (23414381), vue de ville plutôt que parvis.
-  Le texte en haut, sur un panneau clair, sur le ciel de l'aube : le bas de l'image est le portail
-  et le parvis, là où vit Darshan. Raccords : fondu de la nuit de 3.4 vers le jour ; à la sortie,
-  les coups de pinceau de la transition encre : la vie s'écrit.
+  portail central ; elle remplace les flèches de Niort (23414381), une vue de ville plutôt qu'un
+  parvis. Le texte en haut, sur un panneau clair, sur le ciel de l'aube : le bas de l'image est le
+  portail et le parvis, là où vit Darshan. Raccords : fondu de la nuit de 3.4 vers le jour ; à la
+  sortie, la transition encre.
 - **Geste** : aucun.
-- **Effets** : « Croire aux lendemains qui chantent » : l'aube monte sur la façade (comme au
-  dernier vers du poème d'ouverture). « où es-tu » : rien à l'image. « C'est ici que j'écris ma
-  vie » : rien.
+- **Effets** : « Croire aux lendemains qui chantent » : l'aube monte sur la façade, comme au dernier
+  vers du poème d'ouverture. Rien d'autre à l'image, ni sur la question ni sur la dernière phrase.
 - **Son** : cosmos, qui s'éclaircit ; avec l'aube, au loin, le chœur de l'aube (des oiseaux qui
-  s'éveillent, sans mélodie, sans do dièse), qui monte avec la lumière ; au temps de la question, il
-  se tait, et la quinte à vide de l'appel (la, mi, la) sonne très bas sous la phrase, puis s'éteint
-  ; rien ne lui répond ; puis le silence jusqu'aux coups de pinceau de la sortie.
+  s'éveillent, sans mélodie, sans do dièse) ; au temps de la question, il se tait, et la quinte à
+  vide de l'appel (la, mi, la) sonne très bas sous la phrase, puis s'éteint : rien ne lui répond.
+  Puis le silence, jusqu'à la sortie.
 - **Objets et interface** : rien.
 - **Rimes** : l'appel de Darshan à son père, toujours la même quinte, toujours sans réponse :
-  « Papa, où es-tu ? » (1.1), « où es-tu ? » ici, « Il ferme les yeux, inspire et appelle son
-  père. » (6.11) ; seule la porte du père la résout, avec son accord entier (3.10, 7.12) ; l'aube
-  du poème d'ouverture ; « celui qui a fait mon sort », à qui Darshan dira enfin « Père, je suis
-  sûr que vous m'entendez » (7.14).
-- **À valider par Karl** : la cathédrale de Poitiers pour les parvis ; l'aube et son chœur pour les
-  « lendemains qui chantent », qu'il reconnaîtra ; la quinte sous « où es-tu ? ».
+  « Papa, où es-tu ? » (1.1), « où es-tu ? » ici, l'appel de 6.11 ; seule la porte du père la
+  résout, par son accord entier (3.10, 7.12) ; « celui qui a fait mon sort », à qui Darshan dira
+  enfin « Père, je suis sûr que vous m'entendez » (7.14).
+- **À valider par Karl** : la cathédrale de Poitiers pour les parvis ; l'aube et son chœur ; la
+  quinte sous « où es-tu ? ».
 
 ### 3.6 Les bibliothèques
 
@@ -287,21 +279,19 @@ monde : ici, la phrase fait un temps à elle seule, et les trois coups de pincea
 livres réels ; souffler la poussière les mettrait en vedette. Décision : la tranche d'une pile de
 vieux livres, sans titre. Pour Pékin, le dessin prévu cède la place à une photo de Karl, qu'il a
 acceptée le 29 septembre : la bibliothèque aux étagères de verre de l'Universidad Laboral de Gijón,
-dont on ne voit que les rayonnages, toute en droites. Des lignes d'or qui tireraient les droites du
-lieu : inutiles, l'encre les montre déjà.
+dont on ne voit que les rayonnages, toute en droites.
 
-- **Intention** : la patience de la fourmi : le lecteur fait le petit geste obstiné de Darshan,
-  puis le lieu s'ouvre, immense et ordonné : le jour exceptionnel commence.
+- **Intention** : la patience de la fourmi : le lecteur fait le petit geste obstiné de Darshan, puis
+  le lieu s'ouvre, immense et ordonné : le jour exceptionnel commence.
 - **Phrase-clé** : « Les avancées sont rares, mais aujourd’hui s’annonce être un jour exceptionnel, sur un banc de la bibliothèque nationale de Chine à Pékin. »
-- **Point de vue et plan** : gros plan sur la tranche des livres, en subjectif (on se penche) ;
-  puis plan large dans l'allée, à hauteur d'homme assis sur un banc.
+- **Point de vue et plan** : gros plan sur la tranche des livres, en subjectif (on se penche) ; puis
+  plan large dans l'allée, à hauteur d'homme assis sur un banc.
 - **Temps** : quatre temps ; le geste avant le premier.
 - **Image** : `livres-poussiere` : « Pile de livres et tasse en inox sur une étagère en bois »
   (38712879), à l'encre, recadrée sur la pile seule (ni tasse ni titre) ; `pekin` : « Intérieur
-  moderne d'une bibliothèque aux étagères en verre, à Gijón » (39670619), à l'encre : les
-  rayonnages en perspective, le sol blanc. Les deux images sont claires : le panneau aussi, en bas,
-  sur le sol, et il le restera jusqu'à 3.8 (même lieu). Raccord d'entrée : encre. Raccord de
-  sortie : même plan en 3.7.
+  moderne d'une bibliothèque aux étagères en verre, à Gijón » (39670619), à l'encre : les rayonnages
+  en perspective, le sol blanc. Les deux images sont claires : le panneau aussi, en bas, sur le sol,
+  jusqu'à 3.8 (même lieu). Raccord d'entrée : encre. Raccord de sortie : même plan en 3.7.
 - **Geste** : « Soufflez la poussière : glissez vers le haut » sur la tranche des livres : la
   poussière grise s'envole ; dessous revient le jaune chaud du vieux papier. Un souffle donné du
   doigt : l'indifférence se soulève, et la poussière vue retomber en 3.3 s'envole enfin.
@@ -314,8 +304,8 @@ lieu : inutiles, l'encre les montre déjà.
 - **Objets et interface** : rien. Le regard, si le lecteur l'essaie dans l'allée, révèle tout au
   bout un filet d'or au ras d'une porte : la sortie de 3.8 (facultatif).
 - **Rimes** : la poussière qui retombe (3.3) et celle d'Aluva (1.4) ; les droites de Pékin contre
-  les cercles de la lanterne (3.10) : le savoir des hommes est tracé à la règle, la porte du père
-  au compas.
+  les cercles de la lanterne (3.10) : le savoir des hommes est tracé à la règle, la porte du père au
+  compas.
 - **À vérifier à la fabrication** : qu'aucun titre de tranche ne se lise sur le décor `pekin` en
   1 600 × 2 400 (la règle qui a écarté « Bibliothèque de rue »).
 
@@ -323,8 +313,8 @@ lieu : inutiles, l'encre les montre déjà.
 
 **Table ronde** : le découpage faisait tourner les pages au lecteur. Le monteur y voit un troisième
 geste de bibliothèque d'affilée ; le dramaturge, une rime à ne pas gâcher : ici, le lecteur regarde
-un pinceau écrire des vers venus d'ailleurs ; au chapitre 7, il écrira lui-même, du doigt, la
-lettre de Darshan. Décision : pas de geste ; c'est le moment typographique du chapitre.
+un pinceau écrire ; au chapitre 7, il écrira lui-même, du doigt, la lettre de Darshan. Décision :
+pas de geste ; c'est le moment typographique du chapitre.
 
 - **Intention** : la révélation, au milieu de l'effervescence des esprits : deux lignes calmes,
   écrites à l'encre sous nos yeux, qui contiennent la règle de tout le livre.
@@ -339,19 +329,19 @@ lettre de Darshan. Décision : pas de geste ; c'est le moment typographique du c
 - **Geste** : aucun.
 - **Effets** : « Darshan pour sa part parcourt un recueil » : le regard descend sur le recueil (le
   décor glisse, 0,9 s). « L'amour est le lit de la famille. », puis « La clé de sa chambre… » :
-  chaque vers quitte le panneau et s'écrit au pinceau, noir d'encre, au milieu de la page de
-  droite, de gauche à droite (2,5 s, puis 4 s), avec une légère bavure. C'est du vrai texte (lu
-  par VoiceOver, sélectionnable), le seul moment typographique du chapitre ; en mouvement réduit,
-  le vers paraît en fondu, déjà écrit ; en mode Lecture, il est dans le texte, comme les autres.
+  chaque vers quitte le panneau et s'écrit au pinceau, noir d'encre, au milieu de la page de droite,
+  de gauche à droite (2,5 s, puis 4 s), avec une légère bavure. C'est du vrai texte (lu par
+  VoiceOver, sélectionnable), le seul moment typographique du chapitre ; en mouvement réduit, le
+  vers paraît en fondu, déjà écrit ; en mode Lecture, il est dans le texte, comme les autres.
 - **Son** : bibliothèque, dont la rumeur s'éteint avant le premier vers ; le frottement doux d'un
   pinceau, par groupes de lettres.
 - **Objets et interface** : rien encore : les vers entreront au sac avec le recueil (3.8) ; le
   second est déjà une phrase de la fiche de la clé (`objets.ini`) ; il entrera dans la fiche de la
   porte du père en 3.12, quand Darshan dira que « La solution était dans un poème ».
 - **Rimes** : la lettre écrite du doigt (7.7) : la sincérité, enfin ; le mensonge du chapitre 6,
-  quand la clé de la sincérité manque et que les clés n'ouvrent sur rien (6.11, 6.12) ; « Julie
-  aime Darshan et Darshan aime Julie » (7.11) : la réciprocité, dite en miroir, l'autre moment
-  typographique du livre ; « une encre venue d'Asie » (6.6).
+  quand la clé de la sincérité manque et que les clés n'ouvrent sur rien (6.11, 6.12) ; « Julie aime
+  Darshan et Darshan aime Julie » (7.11) : la réciprocité, dite en miroir, l'autre moment
+  typographique du livre.
 - **À valider par Karl** : les vers écrits au pinceau, en français ; une écriture de pinceau
   particulière (police embarquée), ou l'Amiri du livre, tracée ?
 
@@ -361,30 +351,28 @@ lettre de Darshan. Décision : pas de geste ; c'est le moment typographique du c
 possible. Si, … »). Le monteur isole la première phrase pour que la contradiction tombe comme un
 gag ; le designer d'interaction fait pousser une porte battante qui bat deux fois, « entre deux
 battements ». Au geste, tout se pressait (deux battements, un éclair de soleil, l'annonce du
-recueil, la clé, l'étoile), et la nonchalance s'y noyait. Décision : au geste, la porte seule et
-sa lumière ; le recueil entre au sac sans annonce, sur « Il quitte sa table avec son ouvrage sous
-le bras » (c'est un livre de bibliothèque, on n'en dit rien) ; l'étoile de Pékin naît à l'arrivée,
-quand la lumière du passage a gagné l'écran (arbitrage 6).
+recueil, la clé, l'étoile), et la nonchalance s'y noyait. Décision : au geste, la porte seule et sa
+lumière ; le recueil entre au sac sans annonce, « sous le bras » ; l'étoile de Pékin naît à
+l'arrivée, quand la lumière du passage a gagné l'écran (arbitrage 6).
 
 - **Intention** : la comédie de la nonchalance : l'immortel emprunte un livre et la porte des
   toilettes du personnel comme on prend le métro.
 - **Phrase-clé** : « Il quitte sa table avec son ouvrage sous le bras et disparaît avec nonchalance entre deux battements de porte des toilettes du personnel. »
-- **Point de vue et plan** : l'allée, le regard relevé du recueil ; puis la porte battante, au
-  bout des rayonnages, en plan moyen et de face.
+- **Point de vue et plan** : l'allée, le regard relevé du recueil ; puis la porte battante, au bout
+  des rayonnages, en plan moyen et de face.
 - **Temps** : « Il n'y a pas de doute possible. », seule ; « Si, il y en a suffisamment… par un
   mudrā. » ; le geste ; la dernière phrase.
 - **Image** : `pekin`, puis `porte-personnel` : une porte de service à battant, peinte, à hublot
-  rond, sans écriteau (dessin à l'encre, ou photo de Karl, repérage 3). Panneau clair, en bas.
-  Raccord d'entrée : fondu court. Raccord de sortie : la transition porte : la lumière du Periyar
-  passe par l'entrebâillement et gagne l'écran.
+  rond, sans écriteau (dessin à l'encre, ou photo de Karl, repérage 3), centrée en (600, 900).
+  Panneau clair, en bas. Raccord d'entrée : fondu court. Raccord de sortie : la transition porte :
+  la lumière du Periyar passe par l'entrebâillement et gagne l'écran.
 - **Geste** : « Poussez la porte ». Au toucher, la porte bat une première fois : dans
   l'entrebâillement, un éclair de soleil chaud qui n'a rien à faire à Pékin (le jour d'une porte,
   comme au pigeonnier) ; elle revient, bat une seconde fois, plus grand : c'est par là. Équivalent :
   Entrée.
 - **Effets** : « Si, il y en a suffisamment » : la porte paraît. Au geste : les deux battements
-  (500 ms chacun) et le jour de l'autre côté dans l'entrebâillement ; les lunettes deviennent clé
-  hors champ, sans éclat. « Il quitte sa table avec son ouvrage sous le bras » : le recueil entre
-  au sac, sans bandeau.
+  (500 ms chacun), le jour dans l'entrebâillement ; les lunettes deviennent clé hors champ, sans
+  éclat. « Il quitte sa table… » : le recueil entre au sac, sans bandeau.
 - **Son** : bibliothèque ; deux battements de porte (grincement bref, souffle d'air, claquement
   amorti) ; au second, le son de l'autre côté, étouffé comme derrière des planches : une seconde de
   clapotis du Periyar.
@@ -392,40 +380,37 @@ quand la lumière du passage a gagné l'écran (arbitrage 6).
   L'étoile « Les toilettes du personnel, à Pékin → le Periyar » naît au début de 3.9.
 - **Rimes** : Darshan qui disparaît par une porte (1.9) ; le jour d'une porte, qui fait entendre
   l'autre côté (1.3, 1.9) ; le placard (6.13) et le local à kayaks (7.8) : les portes les plus
-  ordinaires sont les plus magiques ; le mudrā, annoncé ici et fait en 3.9.
+  ordinaires sont les plus magiques.
 - **À valider par Karl** : le ton comique ; le recueil qui entre au sac.
 
 ### 3.9 Le mudrā
 
-**Table ronde** : faut-il lire d'abord comment se fait le mudrā, puis le faire ? Le dramaturge
-tient au principe du livre : le lecteur agit, le texte confirme. Tenant son téléphone à deux mains,
-il pose ses deux pouces l'un contre l'autre, et la phrase lui apprend qu'il vient de réaliser le
-Dhyana mudrā. Décision : le geste précède la phrase. Deux petits cercles côte à côte n'y suffisaient
-pas : deux pouces qui se touchent posent sur le verre à près de deux centimètres l'un de l'autre.
-Décision : une zone basse, où deux doigts quelconques sont acceptés. Jivan ne se voit pas : on
-l'entend, à peine.
+**Table ronde** : faut-il lire d'abord comment se fait le mudrā, puis le faire ? Le dramaturge tient
+au principe du livre : le lecteur agit, le texte confirme. Tenant son téléphone à deux mains, il
+joint ses deux pouces, et la phrase lui apprend qu'il vient de réaliser le Dhyana mudrā. Décision :
+le geste précède la phrase, dans une zone basse où deux doigts quelconques sont acceptés (deux
+pouces joints se posent sur le verre à près de deux centimètres l'un de l'autre). Jivan ne se voit
+pas : on l'entend, à peine.
 
 - **Intention** : le recueillement : le lecteur fait, de ses propres mains, le sceau de Darshan ; le
   fleuve s'apaise.
 - **Phrase-clé** : « Un mudrā est un sceau permettant de canaliser l’énergie afin qu’elle s’exprime au travers du filtre de cette langue mystique. »
-- **Point de vue et plan** : subjectif, assis au bord du fleuve, le soir : l'eau, le ciel orangé,
-  la passerelle au loin ; les seules mains sont celles du lecteur.
-- **Temps** : « Il sort de sa petite boite… » ; le geste ; « Darshan s'assied… Dhyana mudrā. » ;
-  la définition du mudrā ; « Jivan a remarqué le retour de son ami. » ; la fin du paragraphe.
+- **Point de vue et plan** : subjectif, assis au bord du fleuve, le soir : l'eau, le ciel orangé, la
+  passerelle au loin ; les seules mains sont celles du lecteur.
+- **Temps** : « Il sort de sa petite boite… » ; le geste ; « Darshan s'assied… Dhyana mudrā. » ; la
+  définition du mudrā ; « Jivan a remarqué le retour de son ami. » ; la fin du paragraphe.
 - **Image** : `periyar-soir` (10220497, à l'encre, palette du soir). Le texte en haut, sur un
-  panneau clair, sur le ciel orangé, comme à Aluva au chapitre 1 ; le bas reste aux mains.
-  Raccord d'entrée : la transition porte, depuis la porte battante ; quand sa lumière retombe,
-  l'étoile de Pékin naît au carnet. Raccord de sortie : la même image ouvre 3.10, le sceau en
-  filigrane.
+  panneau clair, sur le ciel orangé, comme à Aluva au chapitre 1 ; le bas reste aux mains. Raccord
+  d'entrée : la transition porte ; quand sa lumière retombe, l'étoile de Pékin naît au carnet.
+  Raccord de sortie : la même image ouvre 3.10, le sceau en filigrane.
 - **Geste** : « Joignez les deux pouces, et gardez-les » : deux doigts posés n'importe où dans le
   bas de la page (y 900 à 1 500, toute la largeur) ; deux cercles d'or naissent sous eux, les
-  suivent et glissent l'un vers l'autre ; au milieu, ils se fondent en un ovale d'or, le sceau, qui
-  se ferme en 2,6 s ; l'eau se calme (les reflets cessent de trembler), le son baisse. Le réglage
-  vaut pour un téléphone comme pour une tablette. Sensation : l'immobilité, à deux mains ; aller
-  vite ne sert à rien. Équivalent : un seul doigt maintenu ; Espace maintenu ; le bouton « Faire le
-  geste ».
-- **Effets** : à l'ouverture, l'étoile de Pékin ; le sceau (l'ovale d'or reste en filigrane
-  jusqu'à la fin du tableau) ; « il veille à sa discrétion… » : un froissement d'herbe.
+  suivent et glissent l'un vers l'autre, puis se fondent en un ovale d'or, le sceau, fermé en
+  2,6 s ; l'eau se calme (les reflets cessent de trembler), le son baisse. Sensation : l'immobilité,
+  à deux mains ; aller vite ne sert à rien. Équivalent : un seul doigt maintenu ; Espace maintenu ;
+  le bouton « Faire le geste ».
+- **Effets** : au geste, le sceau (l'ovale d'or reste en filigrane jusqu'à la fin du tableau) ; « il
+  veille à sa discrétion… » : un froissement d'herbe.
 - **Son** : le Periyar du soir (moins d'oiseaux, des grillons), le clapotis au premier temps ;
   pendant le sceau, l'ambiance baisse de moitié ; le froissement d'herbe, à peine audible : Jivan
   est là, on ne le voit pas.
@@ -622,11 +607,11 @@ bouton Carnet luit une fois.
 
 **Table ronde** : semer aux quatre coins de la page, comme le prévoyait le découpage, risquait de
 tourner la page : certaines liseuses tournent quand on touche les bords. Décision : une rose des
-vents dessinée en or, quatre points bien à l'intérieur de la page ; chaque toucher y sème une
-graine que le vent emporte vers le bord. C'est la boussole de 5.3 avant son aiguille : Darshan
-sème dans toutes les directions, il n'a pas encore de nord. Les « quatre jours » se posent en haut
-de la page, avec le tic du compte, là où le téléphone de Julie les affichera en 4.7 : les mêmes
-mots, au même endroit, d'un monde à l'autre.
+vents dessinée en or, quatre points bien à l'intérieur de la page ; chaque toucher y sème une graine
+que le vent emporte vers le bord. C'est la boussole de 5.3 avant son aiguille : Darshan sème dans
+toutes les directions, il n'a pas encore de nord. Les « quatre jours » se posent en haut de la page,
+avec le tic du compte, là où le téléphone de Julie les affichera en 4.7 : les mêmes mots, au même
+endroit, d'un monde à l'autre.
 
 - **Intention** : l'élan joyeux et un peu fou de Darshan ; le temps se met à compter.
 - **Phrase-clé** : « Ainsi l’extraordinaire arpenteur de l’humanité sema aux quatre vents les graines de sa libération sans attendre. »
@@ -634,16 +619,15 @@ mots, au même endroit, d'un monde à l'autre.
   dans le bas de la page (centre 600, 1 100).
 - **Temps** : les répliques ; le geste avant la dernière phrase.
 - **Image** : `periyar-crepuscule` ; le texte en haut, sur le panneau clair.
-- **Geste** : « Semez aux quatre vents » : quatre points d'or, au nord (600, 760), à l'est
-  (940, 1 100), au sud (600, 1 440) et à l'ouest (260, 1 100) d'une rose sans aiguille, tous à plus
-  de 250 unités des bords ; à chaque toucher, une graine d'or part vers le bord correspondant,
-  portée par une rafale ; dans n'importe quel ordre, vite, « sans attendre ». Équivalent : quatre
-  touchers n'importe où (les graines partent dans l'ordre) ; Entrée quatre fois. En mouvement
-  réduit, les graines paraissent au bord, sans voler.
+- **Geste** : « Semez aux quatre vents » : quatre points d'or, au nord (600, 760), à l'est (940,
+  1 100), au sud (600, 1 440) et à l'ouest (260, 1 100) d'une rose sans aiguille, tous à plus de
+  250 unités des bords ; à chaque toucher, une graine d'or part vers le bord correspondant, portée
+  par une rafale ; dans n'importe quel ordre, vite, « sans attendre ». Équivalent : quatre touchers
+  n'importe où (les graines partent dans l'ordre) ; Entrée quatre fois. En mouvement réduit, les
+  graines paraissent au bord, sans voler.
 - **Effets** : « dans quatre jours je reçois l'élue de mon cœur » : les mots « quatre jours »
-  s'éclairent d'or dans la réplique, et leur double se pose, petit, tout en haut au milieu de la
-  page, au-dessus du panneau, jusqu'à la fin du chapitre ; un tic. Après la quatrième graine, le
-  vent se lève et reste.
+  s'éclairent d'or dans la réplique, et leur double se pose, petit, en haut de la page, jusqu'à la
+  fin du chapitre ; un tic. Après la quatrième graine, le vent se lève et reste.
 - **Son** : le Periyar ; le couteau de Jivan, qui continue pendant son refus ; le tic du compte ;
   une brise à chaque graine ; puis le vent, qui emporte la page vers le chapitre de Julie.
 - **Objets et interface** : le compte à rebours paraît, fait des mots du livre : « quatre jours ».
@@ -766,7 +750,7 @@ reste inconnue jusqu'à la vision.
 - `carnet` (3.13) : le bouton Carnet luit une fois (0,6 s), sans son : la fiche d'une porte a reçu
   une phrase.
 - `son` : un son ponctuel, rattaché à une phrase (`effet="question"`, `effet="herbe"`,
-  `effet="tic"`…) ; pour l'accord du père, `tenu=True` (repris sans montée, à l'ouverture d'une page)
+  `effet="pere"`) ; pour l'accord du père, `tenu=True` (repris sans montée, à l'ouverture d'une page)
   et `eteindre` (en millisecondes), le vocabulaire du chapitre 7. `couche` : une couche sonore
   qu'on allume ou éteint à une phrase (`couche="aube"`, `couche="couteau"`, `couche="vent"`).
 - `calligraphie` (3.7) : le paragraphe quitte le panneau et s'écrit sur le décor, au pinceau, de
@@ -783,8 +767,9 @@ reste inconnue jusqu'à la vision.
 - `braises`, `absence`, `palpite`, `bascule`, `lanterne` (`tracer`, `allumer`, et `allumee` pour
   l'état à l'ouverture de 3.11), `ornements` (`deja` à l'ouverture de 3.11), `draper` et `happe`
   (3.10, 3.11) : décrits dans les tableaux ; ils forment la scène « vision ».
-- `compte` (3.14), celui des chapitres 4 et 5 : chez Darshan, les mots en or, leur double tout en
-  haut au milieu (`place="haut"`), et le tic.
+- `compte` (3.14), celui des chapitres 4 et 5, avec leur réglage `son="tic"` : les mots
+  s'éclairent dans la phrase et leur double se pose en haut de la page, là où le téléphone de
+  Julie affiche l'heure (4.7) ; chez Darshan, en or.
 
 **Scènes écrites à la main**
 - « plier » (3.4) : le ciel, les deux étoiles et leur fil d'or, les lunettes et la clé en or
@@ -806,7 +791,8 @@ reste inconnue jusqu'à la vision.
 - `recueil` : un vieux livre ouvert vu d'au-dessus, au coin d'une table de bois ; pages vierges,
   jaunies, bords sombres et rousseurs ; lumière de lampe venue de la gauche ; aucune lettre.
 - `porte_battante` : une porte de service à un battant, peinte, hublot rond, plaque de poussée,
-  ferme-porte, au bout d'une allée de rayonnages ; à l'encre ; sans écriteau.
+  ferme-porte, au bout d'une allée de rayonnages ; à l'encre ; sans écriteau. La porte est centrée
+  en (600, 900), là où la transition `porte` fait jaillir sa lumière par défaut (vers 3.9).
 - `porte_pere` : un calque **à fond transparent** (WebP avec couche alpha), pour servir sur le noir
   de la vision comme sur le trottoir photographié de 7.12 : le haut de la photo 39434691 (y 0 à
   0,64 : linteau, battants, octogones sculptés), mis à 900 unités de large et placé à y = 420 ;
@@ -826,7 +812,7 @@ reste inconnue jusqu'à la vision.
   il meurt avec elle en 3.11, et quand Darshan se détourne de la porte en 7.13. Il contient la
   quinte de l'appel (la, mi) et lui donne sa tierce : seule la porte résout la question.
 - Repris du chapitre 1 : `question` (la quinte à vide de l'appel, 3.5), `autre-cote` (3.8).
-  Repris du chapitre 5 : `tic` (3.14).
+  Repris des chapitres 4 et 5 : le `tic` du compte (3.14).
 - Nouveaux : la couche `aube` (le chœur de l'aube, des oiseaux lointains qui s'éveillent, sans
   mélodie, sans do dièse, qui monte avec la lumière) ; pinceau, battant de porte, herbe, braises,
   battement ; la couche `couteau` (un coup toutes les 0,7 s, plus lent sur demande).
@@ -838,13 +824,13 @@ reste inconnue jusqu'à la vision.
   l'accord est toujours doublé par la lumière de la lanterne ; la quinte, par la question écrite.
 
 **Texte**
-- Un style `ciel` (3.1 et 3.4) : le texte à même le ciel, sans bandeau, crème doré sur une ombre
+- Un style `ciel` (3.1 et 3.4) : le texte à même le ciel, sans bandeau, en or pâle sur une ombre
   légère, comme les vers de la voûte (0.2) : la voix du conte, en or sur la nuit.
 - Le panneau crème proposé d'abord pour la légende (« conte ») n'y paraît plus : il prend le nom
   `papier` et reste à la fin du livre, où il paraîtra pour la première fois (7.15).
-- `haut clair` à Aluva (3.9, 3.12 à 3.14), comme au chapitre 1 ; `bas clair` dans la bibliothèque
-  (3.6 à 3.8), dont les images sont claires ; le panneau sombre en bas ailleurs (3.2, 3.3, 3.10,
-  3.11).
+- `haut clair` à Aluva (3.9, 3.12 à 3.14), comme au chapitre 1, et sur l'aube du parvis (3.5) ;
+  `bas clair` dans la bibliothèque (3.6 à 3.8), dont les images sont claires ; le panneau sombre en
+  bas ailleurs (3.2, 3.3, 3.10, 3.11).
 
 **Budget** : deux animations sur toile au plus par page, trois en 3.10 (braises, couleurs qui
 tracent la lanterne, cercles de lumière), jamais en même temps.
@@ -957,7 +943,7 @@ SCENES_CH3 = {
               gestes=[G("semer", rose=[600, 1100], sans_aiguille=True,
                         cibles=[[600, 760, 110], [940, 1100, 110], [600, 1440, 110], [260, 1100, 110]],
                         effets=[E("couche", couche="vent", oui=True)])],
-              moments=[[E("compte", valeur="quatre jours", place="haut"), E("son", effet="tic")]]),
+              moments=[E("compte", valeur="quatre jours", son="tic")]),
 }
 ```
 
@@ -1207,8 +1193,10 @@ regarder = Regarder à travers
   (6.4), la fente du local à kayaks (7.8) ; et, cruel et juste, rien derrière les portes de 6.12.
 - **`son.js`** : `pere`, un son à lui (l'accord de la majeur), qui ne dépend plus de `jour` ; la
   couche `aube` ; les sons et la couche `couteau` décrits en 6 ; l'ambiance « vision ».
-- **`build.py`** : dans `POINTS_D_ENTREE`, 3.4 en (600, 700), sur les lunettes ; 3.9 en (600, 900),
-  l'embrasure de la cabane ; 3.10 à retirer (même plan) ; 3.12 inchangé.
+- **`build.py`** : dans `POINTS_D_ENTREE`, 3.4 en (600, 700), où l'iris s'ouvre sur les lunettes ;
+  3.10 à retirer (même plan, sans balayage) ; 3.12 inchangé. Rien pour 3.9 : la transition `porte`
+  fait jaillir sa lumière d'une embrasure centrée en (600, 900), là où se tient la porte battante,
+  et le Periyar paraît dans l'embrasure qu'elle prévoit.
 - **`objets.ini`** : rien à changer ; les phrases utiles au chapitre y sont déjà (lunettes, clé,
   recueil).
 - **Pour le chapitre 7** : la porte du père est la porte d'Irun, en calques transparents
@@ -1306,6 +1294,10 @@ autres aussi, sauf ce qui est dit à la fin.
 - **3.11** : plus d'air (3.11-a : c'est la lumière qui ondule) ; la page se suffit dans Apple Books
   (3.11-b : lanterne, ornements et accord dès l'ouverture).
 - **Le compte a son tic** (3.14-a), et se pose en haut, là où Julie le verra en 4.7.
+- **Hors des notes** : le point d'entrée que la fiche demandait pour 3.9 (deux nombres, que la
+  transition `porte` ne sait pas lire) est retiré, la porte battante se tenant là où cette
+  transition fait jaillir sa lumière ; le compte prend le réglage `son="tic"` du chapitre 4 (révisé) ;
+  les tableaux restent sous 500 mots, sauf les sommets (3.2, 3.4, 3.10, 3.11).
 
 **Renforcé**
 - 3.4-a : le geste vif de 1.3, même consigne, fait la fonte et le pli d'un seul mouvement ; le
@@ -1328,16 +1320,22 @@ autres aussi, sauf ce qui est dit à la fin.
 - 3.14-b : la rose sans aiguille, la boussole de 5.3 avant son nord, descendue sous le texte.
 - F1 : `portes.ini`, avec ses trois conditions (section 7.4).
 - F2 : les questions à jour (Pékin et les fleurs de lys retirés ; l'aube et la quinte ; la coquille
-  de 3.3 ajoutée) ; « voir la section 7.4 » ; l'idée d'éteindre l'accord pendant la prière est
-  retirée : une musique qui s'éteint pendant la prière passerait pour une réponse.
+  de 3.3 ajoutée) ; en 3.11, le renvoi nomme la section 7.4 ; l'idée d'éteindre l'accord pendant la
+  prière est retirée : une musique qui s'éteint pendant la prière passerait pour une réponse.
 
 **Écarté, et pourquoi**
-- Rallumer l'étoile du matin « si Karl y tient » (3.5-b) : elle n'est pas proposée à Karl ; le
-  chapitre 5 la donne à Julie, et c'est là qu'elle a son sens.
+- Garder l'étoile du matin en l'éteignant plus tôt, au cas où Karl y tiendrait (3.5-b) : elle ne
+  lui est pas proposée ; le chapitre 5 la donne à Julie, et c'est là qu'elle a son sens.
 - Sortir du cadre la lanterne de la porte rustique (3.2-c, seconde option) : éteinte, elle ne dit
   rien du père ; elle ne fait que préparer l'œil.
-- Montrer tout de suite les mains de Jivan en dessin (3.12-a) : les mains ne se dessinent pas bien
-  à l'encre procédurale ; en attendant la photo de Karl, Jivan reste un son.
-- « Tu es là ! » lettre à lettre dépend de la synthèse : si elle ne retient pas l'écriture lettre à
-  lettre comme signature des voix intérieures (chapitres 1 et 2), la pensée reste dans l'italique du
+- En attendant la photo des mains de Jivan (3.12-a), un dessin pour les remplacer : les mains se
+  dessinent mal à l'encre procédurale ; d'ici là, Jivan reste un son.
+
+**Pour la synthèse**
+- « Tu es là ! » lettre à lettre suppose que la synthèse retienne l'écriture lettre à lettre comme
+  signature des voix intérieures (chapitres 1 et 2) ; sinon, la pensée reste dans l'italique du
   livre, sans effet (le choix de la première version).
+- Les chapitres 6 et 7 gardent l'erreur de T1 (l'accord entendu au pigeonnier) ; le chapitre 7
+  écrit encore `haut conte` en 7.15, qui devient `haut papier` ; le regard, le carnet des portes
+  (`portes.ini`) et le ciel commun à `cosmos` et à `ciel-pere` sont à régler pour tout le livre
+  (section 7.4).
