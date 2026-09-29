@@ -14,6 +14,29 @@ Le livre entier est découpé en 85 tableaux dans
 
 Rien ici n'est encore relié au site : aucune page ne pointe vers ce dossier.
 
+## Chantier en cours : le livre entier (pause du 29 septembre 2026)
+
+La réalisation du livre entier a commencé le 29 septembre ; elle s'est arrêtée à mi-chemin
+des fondations, à la demande de Karl. Ce qui est en place :
+
+| Fichier | État |
+|---|---|
+| `texte.py` | Fait. Le texte du livre, commun à la fabrication et au découpage, avec les italiques du livre imprimé rétablies. |
+| `livre.py` | Fait. Les réglages de production des 85 tableaux : décors, gestes, effets, objets gagnés ou perdus, portes franchies. |
+| `objets.ini` | Fait, à relire par Karl. Les 17 objets, leur nom, et les phrases du livre qui en parlent (vérifiées mot pour mot). |
+| `interface.ini` | Fait, à valider par Karl. Tous les textes d'interface : consignes des 67 gestes, boutons, menu, carnet des portes. |
+| `build.py` | Réécrit pour les 85 pages : 377 temps, 67 gestes, effets, sacs et portes calculés page après page, vérifications. Il attend le nouveau moteur. |
+| `src/js/` | Le nouveau moteur, en fragments : seul `base.js` est écrit. |
+
+Tant qu'un fragment du moteur manque, `build.py` s'arrête sur un message clair.
+L'extrait jouable du 28 septembre se refabrique avec la version précédente du programme
+(commit `e6921d2`).
+
+Reste à faire, dans l'ordre : les fragments du moteur (son, visuels, transitions,
+interface, récit, mécaniques, effets, scènes, départ) ; les décors qui manquent ; la partie
+jouée de bout en bout, au clavier et en mouvement réduit ; l'EPUB classique ; la tâche
+GitHub ; la mise à jour des plans et de la pull request.
+
 ## Jouer
 
 - **Sur ordinateur ou téléphone** : fabriquer (ci-dessous), puis ouvrir

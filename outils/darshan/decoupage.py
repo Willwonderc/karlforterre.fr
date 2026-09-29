@@ -23,7 +23,7 @@ import sys
 
 ICI = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(ICI))
-from build import lignes  # noqa: E402  (le texte du livre, paragraphe par paragraphe)
+from texte import lignes  # noqa: E402  (le texte du livre, paragraphe par paragraphe)
 
 RACINE = ICI.parent.parent
 SORTIE = RACINE / "docs" / "darshan-decoupage.md"

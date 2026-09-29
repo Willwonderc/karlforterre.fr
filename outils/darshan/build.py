@@ -1,18 +1,31 @@
-"""Construit la tranche verticale de Darshan : édition web et EPUB 3 en mise en page fixe.
+"""Fabrique Darshan jouable : tout le livre, en édition web et en EPUB 3 à pages fixes.
 
-Usage : python3 outils/darshan/build.py  (Python seul, sans module à installer).
-Sorties dans outils/darshan/dist/ : web/index.html et darshan-extrait-jouable.epub.
+Usage : python3 outils/darshan/build.py [--strict]
+Python seul, sans module à installer. Sorties dans outils/darshan/dist/ :
+web/index.html (le livre), web/transitions.html (banc d'essai des transitions) et
+darshan-jouable.epub. --strict (tâche GitHub) : un décor manquant est une erreur.
 
-Le texte est lu dans l'EPUB publié (livres/darshan.epub), jamais recopié à la main :
-chaque paragraphe est découpé en « temps », et le programme vérifie que les temps
-recollés redonnent exactement le paragraphe d'origine.
+Le livre réunit quatre sources, sans rien recopier à la main :
+- le texte, lu dans l'EPUB publié (texte.py), découpé en 85 tableaux (decoupage.py) ;
+- les réglages de production de chaque tableau : décor, gestes, effets (livre.py) ;
+- les objets et les phrases du livre qui parlent d'eux (objets.ini) ;
+- les textes d'interface, seuls textes qui ne sont pas de Karl (interface.ini).
+
+Chaque tableau devient une page : son texte est découpé en « temps » (une ou deux phrases,
+que le lecteur révèle l'une après l'autre), un geste attend avant la phrase qui le raconte,
+un effet se joue avec la phrase qui le fait naître. Le programme vérifie que les temps
+recollés redonnent le livre au caractère près, que chaque phrase citée par une fiche d'objet
+est dans le livre, que chaque geste a sa consigne, et que chaque mécanique, chaque effet et
+chaque texte d'interface appelés existent.
 """
+import configparser
 import html
 import json
 import pathlib
-import random
 import re
 import shutil
+import sys
+import unicodedata
 import uuid
 import zipfile
 from datetime import datetime, timezone
@@ -20,202 +33,657 @@ from datetime import datetime, timezone
 ICI = pathlib.Path(__file__).resolve().parent
 SRC = ICI / "src"
 DIST = ICI / "dist"
-LIVRE = ICI.parent.parent / "livres" / "darshan.epub"
+sys.path.insert(0, str(ICI))
+import decoupage  # noqa: E402
+import livre  # noqa: E402
+import texte as livre_texte  # noqa: E402
+from texte import lignes, position  # noqa: E402
+
+STRICT = "--strict" in sys.argv
+AVERTISSEMENTS = []
 
 
-# ---------------------------------------------------------------- le texte, tel quel
-def paragraphes(epub):
-    """Paragraphes et titres du livre, dans l'ordre, numérotés à partir de 1."""
-    with zipfile.ZipFile(epub) as z:
-        nom = next(n for n in z.namelist() if n.endswith("Darshan_Epub.xhtml"))
-        source = z.read(nom).decode("utf-8")
-    corps = source[source.find("<body"):]
-    sortie = []
-    for m in re.finditer(r'<(p|h\d)[^>]*class="([^"]*)"[^>]*>(.*?)</\1>', corps, re.S):
-        texte = html.unescape(re.sub(r"<[^>]+>", "", re.sub(r"<br\s*/?>", " / ", m.group(3)))).strip()
-        if texte:
-            sortie.append(texte)
-    return {i: t for i, t in enumerate(sortie, start=1)}
+def avertir(message):
+    if STRICT:
+        raise SystemExit("erreur : " + message)
+    AVERTISSEMENTS.append(message)
 
 
-lignes = paragraphes(LIVRE)
+def ascii_(s):
+    """« bibliothèque » → « bibliotheque » (noms internes du moteur)."""
+    return "".join(c for c in unicodedata.normalize("NFKD", s) if not unicodedata.combining(c))
 
 
-def position(numero, rang):
-    """Position de lecture : paragraphe et caractère, en un seul nombre croissant."""
-    return numero * 100000 + rang
+# ---------------------------------------------------------------- textes d'interface et objets
+def lire_ini(nom):
+    c = configparser.ConfigParser(interpolation=None, comment_prefixes=("#",), inline_comment_prefixes=None)
+    c.optionxform = str        # garder les clés telles quelles
+    with open(ICI / nom, encoding="utf-8") as f:
+        c.read_file(f)
+    return c
 
 
-def temps(numero, *debuts):
-    """Découpe le paragraphe `numero` aux phrases qui commencent par `debuts`.
+INTERFACE = lire_ini("interface.ini")
+UI = dict(INTERFACE["interface"])
+CONSIGNES = dict(INTERFACE["consignes"])
+ACTIONS = dict(INTERFACE["actions"])
+LIBELLES_PORTES = dict(INTERFACE["portes"])
+NOMS_LIEUX = dict(INTERFACE["lieux"])
 
-    Chaque temps garde sa position de fin dans le livre (data-lu) : le moteur sait
-    ainsi, à tout moment, jusqu'où le lecteur a lu, et n'affiche dans les fiches
-    d'objet que des phrases déjà lues."""
-    p = lignes[numero]
-    coupes = [0]
-    for d in debuts:
-        k = p.find(d)
-        assert k > 0, (numero, d)
-        coupes.append(k)
-    coupes.append(len(p))
-    morceaux = [(p[a:b], numero, a, b) for a, b in zip(coupes, coupes[1:])]
-    assert "".join(m[0] for m in morceaux) == p
+
+def normal(s):
+    """Pour chercher une phrase : espaces insécables et apostrophes ramenées à une forme."""
+    return s.replace(" ", " ").replace(" ", " ").replace("'", "’")
+
+
+def chercher(phrase, debut=livre_texte.PREMIER, fin=livre_texte.DERNIER):
+    """(paragraphe, début, fin) de la seule occurrence de `phrase` dans le livre."""
+    p = normal(phrase.strip())
+    trouves = [(n, normal(lignes[n]).find(p)) for n in range(debut, fin + 1) if p in normal(lignes[n])]
+    if len(trouves) != 1:
+        raise SystemExit(f"« {phrase} » : {len(trouves)} occurrences dans le livre au lieu d'une")
+    n, k = trouves[0]
+    return n, k, k + len(p)
+
+
+def chapitre_de(numero):
+    """Titre du chapitre qui contient le paragraphe (tel qu'il est dans le livre)."""
+    if numero < 17:
+        return decoupage.CHAPITRES[0][0]
+    if numero >= 216:
+        return decoupage.CHAPITRES[8][0]
+    return lignes[max(n for n in livre_texte.CHAPITRES if n <= numero)]
+
+
+def lire_objets():
+    c = lire_ini("objets.ini")
+    objets = {}
+    for id_ in c.sections():
+        o = c[id_]
+        cites = []
+        for ligne in o["phrases"].splitlines():
+            if not ligne.strip():
+                continue
+            n, a, b = chercher(ligne)
+            cites.append({"texte": lignes[n][a:b], "chapitre": chapitre_de(n), "lu": position(n, b)})
+        fiche = {"nom": o["nom"].strip(), "porteur": o["porteur"].strip(), "citations": cites}
+        assert fiche["porteur"] in ("darshan", "julie"), id_
+        if o.get("metamorphose"):
+            n, a, b = chercher(o["metamorphose"])
+            fiche["metamorphose"] = {"texte": lignes[n][a:b], "lu": position(n, b)}
+        objets[id_] = fiche
+    return objets
+
+
+OBJETS = lire_objets()
+# Les lunettes changent d'allure (binocles) sans cesser d'être les lunettes : un effet qui
+# parle des lunettes trouve aussi les binocles.
+FAMILLES = {"lunettes": ["lunettes", "binocles"]}
+
+
+# ---------------------------------------------------------------- découper le texte en temps
+# fin de phrase : ponctuation forte (et guillemet fermant) suivie d'une majuscule, d'un tiret ou
+# d'un guillemet ouvrant ; ou fin d'une citation dans une liste de citations (« … », « … »)
+FIN_DE_PHRASE = re.compile(r'[.!?…]+[\u00a0 ]*[»”"]?(?=\s+[«“"—A-ZÀ-ÖØ-ÞŒ])|[»”],(?=\s+«)')
+SPECIAUX_ENTIERS = ("seuil", "poeme", "toit", "tuiles", "pigeonnier")   # scènes du prototype : un paragraphe, un temps
+MOTS_MAX, MOTS_MIN = 40, 8
+
+
+def debuts_de_phrase(p, a, b):
+    """Débuts des phrases du paragraphe p entre a et b (a compris)."""
+    s = lignes[p]
+    debuts = [a]
+    for m in FIN_DE_PHRASE.finditer(s, a, b):
+        k = m.end()
+        while k < b and s[k].isspace():
+            k += 1
+        if a < k < b:
+            debuts.append(k)
+    return sorted(set(debuts))
+
+
+def phrase_qui_contient(p, k):
+    """(début, fin) de la phrase du paragraphe p qui contient le caractère k."""
+    d = debuts_de_phrase(p, 0, len(lignes[p])) + [len(lignes[p])]
+    for x, y in zip(d, d[1:]):
+        if x <= k < y:
+            return x, y
+    return d[-2], d[-1]
+
+
+def mots(s):
+    return len(s.split())
+
+
+def temps_du_segment(p, a, b, forcees, manuelles, special):
+    """Coupe le morceau [a, b) du paragraphe p en temps : [(début, fin)]."""
+    s = lignes[p]
+    if manuelles is not None:
+        coupes = [a]
+        for d in manuelles:
+            k = s.find(d, a)
+            assert a < k < b, (p, d)
+            coupes.append(k)
+        coupes.append(b)
+        return list(zip(coupes, coupes[1:]))
+    if special:
+        return [(a, b)]
+    phrases = debuts_de_phrase(p, a, b) + [b]
+    morceaux, debut = [], a
+    for x, y in zip(phrases, phrases[1:]):
+        if x == debut:
+            continue
+        courant = mots(s[debut:x])
+        if x in forcees or (courant >= MOTS_MIN and courant + mots(s[x:y]) > MOTS_MAX):
+            morceaux.append((debut, x))
+            debut = x
+    morceaux.append((debut, b))
     return morceaux
 
 
-def para(morceaux, classe=None):
-    c = f' class="{classe}"' if classe else ""
-    corps = "".join(f'<span class="temps" data-lu="{position(n, fin)}">{html.escape(m, quote=False)}</span>'
-                    for m, n, debut, fin in morceaux)
-    return f"<p{c}>{corps}</p>"
+# ---------------------------------------------------------------- les tableaux
+TABLEAUX = decoupage.TABLEAUX
+assert [t["n"] for t in TABLEAUX] == list(livre.SCENES), "livre.py et decoupage.py ne décrivent pas les mêmes tableaux"
+DEBUT_CHAPITRE = {c: next(t["n"] for t in TABLEAUX if int(t["n"].split(".")[0]) == c) for c in range(0, 9)}
+# D'où part ou s'ouvre un balayage d'entrée (x y en unités de scène), quand ce n'est pas le centre.
+POINTS_D_ENTREE = {"1.3": "600 1000", "3.4": "600 900", "3.10": "600 900", "3.12": "600 900"}
 
 
-def debut(morceaux):
-    """Position de lecture juste avant le premier temps d'une page."""
-    m, n, d, f = morceaux[0]
-    return position(n, d)
+def plage_du_tableau(i):
+    a = decoupage.position(TABLEAUX[i])
+    b = decoupage.position(TABLEAUX[i + 1]) if i + 1 < len(TABLEAUX) else (livre_texte.DERNIER + 1, 0)
+    segments = []
+    for p in range(a[0], b[0] + 1):
+        if p > livre_texte.DERNIER:
+            continue
+        debut = a[1] if p == a[0] else 0
+        fin = b[1] if p == b[0] else len(lignes[p])
+        if fin > debut:
+            segments.append((p, debut, fin))
+    return segments
 
 
-POEME = [temps(i) for i in range(11, 17)]
-assert POEME[0][0][0].startswith("Les murs séparent") and POEME[-1][0][0].startswith("La noirceur figée")
-assert lignes[17] == "Un ciel mouvant"
-p18 = temps(18)
-p19 = temps(19, "Il est d’un régal")
-p20 = temps(20, "Comme toi je vis", "Encore une fois")
-p21 = temps(21, "Il enjambe", "Ses lunettes fumées")
-p22 = temps(22, "Face à l’assemblage", "Les tenant par la branche", "D’un geste vif",
-            "Elle est adaptée", "Elle est affrétée", "À peine insérée")
-p23 = temps(23, "Il ne reste qu’à la pousser", "Notre héros affleure", "Face à lui s’écoule")
+def ancrer(phrase, segments):
+    """(paragraphe, caractère) d'une phrase citée par un geste ou un moment, dans le tableau."""
+    p_ = normal(phrase)
+    for p, a, b in segments:
+        k = normal(lignes[p]).find(p_, a)
+        if k >= 0 and k < b:
+            return p, k
+    raise SystemExit(f"« {phrase} » n'est pas dans le tableau")
 
 
-# ---------------------------------------------------------------- les objets et leurs phrases
-# Une fiche d'objet ne contient que des phrases du livre, vérifiées ici mot pour mot, et
-# le moteur n'affiche que celles que le lecteur a déjà lues (position « lu »).
-CHAPITRE_1 = "Un ciel mouvant"
-OBJETS = {
-    "lunettes": {
-        "nom": "Les lunettes fumées",
-        "citations": [
-            (21, "Ses lunettes fumées sur le nez, son gilet de toile sans manches en prise avec le vent, Darshan danse sur les tuiles jusqu’au pigeonnier.", CHAPITRE_1),
-            (22, "Face à l’assemblage de grilles et de bois, il ôte ses lunettes.", CHAPITRE_1),
-            (22, "Les tenant par la branche, elles vibrent entre ses doigts, leurs couleurs s’altèrent.", CHAPITRE_1),
-        ],
-    },
-    "cle": {
-        "nom": "La clé",
-        # le fragment affiché en grand pendant l'éclat de la métamorphose
-        "metamorphose": (22, "elles se transforment"),
-        "citations": [
-            (22, "D’un geste vif, digne d’un prestidigitateur, elles se transforment, passant de lunettes à une clé au format pincé.", CHAPITRE_1),
-            (22, "Elle est adaptée à la porte par sa finesse\u00a0; assortie aux grillages par ses rayures et sa rouille.", CHAPITRE_1),
-            (22, "Elle est affrétée pour l’amener où son cœur l’emportera.", CHAPITRE_1),
-        ],
-    },
-}
+def construire(i):
+    """Tout ce qu'il faut pour écrire la page du tableau i."""
+    t, s = TABLEAUX[i], livre.SCENES[TABLEAUX[i]["n"]]
+    n = t["n"]
+    segments = plage_du_tableau(i)
+    # les ancres : où tombent les gestes, les moments et les effets rattachés à une phrase
+    gestes = []
+    for k, ((phrase, _, _), g) in enumerate(zip(t["gestes"], s["gestes"]), start=1):
+        cle = f"{n}.{k}"
+        if cle not in CONSIGNES:
+            raise SystemExit(f"interface.ini : pas de consigne pour le geste {cle}")
+        g = dict(g)
+        g.pop("consigne", None)
+        g["consigne"] = CONSIGNES[cle]
+        if cle in ACTIONS:
+            g["action"] = ACTIONS[cle]
+        g["cle"] = cle
+        gestes.append((ancrer(phrase, segments), g))
+    assert len(t["gestes"]) == len(s["gestes"]), f"{n} : {len(t['gestes'])} gestes au découpage, {len(s['gestes'])} dans livre.py"
+    assert len(t["moments"]) == len(s["moments"]) or not s["moments"], f"{n} : moments"
+    effets = []
+    for (phrase, _), e in zip(t["moments"], s["moments"]):
+        if e:
+            effets.append((ancrer(phrase, segments), e if isinstance(e, list) else [e]))
+    for phrase, e in s["extra"].items():
+        effets.append((ancrer(phrase, segments), e if isinstance(e, list) else [e]))
+    # coupes forcées : chaque phrase ancrée commence un temps ; après un geste « apres », la
+    # phrase suivante aussi
+    forcees = {}
+    for (p, k), g in gestes:
+        x, y = phrase_qui_contient(p, k)
+        forcees.setdefault(p, set()).add(x)
+        if g.get("apres"):
+            forcees[p].add(y)
+    for (p, k), _ in effets:
+        forcees.setdefault(p, set()).add(phrase_qui_contient(p, k)[0])
+    # les temps, et les titres de chapitre
+    blocs = []                # (paragraphe, [(début, fin)], titre ?)
+    for p, a, b in segments:
+        if livre_texte.styles[p] == "Chapitres":
+            blocs.append((p, [(a, b)], True))
+            continue
+        manuelles = s["coupes"].get(p)
+        if manuelles is not None:
+            manuelles = [d for d in manuelles if a < lignes[p].find(d, a) < b]
+        entier = s["special"] in SPECIAUX_ENTIERS
+        blocs.append((p, temps_du_segment(p, a, b, forcees.get(p, set()), manuelles, entier), False))
+    temps = [(p, a, b) for p, morceaux, titre in blocs if not titre for a, b in morceaux]
+
+    def indice(p, k):
+        for j, (q, a, b) in enumerate(temps):
+            if q == p and a <= k < b:
+                return j
+        raise SystemExit(f"{n} : ancre hors des temps ({p}, {k})")
+    portes = {}
+    for (p, k), g in gestes:
+        j = indice(p, k) + (1 if g.get("apres") else 0)
+        g["avant"] = j
+        portes.setdefault(j, []).append(g)
+    par_temps = {}
+    for (p, k), liste in effets:
+        par_temps.setdefault(indice(p, k), []).extend(liste)
+    return dict(t=t, s=s, blocs=blocs, temps=temps, gestes=[g for _, g in gestes], portes=portes, effets=par_temps)
 
 
-def donnees_objets():
-    """Les fiches, prêtes pour le moteur ; chaque citation est cherchée dans son paragraphe."""
-    sortie = {}
-    for cle, o in OBJETS.items():
-        cites = []
-        for numero, texte, chapitre in o["citations"]:
-            k = lignes[numero].find(texte)
-            assert k >= 0, (cle, numero, texte)
-            cites.append({"texte": texte, "chapitre": chapitre, "lu": position(numero, k + len(texte))})
-        sortie[cle] = {"nom": o["nom"], "citations": cites}
-        if "metamorphose" in o:
-            numero, texte = o["metamorphose"]
-            k = lignes[numero].find(texte)
-            assert k >= 0, (cle, numero, texte)
-            sortie[cle]["metamorphose"] = {"texte": texte, "lu": position(numero, k + len(texte))}
-    brut = json.dumps(sortie, ensure_ascii=False)
+# ---------------------------------------------------------------- l'état des personnages, page après page
+def trouver(sac, id_):
+    for x in FAMILLES.get(id_, [id_]):
+        if x in sac:
+            return x
+    return None
+
+
+def appliquer(etat, e):
+    """Ce qu'un effet change aux sacs, aux portes et à la magie (le moteur fait de même en direct)."""
+    nom = e["nom"]
+    sacs = etat["sacs"]
+    if nom == "objet+":
+        sac = sacs[e.get("sac") or OBJETS[e["id"]]["porteur"]]
+        if e["id"] not in sac:
+            sac.append(e["id"])
+    elif nom == "objet-":
+        for sac in sacs.values():
+            x = trouver(sac, e["id"])
+            if x:
+                sac.remove(x)
+    elif nom in ("remplacer", "eclat-court"):
+        sac = sacs[e.get("sac", "darshan")]
+        x = trouver(sac, e["de"])
+        if x:
+            sac[sac.index(x)] = e["vers"]
+        elif e["vers"] not in sac:
+            sac.append(e["vers"])
+    elif nom == "transfert":
+        x = trouver(sacs[e["de"]], e["id"])
+        if x:
+            sacs[e["de"]].remove(x)
+        if e["id"] not in sacs[e["vers"]]:
+            sacs[e["vers"]].append(e["id"])
+    elif nom == "porte":
+        if e["id"] not in etat["portes"]:
+            etat["portes"].append(e["id"])
+    elif nom == "desenchantement":
+        for x in ("cle", "lunettes", "binocles"):
+            if x in sacs["darshan"]:
+                sacs["darshan"].remove(x)
+        etat["magie"] = False
+
+
+def etats(pages):
+    """Pour chaque page : les sacs, les portes et la magie au moment où elle s'ouvre."""
+    etat = {"sacs": {"darshan": [], "julie": []}, "portes": [], "magie": True}
+    for pg in pages:
+        pg["etat"] = json.loads(json.dumps(etat))
+        s = pg["s"]
+        for e in s["debut"]:
+            appliquer(etat, e)
+        for j in range(len(pg["temps"]) + 1):
+            for g in pg["portes"].get(j, []):
+                for e in g.get("effets", []):
+                    appliquer(etat, e)
+                if g["meca"] == "etals":           # chaque étal touché donne son objet
+                    for id_ in g["objets"]:
+                        appliquer(etat, {"nom": "objet+", "id": id_})
+            for e in pg["effets"].get(j, []):
+                appliquer(etat, e)
+        for e in s["bilan"]:
+            appliquer(etat, e)
+        tous = s["debut"] + s["bilan"] + [x for l in pg["effets"].values() for x in l] + \
+            [x for g in pg["gestes"] for x in g.get("effets", [])]
+        for e in tous:
+            verifier_references(pg["t"]["n"], e)
+
+
+def verifier_references(n, e):
+    """Chaque effet nomme un objet d'objets.ini, une porte du carnet ou un sac qui existent."""
+    objets = set(OBJETS) | set(FAMILLES)
+    nom = e["nom"]
+    if nom in ("objet+", "objet-", "transfert"):
+        assert e["id"] in objets, f"{n} : objet « {e['id']} » absent d'objets.ini"
+    if nom in ("remplacer", "eclat-court"):
+        assert e["de"] in objets and e["vers"] in objets, f"{n} : objets de « {nom} »"
+    if nom in ("eclat", "eclat-brise", "fiche") and "objet" in e:
+        assert e["objet"] in objets, f"{n} : objet « {e['objet']} » absent d'objets.ini"
+    if nom == "porte":
+        assert e["id"] in livre.PORTES, f"{n} : porte « {e['id']} » inconnue"
+    for cle in ("sac", "de", "vers"):
+        if nom == "transfert" or cle == "sac":
+            if cle in e:
+                assert e[cle] in ("darshan", "julie"), f"{n} : sac « {e[cle]} »"
+
+
+# ---------------------------------------------------------------- balisage
+def e_(s):
+    return html.escape(s, quote=False)
+
+
+def attr(s):
+    return html.escape(s, quote=True)
+
+
+LANGUES = {"mudrā": "sa", "Dhyana mudrā": "sa", "Angelo mio": "it"}
+
+
+def classes_du_paragraphe(p, a):
+    c = []
+    if p in livre_texte.ITALIQUES_PARAGRAPHES:
+        c.append("voix")
+    if livre_texte.est_vers(p):
+        c.append("vers")
+    if 8 <= p <= 10:
+        c.append("dedicace")
+    if 189 <= p <= 193:
+        c.append("lettre-ligne")
+    if p in (74, 75):
+        c.append("sanskrit")
+    if lignes[p].startswith("—"):
+        c.append("replique")
+    if a > 0:
+        c.append("suite-para")
+    return c
+
+
+def span_temps(p, a, b):
+    """Un temps : son texte, avec les mots en italique du livre imprimé."""
+    s = lignes[p]
+    morceaux, k = [], a
+    for x, y in livre_texte.italiques(p):
+        if p in livre_texte.ITALIQUES_PARAGRAPHES or y <= a or x >= b:
+            continue
+        x, y = max(x, a), min(y, b)
+        morceaux.append(e_(s[k:x]))
+        lang = LANGUES.get(s[x:y])
+        morceaux.append(f'<i lang="{lang}" xml:lang="{lang}">{e_(s[x:y])}</i>' if lang else f"<i>{e_(s[x:y])}</i>")
+        k = y
+    morceaux.append(e_(s[k:b]))
+    return f'<span class="temps" data-lu="{position(p, b)}">{"".join(morceaux)}</span>'
+
+
+CLASSES_TEXTE = {"bas": "", "haut": "en-haut", "bas clair": "clair", "nu": "nu", "lettre": "lettre",
+                 "poeme": "poeme", "nu poeme": "nu poeme"}
+
+
+def balisage_texte(pg, classe_sup=""):
+    s = pg["s"]
+    classe = " ".join(x for x in ("texte", CLASSES_TEXTE[s["texte"]], classe_sup) if x)
+    corps = []
+    for p, morceaux, titre in pg["blocs"]:
+        if titre:
+            corps.append(f'<h1 class="chapitre">{e_(lignes[p])}</h1>')
+            continue
+        c = classes_du_paragraphe(p, morceaux[0][0])
+        cl = f' class="{" ".join(c)}"' if c else ""
+        corps.append(f"<p{cl}>{''.join(span_temps(p, a, b) for a, b in morceaux)}</p>")
+    return f'<div class="{classe}">{"".join(corps)}</div>'
+
+
+def src_image(nom, img):
+    return f"{img}decors/{nom}.webp"
+
+
+def decor_existe(nom):
+    d = livre.DECORS[nom]
+    if d["type"] in ("uni", "prototype"):
+        return True
+    return (SRC / "img" / "decors" / f"{nom}.webp").exists()
+
+
+def balisage_decor(pg, img, web):
+    s, n = pg["s"], pg["t"]["n"]
+    noms = s["decor"]
+    premier = livre.DECORS[noms[0]]
+    if premier["type"] == "prototype":
+        f = premier["fichiers"]
+        if noms[0] == "toits":
+            return (f'<div class="decor" aria-hidden="true"><div class="ciel-tournant calque-anime"><img src="{img}{f[0]}" alt=""/></div>'
+                    f'<img src="{img}{f[1]}" alt=""/></div>')
+        if noms[0] == "tuiles":
+            return (f'<div class="decor" aria-hidden="true"><div class="monde calque-anime">'
+                    f'<img src="{img}{f[0]}" alt=""/><img src="{img}{f[1]}" alt=""/></div></div>')
+        if noms[0] == "porte-pigeonnier":
+            return f'<div class="decor calque-anime" aria-hidden="true"><img src="{img}{f[0]}" alt=""/></div>'
+        return f'<div class="decor" aria-hidden="true"><img src="{img}{f[0]}" alt=""/></div>'
+    plans = []
+    for k, nom in enumerate(noms):
+        d = livre.DECORS[nom]
+        classe = "plan vu" if k == 0 else "plan"
+        if d["type"] == "uni":
+            plans.append(f'<div class="{classe} uni" data-plan="{k}" style="background:{d["couleur"]}"></div>')
+            continue
+        if not decor_existe(nom):
+            avertir(f"{n} : décor « {nom} » pas encore fabriqué (python3 outils/darshan/decors.py {nom})")
+            plans.append(f'<div class="{classe} uni manquant" data-plan="{k}" style="background:#223"></div>')
+            continue
+        charge = ' loading="lazy" decoding="async"' if web and (k > 0 or pg["rang"] > 1) else ""
+        plans.append(f'<img class="{classe}" data-plan="{k}" src="{src_image(nom, img)}" alt=""{charge}/>')
+    monde = "julie" if livre.DECORS[noms[0]]["type"] == "photo" else "darshan"
+    return f'<div class="decor decor-{monde}" aria-hidden="true">{"".join(plans)}</div>'
+
+
+TITRE_DE_PAGE = {"0.1": "Darshan"}
+
+
+def config_json(pg):
+    """Les réglages que le moteur lit dans la page : gestes, effets, fin."""
+    s = pg["s"]
+    cfg = {
+        "n": pg["t"]["n"],
+        "gestes": pg["gestes"],
+        "portes": {str(j): [g["cle"] for g in liste] for j, liste in pg["portes"].items()},
+        "effets": {str(j): l for j, l in pg["effets"].items()},
+        "debut": s["debut"],
+        "bilan": s["bilan"],
+        "decors": s["decor"],
+    }
+    return json_sur(cfg)
+
+
+def json_sur(v):
+    brut = json.dumps(v, ensure_ascii=False, separators=(",", ":"))
     # sûr en HTML comme en XHTML
     return brut.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
 
 
-# ---------------------------------------------------------------- la carte du carnet des portes
-def carte_portes():
-    def xy(lon, lat):
-        return (lon + 180) / 360 * 1060, (90 - lat) / 180 * 600
-    rng = random.Random(4)
-    fond = "".join(f'<circle cx="{rng.uniform(0, 1060):.0f}" cy="{rng.uniform(0, 600):.0f}" r="{rng.uniform(0.6, 1.8):.1f}" fill="#d8d2c2" opacity="{rng.uniform(0.2, 0.6):.2f}"/>' for _ in range(160))
-    grille = "".join(f'<line x1="0" y1="{y}" x2="1060" y2="{y}" stroke="#39406a" stroke-width="1" opacity="0.5"/>' for y in range(0, 601, 100))
-    grille += "".join(f'<line x1="{x}" y1="0" x2="{x}" y2="600" stroke="#39406a" stroke-width="1" opacity="0.5"/>' for x in range(0, 1061, 106))
-    px, py = xy(2.35, 48.86)
-    ax, ay = xy(76.35, 10.11)
-    mx, my = (px + ax) / 2, min(py, ay) - 120
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 600" role="img" '
-            f'aria-label="Carte en forme de ciel étoilé : une ligne d’or relie Paris à Aluva.">'
-            f'<rect width="1060" height="600" fill="#070a1c"/>{grille}{fond}'
-            f'<path d="M{px:.0f},{py:.0f} Q{mx:.0f},{my:.0f} {ax:.0f},{ay:.0f}" fill="none" stroke="#f4c56a" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/>'
-            f'<circle cx="{px:.0f}" cy="{py:.0f}" r="9" fill="#fff3cf"/><circle cx="{ax:.0f}" cy="{ay:.0f}" r="9" fill="#fff3cf"/>'
-            f'<text x="{px - 14:.0f}" y="{py - 18:.0f}" fill="#efe6d2" font-size="30" text-anchor="end" font-family="Unna, serif">Paris</text>'
-            f'<text x="{ax + 16:.0f}" y="{ay + 40:.0f}" fill="#efe6d2" font-size="30" font-family="Unna, serif">Aluva</text></svg>')
-
-
-# ---------------------------------------------------------------- les scènes
-def scenes(img):
-    """Balisage des scènes ; `img` est le préfixe des chemins d'images."""
-    return [
-        dict(id="seuil", titre="Darshan", son="cosmos", lu0=0, objets="", entree="", html=f'''
-<div class="decor" aria-hidden="true"><img src="{img}ciel-poeme.jpg" alt=""/></div>
+def balisage_seuil(pg, img):
+    """La page de titre : le titre, la dédicace, et la porte « Ouvrir »."""
+    return f'''
 <div class="titre-livre">
-  <p class="auteur">Karl Forterre</p>
+  <p class="auteur">{e_(UI["auteur"])}</p>
   <h1 class="titre">Darshan</h1>
-  <p class="devanagari" lang="sa">दर्शन</p>
-  <p class="genre">nouvelle — extrait jouable</p>
-  <p class="ui" style="margin-top: 9cqw;"><button type="button" class="bouton-porte">Ouvrir</button></p>
-</div>'''),
-        dict(id="poeme", titre="Poème d’ouverture", son="cosmos", lu0=debut(POEME[0]), objets="", entree="porte", html=f'''
-<div class="decor" aria-hidden="true"><img src="{img}ciel-poeme.jpg" alt=""/></div>
-<div class="texte poeme">{"".join(para(l) for l in POEME)}</div>'''),
-        dict(id="toit", titre="Un ciel mouvant", son="nuit", lu0=debut(p18), objets="", entree="bandes", html=f'''
-<div class="decor" aria-hidden="true">
-  <div class="ciel-tournant calque-anime"><img src="{img}ciel-nuit.jpg" alt=""/></div>
-  <img src="{img}ville.webp" alt=""/>
-</div>
-<div class="texte">
-  <h1 class="chapitre">Un ciel mouvant</h1>
-  {para(p18)}{para(p19)}{para(p20, "voix")}
-</div>'''),
-        dict(id="tuiles", titre="Sur les tuiles du seizième", son="nuit", lu0=debut(p21), objets="", entree="encre", html=f'''
-<div class="decor" aria-hidden="true">
-  <div class="monde calque-anime">
-    <img src="{img}ciel-nuit.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
-    <img src="{img}ville.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
-  </div>
-</div>
-<div class="texte">{para(p21)}</div>'''),
-        dict(id="pigeonnier", titre="Le pigeonnier", son="nuit", lu0=debut(p22), objets="lunettes", entree="iris 600 1000", html=f'''
-<div class="decor calque-anime" aria-hidden="true"><img src="{img}porte.jpg" alt=""/></div>
-<div class="texte en-haut">{para(p22)}{para(p23[:2])}</div>'''),
-        dict(id="aluva", titre="Aluva", son="kerala", lu0=debut(p23[2:]), objets="cle", entree="porte", html=f'''
-<div class="decor" aria-hidden="true"><img src="{img}aluva.jpg" alt=""/></div>
-<div class="texte clair">{para(p23[2:], "suite-para")}</div>
-<div class="fin-extrait ui">
-  <p class="fin-titre">Fin de l’extrait jouable</p>
-  <p>Première porte franchie : du pigeonnier du seizième au local à kayaks d’Aluva.</p>
-  <p><button type="button" class="ouvrir-carnet">Carnet des portes</button> <button type="button" class="recommencer">Recommencer</button></p>
-</div>
-<div class="carnet ui" role="dialog" aria-label="Carnet des portes">
-  <h2>Carnet des portes</h2>
-  {carte_portes()}
-  <p>1. Le pigeonnier des toits du seizième, à Paris → le local à kayaks d’Aluva, au Kerala.</p>
-  <p style="opacity:.7;font-style:italic;">Chaque porte franchie s’allume ici comme une étoile. (Toucher pour fermer.)</p>
-</div>'''),
-    ]
+  <p class="devanagari" lang="hi" xml:lang="hi">दर्शन</p>
+  <p class="genre">{e_(UI["genre"])}</p>
+  <p class="edition">{e_(UI["edition"])}</p>
+  {balisage_texte(pg, "dedicace")}
+  <p class="ui boutons-seuil"><button type="button" class="bouton-porte">{e_(UI["ouvrir"])}</button> <button type="button" class="bouton-reprendre" hidden="hidden">{e_(UI["reprendre"])}</button></p>
+</div>'''
 
 
-def entree(s):
-    """Balayage d'entrée de la scène (voir le moteur) : type, puis d'où il s'ouvre."""
-    return f' data-entree="{s["entree"]}"' if s.get("entree") else ""
+def section(pg, img, web):
+    t, s = pg["t"], pg["s"]
+    n = t["n"]
+    etat = pg["etat"]
+    attrs = {
+        "class": "scene" + (" monde-julie" if t["monde"] == "Julie" else "") + (" sans-magie" if not etat["magie"] else ""),
+        "id": "s-" + n.replace(".", "-"),
+        "data-scene": n,
+        "data-special": s["special"] or "",
+        "data-son": ascii_(decoupage.ambiance(t)),
+        "data-monde": ascii_(t["monde"]).lower().replace(" ", "-"),
+        "data-lu0": str(position(pg["temps"][0][0], pg["temps"][0][1]) if pg["temps"] else 0),
+        "data-sac": " ".join(etat["sacs"]["darshan"]),
+        "data-sac-julie": " ".join(etat["sacs"]["julie"]),
+        "data-portes": " ".join(etat["portes"]),
+        "aria-label": TITRE_DE_PAGE.get(n, t["titre"]),
+    }
+    if t["entree"] != "—":
+        attrs["data-entree"] = (t["entree"] + " " + POINTS_D_ENTREE.get(n, "")).strip()
+    if not web:
+        attrs["epub:type"] = "titlepage" if n == "0.1" else "bodymatter chapter" if n in DEBUT_CHAPITRE.values() else "bodymatter"
+    a = " ".join(f'{k}="{attr(v)}"' for k, v in attrs.items() if v != "" or k in ("data-sac", "data-portes"))
+    if s["special"] == "seuil":
+        corps = balisage_decor(pg, img, web) + balisage_seuil(pg, img)
+    else:
+        corps = balisage_decor(pg, img, web) + balisage_texte(pg)
+    return f'<section {a}>{corps}<script type="application/json" class="config">{config_json(pg)}</script></section>'
 
 
-# ---------------------------------------------------------------- banc d'essai des transitions (web)
-# Une page de démonstration : chaque bouton joue un balayage ou un effet d'objet. Le monde de
-# Darshan passe par ses décors ; celui de Julie par trois photographies de Karl.
+# ---------------------------------------------------------------- les données communes
+def carte_du_ciel():
+    """Lieux (longitude, latitude) et portes (départ, arrivée) du carnet."""
+    return {
+        "lieux": {k: {"nom": NOMS_LIEUX[k], "lon": v[0], "lat": v[1]} for k, v in livre.LIEUX.items()},
+        "portes": {k: {"de": v[0], "vers": v[1], "libelle": LIBELLES_PORTES[k]} for k, v in livre.PORTES.items()},
+    }
+
+
+def donnees_communes(pages):
+    chapitres = []
+    for c, (titre, _) in decoupage.CHAPITRES.items():
+        n = DEBUT_CHAPITRE[c]
+        rang = next(pg["rang"] for pg in pages if pg["t"]["n"] == n)
+        chapitres.append({"titre": titre, "tableau": n, "rang": rang})
+    return {"ui": UI, "objets": OBJETS, "familles": FAMILLES, "carte": carte_du_ciel(), "chapitres": chapitres,
+            "pages": len(pages)}
+
+
+def fichier_donnees(pages):
+    return "/* Données du livre, écrites par build.py : ne pas modifier à la main. */\nwindow.DARSHAN = " + \
+        json_sur(donnees_communes(pages)) + ";\n"
+
+
+# ---------------------------------------------------------------- vérifications
+def verifier(pages):
+    # 1. le texte : les temps et les titres recollés redonnent le livre, au caractère près
+    for pg in pages:
+        attendu = "".join(lignes[p][a:b] for p, a, b in plage_du_tableau(pg["rang"] - 1))
+        obtenu = "".join(lignes[p][a:b] for p, morceaux, _ in pg["blocs"] for a, b in morceaux)
+        assert obtenu == attendu, f"{pg['t']['n']} : le texte de la page ne redonne pas le livre"
+    tout = "".join(lignes[p][a:b] for pg in pages for p, morceaux, _ in pg["blocs"] for a, b in morceaux)
+    assert tout == "".join(lignes[p] for p in range(livre_texte.PREMIER, livre_texte.DERNIER + 1)), "le livre n'est pas complet"
+    # 2. les consignes et les actions : ni manquante, ni en trop
+    cles = {g["cle"] for pg in pages for g in pg["gestes"]}
+    for cle in CONSIGNES:
+        assert cle in cles, f"interface.ini : consigne {cle} sans geste"
+    for cle in ACTIONS:
+        assert cle in cles, f"interface.ini : action {cle} sans geste"
+    # 3. le moteur connaît chaque mécanique et chaque effet ; chaque texte d'interface appelé existe
+    moteur = moteur_source()
+    mecaniques = set(re.findall(r"Mecaniques\[?\.?'?([a-z-]+)'?\]?\s*=\s*function", moteur))
+    effets = set(re.findall(r"Effets\[?\.?'?([a-z+-]+)'?\]?\s*=\s*function", moteur))
+    for pg in pages:
+        n = pg["t"]["n"]
+        speciaux = pg["s"]["special"] in ("seuil", "poeme", "toit", "tuiles", "pigeonnier")
+        for g in pg["gestes"]:
+            assert speciaux or g["meca"] in mecaniques, f"{n} : mécanique « {g['meca']} » inconnue du moteur"
+            for e in g.get("effets", []):
+                assert e["nom"] in effets, f"{n} : effet « {e['nom']} » inconnu du moteur"
+        for e in [x for l in pg["effets"].values() for x in l] + pg["s"]["debut"]:
+            assert speciaux or e["nom"] in effets, f"{n} : effet « {e['nom']} » inconnu du moteur"
+    for cle in set(re.findall(r"\bui\('([a-z_]+)'\)", moteur)):
+        assert cle in UI, f"le moteur demande le texte d'interface « {cle} », absent d'interface.ini"
+    # 4. aucune phrase française écrite en dur dans le moteur (hors commentaires) : tout passe par ui()
+    sans_commentaires = re.sub(r"//[^\n]*|/\*.*?\*/", "", moteur, flags=re.S)
+    for m in re.finditer(r"textContent\s*=\s*'([^']*[a-zà-ÿ]{3}[^']*)'", sans_commentaires):
+        raise SystemExit(f"texte d'interface écrit en dur dans le moteur : « {m.group(1)} »")
+
+
+# ---------------------------------------------------------------- le moteur : fragments assemblés
+ORDRE_MOTEUR = ["base.js", "son.js", "visuels.js", "transitions.js", "interface.js", "recit.js",
+                "mecaniques.js", "effets.js", "scenes.js", "depart.js"]
+
+
+def moteur_source():
+    corps = []
+    for f in ORDRE_MOTEUR:
+        chemin = SRC / "js" / f
+        if not chemin.exists():
+            raise SystemExit(f"Le moteur du livre entier est en chantier : src/js/{f} n'est pas encore écrit.\n"
+                             "Voir « Chantier en cours » dans outils/darshan/README.md.")
+        corps.append(f"// ---- {f}\n" + chemin.read_text(encoding="utf-8"))
+    return ("/* Darshan, le livre des portes : moteur du livre jouable, assemblé par build.py à partir de\n"
+            "   src/js/ (ne pas modifier ce fichier : modifier les fragments). */\n"
+            "(function () {\n  'use strict';\n" + "\n".join(corps) + "\n})();\n")
+
+
+# ---------------------------------------------------------------- ressources
+POLICES = ["Amiri-Regular.woff2", "Amiri-Italic.woff2", "Amiri-Bold.woff2", "Unna-Regular.woff2",
+           "Unna-Italic.woff2", "Tiro-Darshan.woff2"]
+LICENCES = ["OFL-Amiri.txt", "OFL-Unna.txt", "OFL-Tiro.txt"]
+IMAGES_PROTOTYPE = ["ciel-poeme.jpg", "ciel-nuit.jpg", "ville.webp", "porte.jpg", "aluva.jpg"]
+TYPES = {".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".woff2": "font/woff2",
+         ".txt": "text/plain", ".js": "application/javascript", ".css": "text/css"}
+
+
+def css_source():
+    return (SRC / "moteur.css").read_text(encoding="utf-8")
+
+
+def css_epub():
+    """En mise en page fixe, la page mesure 1200 px : 1cqw = 12 px, écrit en dur."""
+    return re.sub(r"(-?\d+(?:\.\d+)?)cqw", lambda m: f"{float(m.group(1)) * 12:g}px", css_source())
+
+
+def decors_utilises():
+    noms = []
+    for s in livre.SCENES.values():
+        for nom in s["decor"]:
+            d = livre.DECORS[nom]
+            if d["type"] in ("photo", "encre", "dessin") and nom not in noms and decor_existe(nom):
+                noms.append(nom)
+    return noms
+
+
+def copier_ressources(racine, pages):
+    for sous in ("css", "js", "fonts", "img/decors"):
+        (racine / sous).mkdir(parents=True, exist_ok=True)
+    for f in POLICES + LICENCES:
+        shutil.copy(SRC / "fonts" / f, racine / "fonts" / f)
+    for f in IMAGES_PROTOTYPE:
+        shutil.copy(SRC / "img" / f, racine / "img" / f)
+    for nom in decors_utilises():
+        shutil.copy(SRC / "img" / "decors" / f"{nom}.webp", racine / "img" / "decors" / f"{nom}.webp")
+    (racine / "js" / "moteur.js").write_text(moteur_source(), encoding="utf-8")
+    (racine / "js" / "donnees.js").write_text(fichier_donnees(pages), encoding="utf-8")
+
+
+# ---------------------------------------------------------------- édition web
+def page_web(titre, description, corps, robots=True):
+    return f'''<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>{e_(titre)}</title>
+<meta name="description" content="{attr(description)}"/>
+{'<meta name="robots" content="noindex"/>' if robots else ''}
+<link rel="stylesheet" href="css/moteur.css"/>
+<style>html,body{{height:100%;}} body{{display:flex;align-items:center;justify-content:center;min-height:100%;}}</style>
+</head>
+<body>
+<main class="plateau">
+{corps}
+</main>
+<script src="js/donnees.js"></script>
+<script src="js/moteur.js"></script>
+</body>
+</html>
+'''
+
+
+# Banc d'essai des transitions : chaque bouton joue un balayage ou un effet d'objet.
 BANC_DECORS = [
     ("darshan", "ciel-poeme.jpg", "Ciel étoilé : photographie de Karl Forterre, retouchée"),
     ("darshan", "porte.jpg", "Le pigeonnier : dessin"),
@@ -226,7 +694,6 @@ BANC_DECORS = [
     ("julie", "photo-pluie.jpg", "« Pluie » : photographie de Karl Forterre"),
 ]
 BANC = [
-    # type, libellé, monde, légende, attributs
     ("fondu", "Fondu", "darshan", "Même lieu, même moment : un fondu au noir.", {}),
     ("encre", "Encre", "darshan", "Darshan change de lieu : trois coups de pinceau traversent la page.", {}),
     ("bandes", "Bandes", "darshan", "Un chapitre commence : les bandes claquent et son titre s’y pose.", {"titre": "Un ciel mouvant"}),
@@ -247,144 +714,99 @@ def banc(img):
     boutons = []
     for t, libelle, monde, legende, attrs in BANC:
         classe = monde if monde == "julie" else ("objet" if not monde else "")
-        extra = "".join(f' data-{k}="{html.escape(v)}"' for k, v in attrs.items())
+        extra = "".join(f' data-{k}="{attr(v)}"' for k, v in attrs.items())
         boutons.append(f'<button type="button" class="{classe}" data-type="{t}" data-monde="{monde or "darshan"}"'
-                       f' title="{html.escape(legende)}"{extra}>{libelle}</button>')
-    decors = "".join(f'<li data-monde="{m}" data-src="{img}{f}">{html.escape(c)}</li>' for m, f, c in BANC_DECORS)
-    return f'''
+                       f' title="{attr(legende)}"{extra}>{libelle}</button>')
+    decors = "".join(f'<li data-monde="{m}" data-src="{img}{f}">{e_(c)}</li>' for m, f, c in BANC_DECORS)
+    return f'''<section class="scene" id="s-banc" data-scene="banc" data-special="banc" data-son="cosmos" data-lu0="{position(24, 0)}" data-sac="" data-sac-julie="" data-portes="" aria-label="Les transitions">
 <div class="decor" aria-hidden="true"><img src="{img}ciel-poeme.jpg" alt=""/></div>
 <h1 class="banc-titre">Darshan : les transitions</h1>
-<p class="banc-legende">Chaque bouton joue une transition ou un effet d’objet, tel qu’il servira dans le livre.</p>
-<p class="banc-credit">{html.escape(BANC_DECORS[0][2])}</p>
+<p class="banc-legende">Chaque bouton joue une transition ou un effet d’objet, tel qu’il sert dans le livre.</p>
+<p class="banc-credit">{e_(BANC_DECORS[0][2])}</p>
 <div class="banc-boutons ui">{"".join(boutons)}</div>
-<ul class="banc-decors">{decors}</ul>'''
+<ul class="banc-decors">{decors}</ul>
+<script type="application/json" class="config">{{"n":"banc","gestes":[],"portes":{{}},"effets":{{}},"debut":[],"bilan":[],"decors":[]}}</script>
+</section>'''
 
 
-POLICES = ["Amiri-Regular.woff2", "Amiri-Italic.woff2", "Amiri-Bold.woff2", "Unna-Regular.woff2",
-           "Unna-Italic.woff2", "Tiro-Darshan.woff2"]
-IMAGES = ["ciel-poeme.jpg", "ciel-nuit.jpg", "ville.webp", "porte.jpg", "aluva.jpg"]
-TYPES = {".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp"}
-
-
-def css_source():
-    return (SRC / "moteur.css").read_text(encoding="utf-8")
-
-
-def css_epub():
-    """En mise en page fixe, la page mesure 1200 px : 1cqw = 12 px, écrit en dur."""
-    return re.sub(r"(-?\d+(?:\.\d+)?)cqw", lambda m: f"{float(m.group(1)) * 12:g}px", css_source())
-
-
-def copier_ressources(racine):
-    for sous in ("css", "js", "fonts", "img"):
-        (racine / sous).mkdir(parents=True, exist_ok=True)
-    for f in POLICES:
-        shutil.copy(SRC / "fonts" / f, racine / "fonts" / f)
-    for f in IMAGES:
-        shutil.copy(SRC / "img" / f, racine / "img" / f)
-    shutil.copy(SRC / "moteur.js", racine / "js" / "moteur.js")
-
-
-# ---------------------------------------------------------------- édition web
-def web():
+def web(pages):
     racine = DIST / "web"
     if racine.exists():
         shutil.rmtree(racine)
-    copier_ressources(racine)
+    copier_ressources(racine, pages)
     (racine / "css" / "moteur.css").write_text(css_source(), encoding="utf-8")
-    corps = "\n".join(f'<section class="scene" id="s-{s["id"]}" data-scene="{s["id"]}" data-son="{s["son"]}" '
-                      f'data-lu0="{s["lu0"]}" data-objets="{s["objets"]}"{entree(s)} '
-                      f'aria-label="{html.escape(s["titre"])}">{s["html"]}</section>' for s in scenes("img/"))
     for f in IMAGES_BANC:
         shutil.copy(SRC / "img" / f, racine / "img" / f)
-    banc_page = f'''<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Darshan — les transitions</title>
-<meta name="description" content="Prototype : les transitions du livre jouable Darshan, de Karl Forterre."/>
-<link rel="stylesheet" href="css/moteur.css"/>
-<style>html,body{{height:100%;}} body{{display:flex;align-items:center;justify-content:center;min-height:100%;}}</style>
-</head>
-<body>
-<main class="plateau">
-<section class="scene" id="s-banc" data-scene="banc" data-son="cosmos" data-lu0="{position(24, 0)}" data-objets="" aria-label="Les transitions">{banc("img/")}</section>
-</main>
-<script type="application/json" id="donnees-objets">{donnees_objets()}</script>
-<script src="js/moteur.js"></script>
-</body>
-</html>
-'''
-    (racine / "transitions.html").write_text(banc_page, encoding="utf-8")
-    page = f'''<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Darshan — extrait jouable</title>
-<meta name="description" content="Prototype : le début de Darshan, nouvelle de Karl Forterre, en livre qui se joue."/>
-<link rel="stylesheet" href="css/moteur.css"/>
-<style>html,body{{height:100%;}} body{{display:flex;align-items:center;justify-content:center;min-height:100%;}}</style>
-</head>
-<body>
-<main class="plateau">
-{corps}
-</main>
-<script type="application/json" id="donnees-objets">{donnees_objets()}</script>
-<script src="js/moteur.js"></script>
-</body>
-</html>
-'''
-    (racine / "index.html").write_text(page, encoding="utf-8")
+    corps = "\n".join(section(pg, "img/", True) for pg in pages)
+    (racine / "index.html").write_text(page_web(
+        "Darshan — Karl Forterre, édition jouable",
+        "Darshan, nouvelle de Karl Forterre, en livre qui se joue : le texte intégral, révélé geste après geste.",
+        corps), encoding="utf-8")
+    (racine / "transitions.html").write_text(page_web(
+        "Darshan — les transitions", "Les transitions du livre jouable Darshan, de Karl Forterre.", banc("img/")),
+        encoding="utf-8")
     return racine
 
 
 # ---------------------------------------------------------------- EPUB 3, mise en page fixe
-def xhtml(s):
+def xhtml(pg):
+    t = pg["t"]
+    titre = TITRE_DE_PAGE.get(t["n"], t["titre"])
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="fr" lang="fr" class="epub">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=1200, height=1800"/>
-<title>{html.escape(s["titre"])}</title>
+<title>{e_(titre)}</title>
 <link rel="stylesheet" type="text/css" href="../css/moteur.css"/>
 </head>
 <body>
 <div class="plateau">
-<section class="scene" id="s-{s["id"]}" data-scene="{s["id"]}" data-son="{s["son"]}" data-lu0="{s["lu0"]}" data-objets="{s["objets"]}"{entree(s)} epub:type="{"titlepage" if s["id"] == "seuil" else "bodymatter"}" aria-label="{html.escape(s["titre"])}">{s["html"]}</section>
+{section(pg, "../img/", False)}
 </div>
-<script type="application/json" id="donnees-objets">{donnees_objets()}</script>
+<script src="../js/donnees.js"></script>
 <script src="../js/moteur.js"></script>
 </body>
 </html>
 '''
 
 
-def epub():
+def nom_de_page(pg):
+    return f"p{pg['rang']:03d}.xhtml"
+
+
+def epub(pages):
     racine = DIST / "epub"
     if racine.exists():
         shutil.rmtree(racine)
     contenu = racine / "EPUB"
-    copier_ressources(contenu)
+    copier_ressources(contenu, pages)
     (contenu / "css" / "moteur.css").write_text(css_epub(), encoding="utf-8")
     (contenu / "xhtml").mkdir()
-    pages = []
-    for n, s in enumerate(scenes("../img/"), start=1):
-        nom = f"{n:02d}-{s['id']}.xhtml"
-        (contenu / "xhtml" / nom).write_text(xhtml(s), encoding="utf-8")
-        pages.append((nom, s))
-    toc = "".join(f'<li><a href="xhtml/{nom}">{html.escape(s["titre"])}</a></li>' for nom, s in pages)
+    for pg in pages:
+        (contenu / "xhtml" / nom_de_page(pg)).write_text(xhtml(pg), encoding="utf-8")
+    couverture = SRC / "img" / "couverture.jpg"
+    if couverture.exists():
+        shutil.copy(couverture, contenu / "img" / "couverture.jpg")
+    else:
+        avertir("couverture manquante : src/img/couverture.jpg (decors.py la fabrique)")
+    # sommaire : les chapitres, puis chaque tableau du chapitre
+    toc = []
+    for c, (titre, _) in decoupage.CHAPITRES.items():
+        du_chapitre = [pg for pg in pages if int(pg["t"]["n"].split(".")[0]) == c]
+        sous = "".join(f'<li><a href="xhtml/{nom_de_page(pg)}">{e_(TITRE_DE_PAGE.get(pg["t"]["n"], pg["t"]["titre"]))}</a></li>'
+                       for pg in du_chapitre)
+        toc.append(f'<li><a href="xhtml/{nom_de_page(du_chapitre[0])}">{e_(titre)}</a><ol>{sous}</ol></li>')
     (contenu / "nav.xhtml").write_text(f'''<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="fr" lang="fr">
 <head><meta charset="UTF-8"/><title>Sommaire</title></head>
 <body>
-<nav epub:type="toc" id="toc"><h1>Sommaire</h1><ol>{toc}</ol></nav>
+<nav epub:type="toc" id="toc"><h1>Sommaire</h1><ol>{"".join(toc)}</ol></nav>
 <nav epub:type="landmarks" hidden="hidden"><h1>Repères</h1><ol>
-<li><a epub:type="titlepage" href="xhtml/{pages[0][0]}">Titre</a></li>
-<li><a epub:type="bodymatter" href="xhtml/{pages[1][0]}">Début du texte</a></li>
+<li><a epub:type="titlepage" href="xhtml/{nom_de_page(pages[0])}">Titre</a></li>
+<li><a epub:type="bodymatter" href="xhtml/{nom_de_page(pages[1])}">Début du texte</a></li>
 </ol></nav>
 </body>
 </html>
@@ -392,28 +814,36 @@ def epub():
     maintenant = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     manifeste = ['<item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>',
                  '<item id="css" href="css/moteur.css" media-type="text/css"/>',
-                 '<item id="js" href="js/moteur.js" media-type="application/javascript"/>']
+                 '<item id="js" href="js/moteur.js" media-type="application/javascript"/>',
+                 '<item id="donnees" href="js/donnees.js" media-type="application/javascript"/>']
     for f in POLICES:
         manifeste.append(f'<item id="f-{f.split(".")[0]}" href="fonts/{f}" media-type="font/woff2"/>')
-    for f in IMAGES:
-        prop = ' properties="cover-image"' if f == "ciel-poeme.jpg" else ""
-        manifeste.append(f'<item id="i-{f.split(".")[0]}" href="img/{f}" media-type="{TYPES[pathlib.Path(f).suffix]}"{prop}/>')
-    for nom, s in pages:
-        props = "scripted svg" if "<svg" in s["html"] else "scripted"
-        manifeste.append(f'<item id="p-{s["id"]}" href="xhtml/{nom}" media-type="application/xhtml+xml" properties="{props}"/>')
-    spine = "".join(f'<itemref idref="p-{s["id"]}"/>' for _, s in pages)
+    for f in LICENCES:
+        manifeste.append(f'<item id="l-{f.split(".")[0]}" href="fonts/{f}" media-type="text/plain"/>')
+    for f in IMAGES_PROTOTYPE:
+        manifeste.append(f'<item id="i-{f.split(".")[0]}" href="img/{f}" media-type="{TYPES[pathlib.Path(f).suffix]}"/>')
+    for nom in decors_utilises():
+        manifeste.append(f'<item id="d-{nom}" href="img/decors/{nom}.webp" media-type="image/webp"/>')
+    if couverture.exists():
+        manifeste.append('<item id="couverture" href="img/couverture.jpg" media-type="image/jpeg" properties="cover-image"/>')
+    for pg in pages:
+        props = "scripted svg" if "<svg" in xhtml(pg) else "scripted"
+        manifeste.append(f'<item id="p{pg["rang"]:03d}" href="xhtml/{nom_de_page(pg)}" media-type="application/xhtml+xml" properties="{props}"/>')
+    spine = "".join(f'<itemref idref="p{pg["rang"]:03d}"/>' for pg in pages)
     opf = f'''<?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uid" xml:lang="fr"
   prefix="rendition: http://www.idpf.org/vocab/rendition/# ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/">
 <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <dc:identifier id="uid">urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, "https://karlforterre.fr/darshan/extrait-jouable")}</dc:identifier>
-  <dc:title>Darshan — extrait jouable (prototype)</dc:title>
+  <dc:identifier id="uid">urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, "https://karlforterre.fr/darshan/jouable")}</dc:identifier>
+  <dc:title>Darshan</dc:title>
   <dc:creator>Karl Forterre</dc:creator>
+  <dc:publisher>Karl Forterre</dc:publisher>
   <dc:language>fr</dc:language>
-  <dc:description>Prototype d’édition jouable du début de Darshan (poème d’ouverture et début du chapitre « Un ciel mouvant »). Le texte est celui de l’édition publiée.</dc:description>
+  <dc:description>Darshan, nouvelle de Karl Forterre, en édition jouable : le texte intégral du livre, révélé geste après geste, dans les décors de ses photographies.</dc:description>
   <meta property="dcterms:modified">{maintenant}</meta>
   <meta property="rendition:layout">pre-paginated</meta>
   <meta property="rendition:spread">none</meta>
+  <meta property="rendition:orientation">portrait</meta>
   <meta property="ibooks:specified-fonts">true</meta>
   <meta property="schema:accessMode">textual</meta>
   <meta property="schema:accessMode">visual</meta>
@@ -425,7 +855,7 @@ def epub():
   <meta property="schema:accessibilityHazard">noFlashingHazard</meta>
   <meta property="schema:accessibilityHazard">motionSimulation</meta>
   <meta property="schema:accessibilityHazard">noSoundHazard</meta>
-  <meta property="schema:accessibilitySummary">Tout le texte de l’extrait est présent dans chaque page et lisible sans animation (bouton « Lecture ») ; les images sont décoratives, le texte les décrit ; chaque geste a un équivalent par simple toucher et au clavier ; les mouvements sont réduits si le système le demande.</meta>
+  <meta property="schema:accessibilitySummary">Tout le texte du livre est présent dans chaque page et lisible sans animation (réglage « Lecture ») ; les images sont décoratives ; chaque geste a un équivalent par simple toucher et au clavier, et un bouton pour avancer sans le faire ; les mouvements sont réduits si le système le demande.</meta>
 </metadata>
 <manifest>
 {chr(10).join("  " + m for m in manifeste)}
@@ -440,7 +870,7 @@ def epub():
 <rootfiles><rootfile full-path="EPUB/package.opf" media-type="application/oebps-package+xml"/></rootfiles>
 </container>
 ''', encoding="utf-8")
-    sortie = DIST / "darshan-extrait-jouable.epub"
+    sortie = DIST / "darshan-jouable.epub"
     with zipfile.ZipFile(sortie, "w") as z:
         z.writestr(zipfile.ZipInfo("mimetype"), "application/epub+zip", compress_type=zipfile.ZIP_STORED)
         for f in sorted(racine.rglob("*")):
@@ -449,7 +879,25 @@ def epub():
     return sortie
 
 
+# ---------------------------------------------------------------- tout
+def pages_du_livre():
+    pages = []
+    for i in range(len(TABLEAUX)):
+        pg = construire(i)
+        pg["rang"] = i + 1
+        pages.append(pg)
+    etats(pages)
+    return pages
+
+
 if __name__ == "__main__":
+    PAGES = pages_du_livre()
+    verifier(PAGES)
     DIST.mkdir(exist_ok=True)
-    print("web :", web())
-    print("epub :", epub())
+    print("web :", web(PAGES))
+    print("epub :", epub(PAGES))
+    n_temps = sum(len(pg["temps"]) for pg in PAGES)
+    n_gestes = sum(len(pg["gestes"]) for pg in PAGES)
+    print(f"{len(PAGES)} pages, {n_temps} temps, {n_gestes} gestes")
+    for a in AVERTISSEMENTS:
+        print("attention :", a)
