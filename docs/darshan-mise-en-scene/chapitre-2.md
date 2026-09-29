@@ -36,6 +36,7 @@ la solitude de Julie.
 | Le cœur : la chamade, qui bat toute seule sous le doigt | 2.2 | les deux cœurs qui valsent (2.9), le premier battement de Julie (4.6), la synchronie (5.9), le baiser (7.10), puis le silence (7.11) |
 | Julie de dos, le chouchou rouge (photo « Dos ») | 2.2 | peinte (2.3), son souvenir (4.6), vers le rendez-vous avec le paquet au ruban rouge (6.1) |
 | La vitrine de la rencontre | 2.2 | « Il m’a abordée devant cette vitrine de la rue Rousseau. » (4.6) ; le reflet d'une vitrine (6.2) |
+| La voix intérieure de Darshan, écrite lettre à lettre comme son appel au père (1.1), mais à l'encre et pour Julie | 2.3 | « Tu es là ! Je t’ai enfin trouvé ! » (3.11), la liste de 6.2 |
 | La photo qui devient peinture (Darshan quitte le réel) | 2.3 | l'encre sur la photo, effacée par le réel (2.10) ; l'encre qui force le réel (6.11 à 6.13) ; la porte peinte qui perce la photo (7.12) ; l'encre qui se retire (7.15) |
 | Le déclic de l'obturateur, son du monde de Julie | 2.1 | chaque passage d'une photo à l'autre, jusqu'au chapitre 7 |
 | Le téléphone de Julie, vu pour la première fois | 2.5 | son sac et son interface (4.3, 4.7), la galerie (5.6), « Darshan, tu m’entends ? » (7.5) |
@@ -107,32 +108,27 @@ lecteur, l'assiette s'efface dans le flou. L'attention de Darshan, c'est la mise
   d'Aluva mais dans une photographie, et ce réel, Darshan ne le regarde qu'à travers elle. Julie
   se présente d'abord par le toucher.
 - **Phrase-clé** : « Il caresse la main de sa belle avec délicatesse. »
-- **Point de vue et plan** : caméra subjective, assis, à hauteur de table. Au premier plan son
-  assiette (le tartare) ; au fond, le verre de Julie à la paille, un verre d'eau taillé, son
-  téléphone posé ; Julie commence au bord haut du cadre (une manche mauve), jamais son visage. Le
-  plan respire à peine.
+- **Point de vue et plan** : caméra subjective, assis à la table : au premier plan son assiette ;
+  au fond, le verre de Julie, son téléphone, sa manche mauve au bord du cadre, jamais son visage.
 - **Temps** : le titre claque dans les bandes ; puis trois temps : « Attablé, … il n’en n’a que
   pour elle. » ; le geste ; « Il caresse la main de sa belle avec délicatesse. De ses doigts il en
   lit les traits. » ; « Il cultive le désir de partager un baiser à l’issue de ce repas. », seul :
   la promesse que 2.9 tiendra.
 - **Image** : « Table heureuse » (34532663), telle quelle, cadrée sur toute la table (x 0,3). La
-  lumière rose d'un néon de salle teinte tout de vermillon : la couleur de l'amour est déjà dans
-  la photo. Mots-clés de Karl : « fête, amour, restaurant, séparation, repas ». Entrée : les bandes
-  du chapitre (encre, vermillon, or, le titre), dont la seconde moitié découvre la photo par les
-  lames de l'obturateur, avec son double déclic : le premier déclic du livre, le son du monde de
-  Julie. Sortie : obturateur vers le souvenir.
-- **Geste** : caresser, lentement, la place de sa main, entre les deux verres (le reflet habituel
-  la signale ; tant que la photo de la main n'existe pas, on caresse sa place). La progression ne
-  compte que les mouvements lents : aller vite n'avance à rien, sans jamais échouer. À mesure, le
-  tartare, net comme Karl l'a photographié, se dissout dans le flou, pendant que le côté de Julie
-  reste tel quel : « ne prête guère attention à son assiette » devient une sensation. Sans geste :
-  maintenir le doigt, ou Espace, 2,4 s ; « Faire le geste » après 8 s.
+  lumière rose d'un néon teinte tout de vermillon : la couleur de l'amour est dans la photo.
+  Entrée : les bandes du titre, dont la seconde moitié découvre la photo par les lames de
+  l'obturateur : le premier déclic du livre, le son du monde de Julie. Sortie : obturateur.
+- **Geste** : caresser, lentement, la place de sa main, entre les deux verres (tant que la photo
+  de la main n'existe pas, on caresse sa place). Seuls les mouvements lents comptent : aller vite
+  n'avance à rien, sans jamais échouer. À mesure, le tartare, net comme Karl l'a photographié, se
+  dissout dans le flou : « ne prête guère attention à son assiette » devient une sensation. Sans
+  geste : maintenir le doigt, ou Espace, 2,4 s ; « Faire le geste » après 8 s.
 - **Effets** : le flou suit le geste, hors d'une zone gardée (le côté de Julie), et reste jusqu'à
   la fin de la page.
-- **Son** : ambiance « restaurant » (couverts, murmure de salle, pas du serveur), qui entre avec le
-  déclic. Pendant la caresse, la salle baisse d'un cran. Pas encore de cœur : il est pour 2.2.
-- **Objets et interface** : au début, la clé redevient lunettes, sans annonce (il vient d'arriver
-  par la porte de la cabane à kayaks, deuxième étoile du carnet). Rien de nouveau.
+- **Son** : ambiance « restaurant » (couverts, murmure, pas du serveur), qui entre avec le déclic ;
+  pendant la caresse, la salle baisse avec le flou. Pas encore de cœur : il est pour 2.2.
+- **Objets et interface** : au début, la clé redevient lunettes, sans annonce (il arrive par la
+  porte de la cabane à kayaks). Rien de nouveau.
 - **Rimes** : la main ouvre un motif : « Darshan pose sa main sur celle de Julie » (6.10), la main
   retirée (6.13), « frôle de sa main le bras délicat » (7.11). L'assiette oubliée revient en 2.6.
   « Il cultive le désir de partager un baiser » annonce le seuil (2.9).
@@ -156,17 +152,15 @@ ajouter ». Le lecteur pose le doigt et ne bouge plus ; le cœur bat tout seul.
 - **Point de vue et plan** : caméra subjective, debout sur le trottoir, à quelques pas derrière
   elle : Julie de dos, cheveux châtains, chouchou rouge ; les vitrines lumineuses à droite. Plan
   fixe : il « restait là, bras ballants ».
-- **Temps** : sept temps courts, comme des battements : « Il se rappelle leur rencontre comme si
-  elle se conjuguait au présent. » ; « Au premier regard qu’ils ont échangé, il savait qu’il était
-  déjà épris d’elle. » ; le geste ; « La chamade battait en lui sans qu’il n’ait rien à y ajouter. »,
-  seul ; « Partait-il à ce moment-là visiter un musée, … si doux. » ; « Elle, elle ne l’avait pas
-  encore vu, … de saison. » ; « Elle appréciait … aux courbes élancées. » ; « Son cœur balançait
-  tandis que celui de Darshan devenait fébrile. », seul : la chute.
-- **Image** : « Dos » (33035648), telle quelle (x 0,5, y 0,45). La chevelure châtaine est celle
-  dont Darshan parlait à Jivan (« sa chevelure châtaine », 1.6) ; le chouchou rouge est le premier
-  vermillon que porte Julie. C'est la signature de Julie dans tout le livre : on la voit de dos,
-  comme Darshan l'a vue la première fois. Entrée : obturateur. Sortie : même plan (le souvenir
-  continue en 2.3).
+- **Temps** : sept temps courts, comme des battements : « Il se rappelle … au présent. » ; « Au
+  premier regard … épris d’elle. » ; le geste ; « La chamade battait en lui … », seul ;
+  « Partait-il … si doux. » ; « Elle, elle ne l’avait pas encore vu, … de saison. » ; « Elle
+  appréciait … élancées. » ; « Son cœur balançait tandis que celui de Darshan devenait fébrile. »,
+  seul : la chute.
+- **Image** : « Dos » (33035648), telle quelle (x 0,5, y 0,45) : « sa chevelure châtaine » (1.6),
+  et un chouchou rouge, le premier vermillon que porte Julie. C'est sa signature dans tout le
+  livre : on la voit de dos, comme Darshan l'a vue la première fois. Entrée : obturateur. Sortie :
+  même plan (le souvenir continue en 2.3).
 - **Geste** : maintenir, n'importe où (halo au milieu de l'image). Au contact, un coup sourd,
   « cet électrochoc si doux », puis le cœur part à 72 battements par minute et s'emballe pendant
   2,6 s ; à chaque battement, un anneau vermillon part du doigt et le décor bat, à peine
@@ -181,13 +175,12 @@ ajouter ». Le lecteur pose le doigt et ne bouge plus ; le cœur bat tout seul.
   devant et la rue recule ; à la balance, un balancier feutré, deux tics, l'un à gauche, l'autre à
   droite. Ce n'est pas encore un battement : le premier cœur de Julie, on l'entendra en 4.6.
 - **Objets et interface** : rien.
-- **Rimes** : ce cœur (ce timbre, cet anneau) est la signature que reprendront 2.9 (deux cœurs qui
-  valsent), 4.6 (les deux premiers battements de Julie, pour lui), 5.9 (son cœur « choisit la
-  synchronie d’une dépendance à deux » : le lecteur accorde le balancier de Julie à la chamade de
-  Darshan) et 7.10 (un seul cœur sous le baiser, qui ralentit, puis le silence de 7.11). La
-  vitrine : Julie la racontera en 4.6, sur la même image, d'abord floue comme un souvenir qu'on
-  cherche. Le chouchou rouge annonce le ruban rouge de 6.1, et « Son cœur balançait », « Son nœud
-  vacille au vent comme son cœur » (6.1).
+- **Rimes** : ce cœur (ce timbre, cet anneau) revient en 2.9 (deux cœurs qui valsent), 4.6 (les
+  deux premiers battements de Julie, pour lui), 5.9 (son cœur « choisit la synchronie d’une
+  dépendance à deux » : le lecteur accorde le balancier de Julie à la chamade) et 7.10 (un seul
+  cœur sous le baiser, qui ralentit jusqu'au silence de 7.11). La vitrine : Julie la racontera en
+  4.6, sur la même image, d'abord floue. Le chouchou rouge annonce le ruban de 6.1, et « Son cœur
+  balançait », « Son nœud vacille au vent comme son cœur » (6.1).
 - **À valider par Karl** : « Dos » montre une personne réelle, de dos, et une passante lointaine
   à gauche ; elle sert aussi en 4.6 et 6.1 (rime voulue). On ne voit ni le mannequin, ni les
   guêtres, ni la robe : le repérage de la vitrine (R3, partagé avec le chapitre 4) les donnerait.
@@ -196,9 +189,12 @@ ajouter ». Le lecteur pose le doigt et ne bouge plus ; le cœur bat tout seul.
 
 **Table ronde.** Garder le geste « Touchez-la : le reste s'efface » ? Le designer d'interaction y
 tenait ; le dramaturge répond que le blason se lit, qu'il est le seul passage en italique du
-chapitre (le livre imprimé le compose ainsi) et qu'un geste le couperait. Décision : pas de
-geste. Au diable les autres, et même les commandes : la photo du souvenir devient d'elle-même la
-peinture de Darshan, la rue retourne au papier, il n'y a qu'elle.
+chapitre (le livre imprimé le compose ainsi : c'est la voix intérieure de Darshan) et qu'un geste
+le couperait. Décision : pas de geste. Au diable les autres, et même les commandes : la photo du
+souvenir devient d'elle-même la peinture de Darshan, la rue retourne au papier, il n'y a qu'elle.
+Et sa voix intérieure s'écrit lettre après lettre, comme son appel à son père en 1.1 : le même
+effet `voix`, à l'encre sur le papier au lieu de l'or sur la nuit. C'est le moment typographique
+du chapitre.
 
 - **Intention** : montrer en un seul mouvement le décalage du chapitre : le réel (la photo de
   Karl) devient la vision de Darshan (l'encre). Et faire sentir que le visage de Julie n'existe que
@@ -211,7 +207,8 @@ peinture de Darshan, la rue retourne au papier, il n'y a qu'elle.
   bouche en fleur ! » ; « Son nom suffit à m’emporter, … tout en me laissant sans voix. » (la
   devinette du nom) ; « Je ne dors pas quand je pense à toi… », seul : le plus intime, il la tutoie
   en pensée. Italique, comme dans le livre imprimé ; texte en haut de la page, sans panneau, à
-  l'encre sur le papier de la peinture.
+  l'encre sur le papier de la peinture ; chaque temps s'écrit lettre après lettre (20 ms par
+  lettre, un bref éclat d'or sur chacune), et un toucher l'achève d'un coup.
 - **Image** : « Dos » passée à l'encre et à l'aquarelle, même cadre, avec une réserve : hors d'une
   ellipse qui la contient, la rue, les vitrines et la passante s'effacent dans le papier (essai
   fait : les cheveux deviennent des traits d'encre, le chouchou une tache vermillon, le vichy un
@@ -219,18 +216,21 @@ peinture de Darshan, la rue retourne au papier, il n'y a qu'elle.
   2,8 s de la photo à la peinture. Sortie : même plan (la question de Julie tombe sur la
   peinture).
 - **Geste** : aucun.
-- **Effets** : au premier temps, le décor passe à l'encre (fondu de 2,8 s), et un voile tombe sur
-  la barre de commandes (« Objets », « Carnet », « Menu » à 35 % d'opacité, toujours utilisables)
-  jusqu'au réveil.
+- **Effets** : au premier temps, le décor passe à l'encre (fondu de 2,8 s) ; la voix intérieure
+  s'écrit (`voix`, à l'encre) ; un voile tombe sur la barre de commandes (« Objets », « Carnet »,
+  « Menu » à 35 % d'opacité, toujours utilisables) jusqu'au réveil.
 - **Son** : la rue s'éteint en 2,5 s (les autres) ; il ne reste que le cœur, plus doux (96). Pas
   de musique.
 - **Objets et interface** : la barre voilée. En mode Lecture : la peinture seule, sans fondu.
-- **Rimes** : la peinture de Julie annonce les toiles de Darshan (« Un seul couple est couché sur
-  toile, il danse main dans la main », 6.6). « il rime avec « délit » » : devinette dont la page
-  suivante donne la réponse ; le lecteur apprend le nom de Julie en se réveillant. Les
-  photographies de Paris paraissaient dans l'encre en 1.7 ; ici, une photographie devient encre :
-  un pas de plus dans la grammaire des passages, jusqu'à 7.12 et 7.15. Premier des deux rêves du
-  chapitre (l'autre : 2.10).
+- **Rimes** : la même voix intérieure, écrite de la même façon, appelait son père en 1.1
+  (« Papa, où es-tu ? ») et l'appellera encore devant la porte inconnue (« Tu es là ! Je t’ai enfin
+  trouvé ! », 3.11) ; ici, elle tutoie Julie : les deux quêtes de Darshan ont la même voix, et le
+  livre les nouera (3.13, 7.14). La peinture de Julie annonce les toiles de Darshan (« Un seul
+  couple est couché sur toile, il danse main dans la main », 6.6). « il rime avec « délit » » :
+  devinette dont la page suivante donne la réponse ; le lecteur apprend le nom de Julie en se
+  réveillant. Les photographies de Paris paraissaient dans l'encre en 1.7 ; ici, une photographie
+  devient encre : un pas de plus dans la grammaire des passages, jusqu'à 7.12 et 7.15. Premier
+  des deux rêves du chapitre (l'autre : 2.10).
 - **À valider par Karl** : la réserve est une retouche de sa photo, du côté de Darshan (l'encre) ;
   la coquille « ses yeux d’Ocre » reste telle.
 
@@ -291,8 +291,8 @@ plan sur celui de Julie, posé sur la table. Le manque se voit : il n'y en a qu'
 - **Geste** : aucun.
 - **Effets** : « Tu n’as pas de téléphone » : coupe franche sur le gros plan ; « Il n’y a pas de
   meilleure façon » : coupe franche, retour à la table.
-- **Son** : restaurant ; pendant l'insert, la salle baisse de moitié : un instant de lucidité. Le
-  téléphone ne vibre pas (le livre ne le dit pas).
+- **Son** : restaurant. Le téléphone ne vibre pas (le livre ne le dit pas) : c'est une image
+  muette, qui suffit.
 - **Objets et interface** : premier regard sur le téléphone de Julie, qui deviendra son interface
   (le chapitre 4 propose d'ajouter cette réplique à sa fiche). Dans le sac de Darshan : les
   lunettes et la montre, pas de téléphone ; qui ouvre « Objets » le constate, sans rien de plus.
@@ -355,10 +355,12 @@ dessert ; on ne montre pas un autre dessert à la place du sien.
 - **Geste** : commander. Une petite carte de papier crème monte du bas ; une seule ligne, dans la
   police du titre de chapitre : « Un pain perdu s’il vous plaît. ». Toucher la ligne (ou Tab,
   Entrée) : la carte redescend, froissement de papier. Mouvement réduit : elle paraît et
-  disparaît. C'est le moment typographique du chapitre : le titre revient, dit par le lecteur.
+  disparaît. Le titre revient, dit par le lecteur ; ses lettres ne s'animent pas (le moment
+  typographique du chapitre est la voix intérieure de 2.3).
 - **Effets** : la porcelaine posée, au troisième temps ; ensuite (après R1) le dessert paraît, net.
-- **Son** : restaurant : assiettes qu'on débarrasse, papier de la carte, porcelaine ; avant « Si
-  j’avais su… », la salle se tait une demi-seconde, le temps du sourire.
+  « Si j’avais su » : la salle se tait une demi-seconde, le temps que la phrase paraisse.
+- **Son** : restaurant : assiettes qu'on débarrasse, papier de la carte, porcelaine posée ; puis la
+  demi-seconde de silence, le temps du sourire.
 - **Objets et interface** : la carte, une interface d'un instant, faite d'une seule phrase du
   livre.
 - **Rimes** : « une brioche perdue qui aura gardé le nom de son rustique ancêtre » : Darshan,
@@ -406,10 +408,11 @@ après image, et l'on passe à côté des amoureux et du merle sans s'arrêter.
 
 **Table ronde.** Ce baiser sur les joues mérite-t-il la ballade ? Le designer sonore montre que le
 livre emploie le même verbe ici (« adoubées d’un baiser ») et au baiser du chapitre 7 (« l’a
-adoubé ») : la ballade, dont Darshan fredonnait les premières notes sous l'eau du Periyar (1.7),
-sort ici à l'air libre, et c'est pour cela qu'elle « revient au baiser » (7.10). Décision : la
-ballade naît des deux cœurs qui valsent. Second débat : la frontière. Décision : la page s'arrête
-sur « Darshan, lui, vole. », pour que la suivante s'ouvre dans le ciel, sur son nuage.
+adoubé ») : la ballade, dont on a entendu les premières notes sous l'eau du Periyar (1.7), sort
+ici à l'air libre, et c'est pour cela qu'elle revient au baiser de 7.10, comme le veut la
+direction. Décision : la ballade naît des deux cœurs qui valsent. Second débat : la frontière.
+Décision : la page s'arrête sur « Darshan, lui, vole. », pour que la suivante s'ouvre dans le
+ciel, sur son nuage.
 
 - **Intention** : le sommet de joie du chapitre : l'intimité (si près qu'on ne voit plus rien),
   le rendez-vous pris, la porte qui se ferme sur elle, et lui qui s'envole. Sous la joie,
@@ -479,8 +482,8 @@ nuage.
   (3,2 s). « Mais un nuage vient porter ombrage à cette vision idyllique » : l'ombre d'un vrai
   nuage traverse la page de droite à gauche (4,5 s) ; là où elle passe, les traits s'amincissent,
   coulent un peu et s'effacent ; le ciel reste plus sombre après elle. Au dernier temps, il n'y a
-  plus que le ciel et les toits. Mouvement réduit et Lecture : le dessin paraît entier, puis
-  disparaît en fondu.
+  plus que le ciel et les toits. Mouvement réduit : le dessin paraît entier, puis s'efface en
+  fondu. Lecture : le ciel seul.
 - **Son** : ambiance « vent », léger ; la ballade continue depuis 2.9 et se casse net sous
   l'ombre, sur une note qui ne se résout pas ; un coup de vent frais ; puis le vent seul.
 - **Objets et interface** : rien ; pas d'étoile au carnet (il vole, il ne passe pas de porte).
@@ -496,11 +499,11 @@ nuage.
 ## 4. Photos retenues
 
 Toutes de Karl. « Regardée » : vue en petite version pendant ce travail (37 photos regardées en
-tout, dont les dix décors déjà faits du chapitre).
+tout, dont les neuf photos des dix décors déjà faits pour le chapitre).
 
 | Scène | Numéro | Titre | Photo ou encre | Cadrage x / y / zoom | Pourquoi | Regardée |
 |---|---|---|---|---|---|---|
-| 2.1, 2.4 à 2.7 | 34532663 | Table heureuse | photo | table 0,3 / 0,5 / 1 | Une table pour deux : le tartare au premier plan, le verre de Julie, un verre taillé, son téléphone, sa manche ; la lumière rose de l'amour. | oui |
+| 2.1, 2.4 à 2.7 | 34532663 | Table heureuse | photo | table 0,3 / 0,5 / 1 | Une table pour deux : le tartare au premier plan, le verre de Julie, un verre taillé, son téléphone, sa manche ; la lumière rose de l'amour ; les mots-clés de Karl : « fête, amour, restaurant, séparation, repas ». | oui |
 | 2.6 | 34532663 | idem | photo | assiette 0,12 / 0,85 / 1,25 | Le tartare presque intact. | oui |
 | 2.5 | 34532663 | idem | photo | téléphone 0,64 / 0,08 / 2,2 | Le téléphone de Julie, posé à l'envers : le seul de la table. | oui |
 | 2.2 | 33035648 | Dos | photo | 0,5 / 0,45 / 1 | Julie de dos, chevelure châtaine, chouchou rouge, devant des vitrines. | oui |
@@ -559,8 +562,8 @@ Peu, mais ce sont ceux qui manquent vraiment. Tous en hauteur, sans visage.
 ## 6. Mécaniques et effets nouveaux demandés au moteur
 
 Le vocabulaire reprend celui des chapitres 1 et 4 quand il existe (`son` avec `effet`, `delai`,
-`decor` avec `fondu` ou `camera="baisse"`, `melodie`, `coeur`, `flou` avec `tout`, `compte` rendu
-dans la matière de la page). Chaque geste a son équivalent au toucher simple et au clavier, et le
+`silence` avec `duree`, `decor` avec `fondu` ou `camera="baisse"`, `melodie`, `voix`, `coeur`,
+`flou` avec `tout`, `compte` rendu dans la matière de la page). Chaque geste a son équivalent au toucher simple et au clavier, et le
 bouton « Faire le geste » après 8 s.
 
 **Mécaniques**
@@ -593,8 +596,9 @@ bouton « Faire le geste » après 8 s.
 
 - **`flou`**, précisé : `garde` (x, y, rayon), une zone qui reste telle quelle, bord adouci ;
   `force` (flou en unités de page) ; `chaud=True`, l'image se réchauffe en même temps (2.9) ;
-  `suit_geste=True`, l'intensité suit la progression du geste (2.1). **`net`** : tout revient,
-  image nette, son ouvert, texte net, barre de commandes pleine.
+  `suit_geste=True`, l'intensité suit la progression du geste, et l'ambiance baisse avec elle
+  (jusqu'au tiers) : l'attention se resserre (2.1). **`net`** : tout revient, image nette, son
+  ouvert, texte net, barre de commandes pleine.
 - **`assourdi`**, précisé : `texte=True`, le temps s'affiche atténué (opacité 0,55, flou de 0,6 px),
   lisible, jusqu'à `net` ; le son passe par le filtre existant (`Son.filtre('assourdi')`). Mode
   Lecture : rien.
@@ -607,6 +611,12 @@ bouton « Faire le geste » après 8 s.
   opacité).
 - **`coeur`**, précisé : `continu=True`, `tempo`, `force` : le cœur continue (pour l'état d'une
   page qui commence au milieu : 2.3, 2.4) ; `arret=True` : il se tait.
+- **`voix`**, précisé (2.3), l'effet du chapitre 1 pour une voix intérieure en italique :
+  `lettres=True`, chaque temps du paragraphe s'écrit lettre après lettre, avec un bref éclat d'or
+  sur chacune ; `couleur="encre"` : les lettres sont à l'encre sombre, parce que la page est un
+  papier clair (en 1.1, or pâle sur la nuit) ; `vitesse` (ms par lettre, ici 20). Un toucher
+  achève le temps d'un coup. Mouvement réduit et Lecture : le texte paraît d'un coup. Jamais pour
+  le père, qui ne parle pas.
 - **`interface`** (2.3) : `voile=True`, la barre de commandes passe à 35 % d'opacité, sans cesser
   d'être utilisable (focus, lecteur d'écran) ; `net` la rétablit.
 - **`passe`** (2.8) : le plan glisse lentement de côté (6 % de sa largeur en 4 s), comme quand on
@@ -624,12 +634,13 @@ bouton « Faire le geste » après 8 s.
   tracé trait par trait, par étapes (`etape=1` : le nuage, 1,8 s ; `etape=2` : la pièce, 3,2 s).
   Traits d'encre (#07091a, 1,5 à 3 unités), lavis crème pour le nuage, lavis vermillon (#c9302c,
   35 %) pour les rideaux ; dans le ciel, entre x 200 et 1000, y 150 et 800. Lecteurs d'écran :
-  décoratif. Mouvement réduit et Lecture : le dessin paraît entier.
+  décoratif. Mouvement réduit : le dessin paraît entier. Lecture : le ciel seul.
 - **`nuage`**, précisé : l'ombre d'un nuage (grande ellipse sombre, bords très flous) traverse la
   page de droite à gauche en 4,5 s, assombrissant de 35 % ; `efface="vision"` : sous l'ombre, les
   traits du dessin s'amincissent, coulent de 8 à 20 unités et s'effacent ; après son passage, le
-  ciel reste plus sombre de 20 % ; `coupe="melodie"` : la ballade s'arrête net, sur une note non
-  résolue, avec une courte traîne. Mouvement réduit : l'ombre et l'effacement en fondu.
+  ciel reste plus sombre de 20 % ; un souffle de vent plus frais passe avec l'ombre ;
+  `coupe="melodie"` : la ballade s'arrête net, sur une note non résolue, avec une courte traîne.
+  Mouvement réduit : l'ombre et l'effacement en fondu.
 - **Transition d'ouverture** : quand un chapitre s'ouvre sur une photo (2.1 ; à étendre à 4.1 et
   6.1 si leurs équipes le veulent), la seconde moitié des bandes découvre la photo par les lames de
   l'obturateur, avec son double déclic.
@@ -697,7 +708,8 @@ Décors que le chapitre 2 n'emploie plus : `restaurant-table`, `assiette`, `deux
     "2.3": S(["rencontre", "rencontre-encre"], texte="haut clair",
              debut=[E("coeur", continu=True, tempo=96, force=0.5)],
              coupes={44: ["Toute la grâce", "Son nez fin", "Son nom suffit", "Je ne dors pas"]},
-             moments=[[E("decor", i=1, fondu=2800), E("interface", voile=True)]]),
+             moments=[[E("decor", i=1, fondu=2800), E("voix", lettres=True, couleur="encre", vitesse=20),
+                       E("interface", voile=True)]]),
     "2.4": S(["rencontre-encre", "resto-table"],
              debut=[E("interface", voile=True), E("coeur", continu=True, tempo=96, force=0.4)],
              gestes=[G("toucher", effets=[E("decor", i=1, par="obturateur"), E("net"),
@@ -714,7 +726,8 @@ Décors que le chapitre 2 n'emploie plus : `restaurant-table`, `assiette`, `deux
     "2.7": S("resto-table", debut=[E("flou", force=16)],
              coupes={56: ["Ce sera un pain perdu", "Il sera servi", "C’est beau"]},
              gestes=[G("carte", ligne="Un pain perdu s’il vous plaît.", apres=True)],
-             moments=[E("son", effet="porcelaine")]),
+             moments=[E("son", effet="porcelaine")],
+             extra={"Si j’avais su": E("silence", duree=500)}),
     "2.8": S(["rocaille", "amoureux", "maison-lierre"],
              moments=[E("avance", lent=True), [E("decor", i=1), E("son", effet="merle")],
                       E("passe"), E("decor", i=2)]),
