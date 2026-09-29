@@ -340,3 +340,19 @@ Décisions prises à la lecture des premiers traitements ; elles valent pour tou
    celui de Julie ; quand Julie le prend (7.11), il n'en reste qu'un dans son sac. Le livre
    ne dit pas si c'est le même paquet ; l'interface non plus.
 
+## 13. Décisions de Karl
+
+À appliquer par toutes les équipes, et à reporter dans la fabrication.
+
+**29 septembre 2026**
+- Le graffiti « je t'aime » (38570603) est recadré sur « aime » ; il paraît un instant au
+  tableau 6.11, quand Julie dit « je t'aime ». C'est fait dans `livre.py` et `decors.py`.
+- La page de titre dit « nouvelle ».
+- ISBN : Karl le demande lui-même à l'AFNIL, un numéro par format. En attendant, aucun ISBN.
+- Photos où l'on voit une personne : **oui** pour « Dos » (33035648), qui peut être Julie,
+  et pour les passants flous de « Fantômes » (31641251) et de « Repos » (34500385). Le
+  portrait 38536478 reste exclu tant que Karl n'en a pas décidé.
+- Pékin : **oui** pour « Intérieur moderne d'une bibliothèque aux étagères en verre, à
+  Gijón » (39670619), la bibliothèque de l'Universidad Laboral, dont on ne voit que les
+  rayonnages.
+
