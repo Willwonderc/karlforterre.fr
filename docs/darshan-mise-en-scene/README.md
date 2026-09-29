@@ -20,6 +20,33 @@ l'ordre, sans un mot changé ni ajouté. Les seuls mots nouveaux sont les textes
 | [chapitre-6.md](chapitre-6.md) | « Des attentes de part et d’autre » (6.1 à 6.15). |
 | [chapitre-7.md](chapitre-7.md) | « Au-delà de la porte » et la clôture (7.1 à 8.1). |
 
+### État de la pré-production (pause du 29 septembre 2026)
+
+| Chapitre | Traitement | Relecture critique | Révision |
+|---|---|---|---|
+| 1 (et l'ouverture) | fait | faite : 32 notes, dont 13 à corriger | voir la section « Révision après relecture » du chapitre |
+| 2 | fait | à faire | — |
+| 3 | fait | à faire | — |
+| 4 | fait | faite : 31 notes, dont 17 à corriger | à faire |
+| 5 | fait | à faire | — |
+| 6 | fait | à faire | — |
+| 7 (et la clôture) | fait | à faire | — |
+
+Les relectures sont dans [relectures/](relectures/). À la reprise, dans l'ordre :
+1. relire les chapitres 2, 3, 5, 6 et 7, puis faire réviser chaque chapitre d'après sa
+   relecture et les arbitrages (section 12) ;
+2. faire la synthèse entre les chapitres ; les points déjà connus sont :
+   - la barre de Julie : jusqu'où les boutons de Darshan s'effacent (chapitres 4 à 6) ;
+   - le nom unique de la ballade dans les fiches de production ;
+   - les décors écartés par plusieurs chapitres ;
+   - le second paquet (`paquet-darshan`, chapitre 7) ;
+   - la porte du père d'Irun, commune aux chapitres 3 et 7 ;
+   - le moment où l'accord du père s'éteint (7.13 ou 7.14) ;
+   - les frontières de tableaux déplacées (2.9 et 2.10 ; 7.7 et 7.8 ; 7.15 et 7.16) ;
+3. rassembler les questions pour Karl en une seule liste ;
+4. reporter les décisions dans `outils/darshan/` (`livre.py`, `decoupage.py`,
+   `interface.ini`, `objets.ini`), puis reprendre le moteur.
+
 Le découpage en 85 tableaux (texte exact de chaque tableau, première idée de geste, de
 décor et de son) est dans [../darshan-decoupage.md](../darshan-decoupage.md) ; l'évaluation
 et le plan d'ensemble dans [../plan-darshan.md](../plan-darshan.md) ; l'interface dans
