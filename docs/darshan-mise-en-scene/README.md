@@ -30,7 +30,7 @@ l'ordre, sans un mot changé ni ajouté. Les seuls mots nouveaux sont les textes
 | 4 | fait | faite : 31 notes, dont 17 à corriger | faite (section 9 du chapitre) |
 | 5 | fait | faite : 37 notes, dont 17 à corriger | faite (section 9 du chapitre) |
 | 6 | fait | faite : 42 notes, dont 23 à corriger | en cours |
-| 7 (et la clôture) | fait | à faire | — |
+| 7 (et la clôture) | fait | faite : 47 notes, dont 17 à corriger | en cours |
 
 Les relectures sont dans [relectures/](relectures/). À la reprise, dans l'ordre :
 1. relire les chapitres 2, 3, 5, 6 et 7, puis faire réviser chaque chapitre d'après sa
@@ -39,10 +39,13 @@ Les relectures sont dans [relectures/](relectures/). À la reprise, dans l'ordre
    - la barre de Julie : jusqu'où les boutons de Darshan s'effacent (chapitres 4 à 6) ;
    - le nom unique de la ballade dans les fiches de production ;
    - les décors écartés par plusieurs chapitres ;
-   - le second paquet (`paquet-darshan`, chapitre 7) ;
-   - la porte du père d'Irun, commune aux chapitres 3 et 7 ;
-   - le moment où l'accord du père s'éteint (7.13 ou 7.14) ;
-   - les frontières de tableaux déplacées (2.9 et 2.10 ; 7.7 et 7.8 ; 7.15 et 7.16) ;
+   - le second paquet (`paquet-darshan`, chapitre 7) : réglé par l'arbitrage 8 ;
+   - la porte du père d'Irun, commune aux chapitres 3 et 7 : adoptée ;
+   - le moment où l'accord du père s'éteint : en 7.13, sur « Je ne sais pas si je pourrai
+     revenir. », quand Darshan recule d'un demi-pas (la lanterne, elle, ne change pas) ;
+   - les frontières de tableaux déplacées (2.9 et 2.10 ; 7.7 et 7.8 ; 7.15 et 7.16) :
+     confirmées par le livre imprimé, à reporter dans `decoupage.py` ;
+   - le décor `rue-vide` (10473138), dont plus aucun chapitre ne se sert ;
 3. rassembler les questions pour Karl en une seule liste ;
 4. reporter les décisions dans `outils/darshan/` (`livre.py`, `decoupage.py`,
    `interface.ini`, `objets.ini`), puis reprendre le moteur.
