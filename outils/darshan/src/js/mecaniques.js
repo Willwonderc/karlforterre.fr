@@ -29,6 +29,18 @@ function halo(calque, x, y, r) {
 }
 function dansCible(p, c) { return !c || Math.hypot(p.x - c[0], p.y - c[1]) <= (c[2] || 170) * 1.25; }
 
+// Le bouton « Faire le geste », pour qui ne peut pas le faire : il paraît après 8 s (3 s en
+// mouvement réduit). Rend { retirer }.
+function boutonFaireLeGeste(scene, faire) {
+  var bouton = null, minuterie = setTimeout(function () {
+    bouton = el('button', { type: 'button', 'class': 'faire-geste ui' }, scene);
+    bouton.textContent = ui('faire_le_geste');
+    bouton.addEventListener('click', function (ev) { ev.stopPropagation(); faire(); });
+    bouton.addEventListener('pointerup', function (ev) { ev.stopPropagation(); });
+  }, calme ? 3000 : 8000);
+  return { retirer: function () { clearTimeout(minuterie); retirer(bouton); } };
+}
+
 // L'échafaudage commun. reglage : { cible, sansHalo, clavier: false (la mécanique gère ses
 // touches), yConsigne }. Rend { fait, terminer, calque, cible }.
 function Geste(scene, g, reglage) {
@@ -43,14 +55,7 @@ function Geste(scene, g, reglage) {
     objet = objet || Objets.dernier('darshan') || Objets.dernier('julie');
     if (objet) Objets.proposer(objet, g.action, function () { terminer(); });
   }
-  // le bouton « Faire le geste », pour qui ne peut pas le faire
-  var bouton = null, minuterie = setTimeout(function () {
-    if (fini) return;
-    bouton = el('button', { type: 'button', 'class': 'faire-geste ui' }, scene);
-    bouton.textContent = ui('faire_le_geste');
-    bouton.addEventListener('click', function (ev) { ev.stopPropagation(); terminer(); });
-    bouton.addEventListener('pointerup', function (ev) { ev.stopPropagation(); });
-  }, calme ? 3000 : 8000);
+  var bouton = boutonFaireLeGeste(scene, function () { terminer(); });
   function clavier(ev) {
     if (fini || bloque() || !scene.classList.contains('active')) return;
     if (!toucheValide(ev)) return;
@@ -62,11 +67,10 @@ function Geste(scene, g, reglage) {
   function terminer() {
     if (fini) return;
     fini = true;
-    clearTimeout(minuterie);
+    bouton.retirer();
     c.effacer();
     doc.removeEventListener('keydown', clavier);
     if (objet) Objets.retirerAction(objet);
-    retirer(bouton);
     if (anneau) anneau.classList.remove('actif');
     setTimeout(function () { retirer(calque); }, 400);
     fin();

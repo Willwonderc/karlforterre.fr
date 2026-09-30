@@ -55,10 +55,22 @@ var Scenes = (function () {
     });
     return recit;
   }
-  // La fin de la page : sur le web, le balayage vers la suivante ; dans l'EPUB, la consigne.
+  // La fin de la page : sur le web, le balayage vers la suivante ; dans l'EPUB, la consigne ;
+  // à la dernière page, la fin du livre.
   function sortir(scene, o) {
+    if (scene.getAttribute('data-scene') === DONNEES.derniere) { finDuLivre(scene); return; }
     if (estEpub) { consigne(scene, ui('tournez'), 1730); return; }
     Navigation.suivante(scene, o);
+  }
+  // « Fin », et de quoi relire le livre depuis le début.
+  function finDuLivre(scene) {
+    var f = el('div', { 'class': 'fin-livre ui' }, scene);
+    el('p', { 'class': 'fin-titre' }, f).textContent = ui('fin');
+    var b = el('button', { type: 'button' }, f);
+    b.textContent = ui('nouvelle_lecture');
+    b.addEventListener('click', function (ev) { ev.stopPropagation(); Navigation.recommencer(); });
+    requestAnimationFrame(function () { requestAnimationFrame(function () { f.classList.add('vu'); }); });
+    annoncer(ui('fin'));
   }
   function jouer(scene) {
     var cfg = config(scene), nom = scene.getAttribute('data-special');
@@ -207,11 +219,11 @@ var Scenes = (function () {
       anneau.classList.add('actif');
       var c = consigne(scene, g.consigne, 1260, 2500);
       return new Promise(function (ok) {
-        var fait = false, zoneCible = cibleEl || objet;
+        var fait = false, zoneCible = cibleEl || objet, bouton = boutonFaireLeGeste(scene, function () { terminer(); });
         function terminer() {
           if (fait) return; fait = true;
           zoneCible.removeEventListener('pointerup', fin); doc.removeEventListener('keydown', fin);
-          Objets.retirerAction(id); c.effacer(); anneau.classList.remove('actif');
+          Objets.retirerAction(id); c.effacer(); anneau.classList.remove('actif'); bouton.retirer();
           ok();
         }
         function fin(ev) {
@@ -299,6 +311,7 @@ var Scenes = (function () {
         function terminer() {
           if (fait) return;
           fait = true;
+          bouton.retirer();
           Objets.retirerAction('cle');
           anneau.classList.remove('actif');
           objet.removeEventListener('pointerdown', bas); objet.removeEventListener('pointermove', mouv);
@@ -308,6 +321,7 @@ var Scenes = (function () {
           anime(700, function (x) { var t = lisse(x); pose.x = x0 + (932 - x0) * t; pose.y = y0 + (1010 - y0) * t; pose.s = s0 + (0.42 - s0) * t; placer(); })
             .then(function () { Son.effet('cle'); Transitions.frisson(scene, 932, 1010, 170); ok(); });
         }
+        var bouton = boutonFaireLeGeste(scene, function () { terminer(); });
         objet.style.touchAction = 'none';
         objet.addEventListener('pointerdown', bas); objet.addEventListener('pointermove', mouv);
         objet.addEventListener('pointerup', haut); doc.addEventListener('keydown', haut);

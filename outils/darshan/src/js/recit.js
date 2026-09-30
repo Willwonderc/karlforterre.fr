@@ -78,7 +78,7 @@ Recit.prototype.montrer = function (j) {
     soi.enAttente = false;
     // un geste attendu juste après ce temps : il s'annonce sans attendre l'étoile
     if (soi.portes[j + 1]) { setTimeout(function () { soi.avancer(); }, calme ? 200 : 900); return; }
-    setTimeout(function () { soi.pret(true); }, calme ? 100 : 700);
+    setTimeout(function () { if (!soi.fini && !soi.enAttente) soi.pret(true); }, calme ? 100 : 700);
   });
   annoncer(t.textContent);
 };

@@ -439,3 +439,12 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 .texte.nu { color: #2a1c10; text-shadow: none; }
 .texte.nu .voix { color: #6b3b0c; }
 .jeu .texte.nu.poeme { background: none; }
+
+/* la fin du livre : « Fin », à l'encre, et de quoi relire */
+.fin-livre { position: absolute; left: 0; right: 0; bottom: 18cqw; text-align: center; opacity: 0; transition: opacity 2.4s ease; z-index: 6; }
+.fin-livre.vu { opacity: 1; }
+.fin-livre .fin-titre { font-family: "Unna", serif; font-variant: small-caps; letter-spacing: 0.2em; font-size: 5cqw; color: #2a1c10; margin: 0 0 4cqw; }
+.fin-livre button { font: inherit; font-size: 3.4cqw; padding: 1.4cqw 4cqw; border-radius: 5cqw; cursor: pointer;
+  border: 0.2cqw solid #6b3b0c; background: none; color: #2a1c10; }
+.fin-livre button:focus-visible { outline: 0.4cqw solid #6b3b0c; outline-offset: 0.5cqw; }
+.sans-magie .consigne, .texte.nu ~ .consigne { color: #6b3b0c; text-shadow: none; }

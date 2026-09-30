@@ -561,7 +561,7 @@ def donnees_communes(pages):
         rang = next(pg["rang"] for pg in pages if pg["t"]["n"] == n)
         chapitres.append({"titre": titre, "tableau": n, "rang": rang})
     return {"ui": UI, "objets": OBJETS, "familles": FAMILLES, "carte": carte_du_ciel(), "chapitres": chapitres,
-            "pages": len(pages)}
+            "pages": len(pages), "derniere": pages[-1]["t"]["n"]}
 
 
 def fichier_donnees(pages):
