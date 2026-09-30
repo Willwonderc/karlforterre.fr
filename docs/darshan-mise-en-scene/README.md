@@ -29,7 +29,7 @@ l'ordre, sans un mot changé ni ajouté. Les seuls mots nouveaux sont les textes
 | 3 | fait | faite : 30 notes, dont 16 à corriger | faite (section 9 du chapitre) |
 | 4 | fait | faite : 31 notes, dont 17 à corriger | faite (section 9 du chapitre) |
 | 5 | fait | faite : 37 notes, dont 17 à corriger | faite (section 9 du chapitre) |
-| 6 | fait | faite : 42 notes, dont 23 à corriger | en cours |
+| 6 | fait | faite : 42 notes, dont 23 à corriger | faite (section 9 du chapitre) |
 | 7 (et la clôture) | fait | faite : 47 notes, dont 17 à corriger | faite (section 9 du chapitre) |
 
 Les relectures sont dans [relectures/](relectures/). À la reprise, dans l'ordre :
