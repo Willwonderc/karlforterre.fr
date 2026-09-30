@@ -100,6 +100,17 @@ section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBChec
    de 7.10 ; deux ambiances à la fois (6.2, 7.4) ; les réglages de la foule et du tanpura.
    Dans l'édition web, la couche des battements survit au passage de 5.9 à 5.10 : arrêter les
    couches au changement de page (`depart.js` ou `Son`).
+4 bis. **La voix** (proposition du 30 septembre, sur une offre reçue par Karl) : Karl a un
+   abonnement ElevenLabs, dont le modèle Eleven v4 est gratuit dans l'application web jusqu'au
+   12 octobre 2026 (dans la limite de deux fois ses crédits mensuels). Le livre fait environ
+   48 800 caractères, une heure de lecture. Proposition : une lecture à voix haute, page par page,
+   de préférence dans la voix de Karl (clonage instantané) ; d'abord un essai sur trois pages
+   (0.2, 2.2, 7.7 : kit envoyé à Karl, avec le texte exact, les réglages et les noms de fichiers,
+   sans que le texte soit recopié dans le dépôt). Si l'essai convainc : un fichier par page
+   (`pNNN-n.mp3`), converti en AAC, lu par le moteur temps par temps et, pour la lecture à voix
+   haute d'Apple Books, par les Media Overlays d'EPUB 3 (SMIL), avec l'alignement des temps ;
+   environ 30 Mo de plus. La voix lit le texte tel quel ; le père ne parle jamais. ElevenLabs
+   peut aussi fabriquer des sons en fichiers, si Apple Books refuse le son fabriqué par le script.
 5. **Petites retouches** : faites le 30 septembre, le compte à rebours (passé en haut à gauche,
    à l'écart des boutons de la barre) et la lettre de 7.7 (le texte rentré dans la feuille ; la
    première lettre des lignes se perdait sur son bord déchiré). Restent, dans `livre.py`, à
