@@ -1317,7 +1317,7 @@ def marchandise(nom, rng, encre="#2a1a0c"):
             out.append(f'<circle cx="{hx:.1f}" cy="{hy:.1f}" r="3.4" fill="#ff7a2a"/>')
         fumee = [(x + 2, y - 162), (x - 14, y - 200), (x + 12, y - 240), (x - 6, y - 280)]
         out.append(f'<path d="{trait(fumee, 5, rng, 0.2, 0.6, 0.4)}" fill="#d8d4cc" opacity="0.6" filter="url(#aquarelle-douce)"/>')
-        out.append(f'<path d="{trait([(x - 36, y - 10), (x - 30, y + 52), (x + 30, y + 52), (x + 36, y - 10)], 2.2, rng, 0.05, 0.05, 0.2)}" fill="{encre}" opacity="0.6"/>')
+        out.append(f'<path d="{trait(droit([(x - 36, y - 10), (x - 30, y + 52), (x + 30, y + 52), (x + 36, y - 10)], 12), 2.2, rng, 0.05, 0.05, 0.2)}" fill="{encre}" opacity="0.6"/>')
     elif nom == "jarres":
         # trois jarres de terre cuite, de tailles différentes
         for dx, dy, h, w in ((-78, 30, 120, 62), (8, 0, 170, 82), (86, 42, 100, 54)):
@@ -1342,7 +1342,7 @@ def marchandise(nom, rng, encre="#2a1a0c"):
                 out.append(f'<circle cx="{rng.uniform(x0 + 6, x1 - 6):.1f}" cy="{rng.uniform(y0 + 6, y1 - 6):.1f}" r="{rng.uniform(1.6, 3.2):.1f}" fill="#fff4c0" opacity="0.9"/>')
             for xx in range(int(x0) + 4, int(x1), 12):
                 out.append(f'<path d="{trait([(xx, y1), (xx + 2, y1 + 22)], 2.2, rng, 0.1, 0.3, 0.1)}" fill="{c2}"/>')
-            out.append(f'<path d="{trait([(x0, y0), (x1, y0), (x1 + 4, y1), (x0 - 4, y1), (x0, y0)], 2.2, rng, 0.02, 0.02, 0.1)}" fill="{encre}" opacity="0.6"/>')
+            out.append(f'<path d="{trait(droit([(x0, y0), (x1, y0), (x1 + 4, y1), (x0 - 4, y1), (x0, y0)], 16), 2.2, rng, 0.02, 0.02, 0.1)}" fill="{encre}" opacity="0.6"/>')
     elif nom == "confettis":
         # le paquet de confettis : du papier blanc froissé en cornet, des points rose, menthe et citron
         out.append(lavis(poly([(x - 34, y - 34), (x + 30, y - 40), (x + 36, y + 32), (x - 38, y + 36)]), "#f6f0e2", 1.0, "aquarelle-douce"))
@@ -1350,7 +1350,7 @@ def marchandise(nom, rng, encre="#2a1a0c"):
         for _ in range(26):
             out.append(f'<circle cx="{rng.uniform(x - 30, x + 30):.1f}" cy="{rng.uniform(y - 30, y + 30):.1f}" r="{rng.uniform(2.5, 4.5):.1f}" '
                        f'fill="{rng.choice(("#f6a1b8", "#9ddcc0", "#f2de7a"))}"/>')
-        out.append(f'<path d="{trait([(x - 34, y - 34), (x + 30, y - 40), (x + 36, y + 32), (x - 38, y + 36), (x - 34, y - 34)], 2, rng, 0.02, 0.02, 0.2)}" fill="{encre}" opacity="0.6"/>')
+        out.append(f'<path d="{trait(droit([(x - 34, y - 34), (x + 30, y - 40), (x + 36, y + 32), (x - 38, y + 36), (x - 34, y - 34)], 10), 2, rng, 0.02, 0.02, 0.2)}" fill="{encre}" opacity="0.6"/>')
     elif nom == "mangue":
         # la mangue qui roule (effet « roule ») : une figurine, dans le coin de la page (DECOUPES)
         cx, cy = 150, 120
@@ -1391,7 +1391,7 @@ def marche_aluva(photo=None, x=0.0, image=None, calque=None, graine=53):
     out.append(marchand(505, 828, 0.72, rng, "assis", habit="#e8b44a", pagne="#8a5a3a"))
     out.append(table_etal(300, 462, 912, rng))
     out.append(lavis(poly([(222, 1098), (360, 1098), (366, 1176), (216, 1176)]), "#7a5230", 1.0, "aquarelle-douce"))
-    out.append(f'<path d="{trait([(216, 1176), (222, 1098), (360, 1098), (366, 1176)], 2.4, rng, 0.05, 0.05, 0.2)}" fill="#2a1a0c" opacity="0.6"/>')
+    out.append(f'<path d="{trait(droit([(216, 1176), (222, 1098), (360, 1098), (366, 1176)], 16), 2.4, rng, 0.05, 0.05, 0.2)}" fill="#2a1a0c" opacity="0.6"/>')
     # à droite : l'étal du curcuma sous l'auvent indigo, son marchand derrière ; les jarres devant, à terre
     out.append(perche(738, 520, 1220, rng))
     out.append(perche(1135, 500, 1230, rng))
@@ -1593,8 +1593,8 @@ def porte_battante(graine=83):
     out.append(f'<rect x="590" y="620" width="96" height="16" rx="3" fill="#6e756f"/>')
     out.append(f'<path d="{trait([(598, 632), (560, 648), (520, 640)], 4, rng, 0.05, 0.05, 0.1)}" fill="#5a615b"/>')
     for pts in (((488, 636), (712, 636), (712, 1165)), ((488, 1165), (488, 636))):
-        out.append(f'<path d="{trait(list(pts), 2.6, rng, 0.02, 0.02, 0.2)}" fill="{ENCRE}" opacity="0.8"/>')
-    out.append(f'<path d="{trait([(504, 650), (696, 650), (696, 1165)], 1.8, rng, 0.02, 0.02, 0.2)}" fill="{ENCRE}" opacity="0.6"/>')
+        out.append(f'<path d="{trait(droit(list(pts)), 2.6, rng, 0.02, 0.02, 0.2)}" fill="{ENCRE}" opacity="0.8"/>')
+    out.append(f'<path d="{trait(droit([(504, 650), (696, 650), (696, 1165)]), 1.8, rng, 0.02, 0.02, 0.2)}" fill="{ENCRE}" opacity="0.6"/>')
     # un rai de lumière sous la porte, et le reflet du sol
     out.append(f'<rect x="504" y="1160" width="192" height="5" fill="#fff6d8" opacity="0.8"/>')
     out.append(lavis(poly([(504, 1166), (696, 1166), (760, 1330), (440, 1330)]), "#fffaf0", 0.35, "aquarelle-douce"))
@@ -1775,8 +1775,8 @@ def panneau(x0, y0, x1, y1, rng, bois="#4a2e1c", encre="#140a04"):
            f'<path d="{poly([(x0, y0), (x0 + b, y0 + b), (x0 + b, y1 - b), (x0, y1)])}" fill="#5a3a24" opacity="0.8"/>',
            f'<path d="{poly([(x1, y0), (x1, y1), (x1 - b, y1 - b), (x1 - b, y0 + b)])}" fill="#26160c" opacity="0.7"/>',
            f'<path d="{poly([(x0, y1), (x1, y1), (x1 - b, y1 - b), (x0 + b, y1 - b)])}" fill="#1e1008" opacity="0.7"/>',
-           f'<path d="{trait([(x0, y0), (x1, y0), (x1, y1), (x0, y1), (x0, y0)], 2.2, rng, 0.02, 0.02, 0.2)}" fill="{encre}" opacity="0.7"/>',
-           f'<path d="{trait([(x0 + b, y0 + b), (x1 - b, y0 + b), (x1 - b, y1 - b), (x0 + b, y1 - b), (x0 + b, y0 + b)], 1.8, rng, 0.02, 0.02, 0.2)}" fill="{encre}" opacity="0.6"/>']
+           f'<path d="{trait(droit([(x0, y0), (x1, y0), (x1, y1), (x0, y1), (x0, y0)], 24), 2.2, rng, 0.02, 0.02, 0.2)}" fill="{encre}" opacity="0.7"/>',
+           f'<path d="{trait(droit([(x0 + b, y0 + b), (x1 - b, y0 + b), (x1 - b, y1 - b), (x0 + b, y1 - b), (x0 + b, y0 + b)], 24), 1.8, rng, 0.02, 0.02, 0.2)}" fill="{encre}" opacity="0.6"/>']
     for _ in range(5):
         vx = rng.uniform(x0 + b + 8, x1 - b - 8)
         out.append(f'<path d="{trait([(vx, y0 + b + 4), (vx + rng.uniform(-6, 6), (y0 + y1) / 2), (vx + rng.uniform(-6, 6), y1 - b - 4)], rng.uniform(1, 2), rng, 0.3, 0.3, 0.3)}" fill="{encre}" opacity="0.3"/>')
@@ -1834,16 +1834,16 @@ def placard(etat="entrouverte", graine=97):
         # l'intérieur de l'armoire autour de l'ouverture, et le battant rabattu à gauche, vu de chant
         corps.append(f'<path d="M305,205 H965 V1125 H305 Z M{ox0},{oy0} H{ox1} V{oy1} H{ox0} Z" fill="#1a0e06" fill-rule="evenodd"/>')
         corps.append(f'<path d="M{ox0},{oy0} H{ox1} V{oy0 + 18} H{ox0 + 18} V{oy1} H{ox0} Z" fill="#000" opacity="0.4"/>')
-        corps.append(f'<path d="{trait([(ox0, oy0), (ox1, oy0), (ox1, oy1), (ox0, oy1), (ox0, oy0)], 3.4, rng, 0.02, 0.02, 0.3)}" fill="#0a0502"/>')
+        corps.append(f'<path d="{trait(droit([(ox0, oy0), (ox1, oy0), (ox1, oy1), (ox0, oy1), (ox0, oy0)]), 3.4, rng, 0.02, 0.02, 0.3)}" fill="#0a0502"/>')
         porte.append(lavis("M305,205 L150,160 L150,1178 L305,1125 Z", "#4a2e1c", 1.0, "aquarelle-douce"))
         porte.append(panneau(176, 250, 282, 612, rng))
         porte.append(panneau(176, 690, 282, 1060, rng))
-        porte.append(f'<path d="{trait([(305, 205), (150, 160), (150, 1178), (305, 1125)], 2.6, rng, 0.02, 0.02, 0.2)}" fill="#140a04" opacity="0.8"/>')
+        porte.append(f'<path d="{trait(droit([(305, 205), (150, 160), (150, 1178), (305, 1125)]), 2.6, rng, 0.02, 0.02, 0.2)}" fill="#140a04" opacity="0.8"/>')
     elif etat == "fermee":
         porte.append(lavis("M305,205 H965 V1125 H305 Z", "#4a2e1c", 1.0, "aquarelle-douce"))
         porte.append(panneau(360, 262, 910, 636, rng))
         porte.append(panneau(360, 712, 910, 1070, rng))
-        porte.append(f'<path d="{trait([(305, 205), (965, 205), (965, 1125), (305, 1125), (305, 205)], 2.6, rng, 0.02, 0.02, 0.2)}" fill="#140a04" opacity="0.8"/>')
+        porte.append(f'<path d="{trait(droit([(305, 205), (965, 205), (965, 1125), (305, 1125), (305, 205)]), 2.6, rng, 0.02, 0.02, 0.2)}" fill="#140a04" opacity="0.8"/>')
     else:
         # entrouverte : le battant tourné vers nous sur ses gonds de gauche ; dans l'entrebâillement,
         # l'intérieur et les serviettes pliées sur leurs étagères
@@ -1855,7 +1855,7 @@ def placard(etat="entrouverte", graine=97):
         porte.append(lavis("M305,205 L760,168 L760,1160 L305,1125 Z", "#4a2e1c", 1.0, "aquarelle-douce"))
         porte.append(f'<g transform="matrix(0.69 -0.056 0 1 305 222)">{panneau(55, 40, 605, 414, rng)}{panneau(55, 490, 605, 848, rng)}</g>')
         porte.append(lavis("M760,168 L780,172 L780,1158 L760,1160 Z", "#2a180c", 1.0, "aquarelle-douce"))
-        porte.append(f'<path d="{trait([(305, 205), (760, 168), (760, 1160), (305, 1125)], 2.6, rng, 0.02, 0.02, 0.2)}" fill="#140a04" opacity="0.8"/>')
+        porte.append(f'<path d="{trait(droit([(305, 205), (760, 168), (760, 1160), (305, 1125)]), 2.6, rng, 0.02, 0.02, 0.2)}" fill="#140a04" opacity="0.8"/>')
     for y in (300, 1030):
         gx = 150 if etat == "ouverte" else 305
         corps.append(f'<rect x="{gx - 6}" y="{y}" width="14" height="46" rx="3" fill="#8a7040"/>')
