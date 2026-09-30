@@ -1,0 +1,85 @@
+# Darshan, les deux éditions du livre (outils/darshan/).
+#
+# À chaque modification des sources du livre, cette tâche fabrique l'édition jouable (EPUB en
+# pages fixes et édition web) et l'édition classique, les contrôle (EPUBCheck, Ace by DAISY),
+# joue le livre entier dans Chromium et photographie chaque page. Rien n'est publié : les deux
+# EPUB, les photos et les rapports sont joints à la tâche (Actions → « Darshan » → la dernière
+# exécution → Artifacts), pour la relecture de Karl. On peut aussi la lancer à la main :
+# Actions → « Darshan » → Run workflow.
+name: Darshan
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - outils/darshan/**
+      - livres/darshan.epub
+      - .github/workflows/darshan.yml
+  pull_request:
+    paths:
+      - outils/darshan/**
+      - livres/darshan.epub
+      - .github/workflows/darshan.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: darshan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  livre:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EPUBCHECK: "5.4.0"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fabriquer l'édition jouable
+        run: python3 outils/darshan/build.py
+
+      - name: Fabriquer l'édition classique
+        run: python3 outils/darshan/classique.py
+
+      - name: EPUBCheck (les deux éditions, avertissements compris)
+        run: |
+          curl -sSfL -o epubcheck.zip "https://github.com/w3c/epubcheck/releases/download/v${EPUBCHECK}/epubcheck-${EPUBCHECK}.zip"
+          unzip -q epubcheck.zip
+          java -jar "epubcheck-${EPUBCHECK}/epubcheck.jar" --failonwarnings outils/darshan/dist/darshan.epub
+          java -jar "epubcheck-${EPUBCHECK}/epubcheck.jar" --failonwarnings outils/darshan/dist/darshan-jouable.epub
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Installer Playwright et Ace by DAISY
+        run: |
+          mkdir -p "$RUNNER_TEMP/outils" && cd "$RUNNER_TEMP/outils"
+          npm init -y > /dev/null
+          npm install --no-audit --no-fund playwright @daisy/ace
+          npx playwright install --with-deps chromium
+
+      - name: Ace by DAISY (édition classique)
+        run: |
+          cd "$RUNNER_TEMP/outils"
+          npx ace-puppeteer -f -o "$GITHUB_WORKSPACE/outils/darshan/captures/ace" "$GITHUB_WORKSPACE/outils/darshan/dist/darshan.epub"
+          node -e "const r=require('$GITHUB_WORKSPACE/outils/darshan/captures/ace/report.json'); const n=(r.assertions||[]).reduce((s,d)=>s+(d.assertions||[]).length,0); console.log('Ace :', r['earl:result']['earl:outcome'], n, 'violation(s)'); if (r['earl:result']['earl:outcome']!=='pass') process.exit(1);"
+
+      - name: Jouer le livre entier dans Chromium
+        working-directory: outils/darshan
+        run: NODE_PATH="$RUNNER_TEMP/outils/node_modules" node essai-livre.js calme
+
+      - name: Joindre les éditions, les photos et les rapports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: darshan
+          path: |
+            outils/darshan/dist/darshan.epub
+            outils/darshan/dist/darshan-jouable.epub
+            outils/darshan/captures/livre/
+            outils/darshan/captures/ace/report.html
+          retention-days: 30

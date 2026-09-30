@@ -21,7 +21,8 @@ fs.mkdirSync(sortie, { recursive: true });
   const navigateur = await chromium.launch();
   const page = await navigateur.newPage({ viewport: { width: 600, height: 900 } });
   const erreurs = [];
-  page.on('pageerror', (e) => erreurs.push({ page: courante, message: String(e && e.message || e) }));
+  let pannes = 0;       // exceptions non rattrapées : l'essai échoue
+  page.on('pageerror', (e) => { pannes++; erreurs.push({ page: courante, message: 'PANNE ' + String(e && e.message || e) }); });
   page.on('console', (m) => { if (m.type() === 'error') erreurs.push({ page: courante, message: m.text() }); });
   let courante = '?';
   const adresse = 'file://' + path.join(__dirname, 'dist', 'web', 'index.html') + (depuis ? '#s-' + depuis.replace('.', '-') : '');
@@ -77,5 +78,11 @@ fs.mkdirSync(sortie, { recursive: true });
     erreurs.map((e) => `${e.page}\t${e.message}`).join('\n') + '\n';
   fs.writeFileSync(path.join(sortie, 'rapport.txt'), texte);
   console.log(texte);
+  // l'essai échoue sur une panne du moteur, ou s'il n'a pas atteint la dernière page
+  const derniere = await page.evaluate(() => (window.DARSHAN || {}).derniere);
+  if (pannes || n !== derniere) {
+    console.error(`ÉCHEC : ${pannes} panne(s) ; arrêt à la page ${n} (dernière : ${derniere})`);
+    process.exitCode = 1;
+  }
   await navigateur.close();
 })();
