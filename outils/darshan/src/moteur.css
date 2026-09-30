@@ -448,3 +448,34 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
   border: 0.2cqw solid #6b3b0c; background: none; color: #2a1c10; }
 .fin-livre button:focus-visible { outline: 0.4cqw solid #6b3b0c; outline-offset: 0.5cqw; }
 .sans-magie .consigne, .texte.nu ~ .consigne { color: #6b3b0c; text-shadow: none; }
+
+/* ------------------------------------------------------------ états de page (synthèse, partie 3.3) */
+/* la barre de Julie (4.1 à 5.1) : les boutons de Darshan s'effacent (le carnet), seul son sac reste */
+.barre-julie .barre .carnet-bouton { display: none; }
+/* le voile des temps forts : la barre à 35 %, toujours utilisable */
+.voile-page .barre { opacity: 0.35; transition: opacity 1.2s; }
+.voile-page .barre:hover, .voile-page .barre:focus-within { opacity: 0.9; }
+/* sans magie (après 7.14) : ni objets, ni carnet, ni halo, ni « Faire le geste » ; le menu reste */
+.sans-magie-page .barre .objets, .sans-magie-page .barre .carnet-bouton, .sans-magie-page .faire-geste,
+.sans-magie-page .halo-interet { display: none; }
+/* répliques de Darshan : en or tant qu'il a sa magie, en clair ensuite */
+.texte p.de-darshan { color: var(--or-pale); }
+.texte.clair p.de-darshan { color: #7a4a10; }
+.repliques-claires .texte p.de-darshan { color: inherit; }
+/* l'aiguille de la boussole, sur le bouton « Carnet » */
+.barre .carnet-bouton .aiguille-bouton { width: 1.2em; height: 1.2em; vertical-align: -0.2em; margin-right: 0.35em; }
+.carte-carnet .lien-porte { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer;
+  text-decoration: underline; text-decoration-color: rgba(244, 197, 106, 0.45); text-underline-offset: 0.2em; }
+.carte-carnet .lien-porte:focus-visible { outline: 0.3cqw solid var(--or-pale); outline-offset: 0.3cqw; }
+.fiche h2.titre-porte { font-size: 4.6cqw; }
+/* le compte à rebours, en haut de la page */
+.compte-page { position: absolute; top: 3.4cqw; left: 50%; transform: translateX(-50%); z-index: 19; white-space: nowrap;
+  font-family: "Unna", serif; font-variant: small-caps; letter-spacing: 0.12em; font-size: 3.4cqw; color: var(--or-pale);
+  text-shadow: 0 0 1.4cqw rgba(255, 200, 110, 0.5), var(--ombre-texte); opacity: 0; transition: opacity 900ms; pointer-events: none; }
+.compte-page.vu { opacity: 1; }
+.compte-page.julie { font-family: "Amiri", serif; font-variant: normal; letter-spacing: 0.04em; color: #fff; text-shadow: none;
+  background: rgba(40, 42, 48, 0.72); padding: 0.6cqw 2.6cqw; border-radius: 3cqw; }
+/* le regard : la page vue à travers deux verres fumés */
+.regard { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 9; pointer-events: none; opacity: 0; transition: opacity 700ms; }
+.jeu .regard { display: block; }
+.regard.vu { opacity: 1; }

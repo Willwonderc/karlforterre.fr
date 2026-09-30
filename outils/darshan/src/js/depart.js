@@ -35,9 +35,17 @@ function entrerDansScene(sc) {
   var lu0 = +sc.getAttribute('data-lu0') || 0;
   if (lu0 > Lecture.max) Lecture.max = lu0;
   var magie = !sc.classList.contains('sans-magie');
+  // les états de la page, calculés par build.py (synthèse, partie 3.3)
+  var barre = sc.getAttribute('data-barre') || 'darshan';
   html.classList.toggle('sans-magie-page', !magie);
-  Objets.initialiser(liste(sc, 'data-sac'), liste(sc, 'data-sac-julie'));
-  Carnet.initialiser(liste(sc, 'data-portes'), magie);
+  html.classList.toggle('barre-julie', barre === 'julie');
+  html.classList.toggle('voile-page', sc.getAttribute('data-voile') === 'oui');
+  html.classList.toggle('repliques-claires', sc.getAttribute('data-repliques') === 'clair');
+  Objets.initialiser(liste(sc, 'data-sac'), liste(sc, 'data-sac-julie'),
+    { barre: barre, regard: sc.getAttribute('data-regard') === 'oui' });
+  Carnet.initialiser(liste(sc, 'data-portes'), magie,
+    { pere: sc.getAttribute('data-pere'), boussole: sc.getAttribute('data-boussole') });
+  Compte.afficher(sc, sc.getAttribute('data-compte'));
   var rang = scenes.indexOf(sc) + 1;
   if (!estEpub && rang > 1) ecrire('darshan.page', rang);
 }

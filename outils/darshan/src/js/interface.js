@@ -86,6 +86,11 @@ var Panneaux = (function () {
 var Objets = (function () {
   var donnees = DONNEES.objets || {}, familles = DONNEES.familles || {};
   var sacs = { darshan: [], julie: [] }, actions = {};
+  // barre « julie » (4.1 à 5.1, où Julie dit « je ») : seul son sac se montre ; regard : l'action
+  // « Regarder à travers » dans la fiche des lunettes (états de page calculés par build.py)
+  var barre = 'darshan', regard = false;
+  function sacsVisibles() { return barre === 'julie' ? ['julie'] : ['darshan', 'julie']; }
+  function visibles() { return sacsVisibles().reduce(function (l, s) { return l.concat(sacs[s]); }, []); }
   function nom(id) { return (donnees[id] || {}).nom || id; }
   function porteur(id) { return (donnees[id] || {}).porteur || 'darshan'; }
   function lues(id) { return ((donnees[id] || {}).citations || []).filter(function (c) { return c.lu <= Lecture.max; }); }
@@ -135,6 +140,11 @@ var Objets = (function () {
       el('cite', {}, b).textContent = q.chapitre;
     });
     var zone = el('div', { 'class': 'fiche-actions' }, c), a = actions[id];
+    // « Regarder à travers » : seulement si Karl a gardé ce texte dans interface.ini (clé regarder)
+    var texteRegard = DONNEES.ui && DONNEES.ui.regarder;
+    if (!a && id === 'lunettes' && regard && texteRegard && !html.classList.contains('sans-magie-page')) {
+      a = { libelle: texteRegard, faire: function () { Regard.regarder(sceneCourante()); } };
+    }
     if (a) {
       var ba = el('button', { type: 'button' }, zone);
       ba.textContent = a.libelle;
@@ -154,9 +164,10 @@ var Objets = (function () {
     var c = p.c;
     el('p', { 'class': 'fiche-surtitre' }, c).textContent = ui('objets_surtitre');
     el('h2', { tabindex: '-1' }, c).textContent = ui('objets');
-    var deux = sacs.julie.length && sacs.darshan.length;
-    if (!tous().length) el('p', { 'class': 'fiche-vide' }, c).textContent = ui('aucun_objet');
-    ['darshan', 'julie'].forEach(function (s) {
+    var montres = sacsVisibles().filter(function (s) { return sacs[s].length; });
+    var deux = montres.length > 1;
+    if (!montres.length) el('p', { 'class': 'fiche-vide' }, c).textContent = ui('aucun_objet');
+    sacsVisibles().forEach(function (s) {
       if (!sacs[s].length) return;
       if (deux) el('h3', { 'class': 'fiche-sac' }, c).textContent = ui('sac_' + s);
       var liste = el('div', { 'class': 'fiche-liste' }, c);
@@ -206,7 +217,7 @@ var Objets = (function () {
     }, calme ? 200 : 1250);
   }
   function majBoutons(pulser) {
-    var n = tous().length;
+    var n = visibles().length;
     $$('.barre .objets').forEach(function (b) {
       b.hidden = !n || html.classList.contains('sans-magie-page');   // l'interface n'apparaît que lorsqu'elle sert
       var c = b.querySelector('.compte');
@@ -216,7 +227,12 @@ var Objets = (function () {
     });
   }
   return {
-    initialiser: function (darshan, julie) { sacs.darshan = darshan.slice(); sacs.julie = julie.slice(); majBoutons(false); },
+    initialiser: function (darshan, julie, o) {
+      sacs.darshan = darshan.slice(); sacs.julie = julie.slice();
+      barre = (o && o.barre) || 'darshan'; regard = !!(o && o.regard);
+      majBoutons(false);
+    },
+    offrirRegard: function (oui) { regard = !!oui; },
     ajouter: function (id, sac, annonce) {
       sac = sac || porteur(id);
       if (sacs[sac].indexOf(id) < 0) sacs[sac].push(id);
@@ -263,7 +279,7 @@ var Objets = (function () {
 // du ciel où chaque lieu est placé par sa longitude et sa latitude
 var Carnet = (function () {
   var carte = DONNEES.carte || { lieux: {}, portes: {} };
-  var portes = [], eteint = false;
+  var portes = [], eteint = false, pere = null, boussole = null;
   function projeter() {
     // cadre des lieux (longitude, latitude) → rectangle de 1000 x 560 unités, marges comprises
     var ids = Object.keys(carte.lieux), lon = [], lat = [];
@@ -288,8 +304,28 @@ var Carnet = (function () {
       parent.appendChild(doc.createTextNode(m));
     });
   }
+  // L'aiguille de la boussole (5.3) : d'or, pointe vermillon, d'Aluva vers Paris ; « perdue » :
+  // immobile, la pointe pâlie (6.15) ; « eteinte » : grise (7.14).
+  function aiguille(g, etat, x, y, r) {
+    var a = svgEl('g', { transform: 'translate(' + x + ' ' + y + ') rotate(' + (etat === 'perdue' ? 62 : -38) + ')' }, g);
+    var eteinte = etat === 'eteinte' || eteint;
+    svgEl('circle', { r: r, fill: 'none', stroke: eteinte ? '#555a6e' : OR, 'stroke-width': r * 0.08, opacity: 0.7 }, a);
+    svgEl('path', { d: 'M0,' + (-r * 0.85) + 'L' + (r * 0.16) + ',0L0,' + (r * 0.85) + 'L' + (-r * 0.16) + ',0Z',
+      fill: eteinte ? '#555a6e' : OR }, a);
+    svgEl('path', { d: 'M0,' + (-r * 0.85) + 'L' + (r * 0.16) + ',0L' + (-r * 0.16) + ',0Z',
+      fill: eteinte ? '#6d7182' : SINDOOR, opacity: etat === 'perdue' ? 0.45 : 1 }, a);
+    return a;
+  }
   function dessinerCiel(parent) {
     var s = svgEl('svg', { viewBox: '0 0 1000 560', 'aria-hidden': 'true', focusable: 'false' }, parent);
+    // l'étoile à part, la porte du père : un anneau vu (3.11), allumé (7.12), éteint (7.14)
+    if (pere) {
+      var p = svgEl('g', { 'class': 'etoile-pere', transform: 'translate(930 70)' }, s);
+      if (pere === 'allumee' && !eteint) svgEl('path', { d: etoile(26), fill: '#fff8ea' }, p);
+      svgEl('circle', { r: 30, fill: 'none', stroke: pere === 'eteinte' || eteint ? '#555a6e' : OR, 'stroke-width': 3,
+        opacity: pere === 'vue' ? 0.8 : 1 }, p);
+    }
+    if (boussole) aiguille(s, boussole, 70, 490, 48);
     var ou = projeter(), vus = {};
     portes.forEach(function (id) {
       var p = carte.portes[id];
@@ -312,21 +348,65 @@ var Carnet = (function () {
     else {
       dessinerCiel(c);
       var liste = el('ol', { 'class': 'carnet-liste' }, c);
-      portes.forEach(function (id) { if (carte.portes[id]) libelle(el('li', {}, liste), carte.portes[id].libelle); });
+      portes.forEach(function (id) {
+        var porte = carte.portes[id];
+        if (!porte) return;
+        var li = el('li', {}, liste);
+        // la fiche de la porte : les phrases du livre déjà lues (portes.ini)
+        if (lues(porte).length) {
+          var b = el('button', { type: 'button', 'class': 'lien-porte' }, li);
+          libelle(b, porte.libelle);
+          b.addEventListener('click', function () { fichePorte(id); });
+        } else libelle(li, porte.libelle);
+      });
     }
     el('p', { 'class': 'fiche-vide' }, c).textContent = eteint ? ui('carnet_eteint') : ui('carnet_aide');
     Panneaux.boutonFermer(el('div', { 'class': 'fiche-actions' }, c));
     Panneaux.montrer(p.f);
   }
+  function lues(porte) {
+    return (porte.citations || []).filter(function (c) { return c.lu <= Lecture.max && (!c.cle || c.cle <= Lecture.max); });
+  }
+  function fichePorte(id) {
+    var porte = carte.portes[id], p = Panneaux.preparer(porte.libelle, 'carte-carnet');
+    if (!p) return;
+    el('p', { 'class': 'fiche-surtitre' }, p.c).textContent = ui('carnet_titre');
+    libelle(el('h2', { tabindex: '-1', 'class': 'titre-porte' }, p.c), porte.libelle);
+    lues(porte).forEach(function (q, k) {
+      var b = el('blockquote', {}, p.c);
+      b.style.animationDelay = (360 + k * 90) + 'ms';
+      b.appendChild(doc.createTextNode('« ' + q.texte + ' »'));
+      el('cite', {}, b).textContent = q.chapitre;
+    });
+    var zone = el('div', { 'class': 'fiche-actions' }, p.c);
+    var retour = el('button', { type: 'button', 'class': 'secondaire' }, zone);
+    retour.textContent = ui('carnet');
+    retour.addEventListener('click', function () { ouvrir(); });
+    Panneaux.boutonFermer(zone);
+    Panneaux.montrer(p.f);
+  }
   function majBoutons(pulser) {
     $$('.barre .carnet-bouton').forEach(function (b) {
-      b.hidden = !portes.length || eteint;
+      b.hidden = !portes.length || eteint || html.classList.contains('barre-julie');
+      var vieille = b.querySelector('.aiguille-bouton');
+      if (vieille) retirer(vieille);
+      if (boussole) {
+        var petit = svgEl('svg', { 'class': 'aiguille-bouton', viewBox: '-50 -50 100 100', 'aria-hidden': 'true', focusable: 'false' });
+        aiguille(petit, boussole, 0, 0, 44);
+        b.insertBefore(petit, b.firstChild);
+      }
       b.setAttribute('aria-label', ui('carnet') + ' : ' + portes.length);
       if (pulser) { b.classList.remove('pulse'); void b.offsetWidth; b.classList.add('pulse'); }
     });
   }
   return {
-    initialiser: function (liste, magie) { portes = liste.slice(); eteint = !magie; majBoutons(false); },
+    initialiser: function (liste, magie, o) {
+      portes = liste.slice(); eteint = !magie;
+      pere = (o && o.pere) || null; boussole = (o && o.boussole) || null;
+      majBoutons(false);
+    },
+    pere: function (etat) { pere = etat; majBoutons(true); },
+    boussole: function (etat) { boussole = etat; majBoutons(true); },
     // l'étoile d'une porte naît quand le passage s'achève à l'image (arbitrage 6)
     allumer: function (id) {
       if (portes.indexOf(id) >= 0) return Promise.resolve();
@@ -342,6 +422,58 @@ var Carnet = (function () {
     portes: function () { return portes.slice(); }
   };
 })();
+
+// ---- le regard : « Regarder à travers » les lunettes fumées (de 3.4 à 7.8, quand elles sont dans
+// le sac de Darshan). La vue passe par deux verres sombres ; une page peut montrer ce que le
+// regard révèle (scene.regard, écrit par ses effets : le filet d'or au pied d'une porte) ;
+// ailleurs, la page telle quelle, vue à travers les verres.
+var Regard = {
+  regarder: function (scene) {
+    if (!scene) return Promise.resolve();
+    // un voile sombre percé de deux verres fumés, comme si l'on portait les lunettes
+    var v = svgEl('svg', { 'class': 'regard ui', viewBox: '0 0 ' + W + ' ' + H, 'aria-hidden': 'true', focusable: 'false' }, scene);
+    var r = 250, y = 820, xs = [335, 865];
+    var trous = xs.map(function (x) {
+      return 'M' + (x - r) + ',' + y + 'a' + r + ',' + r + ' 0 1,0 ' + (2 * r) + ',0a' + r + ',' + r + ' 0 1,0 ' + (-2 * r) + ',0Z';
+    }).join('');
+    svgEl('path', { d: 'M-80,-80H' + (W + 80) + 'V' + (H + 80) + 'H-80Z' + trous, fill: '#060402', 'fill-rule': 'evenodd', opacity: 0.9 }, v);
+    xs.forEach(function (x) {
+      svgEl('circle', { cx: x, cy: y, r: r, fill: '#3c2610', opacity: 0.3 }, v);
+      svgEl('circle', { cx: x, cy: y, r: r, fill: 'none', stroke: '#241810', 'stroke-width': 26 }, v);
+    });
+    svgEl('path', { d: 'M' + (xs[0] + r - 20) + ',' + (y - 40) + 'Q600,' + (y - 110) + ' ' + (xs[1] - r + 20) + ',' + (y - 40),
+      fill: 'none', stroke: '#241810', 'stroke-width': 22 }, v);
+    requestAnimationFrame(function () { requestAnimationFrame(function () { v.classList.add('vu'); }); });
+    Son.effet('papier', { force: 0.4 });
+    var montre = typeof scene.regard === 'function' ? scene.regard() : null;
+    return Promise.resolve(montre).then(function () { return attendreVraiment(calme ? 1800 : 2800); }).then(function () {
+      v.classList.remove('vu');
+      return attendreVraiment(700);
+    }).then(function () { retirer(v); });
+  }
+};
+
+// ---- le compte à rebours : en haut de la page, là où le téléphone affiche l'heure ; en or chez
+// Darshan, blanc sur un bandeau graphite chez Julie (synthèse, parties 2.2 et 3.3)
+var Compte = {
+  afficher: function (scene, valeur, o) {
+    o = o || {};
+    var c = $('.compte-page', scene);
+    if (!valeur) { if (c) { c.classList.remove('vu'); setTimeout(function () { retirer(c); }, 900); } return; }
+    if (!c) {
+      c = el('div', { 'class': 'compte-page ui' + (scene.classList.contains('monde-julie') ? ' julie' : ''), 'aria-live': 'polite' }, scene);
+    }
+    if (c.textContent && c.textContent !== valeur && !calme) {
+      // les mots précédents se défont, les nouveaux se posent
+      c.classList.remove('vu');
+      setTimeout(function () { c.textContent = valeur; c.classList.add('vu'); }, 450);
+    } else {
+      c.textContent = valeur;
+      requestAnimationFrame(function () { requestAnimationFrame(function () { c.classList.add('vu'); }); });
+    }
+    if (o.son) Son.effet(o.son);
+  }
+};
 
 // ---- la barre de commandes et le menu
 function installerBarre(scene) {
