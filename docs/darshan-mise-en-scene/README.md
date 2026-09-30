@@ -430,6 +430,10 @@ reprise du chantier.
   et le Kerala avec les ressources de l'équipe, un travail important de recherche. D'abord,
   lui présenter ce qui est déjà fait pour ces pages (1.4 à 1.9, 3.9 à 3.14, 5.2 à 5.5,
   7.6 à 7.8) et un plan qui réponde à cet objectif.
+- **La voix** (30 septembre, en préparant le livre audio avec ElevenLabs) : la dédicace n'est
+  jamais lue par une voix de synthèse ; elle ne peut venir que de la voix de Karl, qui
+  l'enregistrera s'il le souhaite. Le livre audio commence donc au poème d'ouverture, et le
+  colophon n'est pas lu.
 - **À expliquer davantage, puis à reposer** (5) : 12 (qui dit « Il est incroyable. », 5.8 :
   avec un extrait plus large et une analyse plus poussée), 19 (la fenêtre de 6.13), 23 (le
   doigt de dieu, 7.1), 25 (les confettis : la question n'était pas claire), 43 (les

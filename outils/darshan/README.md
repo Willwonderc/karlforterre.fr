@@ -109,7 +109,8 @@ section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBChec
    sans que le texte soit recopié dans le dépôt). Si l'essai convainc : un fichier par page
    (`pNNN-n.mp3`), converti en AAC, lu par le moteur temps par temps et, pour la lecture à voix
    haute d'Apple Books, par les Media Overlays d'EPUB 3 (SMIL), avec l'alignement des temps ;
-   environ 30 Mo de plus. La voix lit le texte tel quel ; le père ne parle jamais. ElevenLabs
+   environ 30 Mo de plus. La voix lit le texte tel quel ; le père ne parle jamais ; la dédicace n'est lue que par
+   Karl, de sa propre voix (décision du 30 septembre), et le colophon n'est pas lu. ElevenLabs
    peut aussi fabriquer des sons en fichiers, si Apple Books refuse le son fabriqué par le script.
 5. **Petites retouches** : faites le 30 septembre, le compte à rebours (passé en haut à gauche,
    à l'écart des boutons de la barre) et la lettre de 7.7 (le texte rentré dans la feuille ; la
