@@ -52,7 +52,7 @@ function enDonnees(fichier, type) {
 const POLICE = enDonnees('src/fonts/Unna-Regular.woff2', 'font/woff2');
 // un décor de chaque monde : l'encre du marché d'Aluva, la photo de la chambre de Julie
 const DECORS = {
-  darshan: enDonnees('src/img/decors/marche.webp', 'image/webp'),
+  darshan: enDonnees('src/img/decors/marche-aluva.webp', 'image/webp'),
   julie: enDonnees('src/img/decors/chambre.webp', 'image/webp'),
 };
 

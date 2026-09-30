@@ -571,11 +571,12 @@ def preparer_porte_pere(d, dossier, nom):
     fond = Image.new("RGB", (W, H), tuple(int(c) for c in ImageOps.fit(morceau, (1, 1)).getpixel((0, 0))))
     fond.paste(posee, (0, 0), posee)
     bx0, by0, bx1, by1 = (round(v * K) for v in boite)
-    # le masque : la pierre fondue sur ses 12 % extérieurs (côtés et haut), le bas fondu avant la serrure
+    # le masque : la pierre fondue sur ses 12 % extérieurs (côtés), à peine en haut (le linteau reste
+    # à y0, sous la lanterne du moteur), le bas fondu avant la serrure
     a, b = d.get("fondu_bas", [0.50, 0.60])
     bw, bh = bx1 - bx0, by1 - by0
     gauche = ImageOps.invert(rampe((bw, bh), 0.0, 0.12, horizontale=True))      # 0 au bord, 255 à 12 %
-    haut_ = ImageOps.invert(rampe((bw, bh), 0.0, 0.12 * bw / bh))
+    haut_ = ImageOps.invert(rampe((bw, bh), 0.0, 0.045))
     masque = ImageChops.multiply(ImageChops.multiply(gauche, ImageOps.mirror(gauche)),
                                  ImageChops.multiply(haut_, rampe((bw, bh), a / haut, b / haut)))
     alpha = Image.new("L", (W, H), 0)
@@ -835,8 +836,14 @@ def faire_arbres_poeme():
     plein = Image.new("L", ciel.size, 0)
     ImageDraw.Draw(plein).rectangle((0, round(ciel.height * 0.93), ciel.width, ciel.height), fill=255)
     m = ImageChops.lighter(m, plein.filter(ImageFilter.GaussianBlur(20)))
+    # seul ce qui tient au sol est arbre : les taches sombres du ciel, isolées, restent du ciel
+    tient = m.point(lambda v: 255 if v > 90 else 0)
+    for x in range(0, tient.width, 3):
+        if tient.getpixel((x, tient.height - 1)) == 255:
+            ImageDraw.floodfill(tient, (x, tient.height - 1), 128)
+    tient = tient.point(lambda v: 255 if v == 128 else 0).filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.GaussianBlur(2))
     im = ciel.convert("RGBA")
-    im.putalpha(m)
+    im.putalpha(ImageChops.multiply(m, tient))
     return im
 
 
