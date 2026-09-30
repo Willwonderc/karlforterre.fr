@@ -133,10 +133,35 @@ section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBChec
    6.8, 6.11, 6.12, 7.7, 7.9, 7.11, 7.13) ; VoiceOver et TalkBack ; grand texte ; sans script ;
    Apple Books sur iPhone et iPad (essai de Karl : aucun geste ne doit tourner la page).
 7. **Les réponses de Karl** (30 septembre, `docs/darshan-mise-en-scene/README.md`, partie 13) :
-   les reporter dans la fabrication, dont la correction des coquilles, la commande du dessert
+   les reporter dans la fabrication. Les coquilles sont corrigées depuis le 30 septembre
+   (`texte.CORRECTIONS` : 34 corrections dans 28 paragraphes, les deux éditions). Restent la commande du dessert
    en 2.7, la chemise boutonnée en 1.8 et l'effet de Jivan en 1.5 ; lui présenter ce qui est
    fait pour le Kerala et un plan pour l'illustrer sans photos d'Inde ; lui reposer, mieux
    expliquées, les questions 12, 19, 23, 25 et 43.
+   Pour le second tour (préparé le 30 septembre, pas encore publié ; même page « Décisions pour
+   Darshan », numéros 45 à 50, les réponses 1 à 44 restant intactes) :
+   - 12 (5.8) : le paragraphe 126 (« Il est incroyable. Pourquoi tu ne trouves pas de garçons
+     normaux hein ? … »), en romain, répond d'avance au 128, en italique (« La fille que tu étais
+     n'a-t-elle pas toujours voulu un amour exceptionnel… Oui c'est vrai… ») : deux voix de Julie
+     (raison, cœur), ou quelqu'un d'autre (Amélie, sa mère), ou Julie tout haut ; au 124, elle est
+     sur son téléphone ;
+   - 19 (6.13) : « Si cette fenêtre ne te convainc pas » (§ 163) renvoie au § 149 (6.7) : « elle
+     jurerait depuis sa fenêtre avoir quitté terre et être à un étage. Au bord de sa fenêtre, Julie
+     ne reconnaît pas la rue Rousseau » ; la fenêtre, première preuve, le placard, la seconde ;
+   - 23 (7.1) : « Au milieu du désert libyque, adossé au doigt de dieu » (§ 171) : un lieu réel
+     ou une image ? « dieu » en minuscule, voulu ? (dessin d'après les rochers 35024039) ;
+   - 25 : les confettis entrent au sac en 5.5 (§ 123) et ne reviennent jamais ; le chapitre 5
+     s'appelle « Douceurs et confettis » : rester au sac (fête qui n'aura pas lieu), éclater à un
+     moment que Karl choisit, ou ne pas être un objet ;
+   - 43 : expliquer ce qu'est un repérage (une photo qui remplace une image d'attente), avec les
+     dix de la synthèse (partie 9.1), ce qu'il faut photographier et pour quelles pages ;
+   - le Kerala : les 19 pages (1.4 à 1.9, 3.9 à 3.14, 5.2 à 5.5, 7.6 à 7.8) emploient des
+     dessins (aluva, marche-aluva, porte-pere, local-or, local-nuit, depart, papier-lettre) et des
+     encres de photos de Karl prises ailleurs (palmes 34342144, filet 34956319, periyar et ponton
+     10310851, periyar-soir et periyar-crepuscule 10220497, montre 20315376, feu 22591346) ; plan :
+     une fiche documentaire sur Aluva et le Periyar tirée de sources publiques, sans recopier
+     d'image ; une manière propre au Kerala (le dessin, en couleurs chaudes, face au Paris de
+     Julie en photos) ; huit décors clés redessinés ou enrichis ; une planche validée par Karl.
 8. **Ce qui attend encore Karl** : les textes nouveaux d'`interface.ini`, d'`objets.ini` et
    de `portes.ini` ; les repérages (synthèse, partie 9 : la main de Julie, la rue de Rungis,
    le tartare et le pain perdu, la lettre de sa main, le mur de torchis, la porte de

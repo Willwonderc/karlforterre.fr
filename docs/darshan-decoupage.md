@@ -13,7 +13,7 @@ Julie) : [plan-darshan-interface.md](plan-darshan-interface.md).
 
 ## En bref
 
-- **85 tableaux**, 8401 mots, de 40 à 160 mots chacun (moyenne 99).
+- **85 tableaux**, 8404 mots, de 40 à 160 mots chacun (moyenne 99).
 - **58 gestes**, tous nés d'une phrase du livre ; chacun a son équivalent au toucher simple et au clavier.
 - **80 photographies de Karl** mises en scène : telles quelles dans le monde de Julie, passées à l'encre dans celui de Darshan, ou comme modèles des dessins.
 - **43 repérages** : les photos qui manquent encore, à prendre par Karl, regroupées en 10 sorties (liste à la fin).
@@ -22,13 +22,13 @@ Julie) : [plan-darshan-interface.md](plan-darshan-interface.md).
 | Chapitre | Paragraphes | Tableaux | Mots | Monde | Gestes |
 |---|---|---|---|---|---|
 | Ouverture | 8–16 | 2 | 139 | livre | 0 |
-| 1. Un ciel mouvant | 17–39 | 9 | 874 | Darshan, les deux | 10 |
+| 1. Un ciel mouvant | 17–39 | 9 | 876 | Darshan, les deux | 10 |
 | 2. Un pain perdu s’il vous plaît. | 40–62 | 10 | 961 | Julie, les deux | 5 |
-| 3. Entre deux mondes | 63–98 | 14 | 1370 | Darshan, légende | 8 |
-| 4. Amélie et Julie | 99–108 | 7 | 756 | Julie | 5 |
-| 5. Douceurs et confettis | 109–133 | 11 | 1251 | Darshan, Julie | 6 |
-| 6. Des attentes de part et d’autre | 134–169 | 15 | 1510 | Julie, les deux | 13 |
-| 7. Au-delà de la porte | 170–215 | 16 | 1479 | Darshan, Julie, les deux, livre | 11 |
+| 3. Entre deux mondes | 63–98 | 14 | 1373 | Darshan, légende | 8 |
+| 4. Amélie et Julie | 99–108 | 7 | 755 | Julie | 5 |
+| 5. Douceurs et confettis | 109–133 | 11 | 1252 | Darshan, Julie | 6 |
+| 6. Des attentes de part et d’autre | 134–169 | 15 | 1507 | Julie, les deux | 13 |
+| 7. Au-delà de la porte | 170–215 | 16 | 1480 | Darshan, Julie, les deux, livre | 11 |
 | Clôture | 216–221 | 1 | 61 | livre | 0 |
 
 ## La grammaire des transitions
@@ -186,7 +186,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 
 ### 0.1 Le seuil
 
-¶8–10, 53 mots · **fait en partie** : « À Maëlle, mon amour qui est bien plus que … une l’intensité inégalée. / Bonne lecture. »
+¶8–10, 53 mots · **fait en partie** : « À Maëlle, mon amour qui est bien plus que … une intensité inégalée. / Bonne lecture. »
 
 - **Lieu** : Page de titre · **monde** : livre · **entrée** : même plan
 - **Décor** : Le ciel étoilé de Karl, assombri ; le titre, दर्शन ; la dédicace à Maëlle paraît d'elle-même sous le titre, en silence ; la porte « Ouvrir », active dès l'arrivée, s'éclaire après « Bonne lecture. ».
@@ -276,13 +276,13 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 
 ### 1.5 Le vieil homme
 
-¶25–29, 109 mots : « Un vieil homme au short et au marcel de … presque à parler d’un dieu même. »
+¶25–29, 110 mots : « Un vieil homme au short et au marcel de … presque à parler d’un dieu même. »
 
 - **Lieu** : Aluva, au bord du fleuve · **monde** : Darshan · **entrée** : fondu
 - **Décor** : Le chemin sous les palmes, d'où vient le vieil homme ; puis son filet, en gros plan.
 - **Photos de Karl** : [34342144](https://photos.karlforterre.fr/photo/34342144/) « Jardin tropical » (encre) ; [34956319](https://photos.karlforterre.fr/photo/34956319/) « Gros plan d'un casier de pêche noir et de filets parmi des fleurs jaunes sauvages » (encre)
 - **Moment** : « L’individu dépose à côté de lui un filet » → on passe au filet, en gros plan
-- **Moment** : « Il tire jusqu'à lui un tabouret rafistolé » → le raclement du tabouret sur les planches ; puis les maquereaux plongent dans le tonneau
+- **Moment** : « Il tire jusqu’à lui un tabouret rafistolé » → le raclement du tabouret sur les planches ; puis les maquereaux plongent dans le tonneau
 - **Moment** : « l’homme entame la conversation » → premier dialogue du livre : les répliques paraissent une à une, le vieil homme en clair, Darshan en or
 - **Son** : kerala ; tabouret, poissons
 - **Note** : Le vieil homme n'a pas encore de nom : le livre ne le donne qu'à la dernière phrase du chapitre. Le titre de cette page, « Jivan », devient « Le vieil homme ».
@@ -317,7 +317,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 
 ### 1.8 Vieillir
 
-¶35–38, 127 mots : « — Je t’invite à t’attarder davantage sur ma personne … conclut Darshan en enfilant sa chemise. »
+¶35–38, 128 mots : « — Je t’invite à t’attarder davantage sur ma personne … conclut Darshan en enfilant sa chemise. »
 
 - **Lieu** : Aluva, le ponton · **monde** : Darshan · **entrée** : même plan
 - **Décor** : Le ponton du vieil homme, vide : sa place sans lui ; à « As-tu déjà pensé à vieillir ? », la lumière vire lentement à l'or ; après la pirouette, le lin blanc de la chemise passe devant la vue.
@@ -469,7 +469,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 
 ### 2.10 Le nuage
 
-¶62, 61 mots : « Sur son nuage il saute de rêves en projets … encore ou il va recevoir Julie. »
+¶62, 61 mots : « Sur son nuage il saute de rêves en projets … encore où il va recevoir Julie. »
 
 - **Lieu** : Au-dessus des toits, au crépuscule · **monde** : les deux · **entrée** : même plan
 - **Décor** : Les toits au crépuscule ; sur le ciel, à l'encre, son nuage puis la pièce qu'il rêve ; l'ombre d'un vrai nuage la fait pâlir.
@@ -509,7 +509,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 
 ### 3.3 L'immortel
 
-¶66, 86 mots : « Cet être immortel vécut bien longtemps dérouté, en quête … la vue de ses compétences extraordinaires. »
+¶66, 87 mots : « Cet être immortel vécut bien longtemps dérouté, en quête … la vue de ses compétences extraordinaires. »
 
 - **Lieu** : Les âges · **monde** : légende · **entrée** : fondu
 - **Décor** : Le chemin des pèlerins, à l'encre, qui monte sous les arbres, où l'on avance très lentement ; personne ; la poussière se soulève et retombe.
@@ -647,7 +647,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 
 ### 3.13 Le véritable amour
 
-¶93–95, 119 mots : « — Il n’y pas de doute possible, le message … un présent que je pourrai t’offrir. »
+¶93–95, 121 mots : « — Il n’y a pas de doute possible, le … présent que je pourrais t’offrir ? »
 
 - **Lieu** : Aluva · **monde** : Darshan · **entrée** : même plan
 - **Décor** : Le crépuscule sur le Periyar.
@@ -671,7 +671,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 
 ### 4.1 Amélie
 
-¶99–100, 72 mots : « Amélie et Julie / Amélie c’est ma meilleure amie, … c’est pourquoi je choisis cette option. »
+¶99–100, 71 mots : « Amélie et Julie / Amélie c’est ma meilleure amie, … c’est pourquoi je choisis cette option. »
 
 - **Lieu** : Paris, le métro · **monde** : Julie · **entrée** : bandes-julie
 - **Décor** : Le panneau du métro, vu d'en bas ; puis le quai, vu d'en haut : des cercles tous pareils.
@@ -877,7 +877,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 
 ### 5.10 La pâtisserie
 
-¶130, 113 mots : « Elle se lève, s’habille, rejoint la rue puis part … de faire chavirer son cœur ? »
+¶130, 114 mots : « Elle se lève, s’habille, rejoint la rue puis part … de faire chavirer son cœur ? »
 
 - **Lieu** : La rue, la pâtisserie · **monde** : Julie · **entrée** : obturateur
 - **Décor** : La rue le soir, qui se brouille ; la vitrine, floue et chaude tant que Karl ne l'a pas photographiée.
@@ -948,7 +948,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 
 ### 6.4 La clé dans la poche
 
-¶144–147, 153 mots : « — Oui bien sûr, laisse-moi un instant, je vais … son aimé, puis pousse la porte. »
+¶144–147, 151 mots : « — Oui bien sûr, laisse-moi un instant, je vais … son aimé, puis pousse la porte. »
 
 - **Lieu** : La porte de la demeure · **monde** : Julie · **entrée** : même plan
 - **Décor** : La porte bleue sous le balcon ; à « La porte est ouverte », l'encre saigne depuis le bouton du portillon : la porte devient celle de la légende (3.1, 3.2).
@@ -1003,7 +1003,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 
 ### 6.8 Le thé de haut
 
-¶150–152, 102 mots : « Darshan joint sa main gauche à la anse de … sourire amusé accompagné d›un index naïf. »
+¶150–152, 101 mots : « Darshan joint sa main gauche à l’anse de la … sourire amusé accompagné d’un index naïf. »
 
 - **Lieu** : L'appartement · **monde** : Julie · **entrée** : fondu
 - **Décor** : Le filet de thé versé de haut dans la tasse de cuivre ; puis, derrière l'épaule, le tableau : une barque vide sur un lac, en noir et blanc, dans un cadre de bois sombre.
@@ -1311,7 +1311,7 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 
 ### 7.15 La chute
 
-¶213–214, 114 mots : « La stupéfaction n’a plus de limite pour Julie. Elle … mélodie des aléas de la vie. »
+¶213–214, 115 mots : « La stupéfaction n’a plus de limite pour Julie. Elle … mélodie des aléas de la vie. »
 
 - **Lieu** : Rue de Rungis ; puis le ciel du soir · **monde** : Julie · **entrée** : même plan
 - **Décor** : Le bruit sourd : la lanterne s'éteint net ; puis la porte tombe dans la fente, sans un son ; les couleurs reviennent, sans trace d'encre ; les passants reprennent leur course ; le ciel du soir et la lune de 5.9.
@@ -1354,7 +1354,7 @@ entre parenthèses sont ceux des mécaniques et des effets de `livre.py`.
 
 ### D3. Ouverture, chapitres 1 et 2
 
-- **Tableaux** : 21 (0.1 à 2.10), 1974 mots, 15 gestes
+- **Tableaux** : 21 (0.1 à 2.10), 1976 mots, 15 gestes
 - **Plans nouveaux** : 12, dont 6 décors dessinés (monde de Darshan)
 - **Photos de Karl** : 12 telles quelles, 6 passées à l'encre ; **repérages** : 11
 - **Mécaniques** : caresser, glisser, maintenir, porter, remuer, rythme, toucher, tourner, tracer ; à écrire : **caresser, remuer**
@@ -1363,7 +1363,7 @@ entre parenthèses sont ceux des mécaniques et des effets de `livre.py`.
 
 ### D4. Chapitre 3
 
-- **Tableaux** : 14 (3.1 à 3.14), 1370 mots, 8 gestes
+- **Tableaux** : 14 (3.1 à 3.14), 1373 mots, 8 gestes
 - **Plans nouveaux** : 8, dont 8 décors dessinés (monde de Darshan)
 - **Photos de Karl** : 2 telles quelles, 11 passées à l'encre ; **repérages** : 5
 - **Mécaniques** : deux-pouces, glisser, respirer, semer, tendre, toucher ; à écrire : **deux-pouces, respirer, semer, tendre**
@@ -1381,7 +1381,7 @@ entre parenthèses sont ceux des mécaniques et des effets de `livre.py`.
 
 ### D6. Chapitre 6
 
-- **Tableaux** : 15 (6.1 à 6.15), 1510 mots, 13 gestes
+- **Tableaux** : 15 (6.1 à 6.15), 1507 mots, 13 gestes
 - **Plans nouveaux** : 7, dont 0 décors dessinés (monde de Darshan)
 - **Photos de Karl** : 17 telles quelles, 3 passées à l'encre ; **repérages** : 9
 - **Mécaniques** : attendre, caresser, glisser, liste, main, maintenir, portes, toucher, tourner, verser ; à écrire : **liste, main, portes, verser**
@@ -1390,7 +1390,7 @@ entre parenthèses sont ceux des mécaniques et des effets de `livre.py`.
 
 ### D7. Chapitre 7 et clôture
 
-- **Tableaux** : 17 (7.1 à 8.1), 1540 mots, 11 gestes
+- **Tableaux** : 17 (7.1 à 8.1), 1541 mots, 11 gestes
 - **Plans nouveaux** : 9, dont 2 décors dessinés (monde de Darshan)
 - **Photos de Karl** : 14 telles quelles, 5 passées à l'encre ; **repérages** : 8
 - **Mécaniques** : ecrire, effacer, glisser, maintenir, paume, porter, rythme, toucher, tourner ; à écrire : **ecrire, effacer, paume**

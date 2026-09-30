@@ -514,8 +514,11 @@ Ace by DAISY sans erreur grave, mode lecture, mouvement réduit, clavier, lecteu
 
 ## Annexe A. Coquilles relevées
 
-Elles figurent à l'identique dans le PDF imprimé et dans l'EPUB. Aucune n'est corrigée sans
-l'accord de Karl.
+Elles figurent à l'identique dans le PDF imprimé et dans l'EPUB. Karl a accepté le 30 septembre
+2026 de corriger les « certaines » (sauf le colophon, sans objet), ainsi que sept apostrophes
+droites égarées (synthèse, partie 11.2) : elles le sont à la fabrication, dans les deux éditions
+(`texte.CORRECTIONS`, dans `outils/darshan/texte.py`), et `livres/darshan.epub` reste tel quel.
+Les passages « à vérifier » ne sont pas touchés.
 
 Certaines :
 
