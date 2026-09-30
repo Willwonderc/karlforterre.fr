@@ -6,8 +6,8 @@
 module à installer.
 
 Le livre tel qu'il est. Le texte est lu dans livres/darshan.epub par texte.py, jamais
-recopié ni modifié : les coquilles de l'annexe A de docs/plan-darshan.md attendent l'accord
-de Karl. Seules changent la présentation (italiques du livre imprimé rétablies, poèmes,
+recopié ; seules les coquilles que Karl a acceptées le 30 septembre 2026 (texte.CORRECTIONS :
+annexe A de docs/plan-darshan.md, apostrophes droites égarées) sont corrigées. Seules changent la présentation (italiques du livre imprimé rétablies, poèmes,
 dédicace, lettre de Darshan) et les mentions, celles de Karl, sans rien de la SEP.
 
 Ordre du livre imprimé : couverture, page de titre, sommaire, dédicace, poème d'ouverture,
@@ -146,7 +146,7 @@ def debuts_de_strophe():
         t = html.unescape(re.sub(r"<[^>]+>", "", re.sub(r"<br\s*/?>", " / ", m.group(3)))).strip()
         if t:
             n += 1
-            if texte.lignes.get(n) != t:
+            if texte.originales.get(n) != t:
                 arreter(f"relecture de l'EPUB de 2023 décalée au paragraphe {n}")
             if vide and texte.est_vers(n):
                 debuts.add(n)
@@ -596,7 +596,7 @@ def main():
         raise
     provisoire.replace(sortie)
     print(f"{sortie} : {sortie.stat().st_size / 1024:.0f} Ko, {len(pages)} documents ; "
-          f"texte vérifié ({nombre} paragraphes identiques au livre).")
+          f"texte vérifié ({nombre} paragraphes identiques au livre, {len(texte.CORRECTIONS)} coquilles corrigées).")
 
 
 if __name__ == "__main__":

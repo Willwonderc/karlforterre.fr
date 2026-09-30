@@ -1,6 +1,7 @@
 // ---------------------------------------------------------------- le récit : révéler le texte temps par temps
 /* Chaque page découpe son texte en temps (<span class="temps">, écrits par build.py). Le
-   lecteur avance d'un temps en touchant le texte, l'étoile ✦, ou avec Entrée, Espace, →.
+   lecteur avance d'un temps en touchant la page (hors de l'interface et d'un geste attendu),
+   l'étoile ✦, ou avec Entrée, Espace, →.
    Certains temps attendent d'abord un geste (portes[j] : une fonction qui rend une promesse) ;
    d'autres déclenchent des effets en paraissant (surTemps(j) : peut rendre une promesse, que
    le temps suivant attend). À l'écran : le temps en cours et, s'il est du même paragraphe, le
@@ -24,8 +25,11 @@ function Recit(scene, options) {
   this.bouton = suite;
   function avancer(ev) { if (ev) ev.stopPropagation(); if (!bloque()) soi.avancer(); }
   suite.addEventListener('click', avancer);
-  var texte = $('.texte', scene);
-  if (texte) texte.addEventListener('click', avancer);
+  // toute la page, pas seulement le texte : un toucher sur le décor fait aussi avancer
+  scene.addEventListener('click', function (ev) {
+    if (!horsInterface(ev) || scene.classList.contains('geste-attendu')) return;
+    avancer(ev);
+  });
   this.clavier = function (ev) {
     if (!scene.classList.contains('active')) return;
     if (['ArrowRight', ' ', 'Enter', 'PageDown'].indexOf(ev.key) < 0) return;

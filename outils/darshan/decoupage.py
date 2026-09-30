@@ -519,7 +519,7 @@ TABLEAUX = [
       "Le chemin sous les palmes, d'où vient le vieil homme ; puis son filet, en gros plan.",
       photos=[(34342144, "encre"), (34956319, "encre")],
       moments=[("L’individu dépose à côté de lui un filet", "on passe au filet, en gros plan"),
-               ("Il tire jusqu'à lui un tabouret rafistolé",
+               ("Il tire jusqu’à lui un tabouret rafistolé",
                 "le raclement du tabouret sur les planches ; puis les maquereaux plongent dans le tonneau"),
                ("l’homme entame la conversation",
                 "premier dialogue du livre : les répliques paraissent une à une, le vieil homme en clair, Darshan en or")],

@@ -55,15 +55,10 @@ section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBChec
 `--failonwarnings` et `essai-livre.js` en mouvement réduit puis normal ; la tâche GitHub
 « Darshan » refait tout à chaque envoi. Dans l'ordre :
 
-1. **`build.py`** (demandé par les équipes des gestes et des effets) :
-   - copier dans l'édition web et dans l'EPUB, et inscrire dans `DONNEES.images` et au
-     manifeste, les calques et extras de `decors.py` : `fenetre-cadre`, `fenetre-vue`,
-     `toiles-couleur`, `placard-fermee`, `placard-ouverte`, `mangue`, les calques
-     `marche-aluva-<objet>` (5.2), `lune-bande`, les `<nom>-cliche` et `<nom>-vignette` de la
-     galerie (5.6, 5.7), `video-lune-vignette` et `esquisse-theatre.svg` (en `image/svg+xml`).
-     Sans eux, la galerie montre des vignettes floues et les étals se dessinent en figurines ;
-   - un attribut `data-genre` (photo, encre, dessin, uni) sur chaque plan : le froid, le gel et
-     l'effacement ne touchent que les photos.
+1. **`build.py`** : les calques et extras de `decors.py` (galerie, marché, fenêtre, placard, lune,
+   esquisse, planche) sont copiés, déclarés au moteur et inscrits au manifeste depuis le 30
+   septembre. Reste un attribut `data-genre` (photo, encre, dessin, uni) sur chaque plan : le
+   froid, le gel et l'effacement ne touchent que les photos.
 2. **Les effets** (`effets.js`) : les 71 qui manquent, par familles (images et plans ;
    particules, une toile par page ; texte ; cœur et temps ; son et alias), puis les réglages qui
    manquent aux effets déjà là : `objet+` (`style="notification"`, `ploie`), `transfert`
@@ -105,22 +100,69 @@ section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBChec
    de 7.10 ; deux ambiances à la fois (6.2, 7.4) ; les réglages de la foule et du tanpura.
    Dans l'édition web, la couche des battements survit au passage de 5.9 à 5.10 : arrêter les
    couches au changement de page (`depart.js` ou `Son`).
-5. **Petites retouches** : en 5.6, le compte « soixante-douze heures » chevauche les boutons de
-   la barre ; en 7.7, la première lettre des lignes en italique est rognée au bord gauche du
-   papier (peut-être le `filter` de `.temps`) ; dans `livre.py`, à décider : `objet="lunettes"`
-   en 1.9, `teinte="couchant"` en 7.10, `consigne_immediate` en 1.2, `dessin="cle-placard"` en
-   6.13, `suit_geste` pour les braises de 3.10.
-6. **Les essais** (synthèse, partie 12, étape 9) : `essai-livre.js` à chaque étape (le 30
+4 bis. **La voix** (proposition du 30 septembre, sur une offre reçue par Karl) : Karl a un
+   abonnement ElevenLabs, dont le modèle Eleven v4 est gratuit dans l'application web jusqu'au
+   12 octobre 2026 (dans la limite de deux fois ses crédits mensuels). Le livre fait environ
+   48 800 caractères, une heure de lecture. Proposition : une lecture à voix haute, page par page,
+   de préférence dans la voix de Karl (clonage instantané) ; d'abord un essai sur trois pages
+   (0.2, 2.2, 7.7 : kit envoyé à Karl, avec le texte exact, les réglages et les noms de fichiers,
+   sans que le texte soit recopié dans le dépôt). Si l'essai convainc : un fichier par page
+   (`pNNN-n.mp3`), converti en AAC, lu par le moteur temps par temps et, pour la lecture à voix
+   haute d'Apple Books, par les Media Overlays d'EPUB 3 (SMIL), avec l'alignement des temps ;
+   environ 30 Mo de plus. La voix lit le texte tel quel ; le père ne parle jamais ; la dédicace n'est lue que par
+   Karl, de sa propre voix (décision du 30 septembre), et le colophon n'est pas lu. ElevenLabs
+   peut aussi fabriquer des sons en fichiers, si Apple Books refuse le son fabriqué par le script.
+5. **Petites retouches** : faites le 30 septembre, le compte à rebours (passé en haut à gauche,
+   à l'écart des boutons de la barre) et la lettre de 7.7 (le texte rentré dans la feuille ; la
+   première lettre des lignes se perdait sur son bord déchiré). Restent, dans `livre.py`, à
+   décider : `objet="lunettes"` en 1.9, `teinte="couchant"` en 7.10, `consigne_immediate` en 1.2,
+   `dessin="cle-placard"` en 6.13, `suit_geste` pour les braises de 3.10.
+6. **Les essais** (synthèse, partie 12, étape 9). Premier essai de Karl dans Apple Books sur
+   iPhone, le 30 septembre : la page de titre convainc ; mais chaque toucher faisait paraître le
+   menu d'Apple Books (sa barre et les vignettes des pages), et « Ouvrir » ne menait nulle part.
+   Corrigé le jour même (`installerTouchers` dans `depart.js`, essai `essai-touchers.js`) : à
+   refaire sur l'iPhone. Karl n'avait pas non plus de son : le moteur ne demandait le son qu'au
+   premier doigt posé (`pointerdown`), qu'iOS ne compte pas comme un geste qui autorise le son
+   (il lui faut le doigt levé ou un clic). Il le redemande désormais à chaque doigt levé, clic ou
+   touche, tant que le son ne joue pas (`reveillerLeSon`). À vérifier aussi sur l'iPhone : que le
+   bouton du mode silencieux n'est pas mis (iOS y fait taire les sons du Web) ; si le son manque
+   encore, Apple Books refuse peut-être le son fabriqué par le script (Web Audio), et il faudra
+   des fichiers audio. Puis : `essai-livre.js` à chaque étape (le 30
    septembre, en mouvement réduit comme en mouvement normal, toutes les pages sont jouées
    jusqu'à 8.1 sans panne ; les seules erreurs sont les effets pas encore écrits) et depuis 3.10 ; les pages de l'EPUB jouées au clavier dans Chromium, en
    commençant par celles des gestes (1.3, 1.4, 2.2, 3.9, 3.10, 4.2, 4.3, 5.2, 5.6, 5.11, 6.2,
    6.8, 6.11, 6.12, 7.7, 7.9, 7.11, 7.13) ; VoiceOver et TalkBack ; grand texte ; sans script ;
    Apple Books sur iPhone et iPad (essai de Karl : aucun geste ne doit tourner la page).
 7. **Les réponses de Karl** (30 septembre, `docs/darshan-mise-en-scene/README.md`, partie 13) :
-   les reporter dans la fabrication, dont la correction des coquilles, la commande du dessert
+   les reporter dans la fabrication. Les coquilles sont corrigées depuis le 30 septembre
+   (`texte.CORRECTIONS` : 34 corrections dans 28 paragraphes, les deux éditions). Restent la commande du dessert
    en 2.7, la chemise boutonnée en 1.8 et l'effet de Jivan en 1.5 ; lui présenter ce qui est
    fait pour le Kerala et un plan pour l'illustrer sans photos d'Inde ; lui reposer, mieux
    expliquées, les questions 12, 19, 23, 25 et 43.
+   Pour le second tour (préparé le 30 septembre, pas encore publié ; même page « Décisions pour
+   Darshan », numéros 45 à 50, les réponses 1 à 44 restant intactes) :
+   - 12 (5.8) : le paragraphe 126 (« Il est incroyable. Pourquoi tu ne trouves pas de garçons
+     normaux hein ? … »), en romain, répond d'avance au 128, en italique (« La fille que tu étais
+     n'a-t-elle pas toujours voulu un amour exceptionnel… Oui c'est vrai… ») : deux voix de Julie
+     (raison, cœur), ou quelqu'un d'autre (Amélie, sa mère), ou Julie tout haut ; au 124, elle est
+     sur son téléphone ;
+   - 19 (6.13) : « Si cette fenêtre ne te convainc pas » (§ 163) renvoie au § 149 (6.7) : « elle
+     jurerait depuis sa fenêtre avoir quitté terre et être à un étage. Au bord de sa fenêtre, Julie
+     ne reconnaît pas la rue Rousseau » ; la fenêtre, première preuve, le placard, la seconde ;
+   - 23 (7.1) : « Au milieu du désert libyque, adossé au doigt de dieu » (§ 171) : un lieu réel
+     ou une image ? « dieu » en minuscule, voulu ? (dessin d'après les rochers 35024039) ;
+   - 25 : les confettis entrent au sac en 5.5 (§ 123) et ne reviennent jamais ; le chapitre 5
+     s'appelle « Douceurs et confettis » : rester au sac (fête qui n'aura pas lieu), éclater à un
+     moment que Karl choisit, ou ne pas être un objet ;
+   - 43 : expliquer ce qu'est un repérage (une photo qui remplace une image d'attente), avec les
+     dix de la synthèse (partie 9.1), ce qu'il faut photographier et pour quelles pages ;
+   - le Kerala : les 19 pages (1.4 à 1.9, 3.9 à 3.14, 5.2 à 5.5, 7.6 à 7.8) emploient des
+     dessins (aluva, marche-aluva, porte-pere, local-or, local-nuit, depart, papier-lettre) et des
+     encres de photos de Karl prises ailleurs (palmes 34342144, filet 34956319, periyar et ponton
+     10310851, periyar-soir et periyar-crepuscule 10220497, montre 20315376, feu 22591346) ; plan :
+     une fiche documentaire sur Aluva et le Periyar tirée de sources publiques, sans recopier
+     d'image ; une manière propre au Kerala (le dessin, en couleurs chaudes, face au Paris de
+     Julie en photos) ; huit décors clés redessinés ou enrichis ; une planche validée par Karl.
 8. **Ce qui attend encore Karl** : les textes nouveaux d'`interface.ini`, d'`objets.ini` et
    de `portes.ini` ; les repérages (synthèse, partie 9 : la main de Julie, la rue de Rungis,
    le tartare et le pain perdu, la lettre de sa main, le mur de torchis, la porte de
@@ -187,6 +229,7 @@ Dans une session Claude (Playwright et Chromium y sont installés), depuis `outi
 
 ```
 NODE_PATH=/opt/node22/lib/node_modules node essai-livre.js
+NODE_PATH=/opt/node22/lib/node_modules node essai-touchers.js
 NODE_PATH=/opt/node22/lib/node_modules node essai.js telephone
 NODE_PATH=/opt/node22/lib/node_modules node essai.js calme
 NODE_PATH=/opt/node22/lib/node_modules node essai-transitions.js telephone
@@ -196,7 +239,9 @@ NODE_PATH=/opt/node22/lib/node_modules node captures.js
 `essai-livre.js` joue le livre entier dans l'édition web, au clavier (`calme` par défaut,
 `normal` pour les animations complètes, et un numéro de tableau pour partir d'une page), et
 photographie chaque page dans `captures/livre/` avec un rapport (temps passé, erreurs du
-moteur). `essai.js` joue l'extrait de bout en bout (`telephone`, `ordinateur`, ou `calme` pour le
+moteur). `essai-touchers.js` touche les pages de l'EPUB comme sur un téléphone : le livre
+garde les touchers qui lui servent (Apple Books ne montre alors ni son menu ni ne tourne la
+page), laisse les bords et la page lue à la liseuse, et les gestes se font au doigt. `essai.js` joue l'extrait de bout en bout (`telephone`, `ordinateur`, ou `calme` pour le
 mouvement réduit) et photographie chaque étape, balayages compris, dans `captures/` (non
 suivi par Git) ; `essai-transitions.js` photographie chaque transition du banc d'essai à
 plusieurs instants et vérifie qu'aucun calque ne reste derrière elle ; `captures.js`

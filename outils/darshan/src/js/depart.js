@@ -69,10 +69,16 @@ var Navigation = {
     else if (apres.recit) apres.recit.toutMontrer();
   },
   // Passer à la page suivante : sur le web, le balayage que la suivante annonce ; `o.de` :
-  // d'où part le balayage dans la page qui s'en va.
+  // d'où part le balayage dans la page qui s'en va. Dans l'EPUB (« Ouvrir », page de titre) :
+  // le fichier d'après.
   suivante: function (scene, o) {
+    if (estEpub) {
+      var m = /p(\d{3})\.xhtml$/.exec(window.location.pathname || '');
+      if (m) Navigation.allerA(+m[1] + 1);
+      return;
+    }
     var i = scenes.indexOf(scene);
-    if (estEpub || i < 0 || i + 1 >= scenes.length) return;
+    if (i < 0 || i + 1 >= scenes.length) return;
     Transitions.passer(scene, scenes[i + 1], function () { Navigation.aller(i + 1); }, o);
   },
   // Aller à la page de rang r (1 = page de titre) : un fondu sur le web, un lien dans l'EPUB.
@@ -98,20 +104,98 @@ var Navigation = {
   reprise: function () { var r = lire('darshan.page'); return typeof r === 'number' ? r : 0; }
 };
 
+// ---------------------------------------------------------------- les touchers dans les liseuses
+/* Apple Books (et Kobo) prennent chaque toucher pour leur menu ou pour tourner la page, sauf si
+   le livre l'annule dès que le doigt se pose (Apple Books Asset Guide, « Designing Content for
+   Books with JavaScript Interactivity »). Le livre l'annule quand le toucher lui sert : un
+   bouton, une fiche ouverte, un geste attendu, un balayage en cours, du texte encore à lire. Les
+   bords de la page restent à la liseuse (tourner la page), sauf sur un bouton ; la page lue, le
+   milieu aussi (son menu). Annuler le toucher supprime le clic qui le suit : on le rejoue. Les
+   gestes suivent les pointeurs, que l'annulation n'arrête pas. Les liens gardent leur toucher. */
+function installerTouchers() {
+  if (!estEpub || !('ontouchstart' in window) || typeof MouseEvent !== 'function') return;
+  var BORD = 0.08, suivi = null, rejoue = 0;
+  function sert(cible, x) {
+    if (!cible || !cible.closest || cible.closest('a[href], select')) return false;
+    if (cible.closest('button, input, textarea, label, .fiche, .nouvel-objet')) return true;
+    var l = doc.documentElement.clientWidth || window.innerWidth || 0;
+    if (l && (x < l * BORD || x > l * (1 - BORD))) return false;
+    var s = sceneCourante();
+    if (!s) return false;
+    if (s.classList.contains('geste-attendu') || Transitions.occupe()) return true;
+    return !!(s.recit && !s.recit.fini);
+  }
+  // le curseur du volume (menu) se règle au doigt, puisque son toucher est annulé
+  function regler(i, t) {
+    var r = i.getBoundingClientRect();
+    if (!r.width) return;
+    var min = +i.min || 0, max = +i.max || 1, pas = +i.step || 0;
+    var v = min + (max - min) * borne((t.clientX - r.left) / r.width);
+    i.value = String(pas ? Math.round(v / pas) * pas : v);
+    i.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  doc.addEventListener('touchstart', function (ev) {
+    var t = ev.changedTouches && ev.changedTouches[0];
+    suivi = null;
+    if (!t || ev.touches.length > 1 || !sert(ev.target, t.clientX)) return;
+    suivi = { x: t.clientX, y: t.clientY, t0: Date.now(), cible: ev.target, curseur: ev.target.closest('input[type="range"]') };
+    // une fiche qui défile garde son défilement : seul le toucher bref y est annulé, à la fin
+    var carte = ev.target.closest('.fiche-carte');
+    if (carte && carte.scrollHeight > carte.clientHeight + 2 && !suivi.curseur) return;
+    if (ev.cancelable) ev.preventDefault();
+    if (suivi.curseur) regler(suivi.curseur, t);
+  }, { capture: true, passive: false });
+  doc.addEventListener('touchmove', function (ev) {
+    if (!suivi || !suivi.curseur || !ev.changedTouches) return;
+    if (ev.cancelable) ev.preventDefault();
+    regler(suivi.curseur, ev.changedTouches[0]);
+  }, { capture: true, passive: false });
+  doc.addEventListener('touchend', function (ev) {
+    var s = suivi, t = ev.changedTouches && ev.changedTouches[0];
+    suivi = null;
+    if (!s || !t) return;
+    if (ev.cancelable) ev.preventDefault();
+    if (s.curseur) { s.curseur.dispatchEvent(new Event('change', { bubbles: true })); return; }
+    // un toucher bref et presque immobile ; un glissement reste aux gestes
+    if (Math.abs(t.clientX - s.x) > 24 || Math.abs(t.clientY - s.y) > 24 || Date.now() - s.t0 > 1000) return;
+    var b = s.cible.closest('button, input, textarea');
+    if (b && b.focus) { try { b.focus({ preventScroll: true }); } catch (e) { /* rien */ } }
+    rejoue = Date.now();
+    s.cible.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window, detail: 1,
+      clientX: t.clientX, clientY: t.clientY, screenX: t.screenX, screenY: t.screenY }));
+  }, { capture: true, passive: false });
+  doc.addEventListener('touchcancel', function () { suivi = null; }, true);
+  doc.addEventListener('click', function (ev) {
+    if (!ev.isTrusted) return;
+    // un clic natif juste après le clic rejoué serait le même toucher, compté deux fois
+    if (Date.now() - rejoue < 700) { ev.stopPropagation(); if (ev.cancelable) ev.preventDefault(); return; }
+    // à la souris (Apple Books sur Mac), la même règle
+    if (ev.cancelable && sert(ev.target, ev.clientX)) ev.preventDefault();
+  }, true);
+}
+
+// Le son ne part qu'après un geste du lecteur. Sur iPhone et iPad, le doigt posé (pointerdown)
+// ne suffit pas à l'autoriser : il faut le doigt levé (touchend) ou un clic. Chaque geste de ce
+// genre relance donc le son tant qu'il ne joue pas (Son.init reprend un contexte suspendu, et ne
+// fait rien quand il joue ou que le son est coupé).
+function reveillerLeSon() {
+  ['pointerdown', 'touchend', 'click', 'keydown'].forEach(function (type) {
+    doc.addEventListener(type, function () { Son.init(); }, true);
+  });
+}
+
 function depart() {
   scenes.forEach(installerBarre);
+  installerTouchers();
   if (estEpub) {
-    // dans l'EPUB, une page = une scène ; le son démarre au premier toucher de la page
+    // dans l'EPUB, une page = une scène ; le son démarre au premier geste sur la page
     var s = scenes[0];
     if (!s) return;
     s.classList.add('active');
     entrerDansScene(s);
     var a = s.getAttribute('data-son');
     if (a) Son.ambiance(a);
-    doc.addEventListener('pointerdown', function premier() {
-      doc.removeEventListener('pointerdown', premier);
-      Son.init();
-    });
+    reveillerLeSon();
     Transitions.entree(s);
     Scenes.jouer(s);
     return;
@@ -120,9 +204,7 @@ function depart() {
   var cible = window.location.hash ? doc.getElementById(window.location.hash.slice(1)) : null;
   var i = cible ? scenes.indexOf(cible) : 0;
   Navigation.aller(i < 0 ? 0 : i);
-  if (i > 0) {
-    doc.addEventListener('pointerdown', function premier() { doc.removeEventListener('pointerdown', premier); Son.init(); });
-    doc.addEventListener('keydown', function premier() { doc.removeEventListener('keydown', premier); Son.init(); });
-  }
+  // depuis la page de titre, le son part avec « Ouvrir » ; ailleurs, au premier geste
+  if (i > 0) reveillerLeSon();
 }
 if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', depart); else depart();
