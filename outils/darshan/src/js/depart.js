@@ -15,6 +15,22 @@ function sceneCourante() { return estEpub ? scenes[0] : scenes[actuelle]; }
 function quandEntree(sc) { return sc.entreeFaite || Promise.resolve(); }
 function liste(sc, attr) { return (sc.getAttribute(attr) || '').split(/\s+/).filter(Boolean); }
 
+// Édition web : les 85 pages sont dans un seul document. Une page quittée rend ses images (elles
+// reviennent quand on y retourne), sinon un téléphone garderait en mémoire tous les décors vus.
+function liberer(sc) {
+  $$('img[src]', sc).forEach(function (img) { img.setAttribute('data-src', img.getAttribute('src')); img.removeAttribute('src'); });
+}
+function recharger(sc) {
+  $$('img[data-src]', sc).forEach(function (img) { img.setAttribute('src', img.getAttribute('data-src')); img.removeAttribute('data-src'); });
+}
+// Le fichier du premier décor de la page suivante est lu d'avance (le balayage ne découvre pas
+// une image encore vide) ; seul le fichier est gardé, pas l'image décodée.
+function precharger(sc) {
+  var img = sc && $('.decor img', sc);
+  var src = img && (img.getAttribute('src') || img.getAttribute('data-src'));
+  if (src) { var i = new Image(); i.src = src; }
+}
+
 function entrerDansScene(sc) {
   var lu0 = +sc.getAttribute('data-lu0') || 0;
   if (lu0 > Lecture.max) Lecture.max = lu0;
@@ -31,14 +47,16 @@ var Navigation = {
   aller: function (i) {
     if (i < 0 || i >= scenes.length) return;
     var avant = scenes[actuelle], apres = scenes[i];
-    if (avant) { avant.classList.remove('active'); Visuels.quitter(avant); }
+    if (avant) { avant.classList.remove('active'); Visuels.quitter(avant); liberer(avant); }
     actuelle = i;
+    recharger(apres);
     apres.classList.add('active');
     entrerDansScene(apres);
     var img = $('.decor img', apres);
     if (fond && img) fond.style.backgroundImage = 'url("' + img.getAttribute('src') + '")';
     var son = apres.getAttribute('data-son');
     if (son) Son.ambiance(son);
+    precharger(scenes[i + 1]);
     if (!apres.demarree) { apres.demarree = true; Scenes.jouer(apres); }
     else if (apres.recit) apres.recit.toutMontrer();
   },

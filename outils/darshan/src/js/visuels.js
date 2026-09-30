@@ -17,14 +17,22 @@ var Visuels = (function () {
   // Les toiles animées d'une scène : arrêtées quand on la quitte. Pas plus de trois à la fois
   // (Apple Books sur iPhone) : la plus ancienne s'arrête si une quatrième démarre.
   var vivantes = [];
-  function enregistrer(scene, anim) {
+  function enregistrer(scene, anim, toileEl) {
     anim.scene = scene;
+    anim.toile = toileEl;
     vivantes.push(anim);
-    while (vivantes.length > 3) vivantes.shift().arreter();
+    while (vivantes.length > 3) { var vieille = vivantes.shift(); vieille.arreter(); retirer(vieille.toile); }
     return anim;
   }
+  // Quitter une scène : ses animations s'arrêtent et leurs toiles disparaissent (leur mémoire
+  // avec) ; la scène les refait si on y revient.
   function quitter(scene) {
-    vivantes = vivantes.filter(function (a) { if (a.scene === scene) { a.arreter(); return false; } return true; });
+    vivantes = vivantes.filter(function (a) {
+      if (a.scene !== scene) return true;
+      a.arreter(); retirer(a.toile);
+      return false;
+    });
+    scene.etoiles = null; scene.poussiere = null;
   }
   function toile(scene, parent) {
     return el('canvas', { 'class': 'toile', 'aria-hidden': 'true' }, parent || $('.decor', scene) || scene);
@@ -74,7 +82,7 @@ var Visuels = (function () {
         })();
       },
       arreter: function () { vivant = false; }
-    });
+    }, t);
   }
 
   // ---- poussière dans la lumière (x, y : d'où elle monte ; etendue : sa largeur)
@@ -106,7 +114,7 @@ var Visuels = (function () {
     return enregistrer(scene, {
       bouffee: function (x, y) { if (!calme) ajouter(140, x || x0, y || y0 + 260, 700); },
       arreter: function () { vivant = false; }
-    });
+    }, t);
   }
 
   // ---- les plans du décor : un seul visible (classe « vu »), les autres attendent dessous

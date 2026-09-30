@@ -1,8 +1,9 @@
 // Planche des dessins d'objets de Darshan jouable (src/js/dessins.js).
 //
-// Chaque dessin paraît trois fois, comme dans le livre : en grand sur le fond de la fiche
-// (écrin de nuit, filet d'or, le gros plan dans sa pose de repos), en petit dans le bandeau
-// « Nouvel objet » (icône d'environ 130 × 70 px), et à la même taille sur un décor (l'envol
+// Chaque dessin paraît trois fois, comme dans le livre : en grand sur le fond de sa fiche (chez
+// Darshan l'écrin de nuit au filet d'or, chez Julie la carte claire de son téléphone, comme
+// .carte-julie dans moteur.css), dans la pose de repos du gros plan ; en petit dans le bandeau
+// « Nouvel objet » (icône d'environ 130 × 70 px) ; et à la même taille sur un décor (l'envol
 // vers le bouton « Objets »), avec son nom tiré d'objets.ini.
 //
 // Usage, depuis outils/darshan/ (Playwright et Chromium sont installés dans les sessions) :
@@ -68,7 +69,7 @@ const PAGE = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><style>
 html, body { margin: 0; background: #05060f; color: #f5efe2; font-family: "Unna", Georgia, serif; }
 h1 { margin: 0; padding: 28px 32px 0; font-weight: 400; font-size: 40px; color: #ffe7b0; }
 h1 small { font-size: 20px; color: #aaa5b9; margin-left: 16px; }
-.grille { display: grid; grid-template-columns: repeat(3, 620px); gap: 24px; padding: 24px 32px 32px; }
+.grille { display: grid; grid-template-columns: repeat(3, 680px); gap: 24px; padding: 24px 32px 32px; }
 .cellule { background: #0b0e20; border: 1px solid #262b47; border-radius: 14px; padding: 14px 16px 18px; }
 .titre { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 0 10px; }
 .titre b { font-weight: 400; font-size: 27px; color: #ffe7b0; }
@@ -79,17 +80,18 @@ h1 small { font-size: 20px; color: #aaa5b9; margin-left: 16px; }
   background: linear-gradient(rgba(22, 27, 52, 0.97), rgba(10, 13, 30, 0.98));
   border: 2px solid rgba(244, 197, 106, 0.55); border-radius: 18px;
   box-shadow: inset 0 0 0 5px rgba(244, 197, 106, 0.06); }
+.fiche.julie { background: linear-gradient(#f7f5f0, #e7e3da); border-color: rgba(20, 20, 20, 0.18); box-shadow: none; }
 .fiche svg { width: 70%; height: auto; filter: drop-shadow(0 11px 13px rgba(0, 0, 0, 0.65));
   transform: rotateY(-9deg) rotateX(4deg); }
 .bas { display: flex; align-items: center; justify-content: space-between; margin-top: 22px; }
 .bandeau { display: flex; align-items: center; gap: 22px; padding: 16px 34px 16px 26px; margin-left: 14px;
   background: rgba(7, 9, 26, 0.95); border-left: 19px solid #c9302c; box-shadow: 14px 14px 0 rgba(244, 197, 106, 0.85);
-  transform: skewX(-12deg); color: #ffe7b0; font-size: 25px; line-height: 1.15; max-width: 330px; }
+  transform: skewX(-12deg); color: #ffe7b0; font-size: 22px; line-height: 1.15; max-width: 440px; }
 .bandeau > span { display: block; transform: skewX(12deg); }
 .bandeau .icone { width: 132px; height: 72px; flex: none; }
 .bandeau .icone svg, .decor svg { width: 100%; height: 100%; display: block; }
 .bandeau small { display: block; font-variant: small-caps; letter-spacing: 0.12em; color: #f4c56a; font-size: 18px; }
-.decor { width: 168px; height: 112px; border-radius: 8px; background-size: cover; background-position: center;
+.decor { width: 150px; height: 112px; border-radius: 8px; background-size: cover; background-position: center;
   display: flex; align-items: center; justify-content: center; flex: none; }
 .decor span { width: 132px; height: 72px; }
 </style></head><body><h1>Darshan : les objets <small id="resume"></small></h1><div class="grille" id="grille"></div>
@@ -138,7 +140,7 @@ function dansLaPage(args) {
     el('span', r.octets > 4096 ? 'lourd' : '', titre, id + ' · ' + (r.octets / 1024).toFixed(1) + ' Ko' +
       (r.erreurs.length ? ' · ' + r.erreurs.length + ' erreur(s)' : ''));
     const d1 = window.dessinPlanche(id);
-    const fiche = el('div', 'fiche', cellule);
+    const fiche = el('div', e.porteur === 'julie' ? 'fiche julie' : 'fiche', cellule);
     if (d1) fiche.appendChild(d1);
     const bas = el('div', 'bas', cellule);
     const bandeau = el('div', 'bandeau', bas);
