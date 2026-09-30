@@ -55,15 +55,10 @@ section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBChec
 `--failonwarnings` et `essai-livre.js` en mouvement réduit puis normal ; la tâche GitHub
 « Darshan » refait tout à chaque envoi. Dans l'ordre :
 
-1. **`build.py`** (demandé par les équipes des gestes et des effets) :
-   - copier dans l'édition web et dans l'EPUB, et inscrire dans `DONNEES.images` et au
-     manifeste, les calques et extras de `decors.py` : `fenetre-cadre`, `fenetre-vue`,
-     `toiles-couleur`, `placard-fermee`, `placard-ouverte`, `mangue`, les calques
-     `marche-aluva-<objet>` (5.2), `lune-bande`, les `<nom>-cliche` et `<nom>-vignette` de la
-     galerie (5.6, 5.7), `video-lune-vignette` et `esquisse-theatre.svg` (en `image/svg+xml`).
-     Sans eux, la galerie montre des vignettes floues et les étals se dessinent en figurines ;
-   - un attribut `data-genre` (photo, encre, dessin, uni) sur chaque plan : le froid, le gel et
-     l'effacement ne touchent que les photos.
+1. **`build.py`** : les calques et extras de `decors.py` (galerie, marché, fenêtre, placard, lune,
+   esquisse, planche) sont copiés, déclarés au moteur et inscrits au manifeste depuis le 30
+   septembre. Reste un attribut `data-genre` (photo, encre, dessin, uni) sur chaque plan : le
+   froid, le gel et l'effacement ne touchent que les photos.
 2. **Les effets** (`effets.js`) : les 71 qui manquent, par familles (images et plans ;
    particules, une toile par page ; texte ; cœur et temps ; son et alias), puis les réglages qui
    manquent aux effets déjà là : `objet+` (`style="notification"`, `ploie`), `transfert`
@@ -105,11 +100,11 @@ section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBChec
    de 7.10 ; deux ambiances à la fois (6.2, 7.4) ; les réglages de la foule et du tanpura.
    Dans l'édition web, la couche des battements survit au passage de 5.9 à 5.10 : arrêter les
    couches au changement de page (`depart.js` ou `Son`).
-5. **Petites retouches** : en 5.6, le compte « soixante-douze heures » chevauche les boutons de
-   la barre ; en 7.7, la première lettre des lignes en italique est rognée au bord gauche du
-   papier (peut-être le `filter` de `.temps`) ; dans `livre.py`, à décider : `objet="lunettes"`
-   en 1.9, `teinte="couchant"` en 7.10, `consigne_immediate` en 1.2, `dessin="cle-placard"` en
-   6.13, `suit_geste` pour les braises de 3.10.
+5. **Petites retouches** : faites le 30 septembre, le compte à rebours (passé en haut à gauche,
+   à l'écart des boutons de la barre) et la lettre de 7.7 (le texte rentré dans la feuille ; la
+   première lettre des lignes se perdait sur son bord déchiré). Restent, dans `livre.py`, à
+   décider : `objet="lunettes"` en 1.9, `teinte="couchant"` en 7.10, `consigne_immediate` en 1.2,
+   `dessin="cle-placard"` en 6.13, `suit_geste` pour les braises de 3.10.
 6. **Les essais** (synthèse, partie 12, étape 9). Premier essai de Karl dans Apple Books sur
    iPhone, le 30 septembre : la page de titre convainc ; mais chaque toucher faisait paraître le
    menu d'Apple Books (sa barre et les vignettes des pages), et « Ouvrir » ne menait nulle part.
