@@ -67,6 +67,16 @@ def poly(pts):
     return "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in pts) + " Z"
 
 
+def droit(pts, pas=40):
+    """Les points d'une ligne brisée, resserrés tous les « pas » : le trait de pinceau la suit
+    droite, sans les boucles que la courbe lisse ferait entre des coins éloignés."""
+    out = [pts[0]]
+    for (xa, ya), (xb, yb) in zip(pts, pts[1:]):
+        n = max(1, round(math.dist((xa, ya), (xb, yb)) / pas))
+        out += [(xa + (xb - xa) * k / n, ya + (yb - ya) * k / n) for k in range(1, n + 1)]
+    return out
+
+
 def svg(contenu, defs="", fond=None):
     f = f'<rect width="{W}" height="{H}" fill="{fond}"/>' if fond else ""
     return (f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
@@ -1597,6 +1607,433 @@ def porte_battante(graine=83):
   <stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#3a3a44" stop-opacity="0.28"/>
 </radialGradient>"""
     return svg("".join(out), defs, "#f1ede4")
+
+
+
+# ---------------------------------------------------------------- 6.6 : les toiles de Darshan
+
+TOILE_COUPLE = (398, 104, 822, 562)       # la toile du couple (x0, y0, x1, y1) : son centre vers (610, 333)
+TOILES = [("lune", (66, 168, 330, 440)), ("arbres", (78, 548, 330, 942)),
+          ("croissant", (872, 146, 1134, 398)), ("racines", (884, 460, 1124, 770)), ("arche", (872, 812, 1122, 1012))]
+
+
+def trait_toile(pts, largeur, rng, fin="volute", couleur=ENCRE):
+    """Un trait des toiles de Darshan : il part d'un point d'encre sombre et sec (un « puits
+    asséché ») et finit en volute, ou en racines qui se défont dans le lin."""
+    out = [f'<circle cx="{pts[0][0]:.1f}" cy="{pts[0][1]:.1f}" r="{largeur * 0.95:.1f}" fill="{couleur}" filter="url(#bord-encre)"/>',
+           f'<path d="{trait(pts, largeur, rng, 0.02, 0.6, 0.25)}" fill="{couleur}" opacity="0.92"/>']
+    (xa, ya), (xb, yb) = pts[-2], pts[-1]
+    a = math.atan2(yb - ya, xb - xa)
+    if fin == "volute":
+        spirale = []
+        for k in range(14):
+            t = k / 13
+            r = largeur * 3.2 * (1 - t * 0.8)
+            b = a + t * 4.4
+            spirale.append((xb + r * math.cos(b + math.pi / 2) - largeur * 3.2 * math.cos(a + math.pi / 2),
+                            yb + r * math.sin(b + math.pi / 2) - largeur * 3.2 * math.sin(a + math.pi / 2)))
+        out.append(f'<path d="{trait(spirale, largeur * 0.45, rng, 0.05, 0.8, 0.2)}" fill="{couleur}" opacity="0.85"/>')
+    else:
+        for k in range(3):
+            b = a + rng.uniform(-0.6, 0.6)
+            lg = largeur * rng.uniform(5, 10)
+            out.append(f'<path d="{trait([(xb, yb), (xb + lg * 0.5 * math.cos(b), yb + lg * 0.5 * math.sin(b)), (xb + lg * math.cos(b + 0.2), yb + lg * math.sin(b + 0.2))], largeur * 0.3, rng, 0.05, 0.9, 0.4)}" '
+                       f'fill="{couleur}" opacity="0.6"/>')
+    return "".join(out)
+
+
+def toile_de_lin(x0, y0, x1, y1, rng):
+    """Une toile de lin brut, sans cadre, tendue sur son châssis : le grain du lin, les bords, l'ombre."""
+    return (f'<rect x="{x0 + 10}" y="{y0 + 14}" width="{x1 - x0}" height="{y1 - y0}" fill="#5a4a36" opacity="0.35" filter="url(#flou-toile)"/>'
+            f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}" fill="#d8cab0"/>'
+            f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}" fill="#6a5a40" filter="url(#lin)" opacity="0.6"/>'
+            f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}" fill="none" stroke="#a8977a" stroke-width="3"/>')
+
+
+def sujet(nom, boite, rng):
+    """Ce que montre une petite toile, à l'encre de Chine."""
+    x0, y0, x1, y1 = boite
+    cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, x1 - x0, y1 - y0
+    out = []
+    if nom == "lune":
+        r = w * 0.3
+        out.append(lavis(f"M{cx - r:.0f},{cy:.0f} a{r:.0f},{r:.0f} 0 1 0 {2 * r:.0f},0 a{r:.0f},{r:.0f} 0 1 0 {-2 * r:.0f},0 Z", "#5a5a6a", 0.55, "aquarelle"))
+        out.append(trait_toile([(cx - r * 1.3, cy + r * 1.25), (cx - r * 0.4, cy + r * 1.05), (cx + r * 0.6, cy + r * 1.2), (cx + r * 1.2, cy + r * 1.0)], 4, rng))
+    elif nom == "arbres":
+        out.append(trait_toile([(x0 + w * 0.18, y1 - 20), (x0 + w * 0.26, cy + h * 0.1), (x0 + w * 0.42, y0 + h * 0.28), (cx + 4, y0 + h * 0.2)], 6, rng))
+        out.append(trait_toile([(x1 - w * 0.18, y1 - 20), (x1 - w * 0.26, cy + h * 0.12), (x1 - w * 0.42, y0 + h * 0.3), (cx - 4, y0 + h * 0.22)], 6, rng))
+        for s in (-1, 1):
+            out.append(lavis(f"M{cx + s * w * 0.1:.0f},{y0 + h * 0.2:.0f} q{s * w * 0.25:.0f},{-h * 0.12:.0f} {s * w * 0.36:.0f},{h * 0.05:.0f} q{-s * w * 0.1:.0f},{h * 0.12:.0f} {-s * w * 0.36:.0f},{h * 0.02:.0f} Z", "#3a3a48", 0.35, "aquarelle"))
+    elif nom == "croissant":
+        out.append(trait_toile([(x0 + 18, y1 - h * 0.25), (cx, y1 - h * 0.28), (x1 - 18, y1 - h * 0.25)], 4, rng, fin="racine"))
+        r = w * 0.16
+        out.append(f'<path d="M{cx + r * 0.2:.0f},{cy - r * 1.6:.0f} a{r:.0f},{r:.0f} 0 1 0 0.1,{2 * r:.0f} a{r * 0.75:.0f},{r * 0.85:.0f} 0 1 1 -0.1,{-2 * r:.0f} Z" fill="{ENCRE}" opacity="0.85" filter="url(#bord-encre)"/>')
+    elif nom == "racines":
+        out.append(lavis(f"M{cx - w * 0.3:.0f},{y0 + h * 0.3:.0f} q{w * 0.3:.0f},{-h * 0.3:.0f} {w * 0.6:.0f},0 q{-w * 0.3:.0f},{h * 0.2:.0f} {-w * 0.6:.0f},0 Z", "#3a3a48", 0.45, "aquarelle"))
+        out.append(trait_toile([(cx + 2, y0 + h * 0.3), (cx - 4, cy), (cx + 3, y0 + h * 0.68)], 7, rng, fin="racine"))
+        for dx in (-50, -20, 25, 55):
+            out.append(f'<path d="{trait([(cx, y0 + h * 0.66), (cx + dx * 0.6, y0 + h * 0.8), (cx + dx, y1 - 6)], 2.4, rng, 0.05, 0.9, 0.5)}" fill="{ENCRE}" opacity="0.55"/>')
+    elif nom == "arche":
+        out.append(trait_toile([(cx - w * 0.28, y1 - 12), (cx - w * 0.28, cy - h * 0.05), (cx - w * 0.2, y0 + h * 0.2), (cx, y0 + h * 0.12), (cx + w * 0.2, y0 + h * 0.2), (cx + w * 0.28, cy - h * 0.05), (cx + w * 0.28, y1 - 12)], 5, rng, fin="racine"))
+        out.append(trait_toile([(cx - w * 0.16, y1 - 12), (cx - w * 0.14, cy), (cx, y0 + h * 0.3), (cx + w * 0.14, cy), (cx + w * 0.16, y1 - 12)], 3, rng, fin="racine"))
+    return "".join(out)
+
+
+def couple(rng, couleur=False):
+    """La toile du couple : deux silhouettes en longs traits sinueux, étirées par le mouvement, qui
+    tournent l'une autour de l'autre, les mains jointes au centre (610, 333) ; couleur=True : leur
+    aquarelle seule, l'orange pour elle, le jaune pour lui, arrêtée aux berges d'encre."""
+    elle = [(528, 168), (548, 236), (552, 318), (528, 420), (486, 518)]
+    lui = [(700, 170), (684, 240), (672, 330), (700, 440), (752, 528)]
+    bras_elle = [(546, 246), (582, 298), (608, 331)]
+    bras_lui = [(682, 256), (642, 300), (613, 334)]
+    robe = [(556, 300), (600, 392), (648, 462), (700, 500)]
+    if couleur:
+        rc = random.Random(5)
+        return (lavis(trait(elle, 50, rc, 0.2, 0.55, 0.1), "#e8862a", 0.8, "aquarelle") +
+                lavis(trait(robe, 22, rc, 0.2, 0.7, 0.2), "#e8862a", 0.7, "aquarelle") +
+                lavis(trait(bras_elle, 12, rc, 0.2, 0.3, 0.1), "#e8862a", 0.8, "aquarelle") +
+                lavis(trait(lui, 54, rc, 0.2, 0.55, 0.1), "#e8c42a", 0.8, "aquarelle") +
+                lavis(trait(bras_lui, 13, rc, 0.2, 0.3, 0.1), "#e8c42a", 0.8, "aquarelle") +
+                '<circle cx="610" cy="333" r="16" fill="#e8a62a" opacity="0.8" filter="url(#aquarelle)"/>' +
+                '<circle cx="522" cy="150" r="16" fill="#e8862a" opacity="0.75" filter="url(#aquarelle)"/>' +
+                '<circle cx="705" cy="152" r="17" fill="#e8c42a" opacity="0.75" filter="url(#aquarelle)"/>')
+    out = []
+    for corps, bras, tete, r in ((elle, bras_elle, (522, 150), 20), (lui, bras_lui, (705, 152), 21)):
+        out.append(lavis(trait(corps, 56, rng, 0.2, 0.55, 0.1), "#2a2a38", 0.12, "aquarelle"))
+        out.append(trait_toile(corps, 5.5, rng, fin="volute"))
+        out.append(trait_toile(bras, 3.4, rng, fin="volute"))
+        out.append(f'<circle cx="{tete[0]}" cy="{tete[1]}" r="{r}" fill="none" stroke="{ENCRE}" stroke-width="4.5" filter="url(#bord-encre)"/>')
+    out.append(trait_toile(robe, 3.2, rng, fin="racine"))
+    return "".join(out)
+
+
+def toiles(calque=None, graine=91):
+    """6.6 : un mur de plâtre clair, éclairé de la gauche ; en bas au milieu, vers (600, 1 040), une
+    table basse laquée, une pierre à encre, deux bâtons d'encre, un bâton d'encens (la fumée monte
+    de (600, 1 000)) ; en haut au milieu, la plus grande toile, le couple (TOILE_COUPLE) ; de part et
+    d'autre du chemin de la fumée (x 545 à 655), cinq toiles de lin brut, sans cadre : une pleine
+    lune, deux arbres penchés l'un vers l'autre, un croissant sur un horizon, un arbre aux racines
+    qui coulent, une arche. Tout tient au-dessus de y 1 040. calque « couleur » : l'aquarelle de la
+    toile du couple seule (l'effet « couleur » l'y fait entrer)."""
+    rng = random.Random(graine)
+    if calque == "couleur":
+        x0, y0, x1, y1 = TOILE_COUPLE
+        return svg(f'<g clip-path="url(#toile-couple)">{couple(rng, couleur=True)}</g>',
+                   DEFS_AQUARELLE + f'<clipPath id="toile-couple"><rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}"/></clipPath>')
+    out = [f'<rect width="{W}" height="{H}" fill="url(#mur-toiles)"/>',
+           f'<rect width="{W}" height="{H}" fill="#eee6d6" filter="url(#papier)" opacity="0.4"/>']
+    for nom, boite in TOILES:
+        out.append(toile_de_lin(*boite, rng))
+        out.append(sujet(nom, boite, rng))
+    x0, y0, x1, y1 = TOILE_COUPLE
+    out.append(toile_de_lin(x0, y0, x1, y1, rng))
+    out.append(couple(rng))
+    # la table basse laquée, et ce qui est posé dessus
+    out.append(f'<rect x="330" y="1040" width="540" height="60" fill="#3a2a20" opacity="0.35" filter="url(#flou-toile)"/>')
+    out.append(lavis(poly([(350, 994), (850, 994), (872, 1020), (328, 1020)]), "#4a1a14", 1.0, "aquarelle-douce"))
+    out.append(lavis(poly([(328, 1020), (872, 1020), (872, 1052), (328, 1052)]), "#2a0e0a", 1.0, "aquarelle-douce"))
+    out.append(f'<path d="{trait([(356, 998), (844, 998)], 2.4, rng, 0.1, 0.1, 0.1)}" fill="#e8b0a0" opacity="0.5"/>')
+    out.append(lavis(poly([(418, 956), (556, 952), (562, 998), (412, 1000)]), "#2e2e34", 1.0, "aquarelle-douce"))
+    out.append(f'<ellipse cx="452" cy="972" rx="22" ry="9" fill="#101014"/>')
+    for dx in (0, 34):
+        out.append(f'<path d="{trait([(662 + dx, 992), (742 + dx, 972)], 11, rng, 0.05, 0.05, 0.05)}" fill="#141418"/>')
+        out.append(f'<path d="{trait([(664 + dx, 988), (740 + dx, 968)], 2, rng, 0.1, 0.1, 0.1)}" fill="#c8a040" opacity="0.7"/>')
+    out.append(lavis(poly([(584, 998), (616, 998), (612, 982), (588, 982)]), "#8a6a4a", 1.0, "aquarelle-douce"))
+    out.append(f'<path d="{trait([(600, 984), (599, 1000 - 72)], 2.6, rng, 0.02, 0.05, 0.05)}" fill="#6a3a1a"/>')
+    out.append(f'<circle cx="599" cy="928" r="3.2" fill="#ff7a2a"/>')
+    out.append(f'<rect width="{W}" height="{H}" fill="url(#lumiere-toiles)"/>')
+    defs = DEFS_AQUARELLE + FILTRE_ENCRE + """
+<linearGradient id="mur-toiles" x1="0" y1="0" x2="1" y2="0.3">
+  <stop offset="0" stop-color="#f7f1e4"/><stop offset="1" stop-color="#ddd3c0"/>
+</linearGradient>
+<linearGradient id="lumiere-toiles" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#fff8e8" stop-opacity="0.15"/><stop offset="1" stop-color="#3a3024" stop-opacity="0.12"/>
+</linearGradient>
+<filter id="flou-toile" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="9"/></filter>
+<filter id="lin" x="0" y="0" width="100%" height="100%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.9 0.08" numOctaves="2" seed="41" result="a"/>
+  <feTurbulence type="fractalNoise" baseFrequency="0.08 0.9" numOctaves="2" seed="42" result="b"/>
+  <feComposite in="a" in2="b" operator="arithmetic" k1="0" k2="0.5" k3="0.5" k4="0" result="t"/>
+  <feColorMatrix in="t" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.6 -0.72" result="f"/>
+  <feComposite in="SourceGraphic" in2="f" operator="in"/>
+</filter>"""
+    return svg("".join(out), defs, "#eee6d6")
+
+
+# ---------------------------------------------------------------- 6.13 à 6.15 : l'armoire
+
+OUVERTURE_PLACARD = (330, 320, 870, 1040)     # l'ouverture de l'armoire, transparente (état « ouverte »)
+SERRURE_PLACARD = (932, 680)
+
+
+def panneau(x0, y0, x1, y1, rng, bois="#4a2e1c", encre="#140a04"):
+    """Un panneau mouluré d'armoire : le cadre en biseau, la plate-bande, ses ombres et ses lumières."""
+    b = 22
+    out = [lavis(poly([(x0, y0), (x1, y0), (x1, y1), (x0, y1)]), bois, 1.0, "aquarelle-douce"),
+           f'<path d="{poly([(x0, y0), (x1, y0), (x1 - b, y0 + b), (x0 + b, y0 + b)])}" fill="#6a4630" opacity="0.8"/>',
+           f'<path d="{poly([(x0, y0), (x0 + b, y0 + b), (x0 + b, y1 - b), (x0, y1)])}" fill="#5a3a24" opacity="0.8"/>',
+           f'<path d="{poly([(x1, y0), (x1, y1), (x1 - b, y1 - b), (x1 - b, y0 + b)])}" fill="#26160c" opacity="0.7"/>',
+           f'<path d="{poly([(x0, y1), (x1, y1), (x1 - b, y1 - b), (x0 + b, y1 - b)])}" fill="#1e1008" opacity="0.7"/>',
+           f'<path d="{trait([(x0, y0), (x1, y0), (x1, y1), (x0, y1), (x0, y0)], 2.2, rng, 0.02, 0.02, 0.2)}" fill="{encre}" opacity="0.7"/>',
+           f'<path d="{trait([(x0 + b, y0 + b), (x1 - b, y0 + b), (x1 - b, y1 - b), (x0 + b, y1 - b), (x0 + b, y0 + b)], 1.8, rng, 0.02, 0.02, 0.2)}" fill="{encre}" opacity="0.6"/>']
+    for _ in range(5):
+        vx = rng.uniform(x0 + b + 8, x1 - b - 8)
+        out.append(f'<path d="{trait([(vx, y0 + b + 4), (vx + rng.uniform(-6, 6), (y0 + y1) / 2), (vx + rng.uniform(-6, 6), y1 - b - 4)], rng.uniform(1, 2), rng, 0.3, 0.3, 0.3)}" fill="{encre}" opacity="0.3"/>')
+    return "".join(out)
+
+
+def serviettes(x0, x1, y, rng, couleurs=("#f4f1ea", "#c8dbe8", "#f4f1ea", "#dfe9f0")):
+    """Une pile de serviettes pliées sur une étagère : des couches claires, leurs plis."""
+    out = []
+    h = 26
+    for k, c in enumerate(couleurs):
+        yy = y - (k + 1) * h
+        out.append(f'<path d="M{x0 + k * 2},{yy + h} L{x0 + k * 2},{yy + 6} Q{x0 + k * 2},{yy} {x0 + 10 + k * 2},{yy} L{x1 - 4},{yy} L{x1 - 4},{yy + h} Z" fill="{c}"/>')
+        out.append(f'<path d="{trait([(x0 + k * 2, yy + h - 2), (x1 - 4, yy + h - 2)], 2, rng, 0.05, 0.05, 0.2)}" fill="#7a8a96" opacity="0.5"/>')
+    return "".join(out)
+
+
+def cle_laiton(x, y, rng):
+    """La clé de laiton un peu oxydée dans la serrure : son anneau (vert-de-gris), sa tige, dessinés
+    comme la clé du pigeonnier."""
+    return (f'<path d="{trait([(x, y + 4), (x, y + 40)], 7, rng, 0.05, 0.05, 0.05)}" fill="#a8843a"/>'
+            f'<circle cx="{x}" cy="{y + 62}" r="23" fill="none" stroke="#b8923c" stroke-width="9"/>'
+            f'<circle cx="{x}" cy="{y + 62}" r="23" fill="none" stroke="#5f9a86" stroke-width="4" stroke-dasharray="10 16" opacity="0.8"/>'
+            f'<circle cx="{x - 8}" cy="{y + 50}" r="4" fill="#fff0c0" opacity="0.7"/>'
+            f'<circle cx="{x}" cy="{y + 62}" r="23" fill="none" stroke="#2a1a08" stroke-width="1.6" opacity="0.7"/>')
+
+
+def placard(etat="entrouverte", graine=97):
+    """6.13 à 6.15 : une armoire de bois sombre à une porte, aux panneaux moulurés, l'entrée de
+    serrure de laiton à droite de l'unique battant, à mi-hauteur (SERRURE_PLACARD). Trois états :
+    « entrouverte » (le décor) sur des serviettes pliées, blanches et bleu pâle ; « fermee », la clé
+    de laiton dans la serrure ; « ouverte », le battant rabattu à gauche et l'ouverture
+    (OUVERTURE_PLACARD) transparente pour l'effet « embrasure »."""
+    rng = random.Random(graine)
+    ox0, oy0, ox1, oy1 = OUVERTURE_PLACARD
+    fond = (f'<rect width="{W}" height="{H}" fill="url(#mur-placard)"/>'
+            f'<rect width="{W}" height="{H}" fill="#d9d1c2" filter="url(#papier)" opacity="0.35"/>'
+            f'<rect x="0" y="1230" width="{W}" height="{H - 1230}" fill="#6a5440"/>'
+            f'<path d="{trait([(0, 1230), (W, 1230)], 3, rng, 0.02, 0.02, 0.1)}" fill="#2a1a0c" opacity="0.7"/>')
+    if etat == "ouverte":
+        # l'ouverture est percée dans le mur : l'embrasure y fait paraître un autre lieu
+        fond = (f'<path d="M0,0 H{W} V{H} H0 Z M{ox0},{oy0} H{ox1} V{oy1} H{ox0} Z" fill="url(#mur-placard)" fill-rule="evenodd"/>'
+                f'<path d="M0,1230 H{W} V{H} H0 Z" fill="#6a5440"/>')
+    corps = [f'<rect x="248" y="1100" width="770" height="140" fill="#2a1a0e" opacity="0.4" filter="url(#flou-placard)"/>']
+    trou = f"M250,150 H1010 V1190 H250 Z M{ox0},{oy0} H{ox1} V{oy1} H{ox0} Z"
+    corps.append(lavis(trou if etat == "ouverte" else "M250,150 H1010 V1190 H250 Z", "#3e2718", 1.0, "aquarelle-douce"))
+    corps.append(lavis("M225,108 H1035 L1022,152 H238 Z", "#5a3a24", 1.0, "aquarelle-douce"))
+    corps.append(lavis("M232,152 H1028 V166 H232 Z", "#2a180c", 1.0, "aquarelle-douce"))
+    corps.append(lavis("M238,1178 H1022 V1212 H238 Z", "#2a180c", 1.0, "aquarelle-douce"))
+    for fx in (262, 978):
+        corps.append(lavis(f"M{fx},1212 h26 l-4,26 h-18 Z", "#1e1008", 1.0, "aquarelle-douce"))
+    corps.append(f'<path d="{trait([(225, 108), (1035, 108)], 3, rng, 0.02, 0.02, 0.1)}" fill="#140a04" opacity="0.8"/>')
+    porte = []
+    if etat == "ouverte":
+        # l'intérieur de l'armoire autour de l'ouverture, et le battant rabattu à gauche, vu de chant
+        corps.append(f'<path d="M305,205 H965 V1125 H305 Z M{ox0},{oy0} H{ox1} V{oy1} H{ox0} Z" fill="#1a0e06" fill-rule="evenodd"/>')
+        corps.append(f'<path d="M{ox0},{oy0} H{ox1} V{oy0 + 18} H{ox0 + 18} V{oy1} H{ox0} Z" fill="#000" opacity="0.4"/>')
+        corps.append(f'<path d="{trait([(ox0, oy0), (ox1, oy0), (ox1, oy1), (ox0, oy1), (ox0, oy0)], 3.4, rng, 0.02, 0.02, 0.3)}" fill="#0a0502"/>')
+        porte.append(lavis("M305,205 L150,160 L150,1178 L305,1125 Z", "#4a2e1c", 1.0, "aquarelle-douce"))
+        porte.append(panneau(176, 250, 282, 612, rng))
+        porte.append(panneau(176, 690, 282, 1060, rng))
+        porte.append(f'<path d="{trait([(305, 205), (150, 160), (150, 1178), (305, 1125)], 2.6, rng, 0.02, 0.02, 0.2)}" fill="#140a04" opacity="0.8"/>')
+    elif etat == "fermee":
+        porte.append(lavis("M305,205 H965 V1125 H305 Z", "#4a2e1c", 1.0, "aquarelle-douce"))
+        porte.append(panneau(360, 262, 910, 636, rng))
+        porte.append(panneau(360, 712, 910, 1070, rng))
+        porte.append(f'<path d="{trait([(305, 205), (965, 205), (965, 1125), (305, 1125), (305, 205)], 2.6, rng, 0.02, 0.02, 0.2)}" fill="#140a04" opacity="0.8"/>')
+    else:
+        # entrouverte : le battant tourné vers nous sur ses gonds de gauche ; dans l'entrebâillement,
+        # l'intérieur et les serviettes pliées sur leurs étagères
+        corps.append(f'<path d="M305,205 H965 V1125 H305 Z" fill="#1a0e06"/>')
+        for y in (430, 700, 960):
+            corps.append(f'<rect x="700" y="{y}" width="265" height="14" fill="#5a3a24"/>')
+            corps.append(serviettes(730, 960, y, rng))
+        corps.append(f'<rect x="700" y="205" width="265" height="920" fill="url(#ombre-dedans)"/>')
+        porte.append(lavis("M305,205 L760,168 L760,1160 L305,1125 Z", "#4a2e1c", 1.0, "aquarelle-douce"))
+        porte.append(f'<g transform="matrix(0.69 -0.056 0 1 305 222)">{panneau(55, 40, 605, 414, rng)}{panneau(55, 490, 605, 848, rng)}</g>')
+        porte.append(lavis("M760,168 L780,172 L780,1158 L760,1160 Z", "#2a180c", 1.0, "aquarelle-douce"))
+        porte.append(f'<path d="{trait([(305, 205), (760, 168), (760, 1160), (305, 1125)], 2.6, rng, 0.02, 0.02, 0.2)}" fill="#140a04" opacity="0.8"/>')
+    for y in (300, 1030):
+        gx = 150 if etat == "ouverte" else 305
+        corps.append(f'<rect x="{gx - 6}" y="{y}" width="14" height="46" rx="3" fill="#8a7040"/>')
+    sx, sy = SERRURE_PLACARD
+    if etat == "fermee":
+        porte.append(f'<path d="M{sx - 16},{sy - 44} h32 v88 h-32 Z" fill="#b8923c" stroke="#3a2a10" stroke-width="2"/>')
+        porte.append(f'<path d="M{sx},{sy - 18} a6,6 0 1 1 0.1,0 Z M{sx - 4},{sy - 11} h8 l2,20 h-12 Z" fill="#0a0604"/>')
+        porte.append(cle_laiton(sx, sy - 6, rng))
+    elif etat == "entrouverte":
+        porte.append(f'<path d="M{732},{sy - 40} h26 v80 h-26 Z" fill="#b8923c" stroke="#3a2a10" stroke-width="2"/>')
+    contenu = fond + "".join(corps) + "".join(porte) + (f'<rect width="{W}" height="{H}" fill="url(#lumiere-placard)"/>' if etat != "ouverte" else
+                                                         f'<path d="M0,0 H{W} V{H} H0 Z M{ox0},{oy0} H{ox1} V{oy1} H{ox0} Z" fill="url(#lumiere-placard)" fill-rule="evenodd"/>')
+    defs = DEFS_AQUARELLE + """
+<linearGradient id="mur-placard" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#e4ddd0"/><stop offset="1" stop-color="#c9c0ae"/>
+</linearGradient>
+<linearGradient id="ombre-dedans" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#000" stop-opacity="0.65"/><stop offset="1" stop-color="#000" stop-opacity="0.1"/>
+</linearGradient>
+<linearGradient id="lumiere-placard" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#fff6e0" stop-opacity="0.12"/><stop offset="1" stop-color="#0a0604" stop-opacity="0.22"/>
+</linearGradient>
+<filter id="flou-placard" x="-10%" y="-50%" width="120%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>"""
+    return svg(contenu, defs, None if etat == "ouverte" else "#d9d1c2")
+
+
+# ---------------------------------------------------------------- 7.6 : le départ de Darshan
+
+def silhouette_de_dos(x, y, s, rng, encre=ENCRE, gilet="#b88a2e", chemise="#e8e0cc", lueur=None, marche=False):
+    """Darshan de dos, une silhouette d'encre sans visage : les boucles brunes, la chemise de lin
+    blanc, le gilet de toile sans manches ; (x, y) : le haut de la tête ; s : l'échelle (1 : 1 000
+    unités de la tête à la taille) ; lueur : la couleur du feu qui l'éclaire d'en bas, à gauche."""
+    def P(dx, dy):
+        return (x + dx * s, y + dy * s)
+
+    def forme(pts, couleur, op=1.0, filtre="aquarelle-douce"):
+        return lavis(poly(catmull_rom([P(*q) for q in pts] + [P(*pts[0])], 6)), couleur, op, filtre)
+
+    out = []
+    # les bras (les manches de la chemise), puis le dos : le gilet par-dessus la chemise
+    for c in (-1, 1):
+        bras = [(c * 150, 250), (c * 205, 330), (c * 222, 560), (c * 214, 800), (c * 176, 1000),
+                (c * 140, 1000), (c * 150, 800), (c * 150, 560), (c * 120, 340)]
+        if marche:
+            bras = [(bx + c * 10 * (by > 600), by) for bx, by in bras]
+        out.append(forme(bras, chemise, 1.0))
+        out.append(f'<path d="{trait([P(c * 205, 330), P(c * 222, 560), P(c * 214, 800), P(c * 176, 1000)], 5 * s + 1.5, rng, 0.05, 0.3, 0.3)}" fill="{encre}" opacity="0.75"/>')
+    dos = [(-150, 250), (-60, 200), (60, 200), (150, 250), (158, 600), (150, 1000), (-150, 1000), (-158, 600)]
+    out.append(forme(dos, chemise, 1.0))
+    gilet_ = [(-148, 262), (-52, 212), (-40, 330), (40, 330), (52, 212), (148, 262), (150, 980), (-150, 980)]
+    out.append(forme(gilet_, gilet, 1.0))
+    out.append(f'<path d="{trait([P(0, 330), P(2, 620), P(0, 960)], 3 * s + 1, rng, 0.1, 0.1, 0.3)}" fill="{encre}" opacity="0.5"/>')
+    for pts in (((-150, 250), (-158, 600), (-150, 1000)), ((150, 250), (158, 600), (150, 1000))):
+        out.append(f'<path d="{trait([P(*q) for q in pts], 6 * s + 1.5, rng, 0.05, 0.1, 0.3)}" fill="{encre}" opacity="0.85"/>')
+    # le cou, le col, la tête : des boucles brunes, jamais de visage
+    out.append(forme([(-34, 120), (34, 120), (40, 214), (-40, 214)], "#8a5a3a", 1.0))
+    out.append(forme([(-62, 200), (0, 232), (62, 200), (40, 250), (-40, 250)], chemise, 1.0))
+    out.append(forme([(-86, 60), (-80, -30), (-40, -86), (30, -90), (78, -40), (90, 40), (70, 120), (0, 150), (-66, 124)], "#2a1a12", 1.0))
+    for _ in range(int(40 + 30 * s)):
+        a = rng.uniform(0, 2 * math.pi)
+        r = rng.uniform(0.4, 1.0)
+        cx, cy = 0 + 80 * r * math.cos(a), 20 + 100 * r * math.sin(a)
+        boucle = [P(cx + 12 * math.cos(b), cy + 12 * math.sin(b)) for b in [a + k * 0.9 for k in range(7)]]
+        out.append(f'<path d="{trait(boucle, 3 * s + 1, rng, 0.2, 0.3, 0.3)}" fill="#0a0604" opacity="0.7"/>')
+    if lueur:
+        out.append(f'<g style="mix-blend-mode:screen">{forme(dos + [(-150, 1000)], lueur, 0.0)}</g>')
+    return "".join(out)
+
+
+def depart(plan="proche", modele=None, image=None, graine=103):
+    """7.6 : « proche » : Darshan de dos, tout près, debout près du feu, coupé par le cadre, la
+    lueur du feu sur son gilet ; une silhouette d'encre, sans modèle, jamais de visage ; derrière lui,
+    le fleuve du soir. « loin » : la passerelle et les saules de 36652487, au soir, passés à l'encre
+    (image, préparée par decors.py, l'homme de la photo effacé) ; la barrière retracée ; Darshan,
+    petite silhouette d'encre qui s'éloigne sur le chemin."""
+    rng = random.Random(graine)
+    if plan == "loin":
+        out = [photo_svg(image)]
+        # la barrière du bout de la passerelle, retracée à l'encre là où la photo est effacée
+        for pts, l_ in ((((578, 1478), (850, 1470)), 5), (((578, 1560), (850, 1556)), 4), (((712, 1474), (712, 1562)), 5),
+                        (((584, 1482), (706, 1556)), 3), (((584, 1552), (706, 1482)), 3), (((718, 1478), (844, 1552)), 3),
+                        (((718, 1552), (844, 1478)), 3)):
+            out.append(f'<path d="{trait(list(pts), l_, rng, 0.05, 0.05, 0.2)}" fill="#1a1422" opacity="0.8"/>')
+        out.append(silhouette_de_dos(690, 1290, 0.105, rng, encre="#120c18", gilet="#6a4a2a", chemise="#8a7a86", marche=True))
+        return svg("".join(out), DEFS_AQUARELLE, "#2a1a2a")
+    out = [f'<rect width="{W}" height="{H}" fill="url(#soir-fleuve)"/>']
+    out.append(lavis(poly([(-40, 980), (1240, 950), (1240, 1100), (-40, 1120)]), "#1a1c34", 0.95, "aquarelle-douce"))
+    for x in (-40, 180, 420, 880, 1100):
+        out.append(f'<g opacity="0.8">{palmier(x, 1000, rng.uniform(260, 420), rng, "#07080f", "#141a24")}</g>')
+    out.append(lavis(poly([(-40, 1100), (1240, 1080), (1240, 1850), (-40, 1850)]), "#23233a", 1.0, "aquarelle-douce"))
+    for k in range(10):
+        y = 1140 + k * 42
+        out.append(f'<path d="{trait([(-40, y), (600, y + rng.uniform(-6, 6)), (1240, y)], rng.uniform(2, 5), rng, 0.3, 0.3, 0.4)}" fill="#e89a5a" opacity="{0.08 + k * 0.012:.3f}"/>')
+    out.append(silhouette_de_dos(640, 360, 1.0, rng))
+    out.append(f'<rect width="{W}" height="{H}" fill="url(#feu-dos)" style="mix-blend-mode:screen"/>')
+    out.append(f'<rect width="{W}" height="{H}" fill="url(#nuit-bords)"/>')
+    defs = DEFS_AQUARELLE + """
+<linearGradient id="soir-fleuve" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#0e1026"/><stop offset="0.5" stop-color="#2a2244"/><stop offset="0.62" stop-color="#5a3a4a"/>
+</linearGradient>
+<radialGradient id="feu-dos" gradientUnits="userSpaceOnUse" cx="360" cy="1900" r="1250">
+  <stop offset="0" stop-color="#ff8a3c" stop-opacity="0.75"/><stop offset="0.5" stop-color="#c24a1c" stop-opacity="0.25"/>
+  <stop offset="1" stop-color="#c24a1c" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="nuit-bords" cx="0.5" cy="0.45" r="0.8">
+  <stop offset="0.55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.5"/>
+</radialGradient>"""
+    return svg("".join(out), defs, "#0e1026")
+
+
+# ---------------------------------------------------------------- 2.10 : l'esquisse du théâtre
+
+def vision_theatre(etape=None):
+    """2.10 : l'esquisse que Darshan rêve sur le ciel du soir (effet « esquisse ») : un SVG vectoriel,
+    fond transparent, que le moteur trace trait par trait. Chemins groupés par étape
+    (<g data-etape="1">, puis "2") ; chaque trait a pathLength="1", pour le tracer avec
+    stroke-dasharray et stroke-dashoffset ; les lavis (class « lavis ») paraissent en fondu. Étape 1 :
+    son nuage (des volutes, un lavis crème). Étape 2 : la pièce qu'il rêve, posée dessus : une haute
+    fenêtre ouverte sur la nuit, entre deux hauts rideaux noués (ceux de « fenetre ») et un voilage
+    crème ; deux toiles sur un chevalet ; deux petites silhouettes sans visage, les mains jointes ; un
+    seul point vermillon, le chouchou de la petite silhouette de Julie. Tout tient entre x 200 et
+    1 000, y 150 et 800. etape : 1 ou 2 pour n'avoir que celle-là (sinon les deux)."""
+    encre = "#07091a"
+
+    def t(d, largeur=2.2):
+        return (f'<path d="{d}" fill="none" stroke="{encre}" stroke-width="{largeur}" stroke-linecap="round" '
+                f'stroke-linejoin="round" pathLength="1"/>')
+
+    def l(d, couleur, op):
+        return f'<path class="lavis" d="{d}" fill="{couleur}" opacity="{op}"/>'
+    # étape 1 : le nuage
+    bosses = [(236, 752, 36), (280, 700, 52), (350, 668, 58), (430, 650, 62), (512, 640, 60), (592, 640, 64),
+              (672, 646, 60), (748, 654, 58), (822, 670, 54), (888, 694, 48), (944, 730, 38)]
+    haut = f"M214,770 " + " ".join(f"A{r},{r} 0 0 1 {x + r * 0.9:.0f},{y - r * 0.1:.0f}" for x, y, r in bosses)
+    nuage = f"{haut} L968,772 C860,792 360,794 214,770 Z"
+    etape1 = [l(nuage, "#f3e6c8", 0.6), t(haut, 2.6), t("M214,770 C360,794 860,792 968,772", 2.0)]
+    for cx, cy, r in ((330, 720, 20), (520, 690, 24), (720, 700, 22), (880, 736, 16)):
+        etape1.append(t(f"M{cx + r},{cy} a{r},{r} 0 1 0 {-r * 0.4:.0f},{r * 0.9:.0f} a{r * 0.55:.0f},{r * 0.55:.0f} 0 1 0 {-r * 0.3:.0f},{-r * 0.8:.0f}", 1.6))
+    # étape 2 : la pièce rêvée
+    etape2 = []
+    etape2.append(l("M476,196 H724 V602 H476 Z", "#1b2340", 0.5))
+    for x, y in ((520, 250), (600, 232), (668, 286), (548, 332), (690, 380), (512, 420)):
+        etape2.append(f'<circle class="lavis" cx="{x}" cy="{y}" r="2.4" fill="#f4e8c0" opacity="0.9"/>')
+    etape2.append(t("M476,602 V196 H724 V602", 2.4))
+    etape2.append(t("M600,196 V602", 1.6))
+    etape2.append(t("M476,470 H724", 1.4))
+    etape2.append(t("M420,176 H780", 2.6))
+    for s in (-1, 1):
+        def X(v):
+            return 600 + s * v
+        rideau_ = (f"M{X(176)},{176} C{X(170)},{280} {X(150)},{360} {X(128)},{420} C{X(150)},{500} {X(172)},{570} {X(186)},{640} "
+                   f"L{X(236)},{640} C{X(222)},{560} {X(186)},{480} {X(150)},{420} C{X(200)},{350} {X(222)},{260} {X(226)},{176} Z")
+        etape2.append(l(rideau_, "#1b2848", 0.3))
+        etape2.append(t(f"M{X(176)},176 C{X(170)},280 {X(150)},360 {X(128)},420 C{X(150)},500 {X(172)},570 {X(186)},640", 2.2))
+        etape2.append(t(f"M{X(226)},176 C{X(222)},260 {X(200)},350 {X(150)},420 C{X(186)},480 {X(222)},560 {X(236)},640", 2.2))
+        etape2.append(t(f"M{X(118)},414 Q{X(140)},432 {X(162)},414", 2.0))
+        etape2.append(l(f"M{X(124)},200 L{X(96)},200 L{X(100)},600 L{X(124)},600 Z", "#f6ecd6", 0.55))
+    # le chevalet et ses deux toiles, à gauche
+    etape2.append(t("M300,700 L330,420 L360,700", 2.0))
+    etape2.append(t("M330,420 L338,700", 1.6))
+    etape2.append(l("M286,452 H372 V548 H286 Z", "#f3e6c8", 0.55))
+    etape2.append(t("M286,452 H372 V548 H286 Z", 1.8))
+    etape2.append(t("M298,560 H384 V640 H298 Z", 1.8))
+    etape2.append(t("M300,504 C320,480 340,520 362,492", 1.4))
+    # les deux petites silhouettes, les mains jointes
+    etape2.append(t("M584,520 m-12,0 a12,12 0 1 0 24,0 a12,12 0 1 0 -24,0", 2.0))
+    etape2.append(t("M584,534 C580,580 574,620 566,690", 2.4))
+    etape2.append(t("M584,548 C596,566 606,580 614,592", 1.8))
+    etape2.append(t("M646,498 m-14,0 a14,14 0 1 0 28,0 a14,14 0 1 0 -28,0", 2.0))
+    etape2.append(t("M646,514 C650,570 654,630 662,700", 2.6))
+    etape2.append(t("M644,532 C634,556 624,576 616,592", 1.8))
+    etape2.append(f'<circle class="vermillon" cx="590" cy="510" r="4.5" fill="{VERMILLON}"/>')
+    groupes = []
+    if etape in (None, 1):
+        groupes.append(f'<g data-etape="1">{"".join(etape1)}</g>')
+    if etape in (None, 2):
+        groupes.append(f'<g data-etape="2">{"".join(etape2)}</g>')
+    return svg("".join(groupes))
 
 
 if __name__ == "__main__":
