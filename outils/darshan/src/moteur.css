@@ -345,3 +345,97 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
   border: 0.2cqw solid rgba(244, 197, 106, 0.6); background: rgba(7, 9, 26, 0.82); color: var(--or-pale); }
 .banc-boutons button.julie { border-color: rgba(239, 230, 210, 0.6); background: rgba(24, 26, 32, 0.85); color: #efe6d2; }
 .banc-boutons button.objet { border-color: var(--sindoor); }
+
+/* ------------------------------------------------------------ livre entier : plans du décor, texte, gestes
+   Une page peut avoir plusieurs plans (l'effet « decor » passe de l'un à l'autre) : un seul
+   est visible, même sans script. La caméra déplace tout le décor. */
+.decor .plan { opacity: 0; transition: opacity 1200ms ease; }
+.decor .plan.vu { opacity: 1; }
+.decor { transform-origin: 50% 50%; }
+.decor .manquant { background: #223; }
+.aube { position: absolute; inset: 0; opacity: 0; transition: opacity 5s; pointer-events: none;
+  background: radial-gradient(ellipse 90% 30% at 50% 102%, rgba(255, 214, 150, 0.75), rgba(255, 170, 90, 0.25) 45%, rgba(0, 0, 0, 0) 75%); }
+
+/* places et tons du texte */
+.texte.nu { background: none; }
+.jeu .texte.nu { background: none; }
+.texte.lettre { top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; padding: 10cqw 11cqw;
+  color: #2a1c10; text-shadow: none; background: none; font-size: 4cqw; }
+.jeu .texte.lettre { background: none; }
+.texte p.dedicace { font-style: italic; text-align: right; }
+.texte p.lettre-ligne, .texte p.sanskrit { font-style: italic; }
+.texte.lettre .voix, .texte.lettre p.lettre-ligne { color: #2a1c10; }
+.grand .texte { font-size: 4.8cqw; }
+.grand .poeme { font-size: 4.5cqw; }
+
+/* lecteurs d'écran : lu, pas vu */
+.annonceur, .lu-seulement { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; margin: -1px; padding: 0; border: 0; }
+
+/* gestes : le calque des halos et des indices, le bouton « Faire le geste » */
+.geste-calque { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; overflow: visible; }
+.faire-geste { position: absolute; left: 50%; top: 58%; transform: translateX(-50%); z-index: 7; font: inherit; font-size: 3.4cqw;
+  padding: 1.4cqw 4cqw; border-radius: 5cqw; cursor: pointer; border: 0.2cqw solid var(--or); background: rgba(7, 9, 26, 0.78);
+  color: var(--or-pale); animation: apparait 600ms ease both; }
+@keyframes apparait { from { opacity: 0; } to { opacity: 1; } }
+.faire-geste:focus-visible { outline: 0.4cqw solid var(--or-pale); outline-offset: 0.5cqw; }
+
+/* barre : le carnet et le menu à côté des objets */
+.barre .carnet-bouton { transition: opacity 300ms; }
+.barre .carnet-bouton.pulse { animation: pulse-objets 900ms ease-out 2; }
+.sans-magie .suite { color: #b89a6a; }
+
+/* panneaux : objets de deux sacs, carnet des portes, menu */
+.fiche h3.fiche-sac { font-family: "Unna", serif; font-weight: 400; font-variant: small-caps; letter-spacing: 0.12em;
+  color: var(--or); font-size: 3.4cqw; margin: 3cqw 0 1cqw; text-align: center; }
+.carte-carnet svg { width: 100%; height: auto; display: block; margin: 1cqw 0 3cqw; }
+.carnet-liste { margin: 0 0 3cqw; padding-left: 5cqw; font-size: 3.6cqw; line-height: 1.5; color: #efe6d2; }
+.carnet-liste li { margin-bottom: 1cqw; }
+.fleche { display: inline-block; width: 1.5em; height: 0.75em; margin: 0 0.3em; vertical-align: middle; color: var(--or); }
+.menu-reglages { display: grid; gap: 2cqw; margin: 2cqw 0 3cqw; }
+.menu-reglages > button { font: inherit; font-size: 3.6cqw; text-align: left; padding: 1.6cqw 3cqw; border-radius: 1.6cqw; cursor: pointer;
+  border: 0.2cqw solid rgba(244, 197, 106, 0.45); background: rgba(244, 197, 106, 0.08); color: var(--or-pale); }
+.bascule::after { content: ""; float: right; width: 6cqw; height: 3cqw; margin-top: 0.6cqw; border-radius: 3cqw; background: rgba(239, 230, 210, 0.25);
+  box-shadow: inset 0 0 0 0.2cqw rgba(239, 230, 210, 0.4); }
+.bascule[aria-pressed="true"]::after { background: var(--or); box-shadow: none; }
+.curseur { display: grid; grid-template-columns: 1fr 1.6fr; align-items: center; gap: 2cqw; font-size: 3.4cqw; color: #efe6d2; padding: 0 3cqw; }
+.curseur input { width: 100%; accent-color: #f4c56a; }
+.menu-chapitres { display: grid; gap: 0.6cqw; margin: 0 0 2cqw; }
+.menu-chapitres .lien { font: inherit; font-size: 3.6cqw; text-align: left; background: none; border: 0; cursor: pointer;
+  color: var(--or-pale); padding: 1.2cqw 2cqw; border-bottom: 0.1cqw solid rgba(244, 197, 106, 0.2); }
+.menu-reglages > button:focus-visible, .menu-chapitres .lien:focus-visible, .curseur input:focus-visible { outline: 0.4cqw solid var(--or-pale); outline-offset: 0.3cqw; }
+.revenir-jeu { position: absolute; top: 3cqw; right: 3cqw; z-index: 20; font: inherit; font-size: 2.8cqw; padding: 1cqw 2.6cqw; border-radius: 5cqw;
+  border: 0.15cqw solid rgba(244, 197, 106, 0.45); background: rgba(8, 10, 20, 0.6); color: #efe6d2; cursor: pointer; }
+
+/* chez Julie, la fiche est une carte de téléphone */
+.fiche-carte.carte-julie { background: linear-gradient(#f7f5f0, #e7e3da); border-color: rgba(20, 20, 20, 0.18); color: #1b1b1b; }
+.carte-julie h2 { color: #1b1b1b; }
+.carte-julie blockquote { color: #2e2e2e; border-left-color: rgba(20, 20, 20, 0.25); }
+.carte-julie blockquote cite { color: #6d6a64; }
+.carte-julie .fiche-surtitre { color: #8a2a24; }
+.carte-julie .fiche-actions button { color: #1b1b1b; border-color: #1b1b1b; background: rgba(0, 0, 0, 0.05); }
+.carte-julie .fiche-actions button.secondaire { border-color: rgba(20, 20, 20, 0.3); color: #444; }
+
+@media (prefers-reduced-motion: reduce) {
+  .decor .plan { transition-duration: 200ms; }
+  .faire-geste { animation: none; }
+}
+.calme .texte .temps { filter: none; transition: opacity 200ms; }
+.calme .suite.pret { animation: none; }
+
+/* page de titre : la dédicace prend place dans la colonne du titre, au-dessus de la porte */
+.titre-livre .texte, .jeu .titre-livre .texte { position: static; padding: 0 12cqw; margin: 0 0 6cqw; min-height: 0; background: none;
+  font-size: 3.1cqw; line-height: 1.45; cursor: default; align-self: stretch; }
+.titre-livre .texte p { margin: 0 0 1.4cqw; }
+.titre-livre .edition { font-family: "Unna", serif; font-variant: small-caps; letter-spacing: 0.12em; font-size: 2.9cqw; color: #bfb39c; margin: 1cqw 0 6cqw; }
+.titre-livre .genre { margin: 0; }
+.boutons-seuil { display: flex; gap: 3cqw; justify-content: center; }
+.jeu .boutons-seuil { display: flex; }
+.bouton-reprendre { font-family: "Unna", serif; font-size: 4.2cqw; letter-spacing: 0.08em; color: var(--or-pale); background: rgba(7, 9, 26, 0.6);
+  border: 0.2cqw solid var(--or); border-radius: 1cqw; padding: 2cqw 5cqw; cursor: pointer; }
+.bouton-porte:focus-visible, .bouton-reprendre:focus-visible { outline: 0.4cqw solid var(--or-pale); outline-offset: 0.6cqw; }
+
+/* texte nu : à l'encre, sur le papier des dernières pages (la magie est morte) */
+.texte.nu { color: #2a1c10; text-shadow: none; }
+.texte.nu .voix { color: #6b3b0c; }
+.jeu .texte.nu.poeme { background: none; }

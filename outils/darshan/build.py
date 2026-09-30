@@ -189,6 +189,11 @@ DEBUT_CHAPITRE = {c: next(t["n"] for t in TABLEAUX if int(t["n"].split(".")[0]) 
 POINTS_D_ENTREE = {"1.3": "600 1000", "3.4": "600 900", "3.10": "600 900", "3.12": "600 900"}
 
 
+def ordre_tableau(n):
+    """« 1.10 » après « 1.9 » : pour trier les numéros de tableau."""
+    return tuple(int(x) for x in n.split("."))
+
+
 def plage_du_tableau(i):
     a = decoupage.position(TABLEAUX[i])
     b = decoupage.position(TABLEAUX[i + 1]) if i + 1 < len(TABLEAUX) else (livre_texte.DERNIER + 1, 0)
@@ -581,34 +586,53 @@ def verifier(pages):
         assert cle in cles, f"interface.ini : action {cle} sans geste"
     # 3. le moteur connaît chaque mécanique et chaque effet ; chaque texte d'interface appelé existe
     moteur = moteur_source()
+    # (une mécanique ou un effet pas encore écrits : un toucher simple ou rien, signalés ; erreur
+    # en --strict)
     mecaniques = set(re.findall(r"Mecaniques\[?\.?'?([a-z-]+)'?\]?\s*=\s*function", moteur))
     effets = set(re.findall(r"Effets\[?\.?'?([a-z+-]+)'?\]?\s*=\s*function", moteur))
+    speciales = set(re.findall(r"speciales\[?\.?'?([a-z-]+)'?\]?\s*=\s*function", moteur))
+    manquent = {}
     for pg in pages:
         n = pg["t"]["n"]
-        speciaux = pg["s"]["special"] in ("seuil", "poeme", "toit", "tuiles", "pigeonnier")
+        speciaux = pg["s"]["special"] in speciales
+        if pg["s"]["special"] and not speciaux:
+            manquent.setdefault(("scène", pg["s"]["special"]), []).append(n)
         for g in pg["gestes"]:
-            assert speciaux or g["meca"] in mecaniques, f"{n} : mécanique « {g['meca']} » inconnue du moteur"
+            if not speciaux and g["meca"] not in mecaniques:
+                manquent.setdefault(("mécanique", g["meca"]), []).append(n)
             for e in g.get("effets", []):
-                assert e["nom"] in effets, f"{n} : effet « {e['nom']} » inconnu du moteur"
+                if e["nom"] not in effets:
+                    manquent.setdefault(("effet", e["nom"]), []).append(n)
         for e in [x for l in pg["effets"].values() for x in l] + pg["s"]["debut"]:
-            assert speciaux or e["nom"] in effets, f"{n} : effet « {e['nom']} » inconnu du moteur"
-    for cle in set(re.findall(r"\bui\('([a-z_]+)'\)", moteur)):
+            if not speciaux and e["nom"] not in effets:
+                manquent.setdefault(("effet", e["nom"]), []).append(n)
+    for (genre, nom), ou in sorted(manquent.items()):
+        avertir(f"moteur : {genre} « {nom} » pas encore écrite ({', '.join(sorted(set(ou), key=ordre_tableau))})")
+    sans_commentaires = re.sub(r"//[^\n]*|/\*.*?\*/", "", moteur, flags=re.S)
+    for cle in set(re.findall(r"\bui\('([a-z_]+)'\)", sans_commentaires)):
         assert cle in UI, f"le moteur demande le texte d'interface « {cle} », absent d'interface.ini"
     # 4. aucune phrase française écrite en dur dans le moteur (hors commentaires) : tout passe par ui()
-    sans_commentaires = re.sub(r"//[^\n]*|/\*.*?\*/", "", moteur, flags=re.S)
     for m in re.finditer(r"textContent\s*=\s*'([^']*[a-zà-ÿ]{3}[^']*)'", sans_commentaires):
         raise SystemExit(f"texte d'interface écrit en dur dans le moteur : « {m.group(1)} »")
 
 
 # ---------------------------------------------------------------- le moteur : fragments assemblés
-ORDRE_MOTEUR = ["base.js", "son.js", "visuels.js", "transitions.js", "interface.js", "recit.js",
+ORDRE_MOTEUR = ["base.js", "son.js", "dessins.js", "visuels.js", "transitions.js", "interface.js", "recit.js",
                 "mecaniques.js", "effets.js", "scenes.js", "depart.js"]
+
+
+# Tant que les dessins des objets manquent, le moteur s'en passe : fiches sans gros plan.
+SECOURS = {"dessins.js": "var DESSINS = {};\nfunction dessin() { return null; }\n"}
 
 
 def moteur_source():
     corps = []
     for f in ORDRE_MOTEUR:
         chemin = SRC / "js" / f
+        if not chemin.exists() and f in SECOURS:
+            avertir(f"src/js/{f} manque : le moteur s'en passe")
+            corps.append(f"// ---- {f} (secours)\n" + SECOURS[f])
+            continue
         if not chemin.exists():
             raise SystemExit(f"Le moteur du livre entier est en chantier : src/js/{f} n'est pas encore écrit.\n"
                              "Voir « Chantier en cours » dans outils/darshan/README.md.")
@@ -899,5 +923,5 @@ if __name__ == "__main__":
     n_temps = sum(len(pg["temps"]) for pg in PAGES)
     n_gestes = sum(len(pg["gestes"]) for pg in PAGES)
     print(f"{len(PAGES)} pages, {n_temps} temps, {n_gestes} gestes")
-    for a in AVERTISSEMENTS:
+    for a in dict.fromkeys(AVERTISSEMENTS):
         print("attention :", a)
