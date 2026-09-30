@@ -10,12 +10,17 @@
 //   bus K   le même, pondéré K (ITU-R BS.1770) : le niveau perçu ; les ambiances visent −30
 //   sortie  RMS de la sortie (après compresseur, maître et plafond)
 //   crête   crête de la sortie sur tout le rendu : jamais au-dessus de −1
+//   comp.   crête juste après le compresseur et le maître, avant le plafond (qui ne doit servir
+//           que de filet) : jamais au-dessus de −1 non plus
 //   moment  niveau perçu le plus fort sur 400 ms (bus, pondéré K) : la mesure des effets
 //   silence part de la fenêtre (par tranches de 100 ms) sous −60 dBFS en sortie
 //   G/M/A   part de l'énergie sous 250 Hz, de 250 à 2 000 Hz, au-dessus de 2 000 Hz
 //   courbe  les octaves de 63 Hz à 8 kHz, de ▁ (42 dB sous la plus forte) à █
-// Ensuite, les problèmes : crête, erreur rattrapée, échantillon non fini, son qui continue après
-// l'arrêt, minuterie qui survit à son ambiance ou à sa couche.
+// Ensuite, l'endurance : cent changements d'ambiance d'affilée (toutes les 1,6 s), des couches qui
+// s'allument et s'éteignent, des effets, le son coupé puis remis, puis le silence ; à la fin, plus
+// une source ne doit jouer, plus une réverbération ne doit garder son tampon, plus une minuterie
+// ne doit attendre. Enfin, les problèmes : crête, erreur rattrapée, échantillon non fini, son qui
+// continue après l'arrêt, minuterie qui survit à son ambiance ou à sa couche.
 const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
@@ -80,13 +85,44 @@ function scenarios(noms) {
     if (n === 'pere') {
       liste.push({ sorte: 'effet', nom: 'pere', cle: 'pere', duree: 14, mesure: [0.1, 8], fin: [13, 14],
         actions: [[0.1, 'effet', 'pere'], [8, 'effet', 'pere', { eteindre: 3000 }]] });
-      liste.push({ sorte: 'effet', nom: 'pere (tenu, 7.13)', cle: 'pere', duree: 12, mesure: [0.1, 5], fin: [11, 12],
+      liste.push({ sorte: 'effet', nom: 'pere (tenu, 7.13)', cle: 'pere', duree: 13, mesure: [0.1, 5], fin: [12, 13],
         actions: [[0.1, 'effet', 'pere', { tenu: true }], [4, 'ambiance', 'silence'], [5, 'effet', 'pere', { eteindre: 4000 }]] });
     } else {
       liste.push({ sorte: 'effet', nom: n, cle: n, duree: n === 'appel' ? 12 : 10, mesure: [0, n === 'appel' ? 12 : 10], fin: null,
         actions: [[0.1, 'effet', n]] });
     }
   });
+  // l'endurance : cent changements d'ambiance, des couches, des effets, le son coupé puis remis
+  const act = [];
+  const modes = ['fragment', 'mesure', 'entiere'];
+  for (let i = 0; i < 100; i++) {
+    const t = i * 1.6, nom = noms.ambiances[i % noms.ambiances.length];
+    act.push([t, 'ambiance', nom, i % 3 === 0 ? { vaste: true, densite: 1, rame: true, soir: true, jour: true, horloge: 1 } : null]);
+    if (i % 9 === 0) act.push([t + 0.3, 'couche', 'battements', true, { tempo: 60 + i, julie: i % 2 ? 64 : false, duree: 2000 }]);
+    if (i % 9 === 4) act.push([t + 0.3, 'couche', 'battements', false]);
+    if (i % 11 === 0) act.push([t + 0.4, 'couche', 'pluie', true, { densite: 0.8 }]);
+    if (i % 11 === 6) act.push([t + 0.4, 'couche', 'pluie', false]);
+    if (i % 13 === 0) act.push([t + 0.5, 'couche', 'tele', true]);
+    if (i % 13 === 7) act.push([t + 0.5, 'couche', 'tele', false]);
+    if (i % 17 === 0) act.push([t + 0.6, 'couche', 'feu', true]);
+    if (i % 17 === 8) act.push([t + 0.6, 'couche', 'feu', false]);
+    if (i % 19 === 0) act.push([t + 0.7, 'couche', 'vibration', true, { fois: 2 }]);
+    if (i % 10 === 5) act.push([t + 0.8, 'couche', 'melodie', true, { mode: modes[(i / 10 | 0) % 3], filtre: i % 20 === 5 ? 'telephone' : null }]);
+    if (i % 6 === 0) act.push([t + 0.9, 'effet', ['eclat', 'coup', 'appel', 'papier', 'tour'][(i / 6 | 0) % 5]]);
+    if (i % 25 === 0) act.push([t + 1, 'effet', 'pere']);
+    if (i % 25 === 3) act.push([t + 1, 'effet', 'pere', { eteindre: 2000 }]);
+  }
+  act.push([80.2, 'basculer'], [85.1, 'basculer']);   // le son coupé, puis remis
+  act.push([160, 'ambiance', 'silence'], [160, 'effet', 'pere', { eteindre: 1000 }]);
+  liste.push({ sorte: 'endurance', nom: 'cent changements', duree: 196, actions: act });
+  // la panne du 30 septembre (partie rapide du livre, son coupé) : metro, hopital, metro, rue,
+  // toutes les 2 s, cent fois ; son coupé d'abord (aucune source ne doit démarrer), puis ouvert
+  for (const coupe of [true, false]) {
+    const a2 = coupe ? [[0, 'basculer']] : [];
+    for (let i = 0; i < 100; i++) a2.push([0.1 + i * 2, 'ambiance', ['metro', 'hopital', 'metro', 'rue'][i % 4]]);
+    a2.push([200.1, 'ambiance', 'silence']);
+    liste.push({ sorte: 'endurance', nom: 'metro, hopital, metro, rue' + (coupe ? ' (son coupé)' : ''), duree: 236, actions: a2, coupe });
+  }
   // tout ensemble : une rue, deux cœurs, la ballade entière, puis les effets les plus forts
   liste.push({ sorte: 'ensemble', nom: 'tout ensemble', duree: 18, mesure: [3, 16], fin: null,
     actions: [[0, 'ambiance', 'rue', { densite: 1 }], [0.1, 'couche', 'battements', true, { tempo: 110, julie: 80 }],
@@ -161,15 +197,58 @@ function dansLaPage() {
     return btoa(s);
   }
   window.noms = () => window.Son._essai(new OfflineAudioContext(2, 128, 48000)).noms;
+  // L'endurance : à 16 kHz (seuls comptent les nœuds et les minuteries), en comptant les sources
+  // démarrées et finies, et les réverbérations encore chargées.
+  window.endurance = async function (item) {
+    const sr = 16000, ctx = new OfflineAudioContext(2, Math.ceil(sr * item.duree), sr);
+    const compte = { demarrees: 0, finies: 0, max: 0, convolueurs: [] };
+    const demarrer = AudioScheduledSourceNode.prototype.start, creer = BaseAudioContext.prototype.createConvolver;
+    AudioScheduledSourceNode.prototype.start = function () {
+      compte.demarrees++; this.addEventListener('ended', () => { compte.finies++; }, { once: true });
+      return demarrer.apply(this, arguments);
+    };
+    BaseAudioContext.prototype.createConvolver = function () { const c = creer.apply(this, arguments); compte.convolueurs.push(c); return c; };
+    try {
+      const e = window.Son._essai(ctx);
+      e.sortie.connect(ctx.destination);
+      const actions = item.actions.slice().sort((a, b) => a[0] - b[0]);
+      let ia = 0;
+      const faire = (t) => {
+        while (ia < actions.length && actions[ia][0] <= t + 1e-9) {
+          const a = actions[ia++];
+          try { window.Son[a[1]].apply(null, a.slice(2)); } catch (err) { e.erreurs.push('action : ' + err.message); }
+        }
+      };
+      faire(0);
+      for (let k = 1; k * 0.1 < item.duree - 0.05; k++) {
+        ctx.suspend(k * 0.1).then(() => {
+          const t = ctx.currentTime; faire(t); e.avancer(t);
+          compte.max = Math.max(compte.max, compte.demarrees - compte.finies);
+          ctx.resume();
+        });
+      }
+      await ctx.startRendering();
+      await new Promise((ok) => setTimeout(ok, 200));   // les derniers « ended »
+      return {
+        demarrees: compte.demarrees, finies: compte.finies, vivantes: compte.demarrees - compte.finies, max: compte.max,
+        convolueurs: compte.convolueurs.length, charges: compte.convolueurs.filter((c) => c.buffer).length,
+        minuteries: e.minuteries(), erreurs: e.erreurs.slice(0, 5),
+      };
+    } finally {
+      AudioScheduledSourceNode.prototype.start = demarrer; BaseAudioContext.prototype.createConvolver = creer;
+    }
+  };
   window.rendre = async function (item, avecWav) {
     const sr = 48000, n = Math.ceil(sr * item.duree);
-    const ctx = new OfflineAudioContext(4, n, sr);
+    const ctx = new OfflineAudioContext(6, n, sr);
     const e = window.Son._essai(ctx);
     // deux prises stéréo (un son mono y devient deux canaux égaux, comme à l'oreille) : la sortie, le bus
     const stereo = () => { const g = ctx.createGain(); g.channelCount = 2; g.channelCountMode = 'explicit'; g.channelInterpretation = 'speakers'; return g; };
-    const s1 = ctx.createChannelSplitter(2), s2 = ctx.createChannelSplitter(2), m = ctx.createChannelMerger(4), sor = stereo(), tot = stereo();
+    const s1 = ctx.createChannelSplitter(2), s2 = ctx.createChannelSplitter(2), s3 = ctx.createChannelSplitter(2), m = ctx.createChannelMerger(6);
+    const sor = stereo(), tot = stereo(), avp = stereo();
     e.sortie.connect(sor); sor.connect(s1); s1.connect(m, 0, 0); s1.connect(m, 1, 1);
     e.bus.ambiance.connect(tot); e.bus.effets.connect(tot); tot.connect(s2); s2.connect(m, 0, 2); s2.connect(m, 1, 3);
+    e.avantPlafond.connect(avp); avp.connect(s3); s3.connect(m, 0, 4); s3.connect(m, 1, 5);   // après le compresseur, avant le plafond
     m.connect(ctx.destination);
     const actions = item.actions.slice().sort((a, b) => a[0] - b[0]);
     let ia = 0;
@@ -185,10 +264,12 @@ function dansLaPage() {
     }
     const b = await ctx.startRendering();
     const L = b.getChannelData(0), R = b.getChannelData(1), BL = b.getChannelData(2), BR = b.getChannelData(3);
-    let crete = 0, nonFinis = 0;
+    const PL = b.getChannelData(4), PR = b.getChannelData(5);
+    let crete = 0, creteComp = 0, nonFinis = 0;
     for (let i = 0; i < n; i++) {
-      const a = Math.max(Math.abs(L[i]), Math.abs(R[i]));
+      const a = Math.max(Math.abs(L[i]), Math.abs(R[i])), c = Math.max(Math.abs(PL[i]), Math.abs(PR[i]));
       if (!isFinite(L[i]) || !isFinite(R[i])) nonFinis++; else if (a > crete) crete = a;
+      if (c > creteComp) creteComp = c;
     }
     const i0 = Math.floor(item.mesure[0] * sr), i1 = Math.min(n, Math.floor(item.mesure[1] * sr));
     const kBL = ponderer(BL), kBR = ponderer(BR);
@@ -198,7 +279,8 @@ function dansLaPage() {
     for (let d = i0; d + 4800 <= i1; d += 4800) { tranches++; if (db(moyenne(L, R, d, d + 4800)) < -60) muettes++; }
     const r = {
       bus: db(moyenne(BL, BR, i0, i1)), busK: db(moyenne(kBL, kBR, i0, i1)), sortie: db(moyenne(L, R, i0, i1)),
-      crete: crete > 0 ? 20 * Math.log10(crete) : -Infinity, moment: db(moment),
+      crete: crete > 0 ? 20 * Math.log10(crete) : -Infinity, creteComp: creteComp > 0 ? 20 * Math.log10(creteComp) : -Infinity,
+      moment: db(moment),
       silence: tranches ? muettes / tranches : 0, spectre: spectre(L, R, i0, i1, sr), nonFinis,
       fin: item.fin ? db(moyenne(L, R, Math.floor(item.fin[0] * sr), Math.min(n, Math.floor(item.fin[1] * sr)))) : null,
       minuteries: e.minuteries(), erreurs: e.erreurs.slice(0, 5), niveau: null,
@@ -231,18 +313,31 @@ function dansLaPage() {
 
   const f = (x, l = 6) => (x === null ? '' : x === -Infinity ? '−∞' : x.toFixed(1).replace('-', '−')).padStart(l);
   const titres = { ambiance: 'Ambiances', couche: 'Couches', effet: 'Effets', ensemble: 'Ensemble' };
-  const problemes = [];
+  const problemes = [], notes = [];
   let sorte = null;
   const t0 = Date.now();
   for (const s of liste) {
+    if (s.sorte === 'endurance') {
+      const r = await page.evaluate((item) => window.endurance(item), s);
+      console.log(`\nEndurance (${s.nom}, ${Math.round(s.duree)} s de rendu) : ${r.demarrees} sources démarrées, ${r.finies} finies, ` +
+        `${r.vivantes} encore en vie à la fin (au plus ${r.max} à la fois) ; ${r.convolueurs} réverbérations fabriquées, ` +
+        `${r.charges} encore chargées ; ${r.minuteries} minuterie(s) en attente.`);
+      if (s.coupe && r.demarrees) problemes.push(`endurance, son coupé : ${r.demarrees} source(s) démarrée(s)`);
+      if (r.vivantes) problemes.push(`endurance : ${r.vivantes} source(s) encore en vie à la fin`);
+      if (r.charges) problemes.push(`endurance : ${r.charges} réverbération(s) encore chargée(s) à la fin`);
+      if (r.minuteries) problemes.push(`endurance : ${r.minuteries} minuterie(s) encore en attente à la fin`);
+      if (r.erreurs.length) problemes.push(`endurance : erreurs rattrapées : ${r.erreurs.join(' ; ')}`);
+      sorte = null;
+      continue;
+    }
     if (s.sorte !== sorte) {
       sorte = s.sorte;
       console.log('\n' + titres[sorte]);
-      console.log('nom'.padEnd(26) + '   bus  bus K sortie  crête moment silence  G/M/A      courbe    niveau' + (sorte === 'ambiance' ? '  → proposé' : ''));
+      console.log('nom'.padEnd(26) + '   bus  bus K sortie  crête  comp. moment silence  G/M/A      courbe    niveau' + (sorte === 'ambiance' ? '  → proposé' : ''));
     }
     const r = await page.evaluate(([item, w]) => window.rendre(item, w), [s, avecWav]);
     const gma = r.spectre.gma.map((x) => String(x).padStart(2)).join('/');
-    let ligne = s.nom.padEnd(26) + f(r.bus) + f(r.busK, 7) + f(r.sortie, 7) + f(r.crete, 7) + f(r.moment, 7) +
+    let ligne = s.nom.padEnd(26) + f(r.bus) + f(r.busK, 7) + f(r.sortie, 7) + f(r.crete, 7) + f(r.creteComp, 7) + f(r.moment, 7) +
       (Math.round(r.silence * 100) + ' %').padStart(8) + '  ' + gma.padEnd(10) + ' ' + r.spectre.courbe + '  ' +
       (r.niveau === null ? '' : String(+r.niveau.toFixed(3)).padStart(6));
     if (s.sorte === 'ambiance' && r.niveau !== null && s.cle && isFinite(r.busK) && !s.nom.includes('→')) {
@@ -250,6 +345,7 @@ function dansLaPage() {
     }
     console.log(ligne);
     if (r.crete > -1) problemes.push(`${s.nom} : crête à ${f(r.crete, 0)} dBFS`);
+    if (r.creteComp > -1) (s.sorte === 'ensemble' ? notes : problemes).push(`${s.nom} : crête à ${f(r.creteComp, 0)} dBFS après le compresseur, que le plafond ramène à ${f(r.crete, 0)}`);
     if (r.nonFinis) problemes.push(`${s.nom} : ${r.nonFinis} échantillons non finis`);
     if (r.erreurs.length) problemes.push(`${s.nom} : erreurs rattrapées : ${r.erreurs.join(' ; ')}`);
     if (r.fin !== null && r.fin > -80) problemes.push(`${s.nom} : encore ${f(r.fin, 0)} dBFS après l'arrêt`);
@@ -258,6 +354,7 @@ function dansLaPage() {
   }
   console.log(`\n${liste.length} rendus en ${Math.round((Date.now() - t0) / 1000)} s` + (avecWav ? ` ; WAV dans ${path.relative(process.cwd(), dossierWav) || '.'}` : ''));
   if (erreursPage.length) problemes.push('erreurs de la page : ' + erreursPage.join(' ; '));
+  if (notes.length) console.log('À noter :\n- ' + notes.join('\n- '));
   console.log(problemes.length ? 'Problèmes :\n- ' + problemes.join('\n- ') : 'Aucun problème : ni crête, ni erreur, ni son ou minuterie qui survit à l’arrêt.');
   await nav.close();
   process.exitCode = problemes.length ? 1 : 0;
