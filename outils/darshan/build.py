@@ -621,18 +621,10 @@ ORDRE_MOTEUR = ["base.js", "son.js", "dessins.js", "visuels.js", "transitions.js
                 "mecaniques.js", "effets.js", "scenes.js", "depart.js"]
 
 
-# Tant que les dessins des objets manquent, le moteur s'en passe : fiches sans gros plan.
-SECOURS = {"dessins.js": "var DESSINS = {};\nfunction dessin() { return null; }\n"}
-
-
 def moteur_source():
     corps = []
     for f in ORDRE_MOTEUR:
         chemin = SRC / "js" / f
-        if not chemin.exists() and f in SECOURS:
-            avertir(f"src/js/{f} manque : le moteur s'en passe")
-            corps.append(f"// ---- {f} (secours)\n" + SECOURS[f])
-            continue
         if not chemin.exists():
             raise SystemExit(f"Le moteur du livre entier est en chantier : src/js/{f} n'est pas encore écrit.\n"
                              "Voir « Chantier en cours » dans outils/darshan/README.md.")
