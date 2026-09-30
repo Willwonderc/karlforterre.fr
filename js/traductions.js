@@ -47,6 +47,10 @@ window.TRADUCTIONS = {
     "Ouvrages publiés": { en: "Published works", zh: "出版作品" },
     "Projets réalisés": { en: "Completed projects", zh: "完成项目" },
     "Années d'expérience": { en: "Years of experience", zh: "年经验" },
+    "Presse": { en: "Press", zh: "媒体报道" },
+    "La Nouvelle République, 29 mars 2022 : « Jeune et engagé en Deux-Sèvres (7) : Karl Forterre soutient Fabien Roussel »": { en: "La Nouvelle République, 29 March 2022: “Jeune et engagé en Deux-Sèvres (7) : Karl Forterre soutient Fabien Roussel”", zh: "La Nouvelle République（法国地方日报），2022年3月29日：“Jeune et engagé en Deux-Sèvres (7) : Karl Forterre soutient Fabien Roussel”" },
+    "La Vienne Démocratique, 20 juin 2022 : portrait dans la rubrique « Artistes à la une »": { en: "La Vienne Démocratique, 20 June 2022: profile in the “Artistes à la une” (featured artists) column", zh: "La Vienne Démocratique，2022年6月20日：“Artistes à la une”（焦点艺术家）栏目人物介绍" },
+    "Université de Poitiers, master Livres et médiations : page de présentation": { en: "University of Poitiers, Master’s in Books and Mediation: profile page", zh: "普瓦捷大学“书籍与媒介”硕士项目：个人介绍页面" },
 
     // Portfolio
     "Créations": { en: "Creations", zh: "创作" },
