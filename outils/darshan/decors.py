@@ -339,7 +339,7 @@ p {{ margin: 0; position: absolute; left: 0; right: 0; }}
   letter-spacing: 0.26em; padding-left: 0.26em; color: #e3dccd; text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8); }}
 .titre {{ top: 600px; font-family: "Unna", serif; font-size: 300px; line-height: 1; letter-spacing: 0.01em;
   color: #ffe7b0; text-shadow: 0 0 60px rgba(255, 200, 110, 0.38), 0 0 16px rgba(255, 214, 140, 0.25), 0 4px 18px rgba(0, 0, 0, 0.85); }}
-.devanagari {{ top: 952px; font-family: "Tiro Darshan", serif; font-size: 92px; letter-spacing: 0.1em; padding-left: 0.1em;
+.devanagari {{ top: 952px; font-family: "Tiro Darshan", serif; font-size: 100px; letter-spacing: 0;
   color: #d8c9ab; text-shadow: 0 0 24px rgba(255, 200, 120, 0.25), 0 3px 12px rgba(0, 0, 0, 0.85); }}
 .genre {{ top: 1540px; font-family: "Amiri", serif; font-style: italic; font-size: 60px; letter-spacing: 0.04em;
   color: #d6ccb8; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9); }}

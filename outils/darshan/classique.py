@@ -21,13 +21,15 @@ caractère, à texte.texte_du_livre(). Sinon le programme échoue et n'écrit pa
 - FAIT : tout le livre, métadonnées d'accessibilité, sommaire et repères, vérification du
   texte à chaque fabrication. Polices refaites par polices.py, avec le « ā » de « mudrā »,
   en TTF.
-- CONTRÔLÉ le 30 septembre, sur un essai avec une couverture provisoire (hors du dépôt) :
-  EPUBCheck 5.4.0, aucune erreur ni avertissement ; Ace by DAISY 1.4.6, aucune violation.
-- MANQUE la couverture src/img/couverture.jpg : sans elle, le programme s'arrête avec un
-  message clair, sans écrire de livre.
-- RESTE, une fois la couverture faite : refaire EPUBCheck et Ace sur le vrai livre, les
-  captures dans Chromium, une relecture à la main (ordre de lecture, texte de la
-  couverture), puis passer CONFORMITE_A11Y à True pour déclarer dcterms:conformsTo.
+- COUVERTURE provisoire (decors.py couverture) : le ciel étoilé de Karl et le titre. Karl
+  peut préférer celle de 2023 (photo d'Arianna Jadé, sans les logos de la SEP et de
+  Cheminement) s'il en retrouve le fichier en grand : 1600 x 2400 au moins, l'EPUB de 2023
+  ne l'ayant qu'en 650 x 1063.
+- CONTRÔLÉ le 30 septembre, sur le livre complet : EPUBCheck 5.4.0, aucune erreur ni
+  avertissement ; Ace by DAISY 1.4.6, aucune violation ; pages photographiées dans Chromium
+  (titre, dédicace, chapitres, colophon) ; texte de la couverture relu.
+- RESTE : passer CONFORMITE_A11Y à True quand Karl aura relu l'édition, puisque la
+  déclaration dcterms:conformsTo est faite en son nom (a11y:certifiedBy).
 
 Essai sans la vraie couverture (jamais dans dist/) :
     python3 outils/darshan/classique.py --couverture essai.jpg --sortie /tmp/essai.epub

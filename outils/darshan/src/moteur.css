@@ -69,7 +69,7 @@ h1.chapitre {
 .titre-livre .auteur { font-size: 3.6cqw; letter-spacing: 0.25em; text-transform: uppercase; color: #d9d2c4; margin: 0; }
 .titre-livre .titre { font-family: "Unna", serif; font-weight: 400; font-size: 17cqw; line-height: 1; margin: 2cqw 0 1cqw; color: var(--or-pale);
   text-shadow: 0 0 5cqw rgba(255, 200, 110, 0.35), var(--ombre-texte); }
-.titre-livre .devanagari { font-family: "Tiro Darshan", serif; font-size: 4.4cqw; color: #cdbfa5; margin: 0 0 8cqw; letter-spacing: 0.1em; }
+.titre-livre .devanagari { font-family: "Tiro Darshan", serif; font-size: 4.4cqw; color: #cdbfa5; margin: 0 0 8cqw; letter-spacing: 0; } /* espacé, le devanagari perd sa ligne de tête */
 .titre-livre .genre { font-style: italic; font-size: 3.4cqw; color: #cfc6b3; margin: 0; }
 
 /* ------------------------------------------------------------ interface (mode jeu seulement) */
