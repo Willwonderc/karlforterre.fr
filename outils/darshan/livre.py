@@ -71,7 +71,7 @@ DECORS = {
     "porte-pigeonnier": prototype("porte.jpg"),                                 # 1.3
     # à refaire : la retouche du dessin d'art.py (scene_aluva) : deux kayaks jaunes rangés contre le
     # mur de gauche (d'après la photo 35086240), le coutelas sur le couvercle du tonneau, vers (938, 1470)
-    "aluva": prototype("aluva.jpg"),                                            # 1.4
+    "aluva": dessin("scene_aluva"),                                             # 1.4
     "ciel-appel": prototype("ciel-nuit.jpg"),                   # 6.11 : le ciel de 1.1 (27116682), sans la ville
 
     # ============================================================ chapitre 1 : Aluva, à l'encre
@@ -105,7 +105,7 @@ DECORS = {
         (0.10, 0.625), (0.05, 0.62), (0.005, 0.60), (0.005, 0.555), (0.04, 0.535), (0.10, 0.54),
         (0.15, 0.515), (0.175, 0.45), (0.20, 0.36), (0.215, 0.29), (0.245, 0.21), (0.27, 0.16)]),
     # recadrage à x 0,45 à essayer, si l'arche y gagne sans perdre l'allée
-    "rocaille": photo(10524140, x=0.62),                                        # 2.8
+    "rocaille": photo(10524140, x=0.45),                                        # 2.8
     "amoureux": photo(31514847, x=0.1),                         # 2.8 : les deux amoureux (à x 0,32, l'homme seul)
     "maison-lierre": photo(10199772, x=0.22),                                   # 2.8, 6.14, 6.15
     "seuil-lierre": photo(10199772, x=0.52, y=0.6, zoom=1.5),                   # 2.9, 6.15 : la porte de Julie
@@ -131,7 +131,7 @@ DECORS = {
     "porte-personnel": dessin("porte_battante"),                                # 3.8, ou la photo de Karl (S6)
     "periyar-soir": encre(10220497, x=0.45, soir=True),                         # 3.9, 3.10, 3.12
     "periyar-crepuscule": encre(10220497, x=0.45, soir=True, crepuscule=True),  # 3.12 à 3.14 : le soir tombe
-    "noir-lueur": photo(39575545, x=0.24, y=0.91, zoom=2.0),                    # 3.10 : la lumière orange en (600, 300)
+    "noir-lueur": photo(39575545, x=0.243, y=0.912, zoom=2.0),                    # 3.10 : la lumière orange en (600, 300)
     # la porte du père : la porte d'Irun de Karl, haut de la photo seulement (ni cycliste, ni plaque « 2 »,
     # ni serrure : le bas se fond dès 0,50 de la hauteur et disparaît à 0,60) ; calques à fond transparent,
     # haut du linteau à y 420, la lanterne du moteur 120 unités au-dessus
@@ -422,7 +422,7 @@ SCENES = {
 
     # ============================================================ 3. Entre deux mondes
     "3.1": S("cosmos", texte="bas ciel",
-             moments=[E("barque", depart=[930, 250], vers=[300, 1150], duree=60000),
+             moments=[E("barque", depart=[140, 250], vers=[400, 1150], duree=60000),
                       E("alignement", n=7, porte=PORTE_BLEUE, linteau="droit")]),
     "3.2": S(["cosmos", "portes-4", "portes-5", "portes-3", "portes-1", "porte-trefle", "mur-terre"],
              debut=[E("alignement", n=7, porte=PORTE_BLEUE, linteau="droit", fixe=True)],

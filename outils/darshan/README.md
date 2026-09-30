@@ -14,72 +14,114 @@ Le livre entier est découpé en 85 tableaux dans
 
 Rien ici n'est encore relié au site : aucune page ne pointe vers ce dossier.
 
-## Chantier en cours : le livre entier (état au 30 septembre 2026)
+## Chantier en cours : le livre entier (pause du 30 septembre 2026)
 
-La pré-production est terminée (`docs/darshan-mise-en-scene/`, avec sa synthèse) et reportée
-dans la fabrication. Le livre se fabrique et se joue de bout en bout ; restent les mécaniques,
-les effets et les scènes propres à chaque page, des décors et des sons. Ce qui est en place :
+La pré-production est terminée (`docs/darshan-mise-en-scene/`, avec sa synthèse, qui fait foi)
+et reportée dans la fabrication. Le 30 septembre vers 11 h (UTC), le chantier est mis en pause à
+un point stable : le livre se fabrique, passe EPUBCheck sans erreur ni avertissement et se joue
+de la page de titre à « Fin », au toucher et au clavier (tâche GitHub « Darshan » verte). Les
+décors et les gestes sont faits ; restent une partie des effets, cinq scènes écrites à la main,
+deux transitions, la seconde partie des sons, les essais et ce qui attend Karl.
 
 | Fichier | État |
 |---|---|
 | `texte.py` | Fait. Le texte du livre, commun à la fabrication et au découpage, avec les italiques du livre imprimé rétablies. |
-| `decoupage.py` | Fait (report de la synthèse, 30 septembre). Les 85 tableaux, avec les trois frontières déplacées (2.9/2.10, 7.7/7.8, 7.15/7.16), 58 gestes, les sons et leurs variantes, 43 repérages (S1 à S10), le catalogue des 27 mécaniques. |
-| `livre.py` | Fait (report de la synthèse). Les réglages des 85 tableaux aux noms uniques de la synthèse : 115 décors, gestes, effets, objets gagnés ou perdus, portes franchies, répliques de Darshan (`REPLIQUES`). |
+| `decoupage.py` | Fait. Les 85 tableaux, avec les trois frontières déplacées (2.9/2.10, 7.7/7.8, 7.15/7.16), 58 gestes, les sons et leurs variantes, 43 repérages (S1 à S10), le catalogue des 27 mécaniques. |
+| `livre.py` | Fait. Les réglages des 85 tableaux aux noms uniques de la synthèse : 115 décors, gestes, effets, objets gagnés ou perdus, portes franchies, répliques de Darshan (`REPLIQUES`). Réglages de l'équipe des décors reportés le 30 septembre : Aluva redessinée (`scene_aluva`), rocaille et noir-lueur recadrées, trajet de la barque en 3.1. |
 | `objets.ini`, `portes.ini` | Faits, à relire par Karl. Les 18 objets (68 phrases) et les fiches des 7 portes du carnet (19 phrases), chaque phrase vérifiée mot pour mot. |
 | `interface.ini` | Fait, à valider par Karl. Tous les textes d'interface : consignes des 58 gestes, 13 actions, boutons, menu, carnet des portes, générique ; les textes nouveaux sont marqués « à valider par Karl ». |
-| `build.py` | Fait pour les 85 pages : 446 temps, 58 gestes, sacs, portes et les sept états de page (père, barre de Julie, voile, regard, compte à rebours, boussole, répliques) calculés page après page, vérifications. Il signale les gestes, effets et scènes que le moteur ne connaît pas encore (erreur avec `--strict`). L'EPUB jouable complet passe EPUBCheck sans erreur ni avertissement (30 septembre). |
-| `src/js/` | Le nouveau moteur, en fragments, tous écrits le 30 septembre : `base`, `son`, `dessins` (en cours), `visuels`, `transitions`, `interface`, `recit`, `mecaniques`, `effets`, `scenes`, `depart`. Le livre se joue de bout en bout, au toucher et au clavier. L'interface lit les sept états de page. En cours : les 19 mécaniques et les 76 effets qui restent (un geste inconnu devient pour l'instant un simple toucher) ; à suivre : les 5 scènes écrites à la main (plier, vision, listes, rue-de-rungis, clôture) et les transitions `bandes-photo` et `bandes-julie`. |
-| `src/js/son.js` | Fait pour les lieux (30 septembre) : les 18 ambiances, les couches (cœurs, pluie, feu, télévision sans parole, vibreur, la ballade composée pour le livre), l'appel et l'accord du père ; équilibrage (ambiances autour de -30 dB, crêtes sous -1,4 dBFS) ; son coupé, rien n'est fabriqué ; chaque ambiance arrête toutes ses sources. En cours : les effets ponctuels de la synthèse (partie 5.4), les couches qui manquent et le son `autre-cote` des portes. Banc d'essai : `essai-son.js`. |
-| `decors.py`, `art.py` | En cours (30 septembre) : les décors de la synthèse (115), dessins, recadrages et photos nouvelles, en 1600 × 2400 (WebP) : `python3 outils/darshan/decors.py [noms]`. `build.py` liste ceux qui manquent. |
+| `build.py` | Fait pour les 85 pages : 446 temps, 58 gestes, sacs, portes et les sept états de page (père, barre de Julie, voile, regard, compte à rebours, boussole, répliques) calculés page après page, vérifications. Il signale les effets et les scènes que le moteur ne connaît pas encore (erreur avec `--strict`). Deux ajouts demandés par les équipes (plus bas, point 1). |
+| `src/js/mecaniques.js` | Fait. Les 27 mécaniques : les 8 du prototype revues (toucher, maintenir, glisser, rythme, tourner, porter, tracer, attendre) et les 19 nouvelles (caresser, contact, curseur, deux-pouces, écrire, effacer, essuyer, étals, galerie, liste, main, messages, paume, portes, remuer, respirer, semer, tendre, verser). Chacune a son toucher simple, son clavier et le bouton « Faire le geste » ; les aides changent de couleur chez Julie ; outils communs `Gestes` (halo, onde, cœur calé sur le rythme du son, paupières, main d'or, rose des vents, téléphone, galerie). |
+| `src/js/effets.js` | En partie. Le noyau (un effet ne retient jamais la lecture plus de 15 s ; toute erreur est rattrapée ; animations et minuteries arrêtées avec la page), les effets d'état (objets, portes et carnet, désenchantement sans son animation, interface, regard, compte, pause), le son (effets ponctuels, silence, ambiances, couches, mélodie) et les effets du prototype. **71 effets restent à écrire** (`build.py` les liste) ; d'ici là, un effet inconnu est ignoré sans rien bloquer. |
+| `src/js/scenes.js`, `transitions.js` | En partie. Les scènes du prototype (seuil, poème, toit, tuiles, pigeonnier) et ses transitions. Restent les scènes plier, vision, listes, rue-de-rungis et clôture, et les transitions `bandes-photo` et `bandes-julie`. |
+| autres fragments de `src/js/` | Faits : `base`, `dessins` (les 17 objets), `visuels`, `interface` (sacs, carnet, regard, compte, barre, menu), `recit`, `depart` (navigation, reprise, édition web qui rend la mémoire des pages quittées). |
+| `src/js/son.js` | Fait pour les lieux : les 18 ambiances, les couches (cœurs, pluie, feu, télévision sans parole, vibreur, la ballade composée pour le livre), l'appel et l'accord du père ; équilibrage (ambiances autour de -30 dB, crêtes sous -1,4 dBFS) ; son coupé, rien n'est fabriqué ; chaque ambiance arrête toutes ses sources. Seconde partie à faire (point 4). Banc d'essai : `essai-son.js`. |
+| `decors.py`, `art.py` | Faits. Les 115 décors de la synthèse, leurs calques et les extras (clichés et vignettes de la galerie, bande de la lune, esquisse du théâtre, planche des photographies pour la page « Fin ») : 133 fichiers, 28,3 Mo, en 1600 × 2400 (WebP). Les 24 décors du prototype devenus inutiles sont retirés. Dix décors dépassent 450 Ko même en qualité 82 (patinoire, rocaille, pavé, village, graffiti, fantômes-rue, foule-téléphone, gorge, verdure, mur-terre). Les décors qui attendent un repérage de Karl sont des images d'attente floues. |
 | `classique.py` | Fait, à relire par Karl. L'EPUB classique (refusionnable), aux mentions de Karl, texte vérifié au caractère près. Couverture : celle de 2023 (photographie d'Arianna Jadé), fournie en grand par Karl le 30 septembre ; EPUBCheck et Ace passent sans rien relever. Son en-tête dit où il en est et ce que Karl doit trancher (colophon, libellés, langue de दर्शन, date d'édition). Décidé par Karl le 29 septembre : « nouvelle » sur la page de titre ; ISBN à demander à l'AFNIL (constante `ISBN`, vide en attendant). |
 
 Polices : refaites le 30 septembre par `polices.py`, avec le « ā » de « mudrā » (il
 manquait déjà dans l'EPUB de 2023), en WOFF2 pour l'édition jouable et en TTF pour
 l'édition classique. Aucune police du livre n'a la flèche « → » des étiquettes du carnet
-des portes : le moteur la dessinera. L'édition classique passe EPUBCheck 5.4.0 sans erreur
+des portes : le moteur la dessine. L'édition classique passe EPUBCheck 5.4.0 sans erreur
 ni avertissement, et Ace by DAISY 1.4.6 sans aucune violation (30 septembre).
-
-Pour les décors, il reste :
-- **les 9 dessins** de `art.py` (local-nuit, mur-terre, cosmos, pekin, desert-nuit,
-  desert-jour, papier-lettre, toiles, fenetre) ; `decors.py` les attend sous les noms de
-  fonctions de `livre.py`, et passe à `fenetre` l'adresse de la photo par `image=` ;
-- **la couverture** : celle de 2023, fournie en grand par Karl le 30 septembre (`src/img/couverture.jpg`, 1409 × 2000, gardée telle quelle) ;
-- **des recadrages à corriger dans `livre.py`**, puis refaire ces décors. Rappel : x et y
-  placent le cadre dans la photo (0 : bord gauche ou haut, 0,5 : centre, 1 : bord droit
-  ou bas). Corrections proposées :
-
-  | Décor | x actuel → proposé | Pourquoi |
-  |---|---|---|
-  | portes-3 | 0,5 → 0,2 | la porte de la cour est coupée |
-  | phare | 0,5 → 0,17 | le phare est coupé en deux |
-  | amoureux | 0,32 → 0,15 | l'homme au pull rouge est hors cadre |
-  | lit-telephone | 0,5 → 0,2 | le téléphone est coupé |
-  | banquise | 0,55 → 0,84 | le voilier est coupé |
-  | rochers | 0,5 → 0,75 | l'empilement de rochers est coupé |
-  | rocaille | 0,62 → 0,45 | pour centrer l'arche |
-  | parvis | 0,55 → 0,4 | les flèches touchent le bord |
-  | marche | 0,5 → 0,62 | pour centrer le pignon vitré |
-  | rue-vide | 0,72 → 0,45 (facultatif) | pour centrer la rue |
-
-  « graffiti » : fait. Karl a choisi « aime » (29 septembre) ; le mot, un peu plus large qu'un
-  cadre 2:3, tient grâce à une marge prolongée en haut et en bas (`marge` de `livre.py`). Il
-  paraît un instant au tableau 6.11, quand Julie dit « je t’aime ». « lune » : le croissant
-  est minuscule ; zoom d'environ 1,8 à centrer sur lui.
-- **les points chauds** des gestes à relever sur les images : seule la porte du père est
-  relevée (lanterne vers (360, 850), porte de x 340 à 808 et de y 695 à 1680, poignée vers
-  (760, 1200)) ; la cible de 6.4 sur « porte-bleue » semble trop à droite ;
-- **des retouches** : « portes-3 » trop sombre (l'éclaircir avant l'encre, dictionnaire
-  `RETOUCHES_ENCRE`) ; « periyar-soir » trop brun (plus de rose et de violet) ; neuf
-  photos dépassent 450 Ko (campagne, banc, villandry, rocaille, pave, fantomes, graffiti,
-  verdure, amoureux) : baisser leur qualité vers 75, ou les accepter.
 
 L'extrait jouable du 28 septembre se refabrique avec la version précédente du programme
 (commit `e6921d2`).
 
-Reste à faire, dans l'ordre : les fragments du moteur (son, visuels, transitions,
-interface, récit, mécaniques, effets, scènes, départ) ; les décors qui manquent ; la partie
-jouée de bout en bout, au clavier et en mouvement réduit ; l'EPUB classique ; la tâche
-GitHub ; la mise à jour des plans et de la pull request.
+### Reprendre après la pause
+
+Méthode suivie jusqu'ici : une équipe par fichier (un seul propriétaire par fichier, chacun sa
+section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBCheck avec
+`--failonwarnings` et `essai-livre.js` en mouvement réduit puis normal ; la tâche GitHub
+« Darshan » refait tout à chaque envoi. Dans l'ordre :
+
+1. **`build.py`** (demandé par les équipes des gestes et des effets) :
+   - copier dans l'édition web et dans l'EPUB, et inscrire dans `DONNEES.images` et au
+     manifeste, les calques et extras de `decors.py` : `fenetre-cadre`, `fenetre-vue`,
+     `toiles-couleur`, `placard-fermee`, `placard-ouverte`, `mangue`, les calques
+     `marche-aluva-<objet>` (5.2), `lune-bande`, les `<nom>-cliche` et `<nom>-vignette` de la
+     galerie (5.6, 5.7), `video-lune-vignette` et `esquisse-theatre.svg` (en `image/svg+xml`).
+     Sans eux, la galerie montre des vignettes floues et les étals se dessinent en figurines ;
+   - un attribut `data-genre` (photo, encre, dessin, uni) sur chaque plan : le froid, le gel et
+     l'effacement ne touchent que les photos.
+2. **Les effets** (`effets.js`) : les 71 qui manquent, par familles (images et plans ;
+   particules, une toile par page ; texte ; cœur et temps ; son et alias), puis les réglages qui
+   manquent aux effets déjà là : `objet+` (`style="notification"`, `ploie`), `transfert`
+   (`jaillir`), `eclat-court` entier (la fonte, le nom seul, la clé posée dans la serrure et
+   déclarée dans `scene.cle`), `frisson` avec `bouton`, l'étoile de `porte` qui file vers
+   « Carnet », la `boussole` dans l'image (rose de `Gestes`, états affolée et nord), les quatre
+   mouvements du `desenchantement`, les fondus d'`interface`, les mots éclairés du `compte`, le
+   lettre à lettre de `voix` (1.1), et les options de `decor`, `camera`, `flou`, `eblouir`,
+   `poussiere`, `filantes` et `son` (`boucle`, `ralentir`). Branchements attendus par
+   `mecaniques.js` : `partage` (`gauche`, `droite`, `actif`, `arete`, `attente`, puis `fin`,
+   `duree`), `ruban` (`attache`, `rythme`), `reflet` (`image`, `zone`), `decor` (`i`, `fondu`),
+   la couche `horloge` (`proche`, `presser`). Les effets prennent chez les mécaniques
+   `scene.coeur` (cœur, valse, balance, arrêt), `scene.paupieres.teinte` (morsure),
+   `scene.galerie` (cliché, vidéo de la lune), `scene.cle`, `Gestes.rose` (boussole),
+   `.cicatrice-porte` (effacement) et `e.geste` (flou en 2.1 et 2.9, caméra en 2.8, embrasure
+   en 6.15). Mesures relevées : l'éclipse de 7.11 est centrée en (680, 875), disque de rayon
+   172 environ, anneau à 180 ; l'esquisse de 2.10 (`esquisse-theatre.svg`) a des groupes
+   `data-etape` et des traits en `pathLength="1"`, à tracer trait par trait ; `saigne` (6.4)
+   pourrait se limiter à la porte, `zone=[330, 600, 800, 1130]`, valeur à vérifier sur l'image.
+3. **Les scènes écrites à la main et les transitions** (`scenes.js`, `transitions.js` ;
+   synthèse, partie 3.4, et les traitements des chapitres) : `plier` (3.4), `vision` (3.10,
+   3.11), `listes` (6.2, qui fournit `scene.listes = {darshan, julie}` à la mécanique),
+   `rue-de-rungis` (7.12 à 7.15 : chaque page s'ouvre sur l'état où la précédente s'arrête ;
+   sur `rue-soleil`, poser les lueurs sur les façades, x 0 à 330 à gauche et 950 à 1200 à
+   droite, y 1300 à 1700), `cloture` (8.1 et « Fin » : générique, planche `fin-photos.webp`,
+   « Nouvelle lecture ») ; les retouches des scènes du prototype (l'appel lettre à lettre en
+   1.1, les notes des tuiles sans do dièse, `tourner` et `autre-cote` au pigeonnier, qui peut
+   passer `g.tourne`) ; les transitions `bandes-photo` (2.1, 6.1 : la seconde moitié des bandes
+   découvre la photo par l'obturateur) et `bandes-julie` (4.1 ; 5.1 avec `palette="lilas"`,
+   `grain="confettis"`).
+4. **Le son, seconde partie** (`son.js` ; synthèse, parties 5.4 et 5.5) : les sons ponctuels
+   (tictac, pied, clairon, tic, vibreur, choc, porte-epaisse, merle, porcelaine, fourchette,
+   herbe, tasse, pas, clochette, bombe, coutelas, tabouret…) et ceux des gestes (cran, toc,
+   mousse, remous, velours, graine, reglette, clavier, envoi, buee, the, claque, tissu, plume,
+   frottement, coche-pinceau, coche-stylo, `achat-<objet>` en 5.2, `paysage-<image>` en 6.12),
+   qui se taisent pour l'instant sans erreur ; les couches `aube`, `couteau`, `vent`,
+   `bourdon` ; `autre-cote` avec son lieu ; `Son.niveau(v, ms)` ; `Son.note('montantes', i)`
+   (1.2 : la, si, ré, mi, fa dièse) ; une horloge d'appartement qui sait presser ; le `ralenti`
+   de 7.10 ; deux ambiances à la fois (6.2, 7.4) ; les réglages de la foule et du tanpura.
+   Dans l'édition web, la couche des battements survit au passage de 5.9 à 5.10 : arrêter les
+   couches au changement de page (`depart.js` ou `Son`).
+5. **Petites retouches** : en 5.6, le compte « soixante-douze heures » chevauche les boutons de
+   la barre ; en 7.7, la première lettre des lignes en italique est rognée au bord gauche du
+   papier (peut-être le `filter` de `.temps`) ; dans `livre.py`, à décider : `objet="lunettes"`
+   en 1.9, `teinte="couchant"` en 7.10, `consigne_immediate` en 1.2, `dessin="cle-placard"` en
+   6.13, `suit_geste` pour les braises de 3.10.
+6. **Les essais** (synthèse, partie 12, étape 9) : `essai-livre.js` en mouvement réduit, en
+   mouvement normal et depuis 3.10 ; les pages de l'EPUB jouées au clavier dans Chromium, en
+   commençant par celles des gestes (1.3, 1.4, 2.2, 3.9, 3.10, 4.2, 4.3, 5.2, 5.6, 5.11, 6.2,
+   6.8, 6.11, 6.12, 7.7, 7.9, 7.11, 7.13) ; VoiceOver et TalkBack ; grand texte ; sans script ;
+   Apple Books sur iPhone et iPad (essai de Karl : aucun geste ne doit tourner la page).
+7. **Ce qui attend Karl** : les 44 questions (page « Décisions pour Darshan ») ; les textes
+   nouveaux d'`interface.ini`, d'`objets.ini` et de `portes.ini` ; les repérages (synthèse,
+   partie 9 : la main de Julie, la rue de Rungis, le tartare et le pain perdu, la lettre de sa
+   main, le mur de torchis, la porte de planches la nuit, la clé de laiton, le velours, le
+   recueil, la porte battante, la Charlotte, les lunettes et les clichés de la galerie, le
+   carrelet et le tabouret, la patinoire) ; les coquilles (annexe A du plan) ; l'ISBN ; la
+   relecture de l'édition classique.
 
 ## Jouer
 

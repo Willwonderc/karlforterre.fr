@@ -1007,7 +1007,7 @@ function Geste(scene, g, reglage) {
         if (auFinal) { var f = auFinal; auFinal = null; f(); } else ge.terminer();
       }
     }
-    var depart = null, reference = 0, attenduDepuis = G.maintenant();
+    var depart = null, reference = 0;
     G.doigts(ge, scene, {
       bas: function (q) { depart = q; reference = p; },
       bouge: function (q, ev, d, avant) {
@@ -1028,15 +1028,16 @@ function Geste(scene, g, reglage) {
         depart = null;
         if (toucher) { ge.jouer(); return; }
         if (!lentGeste && !lever && dy > 160) { ge.avalerClic(); avancer(1); return; }
-        if (suivre && !lentGeste && !lever && p < 1) {
+        if (suivre && !lentGeste && !lever && p < 1 && dy > 0) {
           // le pli (3.4) tient une seconde, puis revient
-          var x0 = G.Suivi ? reference : 0;
-          ge.progres(x0);
+          var x0 = borne(dy / 420);
+          ge.apres(function () {
+            anime(500, function (t) { if (!depart && !finiGeste) ge.progres(G.entre(x0, reference, lisse(t))); });
+          }, 1000);
         }
       }
     });
     ge.boucle(function (t) { placerIndice(t); if (finiGeste) return false; });
-    void attenduDepuis;
     return ge.fait;
   };
 
@@ -2230,9 +2231,9 @@ function Geste(scene, g, reglage) {
     function haut(ev) {
       if (!vivant()) { fin(); return; }
       if (!depart) return;
-      var q = coordScene(scene, ev), dy = depart.y - q.y;
+      var q = coordScene(scene, ev), dy = depart.y - q.y, dx = Math.abs(q.x - depart.x);
       depart = null;
-      if (dy > 120 && Math.abs(q.x - (q.x)) < 1 && !bloque() && !recit.enAttente && scene.classList.contains('active')) {
+      if (dy > 120 && dx < dy && !bloque() && !recit.enAttente && scene.classList.contains('active')) {
         Gestes.avalerClic(scene);
         recit.avancer();
       }
@@ -2480,7 +2481,7 @@ function Geste(scene, g, reglage) {
     var tasse = g.tasse || [600, 930], bec = g.bec || [650, 800], max = g.filet || 700;
     var haut = 0, rempli = 0, versant = false, auto = false, auFinal = null, finiV = false, dernierSon = 0;
     var ge = Geste(scene, g, {
-      cible: [bec[0], bec[1], 120], sansHalo: true, yConsigne: 1170, clavier: undefined,
+      cible: [bec[0], bec[1], 120], sansHalo: true, yConsigne: 1170, clavier: false,
       jouer: function () { auto = true; return new Promise(function (ok) { auFinal = ok; }); }
     });
     var calqueV = G.coucheSous(scene, 'verser-calque', true), defs = svgEl('defs', {}, calqueV);
@@ -2694,7 +2695,7 @@ function Geste(scene, g, reglage) {
       var mq = svgEl('mask', { id: id + 'm', maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: W, height: H }, defs);
       var tache = svgEl('circle', { cx: f1(q.x), cy: f1(q.y), r: 0, fill: '#fff', filter: 'url(#' + idf + ')' }, mq);
       gP.setAttribute('mask', 'url(#' + id + 'm)');
-      var rMax = Math.hypot(L, Hh) + 60, ouverte = OUVERTES[Math.min(i, OUVERTES.length - 1)] * (g.accelere === false ? 1.2 / 1.2 : 1);
+      var rMax = Math.hypot(L, Hh) + 60, ouverte = g.accelere === false ? 1000 : OUVERTES[Math.min(i, OUVERTES.length - 1)];
       ge.progres(k / n);
       etincelleCarnet(cx, cy);
       var suite;
@@ -2733,8 +2734,7 @@ function Geste(scene, g, reglage) {
         if (finies >= n) { finiP = true; toutFini(); if (!auto && !ge.enJeu()) ge.terminer(); }
       });
     }
-    G.doigts(ge, scene, { haut: function (q, ev) { if (!auto0()) ouvrir(q); void ev; } });
-    function auto0() { return ge.enJeu(); }
+    G.doigts(ge, scene, { haut: function (q) { if (!ge.enJeu()) ouvrir(q); } });
     return ge.fait;
   };
 

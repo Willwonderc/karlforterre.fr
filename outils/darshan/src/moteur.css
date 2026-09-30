@@ -480,6 +480,95 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 .jeu .regard { display: block; }
 .regard.vu { opacity: 1; }
 
+/* ------------------------------------------------------------ mécaniques (équipe des mécaniques : src/js/mecaniques.js)
+   Les calques des gestes (sous le texte : « couche-geste » ; les aides par-dessus : « geste-calque »),
+   la couleur des aides selon le monde de la page (or chez Darshan, blanc et graphite chez Julie,
+   rien après 7.14), les paupières, l'écran de la galerie, les listes de 6.2, les étals de 5.2,
+   l'écriture à la plume de 7.7. */
+.scene { --aide: #ffe7a8; --aide-fond: rgba(7, 9, 26, 0.78); --aide-texte: var(--or-pale); }
+.scene.monde-julie { --aide: #ffffff; --aide-fond: rgba(36, 38, 44, 0.86); --aide-texte: #ffffff; }
+.geste-calque .aide { stroke: var(--aide); }
+.geste-calque .aide-plein { fill: var(--aide); }
+.geste-calque { transition: opacity 450ms; }
+.geste-calque.efface { opacity: 0; }
+.halo-interet.hesite.actif { animation-duration: 3.6s; }
+.scene.sans-magie .geste-calque .aide, .scene.sans-magie .geste-calque .aide-plein,
+.sans-magie-page .geste-calque .aide, .sans-magie-page .geste-calque .aide-plein { display: none; }
+.scene.geste-attendu { touch-action: none; -webkit-user-select: none; user-select: none; }
+.monde-julie .consigne { font-family: "Amiri", serif; font-style: normal; color: #ffffff; left: 50%; right: auto; transform: translateX(-50%);
+  width: max-content; max-width: 84cqw; padding: 0.8cqw 3cqw; border-radius: 4cqw; background: rgba(36, 38, 44, 0.78); text-shadow: none; }
+.monde-julie .consigne:empty { display: none; }
+.monde-julie .faire-geste { border-color: #ffffff; background: rgba(36, 38, 44, 0.86); color: #ffffff; }
+.monde-julie .faire-geste:focus-visible { outline-color: #ffffff; }
+
+/* les calques des gestes : sous le texte, ou par-dessus (attente, échos, hublot) */
+.couche-geste { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.couche-geste.attente-calque, .couche-geste.echo-calque { z-index: 4; overflow: visible; }
+.couche-geste.hublot-calque { z-index: 3; }
+
+/* les paupières (7.1, 7.10, 7.11) : deux voiles au bord flou ; derrière elles, le monde se trouble */
+.paupieres { visibility: hidden; }
+.paupiere { position: absolute; left: -2%; right: -2%; height: 62%; transform: translateY(-100%); }
+.paupiere.haut { top: 0; }
+.paupiere.bas { bottom: 0; transform: translateY(100%); }
+.paupieres-trouble { position: absolute; inset: 0; opacity: 0; background: rgba(20, 8, 4, 0.18);
+  -webkit-backdrop-filter: blur(0.6cqw); backdrop-filter: blur(0.6cqw); }
+.calme .paupieres-trouble { opacity: 1; }
+/* respirer (3.10) : le fleuve s'assombrit d'un cran à chaque souffle */
+.assombrir { position: absolute; inset: 0; background: #02030a; opacity: 0; transition: opacity 1.4s ease; }
+
+/* l'écran du téléphone de Julie en pleine page (5.6, 5.7) : des vignettes, aucun texte */
+.galerie-ecran { visibility: hidden; background: #000; }
+.galerie-grille { position: absolute; left: 2cqw; right: 2cqw; top: 13cqw; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7cqw; }
+.galerie-grille .vignette { aspect-ratio: 1 / 1; overflow: hidden; background: #16171b; }
+.galerie-grille .vignette img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.galerie-grille .vignette img.attente { filter: blur(0.5cqw) brightness(0.85); transform: scale(1.12); }
+
+/* les listes de 6.2 : Darshan à gauche (au pinceau d'or), Julie à droite (au stylo) ; empilées en grand texte */
+.liste-geste { opacity: 0; overflow: visible; }
+.liste-articles { position: absolute; top: 16cqw; width: 41cqw; margin: 0; padding: 2.6cqw 3cqw; list-style: none; border-radius: 1.4cqw;
+  font-size: 3.5cqw; line-height: 1.3; }
+.liste-geste.darshan .liste-articles { left: 5cqw; color: var(--or-pale); background: rgba(7, 9, 26, 0.72); text-shadow: var(--ombre-texte); }
+.liste-geste.julie .liste-articles { right: 5cqw; font-family: "Amiri", serif; color: #1b1b1b; background: rgba(247, 245, 240, 0.92); }
+.grand .liste-articles { width: auto; left: 7cqw; right: 7cqw; font-size: 4.1cqw; }
+.grand .liste-geste.darshan .liste-articles { top: 12cqw; }
+.grand .liste-geste.julie .liste-articles { top: 58cqw; }
+.liste-article { display: flex; align-items: center; gap: 1.8cqw; margin: 0 0 1.3cqw; }
+.liste-article:last-child { margin-bottom: 0; }
+.liste-article .case { position: relative; flex: none; width: 3.2cqw; height: 3.2cqw; border: 0.22cqw solid currentColor; border-radius: 0.4cqw; opacity: 0.8; }
+.liste-article .case .coche { position: absolute; left: -0.6cqw; top: -1.3cqw; width: 4.6cqw; height: 4.6cqw; overflow: visible; }
+.liste-article.coche .mot { opacity: 0.85; }
+.liste-article .echo { transition: color 900ms, text-shadow 900ms; }
+.liste-geste.darshan .echo.rallume { color: #fff4d6; text-shadow: 0 0 1.4cqw rgba(255, 210, 120, 0.9); }
+.liste-geste.julie .echo.rallume { color: #7a4a10; text-shadow: 0 0 1cqw rgba(244, 197, 106, 0.9); }
+.calme .liste-article .echo { transition: none; }
+
+/* les étals de 5.2 : les marchandises (calques du décor), et un bouton par étal pour le clavier */
+.marchandises { pointer-events: none; }
+.marchandises .marchandise { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.etal-bouton { position: absolute; z-index: 4; margin: 0; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
+.etal-bouton:focus-visible { outline: 0.4cqw dashed var(--aide); outline-offset: -0.4cqw; }
+.etal-source { position: absolute; pointer-events: none; }
+.barre .ploie { animation: ploie 650ms cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes ploie { 35% { transform: translateY(0.9cqw) scaleY(0.9); } 70% { transform: translateY(-0.2cqw) scaleY(1.02); } }
+.calme .barre .ploie { animation: none; }
+
+/* 7.7 : la plume révèle le texte du livre lettre à lettre ; la lettre écrite reste entière */
+.jeu .texte .temps.en-ecriture { opacity: 1; filter: none; transition: none; }
+.lettre-plume { opacity: 0; transition: opacity 160ms; }
+.lettre-plume.ecrite { opacity: 1; }
+.calme .lettre-plume { transition: opacity 300ms; }
+.jeu .texte.lettre .lettre-ligne .temps.passe { opacity: 1; }
+.texte.encre-foncee, .texte.lettre.encre-foncee .lettre-ligne { color: #1a1008; transition: color 1.5s; }
+
+/* 6.11 : la moitié de Julie bat doucement ; la réglette de 4.2, le téléphone de 4.3 et 4.7 */
+.pouls-attente { position: absolute; left: 50%; top: 0; width: 50%; height: 100%; opacity: 0;
+  background: radial-gradient(ellipse 70% 45% at 50% 55%, rgba(255, 236, 214, 0.9), rgba(255, 236, 214, 0) 70%); }
+.reglette-entree { pointer-events: none; }
+.texte-telephone { font-family: "Amiri", serif; }
+.chiffre-reglette, .chiffre-grand { font-family: "Amiri", serif; }
+.chiffre-grand { paint-order: stroke; stroke: rgba(0, 0, 0, 0.45); stroke-width: 6; }
+
 /* ------------------------------------------------------------ report de la synthèse : places du texte, plans sans script
    (direction) Le panneau suit la lumière de l'image (arbitrage 4) : clair en haut sur une image claire,
    bleu de nuit sur un ciel, à l'encre sur le papier des dernières pages. */

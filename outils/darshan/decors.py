@@ -96,24 +96,23 @@ NODE_MODULES = "/opt/node22/lib/node_modules"
 # Les recadrages que la synthèse des équipes a fixés (docs/darshan-mise-en-scene/synthese.md,
 # partie 4) sont dans livre.py ; ne restent ici que ceux qu'elle laissait « à essayer ».
 CORRECTIONS = {
-    # 2.8 : l'arche de rocaille entière, centrée, et l'allée qui passe dessous (la synthèse : « à x 0,45
-    # à essayer, si l'arche y gagne sans perdre l'allée ») ; à reporter dans livre.py
-    "rocaille": {"x": 0.45},
-    # 3.10 : la lumière orange au point où naît la lanterne, (600, 300) ; à x 0,24 et y 0,91 elle tombait
-    # en (612, 303) ; à reporter dans livre.py
-    "noir-lueur": {"x": 0.243, "y": 0.912},
+    # (vide : les recadrages de rocaille, 2.8, et de noir-lueur, 3.10, sont reportés dans livre.py)
 }
 
 # ---------------------------------------------------------------- réglages du filtre, décor par décor
 # Les réglages d'images.encre (part_traits, teinte, couleur, saturation, tons), plus :
 # « clair » : éclaircit la photo avant le filtre, pour les photos sombres qui deviendraient une encre
 # boueuse ; « brique » : ramène les rouges et les roses vers la brique (de 0 à 1), pour que le
-# vermillon reste à l'amour ; « chaud » : réchauffe la lumière de la photo (de 0 à 1).
+# vermillon reste à l'amour ; « chaud » : réchauffe la lumière de la photo (de 0 à 1) ; « lisse » :
+# un flou avant le filtre (en pixels), pour que les traits restent aux contours marqués et ne
+# piquettent pas le grain des feuillages.
 RETOUCHES_ENCRE = {
     "portes-1": {"brique": 0.8},                   # le toit rose cuivré ramené vers la brique (chapitre 3)
     "portes-3": {"clair": 1.45},                   # trop sombre : on voit la cour par la volute de la grille
     "portes-5": {"brique": 0.9},                   # le rouge vif de la porte ramené vers la brique (chapitre 3)
     "marche-aluva": {"chaud": 0.45, "clair": 1.18},  # le « Jardin tropical » chaud et clair : le soleil d'orient
+    "palmes": {"lisse": 4.5, "part_traits": 0.045},  # les feuillages sans piqûres : les troncs et les palmes
+    "voies": {"lisse": 4.5, "part_traits": 0.045},   # le sous-bois sans piqûres : les troncs et le chemin
 }
 
 # ---------------------------------------------------------------- réglages des dessins
@@ -433,14 +432,17 @@ def masque_silhouette(points, bas=None, retrait=10, bord=34, taille=(W, H)):
 
 
 def preparer_encre(photo, r):
-    """Les retouches avant le filtre : brique, chaud, clair (sorties de r)."""
+    """Les retouches avant le filtre : brique, chaud, clair, lisse (sorties de r)."""
     brique, chaud, clair = r.pop("brique", None), r.pop("chaud", None), r.pop("clair", None)
+    lisse = r.pop("lisse", None)
     if brique:
         photo = vers_brique(photo, brique)
     if chaud:
         photo = rechauffer(photo, chaud)
     if clair:
         photo = ImageEnhance.Brightness(photo).enhance(clair)
+    if lisse:
+        photo = photo.filter(ImageFilter.GaussianBlur(lisse))
     return photo
 
 
@@ -976,7 +978,7 @@ def planche():
                 vignettes.append((chemin, f"{sortie}  {chemin.stat().st_size // 1024} Ko"))
     extras = [SORTIE / "lune-bande.webp"]
     extras += [SORTIE / f"{n}-{s}.webp" for n in GALERIE for s in ("vignette", "cliche")]
-    extras += [IMG / "esquisse-theatre.png", FIN]
+    extras += [FIN]                    # (l'esquisse du théâtre est un SVG : le moteur la trace)
     for chemin in extras:
         if chemin.exists():
             poids = f"  {chemin.stat().st_size // 1024} Ko" if chemin.parent == SORTIE else ""
