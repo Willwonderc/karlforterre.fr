@@ -101,15 +101,20 @@ section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBChec
    Dans l'édition web, la couche des battements survit au passage de 5.9 à 5.10 : arrêter les
    couches au changement de page (`depart.js` ou `Son`).
 4 bis. **La voix et la musique** : le 30 septembre au soir, Karl a jugé « vraiment décevant »
-   l'essai d'un livre audio par ElevenLabs (Eleven v4). Décision : pas de voix de synthèse ni de
-   musique générée. On privilégie la musique humaine (enregistrements de musiciens, du domaine
-   public ou sous CC0, avec leur source et leur licence notées), les photos de Karl, et surtout la
-   dimension narrative et expressive : les effets et les scènes écrites à la main (points 2 et 3)
-   passent avant tout le reste. La ballade de 5.7, aujourd'hui composée par programme dans
-   `son.js`, est à remplacer par une vraie chanson italienne jouée par des musiciens, à choisir
-   avec Karl ; les ambiances fabriquées par `son.js` restent à discuter (des prises de son
-   réelles sous CC0, jouées en fichiers, régleraient aussi le risque d'Apple Books pour Web
-   Audio). La dédicace ne peut venir que de la voix de Karl, s'il l'enregistre.
+   l'essai d'un livre audio par ElevenLabs (Eleven v4). Décision, précisée le soir même :
+   aucune voix de synthèse, et aucune voix qui sonne métallique ; le son fabriqué par
+   programme (`son.js`) peut rester s'il est probant ; la musique humaine (enregistrements de
+   musiciens, du domaine public ou sous CC0, avec leur source et leur licence notées) est à
+   privilégier ; les photos de Karl d'abord ; et surtout la dimension narrative et expressive :
+   les effets et les scènes écrites à la main (points 2 et 3) passent avant tout le reste.
+   `son.js` ne fabrique aucune voix, mais deux textures imitent le rythme d'une conversation par
+   des « phrases de bruit » : la rumeur du restaurant (2.1 à 2.7) et la télévision derrière la
+   porte (7.2). À écouter en premier : si elles sonnent métalliques, les adoucir, ou les
+   remplacer par de vraies prises de son sous CC0 (jouées en fichiers, ce qui réglerait aussi
+   le risque d'Apple Books pour Web Audio). La ballade de 5.7 (instrumentale, composée par
+   programme) reste si elle convainc Karl ; sinon, une vraie chanson italienne jouée par des
+   musiciens, à choisir avec lui. La dédicace ne peut venir que de la voix de Karl, s'il
+   l'enregistre.
 5. **Petites retouches** : faites le 30 septembre, le compte à rebours (passé en haut à gauche,
    à l'écart des boutons de la barre) et la lettre de 7.7 (le texte rentré dans la feuille ; la
    première lettre des lignes se perdait sur son bord déchiré). Restent, dans `livre.py`, à
