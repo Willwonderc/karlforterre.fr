@@ -21,10 +21,8 @@ caractère, à texte.texte_du_livre(). Sinon le programme échoue et n'écrit pa
 - FAIT : tout le livre, métadonnées d'accessibilité, sommaire et repères, vérification du
   texte à chaque fabrication. Polices refaites par polices.py, avec le « ā » de « mudrā »,
   en TTF.
-- COUVERTURE provisoire (decors.py couverture) : le ciel étoilé de Karl et le titre. Karl
-  peut préférer celle de 2023 (photo d'Arianna Jadé, sans les logos de la SEP et de
-  Cheminement) s'il en retrouve le fichier en grand : 1600 x 2400 au moins, l'EPUB de 2023
-  ne l'ayant qu'en 650 x 1063.
+- COUVERTURE : celle du livre de 2023 (photographie d'Arianna Jadé), sans les logos de la
+  SEP et de Cheminement, que Karl a fournie en grand le 30 septembre (1409 x 2000).
 - CONTRÔLÉ le 30 septembre, sur le livre complet : EPUBCheck 5.4.0, aucune erreur ni
   avertissement ; Ace by DAISY 1.4.6, aucune violation ; pages photographiées dans Chromium
   (titre, dédicace, chapitres, colophon) ; texte de la couverture relu.
@@ -59,10 +57,11 @@ EDITION = "2026"                 # parution de cette édition (AAAA, ou AAAA-MM-
 ADRESSE_IDENTIFIANT = "https://karlforterre.fr/darshan/classique"   # identifiant urn:uuid stable
 CONFORMITE_A11Y = False          # True seulement quand EPUBCheck et Ace passent sans erreur
 
-# Texte alternatif de la couverture : à revoir quand la couverture définitive existe (tout
-# texte écrit sur l'image doit y figurer).
-ALT_COUVERTURE = ("Couverture de Darshan : le titre sur un ciel étoilé photographié par "
-                  "Karl Forterre.")
+# Texte alternatif de la couverture (tout texte écrit sur l'image doit y figurer : ici, le
+# seul titre).
+ALT_COUVERTURE = ("Couverture de Darshan : le titre au-dessus d’une porte sculptée coiffée d’une "
+                  "lanterne, dans un bois d’automne ; devant elle, un jeune homme aux longs "
+                  "cheveux, en gilet jaune, tient une paire de lunettes.")
 
 # Présentation du livre, texte de Karl repris de sa fiche sur karlforterre.fr (index.html).
 DESCRIPTION = ("Darshan tente de renouer avec un monde avec lequel il peine à s'accorder. Il "
@@ -105,6 +104,7 @@ POEME_OUVERTURE = range(11, 17)
 POEME_CLOTURE = range(216, 222)
 LETTRE = range(189, 194)           # la lettre de Darshan, après « Darshan écrit : »
 REMERCIEMENTS_2023 = 223           # colophon de 2023 : remerciements pour les polices
+CREDIT_2023 = 227                  # colophon de 2023 : « Photographie : Arianna Jadé »
 IMPRIME = "Ce livre a été imprimé en France. "   # phrase de 2023 qui n'est plus vraie
 
 
@@ -294,12 +294,15 @@ def page_colophon(isbn):
     if texte.styles[REMERCIEMENTS_2023] != "Mentions-l-gales" or not mentions.startswith(IMPRIME):
         arreter("le colophon de 2023 (remerciements pour les polices) n'est plus où il était")
     remerciements = mentions[len(IMPRIME):]
+    credit = texte.lignes[CREDIT_2023]
+    if not credit.startswith("Photographie : "):
+        arreter("le crédit de la couverture de 2023 (« Photographie : … ») n'est plus où il était")
     lignes = ["© Karl Forterre",
               f"Première publication : {PREMIERE_PUBLICATION}",
               f"Présente édition : {EDITION[:4]}"]
     if isbn:
         lignes.append(f"ISBN {ISBN.strip()}")
-    lignes.append("Photographie de couverture : Karl Forterre")
+    lignes.append("Photographie de couverture : " + credit[len("Photographie : "):])
     corps = ['<section class="colophon" epub:type="colophon" role="doc-colophon">']
     corps += [f"<p>{e(t)}</p>" for t in lignes]
     corps.append(f'<p class="polices">{e(remerciements)}</p>')

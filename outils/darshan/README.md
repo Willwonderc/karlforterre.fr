@@ -28,8 +28,8 @@ des fondations, à la demande de Karl. Ce qui est en place :
 | `build.py` | Réécrit pour les 85 pages : 377 temps, 67 gestes, effets, sacs et portes calculés page après page, vérifications. Il attend le nouveau moteur. |
 | `src/js/` | Le nouveau moteur, en fragments : `base.js` et `son.js` sont écrits. |
 | `src/js/son.js` | Interface complète (ambiance, effet, couche, filtre, volumes, deux bus) avec les sons du prototype, repris tels quels ; les sons pas encore faits sont des appels sans effet. Restent 14 ambiances (vent, restaurant, rue, parc, bibliotheque, vision, metro, hopital, chambre, marche, patisserie, appartement, desert, pluie), 6 couches (battements, pluie, feu, tele, melodie, vibration), 39 effets (pas, toc, page, battement, clochette, vibreur, message, bip, the, confettis, tonnerre, eclair, goutte, etincelles, plume, ruban, porte, brise, chute, desenchantement, lanterne, eteindre, eclabousse, mousse, inspire, expire, graine, cran, avance, nuage, aube, lueur, boussole, velours, paume, perce, pli, entree, fonte-courte), l'équilibrage (« tour » écrête à +2,6 dBFS depuis le prototype ; « nuit », « papier », « grince » trop bas) et l'arrêt commun des minuteries d'une ambiance. |
-| `decors.py` | Fait. Fabrique les décors en 1600 × 2400 (WebP) : `python3 outils/darshan/decors.py [noms]`, ou `couverture`. 63 décors sur 72 sont dans `src/img/decors/` (20 Mo) : toutes les photos et toutes les encres. |
-| `classique.py` | Fait, à relire par Karl. L'EPUB classique (refusionnable), aux mentions de Karl, texte vérifié au caractère près. Couverture provisoire (le ciel étoilé de Karl, `decors.py couverture`) ; EPUBCheck et Ace passent sans rien relever (30 septembre). Son en-tête dit où il en est et ce que Karl doit trancher (colophon, libellés, langue de दर्शन, date d'édition). Décidé par Karl le 29 septembre : « nouvelle » sur la page de titre ; ISBN à demander à l'AFNIL (constante `ISBN`, vide en attendant). |
+| `decors.py` | Fait. Fabrique les décors en 1600 × 2400 (WebP) : `python3 outils/darshan/decors.py [noms]`. 63 décors sur 72 sont dans `src/img/decors/` (20 Mo) : toutes les photos et toutes les encres. |
+| `classique.py` | Fait, à relire par Karl. L'EPUB classique (refusionnable), aux mentions de Karl, texte vérifié au caractère près. Couverture : celle de 2023 (photographie d'Arianna Jadé), fournie en grand par Karl le 30 septembre ; EPUBCheck et Ace passent sans rien relever. Son en-tête dit où il en est et ce que Karl doit trancher (colophon, libellés, langue de दर्शन, date d'édition). Décidé par Karl le 29 septembre : « nouvelle » sur la page de titre ; ISBN à demander à l'AFNIL (constante `ISBN`, vide en attendant). |
 
 Polices : refaites le 30 septembre par `polices.py`, avec le « ā » de « mudrā » (il
 manquait déjà dans l'EPUB de 2023), en WOFF2 pour l'édition jouable et en TTF pour
@@ -41,7 +41,7 @@ Pour les décors, il reste :
 - **les 9 dessins** de `art.py` (local-nuit, mur-terre, cosmos, pekin, desert-nuit,
   desert-jour, papier-lettre, toiles, fenetre) ; `decors.py` les attend sous les noms de
   fonctions de `livre.py`, et passe à `fenetre` l'adresse de la photo par `image=` ;
-- **la couverture** : faite le 30 septembre (provisoire, en attendant le choix de Karl) ;
+- **la couverture** : celle de 2023, fournie en grand par Karl le 30 septembre (`src/img/couverture.jpg`, 1409 × 2000, gardée telle quelle) ;
 - **des recadrages à corriger dans `livre.py`**, puis refaire ces décors. Rappel : x et y
   placent le cadre dans la photo (0 : bord gauche ou haut, 0,5 : centre, 1 : bord droit
   ou bas). Corrections proposées :

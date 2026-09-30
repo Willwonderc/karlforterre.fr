@@ -1,9 +1,8 @@
 """Fabrique les décors du livre jouable Darshan : une image par décor, 1600 x 2400, en WebP.
 
 Usage, depuis la racine du dépôt, dans une session Claude :
-    python3 outils/darshan/decors.py                  tous les décors, la couverture et la planche
+    python3 outils/darshan/decors.py                  tous les décors et la planche
     python3 outils/darshan/decors.py periyar toiles   seulement ces décors, puis la planche
-    python3 outils/darshan/decors.py couverture       seulement la couverture
     python3 outils/darshan/decors.py planche          seulement la planche contact
 
 Demande Pillow, et Playwright avec Chromium (le programme règle lui-même NODE_PATH), présents
@@ -35,8 +34,8 @@ quel et garde la grande version à côté, dans src/img/pexels-<numéro>-h3600.j
 Sorties :
 - src/img/decors/<nom>.webp : 1600 x 2400 (les coordonnées de la scène, en 1200 x 1800, y sont
   à l'échelle 4/3), sRGB, qualité 86, ramenée à 84 puis 82 au-delà de 450 Ko ;
-- src/img/couverture.jpg : 1600 x 2400, JPEG qualité 90, pour les deux EPUB (jouable et
-  classique) : le ciel étoilé de Karl (27116682), assombri, et le titre dans les polices du livre ;
+- la couverture n'est pas fabriquée ici : src/img/couverture.jpg est celle du livre de 2023,
+  fournie par Karl en grand le 30 septembre 2026 (1409 x 2000), gardée telle quelle ;
 - planche-decors.jpg (non suivie par Git) : toutes les images en vignettes, avec leur nom, pour
   relire d'un coup d'œil.
 """
@@ -59,7 +58,6 @@ import livre  # noqa: E402  (les décors : DECORS)
 
 IMG = ICI / "src" / "img"
 SORTIE = IMG / "decors"
-FONTS = ICI / "src" / "fonts"
 PLANCHE = ICI / "planche-decors.jpg"
 W, H = 1600, 2400                       # taille des décors
 K = W / 1200                            # une unité de la scène (1200 x 1800) = 4/3 de pixel
@@ -325,65 +323,6 @@ def fabriquer(noms):
             enregistrer(im, SORTIE / f"{nom}.webp")
 
 
-# ---------------------------------------------------------------- la couverture
-COUVERTURE = """<!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><style>
-@font-face {{ font-family: "Amiri"; font-style: normal; src: url("{fonts}/Amiri-Regular.woff2") format("woff2"); }}
-@font-face {{ font-family: "Amiri"; font-style: italic; src: url("{fonts}/Amiri-Italic.woff2") format("woff2"); }}
-@font-face {{ font-family: "Unna"; src: url("{fonts}/Unna-Regular.woff2") format("woff2"); }}
-@font-face {{ font-family: "Tiro Darshan"; src: url("{fonts}/Tiro-Darshan.woff2") format("woff2"); }}
-html, body {{ margin: 0; width: 1200px; height: 1800px; overflow: hidden; background: #03040c; }}
-body {{ background: url("{ciel}") center / cover no-repeat; position: relative; text-align: center; }}
-p {{ margin: 0; position: absolute; left: 0; right: 0; }}
-.auteur {{ top: 262px; font-family: "Amiri", serif; font-variant: small-caps; font-size: 64px;
-  letter-spacing: 0.26em; padding-left: 0.26em; color: #e3dccd; text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8); }}
-.titre {{ top: 600px; font-family: "Unna", serif; font-size: 300px; line-height: 1; letter-spacing: 0.01em;
-  color: #ffe7b0; text-shadow: 0 0 60px rgba(255, 200, 110, 0.38), 0 0 16px rgba(255, 214, 140, 0.25), 0 4px 18px rgba(0, 0, 0, 0.85); }}
-.devanagari {{ top: 952px; font-family: "Tiro Darshan", serif; font-size: 100px; letter-spacing: 0;
-  color: #d8c9ab; text-shadow: 0 0 24px rgba(255, 200, 120, 0.25), 0 3px 12px rgba(0, 0, 0, 0.85); }}
-.genre {{ top: 1540px; font-family: "Amiri", serif; font-style: italic; font-size: 60px; letter-spacing: 0.04em;
-  color: #d6ccb8; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9); }}
-</style></head><body>
-<p class="auteur">Karl Forterre</p>
-<p class="titre">Darshan</p>
-<p class="devanagari" lang="hi">दर्शन</p>
-<p class="genre">nouvelle</p>
-</body></html>
-"""
-
-
-def ciel_couverture():
-    """Le ciel étoilé de Karl, cadré comme ciel-poeme.jpg, assombri : voile bleu nuit, plus sombre
-    derrière le titre et sur les bords, pour que la typographie se lise même en vignette."""
-    src = ouvrir(27116682)
-    w = round(src.width * H / src.height)
-    ciel = src.resize((w, H), Image.LANCZOS)
-    x0 = int(w * 0.36)
-    ciel = ciel.crop((x0, 0, x0 + W, H))
-    ciel = ImageChops.screen(ciel, Image.new("RGB", (W, H), (4, 10, 40)))
-    voile = Image.new("L", (W, H), 0)
-    dessin = ImageDraw.Draw(voile)
-    dessin.ellipse((-300, 520 * K, W + 300, 1420 * K), fill=150)
-    dessin.rectangle((0, 0, W, 460 * K), fill=70)
-    voile = voile.filter(ImageFilter.GaussianBlur(160))
-    bords = Image.radial_gradient("L").resize((W, H)).point(lambda v: min(255, int(max(0, v - 120) * 1.6)))
-    voile = ImageChops.lighter(voile, bords)
-    sombre = ImageEnhance.Brightness(ciel).enhance(0.45)
-    return Image.composite(sombre, ImageEnhance.Brightness(ciel).enhance(0.85), voile)
-
-
-def couverture():
-    with tempfile.TemporaryDirectory() as tmp:
-        tmp = pathlib.Path(tmp)
-        fond = tmp / "ciel.png"
-        ciel_couverture().save(fond)
-        (tmp / "couverture.html").write_text(COUVERTURE.format(fonts=FONTS.as_uri(), ciel=fond.as_uri()), encoding="utf-8")
-        chromium(tmp, ["couverture"])
-        im = Image.open(tmp / "couverture.png").convert("RGB")
-    im.save(IMG / "couverture.jpg", quality=90, subsampling=0, optimize=True, progressive=True)
-    print("couverture.jpg", (IMG / "couverture.jpg").stat().st_size // 1024, "Ko")
-
-
 # ---------------------------------------------------------------- la planche contact
 def police(taille):
     for f in ("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "/usr/share/fonts/dejavu/DejaVuSans.ttf"):
@@ -429,13 +368,11 @@ A_FAIRE = ("photo", "encre", "dessin")
 if __name__ == "__main__":
     demandes = sys.argv[1:]
     decors = [n for n, d in livre.DECORS.items() if d["type"] in A_FAIRE]
-    inconnus = [n for n in demandes if n not in decors and n not in ("couverture", "planche")]
+    inconnus = [n for n in demandes if n not in decors and n != "planche"]
     if inconnus:
         sys.exit("décors inconnus (ou sans image à fabriquer) : " + ", ".join(inconnus))
     noms = [n for n in decors if not demandes or n in demandes]
     if noms:
         fabriquer(noms)
-    if not demandes or "couverture" in demandes:
-        couverture()
     if not demandes or noms or "planche" in demandes:
         planche()

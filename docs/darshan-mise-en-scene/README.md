@@ -363,3 +363,10 @@ Décisions prises à la lecture des premiers traitements ; elles valent pour tou
   Gijón » (39670619), la bibliothèque de l'Universidad Laboral, dont on ne voit que les
   rayonnages.
 
+
+**30 septembre 2026**
+- Couverture des deux éditions : celle du livre de 2023 (photographie d'Arianna Jadé : la
+  porte sculptée sous sa lanterne, dans un bois d'automne, et Darshan qui tient ses
+  lunettes), sans les logos de la SEP et de Cheminement, fournie en grand par Karl
+  (`outils/darshan/src/img/couverture.jpg`, 1409 × 2000). C'est la seule image du livre où
+  l'on voit le visage de Darshan, avec les photos du téléphone de Julie (chapitre 5).
