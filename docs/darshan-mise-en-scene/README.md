@@ -19,8 +19,9 @@ l'ordre, sans un mot changé ni ajouté. Les seuls mots nouveaux sont les textes
 | [chapitre-5.md](chapitre-5.md) | « Douceurs et confettis » (5.1 à 5.11). |
 | [chapitre-6.md](chapitre-6.md) | « Des attentes de part et d’autre » (6.1 à 6.15). |
 | [chapitre-7.md](chapitre-7.md) | « Au-delà de la porte » et la clôture (7.1 à 8.1). |
+| [synthese.md](synthese.md) | La synthèse des sept chapitres : un seul livre, et tout ce qu'il faut pour le fabriquer. Karl lira d'abord ses parties 1 (le livre en une page), 9 (les photos à prendre), 10 (ses questions) et 11 (les coquilles). |
 
-### État de la pré-production (pause du 29 septembre 2026)
+### État de la pré-production (30 septembre 2026) : terminée
 
 | Chapitre | Traitement | Relecture critique | Révision |
 |---|---|---|---|
@@ -32,23 +33,15 @@ l'ordre, sans un mot changé ni ajouté. Les seuls mots nouveaux sont les textes
 | 6 | fait | faite : 42 notes, dont 23 à corriger | faite (section 9 du chapitre) |
 | 7 (et la clôture) | fait | faite : 47 notes, dont 17 à corriger | faite (section 9 du chapitre) |
 
-Les relectures sont dans [relectures/](relectures/). À la reprise, dans l'ordre :
-1. relire les chapitres 2, 3, 5, 6 et 7, puis faire réviser chaque chapitre d'après sa
-   relecture et les arbitrages (section 12) ;
-2. faire la synthèse entre les chapitres ; les points déjà connus sont :
-   - la barre de Julie : jusqu'où les boutons de Darshan s'effacent (chapitres 4 à 6) ;
-   - le nom unique de la ballade dans les fiches de production ;
-   - les décors écartés par plusieurs chapitres ;
-   - le second paquet (`paquet-darshan`, chapitre 7) : réglé par l'arbitrage 8 ;
-   - la porte du père d'Irun, commune aux chapitres 3 et 7 : adoptée ;
-   - le moment où l'accord du père s'éteint : en 7.13, sur « Je ne sais pas si je pourrai
-     revenir. », quand Darshan recule d'un demi-pas (la lanterne, elle, ne change pas) ;
-   - les frontières de tableaux déplacées (2.9 et 2.10 ; 7.7 et 7.8 ; 7.15 et 7.16) :
-     confirmées par le livre imprimé, à reporter dans `decoupage.py` ;
-   - le décor `rue-vide` (10473138), dont plus aucun chapitre ne se sert ;
-3. rassembler les questions pour Karl en une seule liste ;
-4. reporter les décisions dans `outils/darshan/` (`livre.py`, `decoupage.py`,
-   `interface.ini`, `objets.ini`), puis reprendre le moteur.
+Les relectures sont dans [relectures/](relectures/). La **synthèse** des sept chapitres,
+[synthese.md](synthese.md), fait un seul livre des sept traitements : cohérence, cahier des
+charges du moteur, décors, son, textes d'interface, objets, découpage, repérages, questions pour
+Karl, coquilles et plan de fabrication. La direction l'a adoptée (arbitrage 9, section 12).
+
+Suite, dans l'ordre de la partie 12 de la synthèse : reporter les décisions dans
+`outils/darshan/` (découpage, fiches, textes d'interface, objets, états de page), fabriquer les
+décors et les sons qui manquent, écrire les mécaniques, les effets et les scènes, puis jouer le
+livre de bout en bout.
 
 Le découpage en 85 tableaux (texte exact de chaque tableau, première idée de geste, de
 décor et de son) est dans [../darshan-decoupage.md](../darshan-decoupage.md) ; l'évaluation
@@ -347,6 +340,33 @@ Décisions prises à la lecture des premiers traitements ; elles valent pour tou
    celui de Julie ; quand Julie le prend (7.11), il n'en reste qu'un dans son sac. Le livre
    ne dit pas si c'est le même paquet ; l'interface non plus.
 
+### Arbitrages sur la synthèse (30 septembre 2026)
+
+9. **La synthèse fait foi pour la fabrication** ([synthese.md](synthese.md)). La direction adopte
+   toutes les solutions de sa partie 2.2 marquées « Direction », et ses propositions des parties 3
+   à 8 et 12. Les points marqués « Karl » vont à sa liste de questions (partie 10). Les principaux :
+   - les noms uniques du cahier des charges (partie 3), avec des alias le temps du report ;
+   - le **voile** des temps forts, calculé comme un état de page (3.10 et 3.11, 7.10 à 7.13) ;
+   - la **couleur des aides** qui suit le monde de la page : or chez Darshan, blanc et graphite
+     chez Julie, plus d'aide après 7.14 ;
+   - la **ballade** jouée entière une seule fois au baiser (7.10), et sa première mesure en 2.9 ;
+   - pas de **do dièse** avant 3.10 : les notes des tuiles (1.2) deviennent la, si, ré, mi, fa
+     dièse ; les jours des portes font entendre l'autre côté (son `autre-cote`), jamais l'accord
+     du père ;
+   - le **compte à rebours** affiché de la page qui le change jusqu'à la fin de son chapitre, sauf
+     2.9 ; 3.14 ne part pas de « dimanche prochain » ;
+   - les états de page **boussole** (nord, perdue, nord, éteinte), **regard** (offert quand les
+     lunettes sont dans le sac, de 3.4 à 7.8), **père** (vue, allumée, éteinte), **barre**,
+     **compte** et **répliques** ;
+   - l'écriture **lettre à lettre** réservée à la voix intérieure de Darshan (1.1, 2.3, 3.11) ;
+   - la serrure de 6.13 en (932, 680) ; `portes-3` seulement éclairci ;
+   - un seul mécanisme pour les **écrans partagés** (6.2, 6.11, 7.4) : deux ambiances à ± 0,6,
+     la moitié inactive 9 dB plus bas ;
+   - deux transitions nouvelles, `bandes-photo` (2.1, 6.1) et `bandes-julie` (4.1, 5.1) ;
+   - le lieu « désert » retiré du carnet ; `portes.ini` créé ;
+   - en 1.9, l'autre côté de la porte est Paris à midi ; l'électrocardiogramme quitte le sac de
+     Julie au début de 7.9.
+
 ## 13. Décisions de Karl
 
 À appliquer par toutes les équipes, et à reporter dans la fabrication.
@@ -369,4 +389,6 @@ Décisions prises à la lecture des premiers traitements ; elles valent pour tou
   porte sculptée sous sa lanterne, dans un bois d'automne, et Darshan qui tient ses
   lunettes), sans les logos de la SEP et de Cheminement, fournie en grand par Karl
   (`outils/darshan/src/img/couverture.jpg`, 1409 × 2000). C'est la seule image du livre où
-  l'on voit le visage de Darshan, avec les photos du téléphone de Julie (chapitre 5).
+  l'on voit le visage de Darshan : la galerie du téléphone de Julie (5.6, 5.7) n'en montre
+  aucun. Elle reste l'illustration de l'édition de 2023 : la porte du père du livre jouable
+  est la porte d'Irun (arbitrage 9 ci-dessus, point 29 de la synthèse).

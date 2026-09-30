@@ -79,22 +79,33 @@ Effets.aube = function (scene) {
   if (a) a.style.opacity = '1';
   if (scene.etoiles) scene.etoiles.eclat(0.35);
 };
-// L'appel de Darshan à son père (« Papa, où es-tu ? ») : la voix intérieure s'éclaire, la quinte
-// à vide sonne, sans réponse (arbitrage 1).
-Effets.voix = function (scene) {
+// La voix intérieure de Darshan, quand il parle à qui ne l'entend pas (1.1, 2.3, 3.11) : elle
+// s'éclaire (synthèse, partie 3.2). L'appel au père n'est pas joué ici mais par l'effet `son`
+// (effet="appel"), en 1.1 seulement.
+Effets.voix = function (scene, e) {
   scene.classList.add('appel-au-pere');
-  if (scene.etoiles) scene.etoiles.eclat(0.95);
-  Son.effet('appel');
+  if (scene.etoiles && e.eclat !== false) scene.etoiles.eclat(0.95);
 };
 
 // ---- le son
-Effets.son = function (scene, e) { Son.effet(e.son || e.id, e); };
+// Un son ponctuel avec la phrase (réglage des fiches : effet="…") ; n : répétitions ;
+// retenir : le temps suivant attend ce délai, compté depuis le départ du son.
+Effets.son = function (scene, e) {
+  var nom = e.effet || e.son || e.id, n = e.n || 1;
+  for (var k = 0; k < n; k++) {
+    if (k === 0) Son.effet(nom, e);
+    else setTimeout(function () { Son.effet(nom, e); }, k * (e.intervalle || 700));
+  }
+  if (e.retenir) return attendreVraiment(calme ? Math.min(e.retenir, 1500) : e.retenir);
+};
 Effets.vibre = function () { Son.effet('vibre'); };
 Effets.jour = function () { Son.effet('jour'); };
 Effets.assourdi = function () { Son.filtre('assourdi'); };
 Effets.silence = function () { Son.ambiance('silence'); };
-Effets.ambiance = function (scene, e) { Son.ambiance(e.id || e.son); };
-Effets.couche = function (scene, e) { Son.couche(e.id, e.oui !== false, e); };
+// Change l'ambiance au milieu d'une page (réglages de son.js : soir, nuit, foule, ete…).
+Effets.ambiance = function (scene, e) { Son.ambiance(e.id || e.ambiance, e); };
+// Une couche allumée ou éteinte à une phrase (réglage des fiches : couche="…", oui=False l'éteint).
+Effets.couche = function (scene, e) { Son.couche(e.couche || e.id, e.oui !== false, e); };
 // les couches par leur nom (oui: false les arrête)
 function couche(nom, e) { Son.couche(nom, e.oui !== false, e); }
 Effets.tele = function (scene, e) { couche('tele', e); };
