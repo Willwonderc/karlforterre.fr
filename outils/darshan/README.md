@@ -31,10 +31,11 @@ des fondations, à la demande de Karl. Ce qui est en place :
 | `decors.py` | Fait. Fabrique les décors en 1600 × 2400 (WebP) : `python3 outils/darshan/decors.py [noms]`, ou `couverture`. 63 décors sur 72 sont dans `src/img/decors/` (20 Mo) : toutes les photos et toutes les encres. |
 | `classique.py` | Fait, à vérifier. L'EPUB classique (refusionnable), aux mentions de Karl, texte vérifié au caractère près. Il attend la couverture `src/img/couverture.jpg` ; ensuite : EPUBCheck, Ace, captures. Son en-tête dit où il en est et ce que Karl doit trancher (colophon, libellés, langue de दर्शन, date d'édition). Décidé par Karl le 29 septembre : « nouvelle » sur la page de titre ; ISBN à demander à l'AFNIL (constante `ISBN`, vide en attendant). |
 
-À corriger pour les deux éditions : les polices allégées de `src/fonts/` n'ont pas le
-« ā » de « mudrā » (U+0101, vérifié le 29 septembre ; il manquait déjà dans l'EPUB de
-2023). Refaire l'allègement d'Amiri (romain et italique) en l'ajoutant ; penser aussi à
-des versions TTF pour les liseuses qui ignorent le WOFF2.
+Polices : refaites le 30 septembre par `polices.py`, avec le « ā » de « mudrā » (il
+manquait déjà dans l'EPUB de 2023), en WOFF2 pour l'édition jouable et en TTF pour
+l'édition classique. Aucune police du livre n'a la flèche « → » des étiquettes du carnet
+des portes : le moteur la dessinera. L'édition classique passe EPUBCheck 5.4.0 sans erreur
+ni avertissement (essai avec une couverture provisoire, le 30 septembre).
 
 Pour les décors, il reste :
 - **les 9 dessins** de `art.py` (local-nuit, mur-terre, cosmos, pekin, desert-nuit,
@@ -182,7 +183,8 @@ réglages (part de traits, couleur, tons) se reprennent décor par décor.
 | `decoupage.py` | Le découpage de tout le livre en 85 tableaux, vérifié contre l'EPUB ; écrit `docs/darshan-decoupage.md`. |
 | `src/moteur.js` | Le moteur : texte révélé temps par temps, gestes, sons fabriqués en direct (Web Audio), étoiles, poussière, fonte des lunettes en clé, transitions (balayages entre scènes, frisson, envol et éclat des objets), interface d'objet (fiche, bouton Objets, annonce), carnet des portes. Sans dépendance, sans appel réseau. |
 | `src/moteur.css` | La mise en page, commune aux deux éditions (en unités `cqw` ; l'EPUB les convertit en pixels). |
-| `src/fonts/` | Amiri et Unna (les polices du livre), Tiro Devanagari Sanskrit (pour दर्शन), allégées, licence SIL OFL. |
+| `src/fonts/` | Amiri et Unna (les polices du livre), Tiro Devanagari Sanskrit (pour दर्शन), allégées par `polices.py` (WOFF2 et TTF), licence SIL OFL. |
 | `src/img/` | Décors prêts à l'emploi, les images tirées des photos de Karl, dont une porte passée à l'encre (`encre-34762346.jpg`). |
 | `art.py`, `rendu.js`, `images.py` | Dessin et préparation des images ; `images.py encre` passe une photo à l'encre. |
+| `polices.py` | Allège les polices du livre (fontTools et brotli nécessaires) ; à relancer seulement si le texte ou l'interface prennent un caractère nouveau. |
 | `essai.js`, `essai-transitions.js`, `captures.js` | Essais automatiques dans Chromium. |

@@ -25,8 +25,7 @@ caractère, à texte.texte_du_livre(). Sinon le programme échoue et n'écrit pa
 - PAS ENCORE FAIT : EPUBCheck 5.4.0, Ace by DAISY et les captures dans Chromium. Tant
   qu'EPUBCheck et Ace n'ont pas passé, CONFORMITE_A11Y reste False : le livre ne déclare
   pas dcterms:conformsTo.
-- POLICES : les versions allégées de src/fonts n'ont pas le « ā » de « mudrā » (4 fois dans
-  le texte) ; la liseuse le prend dans sa propre police tant qu'elles ne sont pas refaites.
+- POLICES : refaites le 30 septembre par polices.py, avec le « ā » de « mudrā », en TTF.
 
 Essai sans la vraie couverture (jamais dans dist/) :
     python3 outils/darshan/classique.py --couverture essai.jpg --sortie /tmp/essai.epub
@@ -86,12 +85,13 @@ LANGUE_DEVANAGARI = "sa"   # la police (Tiro Devanagari Sanskrit) dessine le mot
 # pensées, sont de l'emphase narrative (<em>) ; les mots étrangers ont leur langue (<i lang>).
 MOTS_ETRANGERS = {"mudrā": "sa", "Dhyana mudrā": "sa", "Angelo mio": "it"}
 
-# Polices du livre imprimé, allégées (licence SIL OFL, jointe au livre) : Amiri pour le texte,
-# Unna pour les titres de chapitre, Tiro Devanagari Sanskrit pour दर्शन.
-POLICES = [("Amiri", "normal", "Amiri-Regular.woff2"),
-           ("Amiri", "italic", "Amiri-Italic.woff2"),
-           ("Unna", "normal", "Unna-Regular.woff2"),
-           ("Tiro Darshan", "normal", "Tiro-Darshan.woff2")]
+# Polices du livre imprimé, allégées par polices.py (licence SIL OFL, jointe au livre) : Amiri
+# pour le texte, Unna pour les titres de chapitre, Tiro Devanagari Sanskrit pour दर्शन. En TTF :
+# Kindle, Google et bien des liseuses ignorent le WOFF2 de l'édition jouable.
+POLICES = [("Amiri", "normal", "Amiri-Regular.ttf"),
+           ("Amiri", "italic", "Amiri-Italic.ttf"),
+           ("Unna", "normal", "Unna-Regular.ttf"),
+           ("Tiro Darshan", "normal", "Tiro-Darshan.ttf")]
 LICENCES = ["OFL-Amiri.txt", "OFL-Unna.txt", "OFL-Tiro.txt"]
 TYPES_POLICES = {".woff2": "font/woff2", ".woff": "font/woff", ".ttf": "font/ttf", ".otf": "font/otf"}
 
