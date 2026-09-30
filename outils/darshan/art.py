@@ -1735,7 +1735,7 @@ def toiles(calque=None, graine=91):
            f'<rect width="{W}" height="{H}" fill="#eee6d6" filter="url(#papier)" opacity="0.4"/>']
     for nom, boite in TOILES:
         out.append(toile_de_lin(*boite, rng))
-        out.append(sujet(nom, boite, rng))
+        out.append(f'<g clip-path="url(#toile-{nom})">{sujet(nom, boite, rng)}</g>')
     x0, y0, x1, y1 = TOILE_COUPLE
     out.append(toile_de_lin(x0, y0, x1, y1, rng))
     out.append(f'<g clip-path="url(#toile-couple)">{couple(rng)}</g>')
@@ -1753,7 +1753,9 @@ def toiles(calque=None, graine=91):
     out.append(f'<path d="{trait([(600, 984), (599, 1000 - 72)], 2.6, rng, 0.02, 0.05, 0.05)}" fill="#6a3a1a"/>')
     out.append(f'<circle cx="599" cy="928" r="3.2" fill="#ff7a2a"/>')
     out.append(f'<rect width="{W}" height="{H}" fill="url(#lumiere-toiles)"/>')
-    defs = DEFS_AQUARELLE + FILTRE_ENCRE + f'<clipPath id="toile-couple"><rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}"/></clipPath>' + """
+    defs = DEFS_AQUARELLE + FILTRE_ENCRE + "".join(
+        f'<clipPath id="toile-{nom}"><rect x="{bx0}" y="{by0}" width="{bx1 - bx0}" height="{by1 - by0}"/></clipPath>'
+        for nom, (bx0, by0, bx1, by1) in TOILES + [("couple", TOILE_COUPLE)]) + """
 <linearGradient id="mur-toiles" x1="0" y1="0" x2="1" y2="0.3">
   <stop offset="0" stop-color="#f7f1e4"/><stop offset="1" stop-color="#ddd3c0"/>
 </linearGradient>
@@ -1894,86 +1896,236 @@ def placard(etat="entrouverte", graine=97):
 
 # ---------------------------------------------------------------- 7.6 : le départ de Darshan
 
-def silhouette_de_dos(x, y, s, rng, encre=ENCRE, gilet="#b88a2e", chemise="#e8e0cc", lueur=None, marche=False):
-    """Darshan de dos, une silhouette d'encre sans visage : les boucles brunes, la chemise de lin
-    blanc, le gilet de toile sans manches ; (x, y) : le haut de la tête ; s : l'échelle (1 : 1 000
-    unités de la tête à la taille) ; lueur : la couleur du feu qui l'éclaire d'en bas, à gauche."""
-    def P(dx, dy):
-        return (x + dx * s, y + dy * s)
+def darshan_proche(rng, cx=800, y0=150, k=1.1):
+    """Darshan debout, de dos, tout près : les boucles brunes, la nuque, le col de la chemise de lin
+    blanc, le gilet de toile moutarde, les manches ; coupé par le cadre à droite et en bas. Une
+    silhouette d'encre, sans visage : chaque forme a sa couleur, puis la lumière la multiplie, celle
+    du feu, hors champ en bas à gauche, qui monte sur le gilet, et la nuit bleue ailleurs ; un
+    liseré de feu sur les contours de gauche. (cx, y0) : le haut de la tête ; k : l'échelle."""
+    def P(x, y):
+        return (cx + x * k, y0 + (y - 190) * k)
 
-    def forme(pts, couleur, op=1.0, filtre="aquarelle-douce"):
-        return lavis(poly(catmull_rom([P(*q) for q in pts] + [P(*pts[0])], 6)), couleur, op, filtre)
-
-    out = []
-    # les bras (les manches de la chemise), puis le dos : le gilet par-dessus la chemise
-    for c in (-1, 1):
-        bras = [(c * 150, 250), (c * 205, 330), (c * 222, 560), (c * 214, 800), (c * 176, 1000),
-                (c * 140, 1000), (c * 150, 800), (c * 150, 560), (c * 120, 340)]
-        if marche:
-            bras = [(bx + c * 10 * (by > 600), by) for bx, by in bras]
-        out.append(forme(bras, chemise, 1.0))
-        out.append(f'<path d="{trait([P(c * 205, 330), P(c * 222, 560), P(c * 214, 800), P(c * 176, 1000)], 5 * s + 1.5, rng, 0.05, 0.3, 0.3)}" fill="{encre}" opacity="0.75"/>')
-    dos = [(-150, 250), (-60, 200), (60, 200), (150, 250), (158, 600), (150, 1000), (-150, 1000), (-158, 600)]
-    out.append(forme(dos, chemise, 1.0))
-    gilet_ = [(-148, 262), (-52, 212), (-40, 330), (40, 330), (52, 212), (148, 262), (150, 980), (-150, 980)]
-    out.append(forme(gilet_, gilet, 1.0))
-    out.append(f'<path d="{trait([P(0, 330), P(2, 620), P(0, 960)], 3 * s + 1, rng, 0.1, 0.1, 0.3)}" fill="{encre}" opacity="0.5"/>')
-    for pts in (((-150, 250), (-158, 600), (-150, 1000)), ((150, 250), (158, 600), (150, 1000))):
-        out.append(f'<path d="{trait([P(*q) for q in pts], 6 * s + 1.5, rng, 0.05, 0.1, 0.3)}" fill="{encre}" opacity="0.85"/>')
-    # le cou, le col, la tête : des boucles brunes, jamais de visage
-    out.append(forme([(-34, 120), (34, 120), (40, 214), (-40, 214)], "#8a5a3a", 1.0))
-    out.append(forme([(-62, 200), (0, 232), (62, 200), (40, 250), (-40, 250)], chemise, 1.0))
-    out.append(forme([(-86, 60), (-80, -30), (-40, -86), (30, -90), (78, -40), (90, 40), (70, 120), (0, 150), (-66, 124)], "#2a1a12", 1.0))
-    for _ in range(int(40 + 30 * s)):
+    def forme(pts, n=6):
+        return poly(catmull_rom([P(*q) for q in pts] + [P(*pts[0])], n))
+    tete = [(-115, 330), (-108, 262), (-70, 212), (0, 192), (72, 210), (112, 258), (120, 330), (112, 398), (88, 446),
+            (42, 468), (0, 472), (-44, 468), (-88, 446), (-110, 398)]
+    cou = [(-80, 420), (72, 420), (82, 470), (92, 560), (-92, 560), (-82, 470)]
+    col = [(-88, 505), (-30, 522), (30, 524), (86, 505), (96, 542), (30, 560), (-30, 560), (-96, 542)]
+    chemise = [(-90, 520), (-170, 545), (-250, 570), (-300, 588), (-334, 618), (-352, 680), (-360, 780), (-358, 900),
+               (-352, 1050), (-354, 1250), (-362, 1500), (-368, 1900), (368, 1900), (362, 1500), (354, 1250), (352, 1050),
+               (358, 900), (360, 780), (352, 680), (334, 618), (300, 588), (250, 570), (170, 545), (90, 520)]
+    gilet = [(-86, 550), (0, 560), (86, 550), (150, 558), (212, 576), (226, 650), (230, 760), (262, 812), (268, 1900),
+             (-268, 1900), (-262, 812), (-230, 760), (-226, 650), (-212, 576), (-150, 558)]
+    oreilles = [[(-108, 318), (-130, 334), (-134, 366), (-120, 392), (-104, 388)],
+                [(114, 318), (136, 334), (140, 366), (126, 392), (110, 388)]]
+    silhouette = "".join(f'<path d="{forme(f)}"/>' for f in (chemise, cou, tete))
+    out = [f'<clipPath id="darshan-proche">{silhouette}</clipPath>', '<g style="isolation:isolate">',
+           lavis(forme(chemise), "#e6ddc8", 1.0, "aquarelle-douce"),
+           lavis(forme(gilet), "#c8962a", 1.0, "aquarelle"),
+           lavis(forme(cou), "#7a4a30", 1.0, "aquarelle-douce")]
+    out += [lavis(forme(o, 4), "#7a4a30", 1.0, "aquarelle-douce") for o in oreilles]
+    out.append(lavis(forme(col), "#f2ecdc", 1.0, "aquarelle-douce"))
+    # les plis de la chemise et du gilet : l'aisselle, la manche, la couture du dos, la martingale
+    for pts, l, op in ((((-262, 812), (-268, 1100), (-270, 1400)), 4, 0.5), (((262, 812), (268, 1100), (270, 1400)), 4, 0.5),
+                       (((-336, 640), (-318, 720), (-300, 800)), 3, 0.35), (((336, 640), (318, 720), (300, 800)), 3, 0.35),
+                       (((-350, 900), (-330, 1000), (-322, 1150)), 2.4, 0.3), (((340, 920), (322, 1020), (318, 1160)), 2.4, 0.3),
+                       (((0, 562), (2, 900), (0, 1300), (2, 1900)), 3, 0.45), (((-212, 576), (-226, 650), (-230, 760), (-262, 812)), 3.4, 0.55),
+                       (((212, 576), (226, 650), (230, 760), (262, 812)), 3.4, 0.55)):
+        out.append(f'<path d="{trait([P(*q) for q in pts], l * k, rng, 0.1, 0.3, 0.3)}" fill="#3a2410" opacity="{op}"/>')
+    out.append(lavis(forme([(-226, 1296), (226, 1296), (226, 1346), (-226, 1346)], 2), "#a07420", 1.0, "aquarelle-douce"))
+    out.append(f'<path d="{trait([P(-226, 1296), P(-80, 1296), P(80, 1296), P(226, 1296)], 2.4 * k, rng, 0.02, 0.02, 0.2)}" fill="#3a2410" opacity="0.6"/>')
+    bx, by = P(-18, 1300)
+    out.append(f'<rect x="{bx:.1f}" y="{by:.1f}" width="{36 * k:.1f}" height="{42 * k:.1f}" rx="4" fill="none" stroke="#6a5030" stroke-width="{4 * k:.1f}"/>')
+    # la tête : une masse de boucles serrées, jamais de visage
+    out.append(lavis(forme(tete), "#1c1412", 1.0, "aquarelle"))
+    # la lumière : le feu, en bas à gauche, qui monte ; la nuit bleue en haut et à droite
+    out.append('<rect width="1200" height="1800" fill="url(#feu-monte)" clip-path="url(#darshan-proche)" style="mix-blend-mode:multiply"/>')
+    out.append('<rect width="1200" height="1800" fill="url(#feu-cote)" clip-path="url(#darshan-proche)" style="mix-blend-mode:multiply"/>')
+    out.append('</g>')
+    # les boucles, que la nuit éclaire à peine (bleutées), le feu un peu à gauche
+    for _ in range(150):
         a = rng.uniform(0, 2 * math.pi)
-        r = rng.uniform(0.4, 1.0)
-        cx, cy = 0 + 80 * r * math.cos(a), 20 + 100 * r * math.sin(a)
-        boucle = [P(cx + 12 * math.cos(b), cy + 12 * math.sin(b)) for b in [a + k * 0.9 for k in range(7)]]
-        out.append(f'<path d="{trait(boucle, 3 * s + 1, rng, 0.2, 0.3, 0.3)}" fill="#0a0604" opacity="0.7"/>')
-    if lueur:
-        out.append(f'<g style="mix-blend-mode:screen">{forme(dos + [(-150, 1000)], lueur, 0.0)}</g>')
+        r = math.sqrt(rng.uniform(0.0, 1.0))
+        x, y = 2 + 104 * r * math.cos(a), 330 + 128 * r * math.sin(a)
+        rb = rng.uniform(7, 13)
+        b0 = rng.uniform(0, 2 * math.pi)
+        boucle = [P(x + rb * math.cos(b0 + i * 0.8), y + rb * math.sin(b0 + i * 0.8)) for i in range(rng.randint(4, 6))]
+        feu = x < -50 and y > 330 and rng.random() < 0.6
+        out.append(f'<path d="{trait(boucle, rng.uniform(1.8, 2.8) * k, rng, 0.2, 0.4, 0.3)}" '
+                   f'fill="{"#5a321e" if feu else "#262434"}" opacity="{0.5 if feu else 0.45}"/>')
+    # le liseré du feu sur les contours de gauche, et un peu d'encre sur les autres
+    for pts, l, op in ((((-334, 618), (-352, 680), (-360, 780), (-358, 900), (-352, 1050), (-354, 1250), (-362, 1500)), 6, 0.8),
+                       (((-250, 570), (-300, 588), (-334, 618)), 4, 0.45),
+                       (((-110, 398), (-115, 330), (-108, 262)), 4, 0.35),
+                       (((-82, 470), (-90, 524)), 3, 0.4)):
+        out.append(f'<path d="{trait([P(*q) for q in pts], l * k, rng, 0.25, 0.35, 0.3)}" fill="#ffae5c" opacity="{op}" filter="url(#halo)"/>')
+    for pts, l in ((tete[1:9], 3.5), ([(90, 520), (170, 545), (250, 570), (300, 588), (334, 618), (352, 680), (360, 780)], 3)):
+        out.append(f'<path d="{trait([P(*q) for q in pts], l * k, rng, 0.05, 0.3, 0.35)}" fill="{ENCRE}" opacity="0.7"/>')
+    return "".join(out)
+
+
+def marcheur(x, y, h, rng, encre="#140c18"):
+    """Darshan au loin, de dos, qui s'éloigne : une petite silhouette d'encre en pied, sans visage
+    (x : son milieu, y : le sol sous ses pieds, h : sa hauteur), le pied droit qui se lève, le sac à
+    l'épaule, le gilet sur la chemise."""
+    s = h / 100.0
+
+    def P(dx, dy):
+        return (x + dx * s, y - dy * s)
+
+    def forme(pts, couleur):
+        return lavis(poly(catmull_rom([P(*q) for q in pts] + [P(*pts[0])], 4)), couleur, 1.0, "aquarelle-douce")
+    out = [f'<ellipse cx="{x:.1f}" cy="{y + 1.5 * s:.1f}" rx="{15 * s:.1f}" ry="{2.6 * s:.1f}" fill="{encre}" opacity="0.35"/>',
+           forme([(-7.5, 52), (-2, 52), (-3.2, 26), (-4, 1), (-9.5, 0.5), (-8.6, 26)], encre),
+           forme([(1.5, 52), (7, 52), (7.5, 28), (8.2, 9), (3.4, 7), (2.4, 28)], encre),
+           forme([(-10, 85), (-13.5, 70), (-12.5, 54), (-9.8, 54), (-10, 70), (-7.5, 82)], "#3a3448"),
+           forme([(10, 85), (13.5, 71), (15.5, 56), (12.8, 55.5), (11, 70), (7.5, 82)], "#3a3448"),
+           forme([(-10.5, 86), (-4, 90), (4, 90), (10.5, 86), (11, 70), (9, 50), (-9, 50), (-11, 70)], "#4a3818"),
+           forme([(-2.8, 90), (2.8, 90), (2.4, 95), (-2.4, 95)], "#2a1a14"),
+           f'<circle cx="{P(0, 99)[0]:.1f}" cy="{P(0, 99)[1]:.1f}" r="{6.4 * s:.1f}" fill="#0b0809"/>',
+           f'<path d="{trait([P(-8, 88), P(1, 72), P(10, 57)], 1.6 * s, rng, 0.05, 0.05, 0.1)}" fill="#6a4a2a"/>',
+           forme([(8.5, 63), (15.5, 62), (16, 51), (9, 51.5)], "#4a3620")]
+    return "".join(out)
+
+
+def saules(rng, encre="#2a1420"):
+    """Les saules pleureurs de la passerelle, retracés à l'encre sur le lavis du modèle : quelques
+    grosses branches, et les rameaux qui pendent, plus denses en haut et sur les côtés, jamais
+    devant le chemin du fond."""
+    out = []
+    for pts, l in (([(-20, 95), (90, 122), (190, 190), (290, 226), (380, 250)], 15),
+                   ([(-20, 330), (80, 346), (190, 380), (270, 410)], 12),
+                   ([(-20, 505), (110, 520), (212, 548)], 10),
+                   ([(-20, 880), (60, 858), (170, 790), (290, 716)], 11),
+                   ([(-20, 700), (90, 642), (200, 600)], 7),
+                   ([(700, -20), (736, 110), (790, 200), (900, 262), (1010, 282)], 7),
+                   ([(1220, 186), (1100, 160), (980, 150), (900, 140)], 6)):
+        out.append(f'<path d="{trait(pts, l, rng, 0.02, 0.5, 0.2)}" fill="{encre}" opacity="0.8"/>')
+    # les rameaux, en rideaux pendus aux branches et au haut du cadre ; leurs feuilles étroites
+    ancrages = [(40, 120), (150, 170), (260, 220), (360, 250), (60, 340), (180, 380), (100, 520), (200, 560),
+                (460, 80), (560, 30), (650, 50), (740, 110), (800, 200), (900, 262), (1000, 282), (1100, 160),
+                (980, 150), (1180, 300), (1160, 520), (60, 760), (170, 790), (1120, 700), (300, 40), (860, 20)]
+    for ax, ay in ancrages:
+        balance = rng.uniform(-36, 36)
+        for _ in range(rng.randint(6, 10)):
+            x = ax + rng.uniform(-70, 70)
+            y0 = ay + rng.uniform(-10, 40)
+            longueur = rng.uniform(240, 640)
+            if 470 < x < 930:
+                longueur = min(longueur, max(140, 1060 - y0))
+            pts = [(x, y0), (x + balance * 0.2, y0 + longueur * 0.3), (x + balance * 0.6, y0 + longueur * 0.65),
+                   (x + balance, y0 + longueur)]
+            op = rng.uniform(0.25, 0.55)
+            out.append(f'<path d="{trait(pts, rng.uniform(1.2, 2.6), rng, 0.05, 0.7, 0.3)}" fill="{encre}" opacity="{op:.2f}"/>')
+            c = catmull_rom(pts, 8)
+            for i in range(4, len(c) - 1, 3):
+                (xa, ya), (xb, yb) = c[i], c[i + 1]
+                ang = math.atan2(yb - ya, xb - xa) + (0.5 if i % 2 else -0.5)
+                lg = rng.uniform(12, 22)
+                out.append(f'<path d="{trait([(xa, ya), (xa + lg * math.cos(ang), ya + lg * math.sin(ang))], 3.6, rng, 0.3, 0.6, 0.1)}" '
+                           f'fill="{encre}" opacity="{op * 0.8:.2f}"/>')
     return "".join(out)
 
 
 def depart(plan="proche", modele=None, image=None, graine=103):
     """7.6 : « proche » : Darshan de dos, tout près, debout près du feu, coupé par le cadre, la
     lueur du feu sur son gilet ; une silhouette d'encre, sans modèle, jamais de visage ; derrière lui,
-    le fleuve du soir. « loin » : la passerelle et les saules de 36652487, au soir, passés à l'encre
-    (image, préparée par decors.py, l'homme de la photo effacé) ; la barrière retracée ; Darshan,
-    petite silhouette d'encre qui s'éloigne sur le chemin."""
+    le Periyar le soir, l'autre rive et ses cocotiers. « loin » : la passerelle et les saules de
+    36652487, au soir, dessinés d'après le modèle (image : son lavis du soir, préparé par decors.py,
+    l'homme de la photo effacé) ; la barrière et le chemin retracés à l'encre ; Darshan, petite
+    silhouette d'encre qui s'éloigne sur le chemin, au-delà de la barrière. Tout ce qui compte tient
+    au-dessus du panneau de texte (y 1 330)."""
     rng = random.Random(graine)
     if plan == "loin":
-        out = [photo_svg(image)]
-        # la barrière du bout de la passerelle, retracée à l'encre là où la photo est effacée
-        for pts, l_ in ((((578, 1478), (850, 1470)), 5), (((578, 1560), (850, 1556)), 4), (((712, 1474), (712, 1562)), 5),
-                        (((584, 1482), (706, 1556)), 3), (((584, 1552), (706, 1482)), 3), (((718, 1478), (844, 1552)), 3),
-                        (((718, 1552), (844, 1478)), 3)):
-            out.append(f'<path d="{trait(list(pts), l_, rng, 0.05, 0.05, 0.2)}" fill="#1a1422" opacity="0.8"/>')
-        out.append(silhouette_de_dos(690, 1290, 0.105, rng, encre="#120c18", gilet="#6a4a2a", chemise="#8a7a86", marche=True))
-        return svg("".join(out), DEFS_AQUARELLE, "#2a1a2a")
+        encre = "#22101c"
+        out = [photo_svg(image), saules(rng)]
+        # les garde-corps de la passerelle : la main courante, les montants
+        for x0, y0, x1, y1, pas in ((300, 1338, 580, 1316, 26), (846, 1312, 1240, 1300, 30)):
+            out.append(f'<path d="{trait(droit([(x0, y0), (x1, y1)]), 7, rng, 0.02, 0.02, 0.1)}" fill="{encre}" opacity="0.8"/>')
+            for xx in range(x0 + 14, x1, pas):
+                yy = y0 + (y1 - y0) * (xx - x0) / (x1 - x0)
+                out.append(f'<path d="{trait([(xx, yy + 8), (xx + rng.uniform(-3, 3), 1850)], rng.uniform(1.6, 2.8), rng, 0.02, 0.02, 0.2)}" '
+                           f'fill="{encre}" opacity="0.35"/>')
+        # le tablier : ses bords, son caillebotis
+        out.append(f'<path d="{trait(droit([(582, 1578), (486, 1850)]), 4, rng, 0.02, 0.02, 0.1)}" fill="{encre}" opacity="0.7"/>')
+        out.append(f'<path d="{trait(droit([(844, 1574), (1110, 1850)]), 4, rng, 0.02, 0.02, 0.1)}" fill="{encre}" opacity="0.7"/>')
+        for k, y in enumerate((1600, 1628, 1662, 1704, 1754, 1812)):
+            t = (y - 1576) / 274
+            out.append(f'<path d="{trait(droit([(582 - 96 * t, y), (844 + 266 * t, y)]), 1.6 + k * 0.3, rng, 0.05, 0.05, 0.2)}" '
+                       f'fill="{encre}" opacity="0.28"/>')
+        # le chemin au-delà de la barrière, qui monte sous les saules : ses bords, sa terre
+        for pts in (((598, 1470), (594, 1400), (588, 1330)), ((580, 1300), (566, 1240), (546, 1190)),
+                    ((838, 1466), (820, 1400), (806, 1336)), ((812, 1296), (828, 1240), (856, 1196))):
+            out.append(f'<path d="{trait(list(pts), 2.6, rng, 0.3, 0.5, 0.5)}" fill="{encre}" opacity="0.3"/>')
+        for _ in range(46):
+            y = rng.uniform(1170, 1468)
+            t = (1470 - y) / 300
+            xa = 600 - 60 * t * t + rng.uniform(0, 40)
+            xb = 840 + 30 * t * t - rng.uniform(0, 40)
+            x = rng.uniform(xa, xb - 30)
+            out.append(f'<path d="{trait([(x, y), (x + rng.uniform(14, 40), y + rng.uniform(-2, 2))], rng.uniform(1.2, 2.6), rng, 0.3, 0.4, 0.3)}" '
+                       f'fill="{encre}" opacity="{rng.uniform(0.15, 0.3):.2f}"/>')
+        # le panneau rond sur son poteau, à gauche du chemin
+        out.append(f'<circle cx="510" cy="1236" r="46" fill="{encre}" opacity="0.35" filter="url(#aquarelle-douce)"/>')
+        out.append(f'<circle cx="510" cy="1236" r="46" fill="none" stroke="{encre}" stroke-width="4" opacity="0.8"/>')
+        out.append(f'<path d="{trait([(512, 1282), (518, 1326)], 5, rng, 0.02, 0.02, 0.1)}" fill="{encre}" opacity="0.8"/>')
+        # Darshan, au loin, sur le chemin
+        out.append(marcheur(708, 1300, 104, rng))
+        # la barrière du bout de la passerelle
+        for pts, l_ in ((((586, 1478), (843, 1472)), 5), (((590, 1562), (840, 1558)), 4), (((716, 1470), (718, 1574)), 6),
+                        (((594, 1484), (710, 1556)), 3), (((594, 1556), (710, 1484)), 3), (((724, 1480), (838, 1554)), 3),
+                        (((724, 1554), (838, 1478)), 3)):
+            out.append(f'<path d="{trait(list(pts), l_, rng, 0.05, 0.05, 0.2)}" fill="{encre}" opacity="0.8"/>')
+        out.append(f'<rect width="{W}" height="{H}" fill="url(#soir-bords)"/>')
+        defs = DEFS_AQUARELLE + """
+<radialGradient id="soir-bords" cx="0.56" cy="0.66" r="0.78">
+  <stop offset="0.45" stop-color="#1a0c1c" stop-opacity="0"/><stop offset="1" stop-color="#1a0c1c" stop-opacity="0.45"/>
+</radialGradient>"""
+        return svg("".join(out), defs, "#2a1a2a")
+    # proche : le fleuve le soir, derrière lui
     out = [f'<rect width="{W}" height="{H}" fill="url(#soir-fleuve)"/>']
-    out.append(lavis(poly([(-40, 980), (1240, 950), (1240, 1100), (-40, 1120)]), "#1a1c34", 0.95, "aquarelle-douce"))
-    for x in (-40, 180, 420, 880, 1100):
-        out.append(f'<g opacity="0.8">{palmier(x, 1000, rng.uniform(260, 420), rng, "#07080f", "#141a24")}</g>')
-    out.append(lavis(poly([(-40, 1100), (1240, 1080), (1240, 1850), (-40, 1850)]), "#23233a", 1.0, "aquarelle-douce"))
-    for k in range(10):
-        y = 1140 + k * 42
-        out.append(f'<path d="{trait([(-40, y), (600, y + rng.uniform(-6, 6)), (1240, y)], rng.uniform(2, 5), rng, 0.3, 0.3, 0.4)}" fill="#e89a5a" opacity="{0.08 + k * 0.012:.3f}"/>')
-    out.append(silhouette_de_dos(640, 360, 1.0, rng))
-    out.append(f'<rect width="{W}" height="{H}" fill="url(#feu-dos)" style="mix-blend-mode:screen"/>')
+    for _ in range(40):
+        x, y = rng.uniform(0, W), rng.uniform(0, 520)
+        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{rng.uniform(0.8, 1.8):.1f}" fill="#f4e6c8" opacity="{rng.uniform(0.3, 0.8):.2f}"/>')
+    out.append(lavis(poly([(-40, 842), (200, 830), (520, 838), (900, 826), (1240, 834), (1240, 900), (-40, 904)]), "#0b0c18", 1.0, "aquarelle-douce"))
+    for x, h in ((-30, 330), (90, 420), (250, 300), (420, 380), (960, 360), (1150, 410)):
+        out.append(palmier(x, 846, h, rng, "#07070f", "#0e1220"))
+    out.append(lavis(poly([(-40, 896), (1240, 890), (1240, 1250), (-40, 1260)]), "#141628", 1.0, "aquarelle-douce"))
+    for k in range(14):
+        y = 910 + k * 24
+        xa = rng.uniform(40, 200)
+        out.append(f'<path d="{trait([(xa, y), (xa + rng.uniform(80, 260), y + rng.uniform(-3, 3))], rng.uniform(2, 5), rng, 0.3, 0.3, 0.4)}" '
+                   f'fill="#ff9a50" opacity="{0.12 + k * 0.022:.3f}"/>')
+    out.append(lavis(poly([(-40, 1240), (1240, 1230), (1240, 1860), (-40, 1860)]), "#1a120e", 1.0, "aquarelle-douce"))
+    # des étincelles qui montent du feu, hors champ en bas à gauche
+    for _ in range(26):
+        x, y = rng.uniform(20, 380), rng.uniform(640, 1700)
+        r = rng.uniform(1.6, 3.4)
+        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r * 2.6:.1f}" fill="#ff8a30" opacity="0.25" filter="url(#halo)"/>')
+        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="#ffd08a" opacity="{rng.uniform(0.6, 0.95):.2f}"/>')
+    out.append(f'<rect width="{W}" height="{H}" fill="url(#feu-sol)" style="mix-blend-mode:screen"/>')
+    out.append(darshan_proche(rng))
     out.append(f'<rect width="{W}" height="{H}" fill="url(#nuit-bords)"/>')
-    defs = DEFS_AQUARELLE + """
+    defs = DEFS_AQUARELLE + FILTRE_ENCRE + """
 <linearGradient id="soir-fleuve" x1="0" y1="0" x2="0" y2="1">
-  <stop offset="0" stop-color="#0e1026"/><stop offset="0.5" stop-color="#2a2244"/><stop offset="0.62" stop-color="#5a3a4a"/>
+  <stop offset="0" stop-color="#0b0d22"/><stop offset="0.3" stop-color="#1c1a3a"/><stop offset="0.47" stop-color="#4a3048"/>
+  <stop offset="0.5" stop-color="#2a1e30"/>
 </linearGradient>
-<radialGradient id="feu-dos" gradientUnits="userSpaceOnUse" cx="360" cy="1900" r="1250">
-  <stop offset="0" stop-color="#ff8a3c" stop-opacity="0.75"/><stop offset="0.5" stop-color="#c24a1c" stop-opacity="0.25"/>
+<radialGradient id="feu-sol" gradientUnits="userSpaceOnUse" cx="120" cy="1880" r="1100">
+  <stop offset="0" stop-color="#ff8a3c" stop-opacity="0.8"/><stop offset="0.45" stop-color="#c24a1c" stop-opacity="0.3"/>
   <stop offset="1" stop-color="#c24a1c" stop-opacity="0"/>
 </radialGradient>
-<radialGradient id="nuit-bords" cx="0.5" cy="0.45" r="0.8">
-  <stop offset="0.55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.5"/>
+<linearGradient id="feu-monte" gradientUnits="userSpaceOnUse" x1="0" y1="1800" x2="0" y2="150">
+  <stop offset="0" stop-color="#ffb46a"/><stop offset="0.36" stop-color="#c8704a"/><stop offset="0.6" stop-color="#6a4a5c"/>
+  <stop offset="0.8" stop-color="#2e2c44"/><stop offset="1" stop-color="#1e2034"/>
+</linearGradient>
+<linearGradient id="feu-cote" gradientUnits="userSpaceOnUse" x1="380" y1="0" x2="1200" y2="0">
+  <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#7a82a0"/>
+</linearGradient>
+<radialGradient id="nuit-bords" cx="0.5" cy="0.42" r="0.85">
+  <stop offset="0.6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.45"/>
 </radialGradient>"""
-    return svg("".join(out), defs, "#0e1026")
+    return svg("".join(out), defs, "#0b0d22")
 
 
 # ---------------------------------------------------------------- 2.10 : l'esquisse du théâtre

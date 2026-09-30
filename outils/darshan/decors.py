@@ -135,6 +135,7 @@ PAPIER_DESSIN = {
     "desert-nuit": 0.35,     # le velours noir de la nuit, à peine grené
     "desert-jour": 0.55,     # le ciel blanc de chaleur : le papier, sans ses auréoles
     "aluva": 0.45,           # le dessin du prototype, que Karl a vu : un papier plus discret
+    "depart-proche": 0.35,   # la nuit au bord du fleuve : à peine grenée
 }
 
 # Décors et calques enregistrés avec leur couche de transparence (WebP avec alpha).
@@ -693,15 +694,15 @@ def preparer_desert(d, dossier, nom):
 
 
 def preparer_depart(d, dossier, nom):
-    """depart, plan « loin » : la passerelle et les saules du modèle, passés à l'encre du soir ;
-    l'homme du modèle est effacé (le dessin le recouvre de la passerelle vide)."""
+    """depart, plan « loin » : la passerelle et les saules du modèle en lavis du soir, sans traits
+    (le dessin retrace à l'encre les saules, la barrière et le chemin) ; l'homme du modèle est effacé."""
     if d.get("plan") != "loin" or not d.get("modele"):
         return {}
     photo = recadrer(photo_pour(d["modele"]), 0.5, 0.5, 1.0)
-    photo = effacer_passant(photo)
+    photo = effacer_passant(photo).filter(ImageFilter.GaussianBlur(4))
     photo = crepuscule(photo)
-    im = encre(photo, part_traits=0.09, teinte=(34, 18, 44), tons=(112, 168, 214),
-               fond=Image.new("RGB", (W, H), (255, 255, 255)))
+    im = encre(photo, part_traits=0.0001, teinte=(34, 18, 44), tons=(112, 168, 214),
+               fond=degrade((236, 206, 178), (170, 150, 176), (226, 184, 170)))
     return {"image": fichier(im, dossier, f"{nom}-passerelle")}
 
 
