@@ -1,1 +1,11 @@
 .DS_Store
+# Darshan jouable : sorties de fabrication et fichiers de travail
+outils/darshan/dist/
+outils/darshan/captures/
+outils/darshan/src/img/*.svg
+outils/darshan/src/img/*.png
+outils/darshan/src/img/pexels-*.jpg
+outils/darshan/planche-*.jpg
+outils/darshan/src/img/toits.jpg
+__pycache__/
+outils/darshan/src/fonts/originaux/

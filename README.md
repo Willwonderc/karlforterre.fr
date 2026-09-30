@@ -182,6 +182,12 @@ Pour déposer un fichier : **Add file** → **Upload files**, dans le bon dossie
 - `images/` : portrait, logo, fond, `portfolio/` et `graphisme/` (pour chaque œuvre,
   vignette, version moyenne et grande image).
 - `livres/` : couvertures, livres en PDF et EPUB, mémoire.
+- `docs/plan-darshan.md` : évaluation et plan d'une édition jouable de *Darshan* (EPUB
+  « presque jeu vidéo ») ; `docs/plan-darshan-interface.md` : son interface ;
+  `docs/darshan-decoupage.md` : tout le livre découpé en 85 tableaux ;
+  `docs/darshan-mise-en-scene/` : sa mise en scène ; `outils/darshan/` : la fabrication de
+  l'édition jouable (en cours) et de l'édition classique, reliées à aucune page du site
+  (état du chantier et mode d'emploi dans son README).
 - `fonts/` : polices Cormorant Garamond et Inter, hébergées avec le site (licence
   SIL Open Font License), sans appel à Google.
 - `memoire/` : la page du mémoire, avec les balises lues par Google Scholar.

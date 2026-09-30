@@ -1,0 +1,585 @@
+/* Darshan, le livre des portes : feuille de style commune à l'EPUB et à l'édition web.
+   La scène mesure 1200 x 1800 unités logiques ; 1cqw = 12 unités (l'EPUB les écrit en px).
+   Sans script, chaque scène est une page illustrée où tout le texte est lisible ; avec le
+   script (classe « jeu » sur <html>), le texte se révèle temps par temps et les gestes
+   s'animent. */
+
+@font-face { font-family: "Amiri"; font-style: normal; font-weight: 400; src: url("../fonts/Amiri-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Amiri"; font-style: italic; font-weight: 400; src: url("../fonts/Amiri-Italic.woff2") format("woff2"); }
+@font-face { font-family: "Amiri"; font-style: normal; font-weight: 700; src: url("../fonts/Amiri-Bold.woff2") format("woff2"); }
+@font-face { font-family: "Unna"; font-style: normal; font-weight: 400; src: url("../fonts/Unna-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Unna"; font-style: italic; font-weight: 400; src: url("../fonts/Unna-Italic.woff2") format("woff2"); }
+@font-face { font-family: "Tiro Darshan"; src: url("../fonts/Tiro-Darshan.woff2") format("woff2"); }
+
+:root {
+  --or: #f4c56a;
+  --or-pale: #ffe7b0;
+  --nuit: #050816;
+  --encre: #07091a;
+  --sindoor: #c9302c;
+  --creme: #fff4de;
+  --texte: #f5efe2;
+  --ombre-texte: 0 0.1cqw 0.6cqw rgba(0, 0, 0, 0.9);
+}
+
+html { background: #000; }
+html, body { margin: 0; padding: 0; color: var(--texte); }
+body { font-family: "Amiri", Georgia, serif; -webkit-text-size-adjust: none; text-size-adjust: none; }
+
+/* ------------------------------------------------------------ la scène */
+.plateau { position: relative; margin: 0 auto; }
+.scene {
+  position: relative; overflow: hidden; margin: 0 auto;
+  width: min(100vw, calc(100vh * 2 / 3)); aspect-ratio: 2 / 3;
+  container-type: inline-size; background: var(--nuit);
+}
+.epub .scene { width: 1200px; height: 1800px; aspect-ratio: auto; }
+.decor, .decor > * { position: absolute; inset: 0; width: 100%; height: 100%; }
+.decor img { object-fit: cover; display: block; }
+.calque-anime { will-change: transform; transform-origin: 50% 50%; }
+
+/* ------------------------------------------------------------ le texte (lisible sans script) */
+.texte {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 16cqw 7cqw 7cqw;
+  font-size: 4.1cqw; line-height: 1.48; text-align: left;
+  text-shadow: var(--ombre-texte);
+  background: linear-gradient(to bottom, rgba(3, 4, 12, 0) 0%, rgba(3, 4, 12, 0.72) 22%, rgba(3, 4, 12, 0.9) 100%);
+  hyphens: auto; -webkit-hyphens: auto;
+}
+.texte.en-haut { top: 0; bottom: auto; padding: 7cqw 7cqw 16cqw;
+  background: linear-gradient(to top, rgba(3, 4, 12, 0) 0%, rgba(3, 4, 12, 0.72) 22%, rgba(3, 4, 12, 0.9) 100%); }
+.texte.clair { color: #1d140c; text-shadow: 0 0 0.8cqw rgba(255, 244, 222, 0.9);
+  background: linear-gradient(to bottom, rgba(250, 238, 214, 0) 0%, rgba(250, 238, 214, 0.8) 22%, rgba(250, 238, 214, 0.94) 100%); }
+.texte p { margin: 0 0 1.6cqw; text-indent: 0; }
+.texte .voix { font-style: italic; color: var(--or-pale); }
+.texte.clair .voix { color: #6b3b0c; }
+h1.chapitre {
+  font-family: "Unna", Georgia, serif; font-weight: 400; font-variant: small-caps;
+  font-size: 6cqw; letter-spacing: 0.08em; text-align: center; margin: 0 0 3cqw;
+  color: var(--or-pale); text-shadow: 0 0 2cqw rgba(255, 210, 120, 0.45), var(--ombre-texte);
+}
+.poeme { text-align: center; font-size: 3.9cqw; top: 0; bottom: 0; display: flex; flex-direction: column;
+  justify-content: center; background: radial-gradient(ellipse at 50% 50%, rgba(2, 3, 10, 0.55), rgba(2, 3, 10, 0.1) 70%); }
+.poeme p { margin: 0 0 3.2cqw; }
+.suite-para { text-indent: 0; }
+
+/* ------------------------------------------------------------ page de titre */
+.titre-livre { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.titre-livre .auteur { font-size: 3.6cqw; letter-spacing: 0.25em; text-transform: uppercase; color: #d9d2c4; margin: 0; }
+.titre-livre .titre { font-family: "Unna", serif; font-weight: 400; font-size: 17cqw; line-height: 1; margin: 2cqw 0 1cqw; color: var(--or-pale);
+  text-shadow: 0 0 5cqw rgba(255, 200, 110, 0.35), var(--ombre-texte); }
+.titre-livre .devanagari { font-family: "Tiro Darshan", serif; font-size: 4.4cqw; color: #cdbfa5; margin: 0 0 8cqw; letter-spacing: 0; } /* espacé, le devanagari perd sa ligne de tête */
+.titre-livre .genre { font-style: italic; font-size: 3.4cqw; color: #cfc6b3; margin: 0; }
+
+/* ------------------------------------------------------------ interface (mode jeu seulement) */
+.ui { display: none; }
+.jeu .ui { display: block; }
+.jeu .scene { display: none; }
+.jeu .scene.active { display: block; }
+
+.jeu .texte { padding-top: 12cqw; min-height: 26cqw; cursor: pointer;
+  background: linear-gradient(to bottom, rgba(3, 4, 12, 0) 0%, rgba(3, 4, 12, 0.66) 30%, rgba(3, 4, 12, 0.82) 100%); }
+.jeu .texte.en-haut { padding-top: 13cqw; padding-bottom: 12cqw;
+  background: linear-gradient(to top, rgba(3, 4, 12, 0) 0%, rgba(3, 4, 12, 0.66) 30%, rgba(3, 4, 12, 0.82) 100%); }
+.jeu .texte.clair { background: linear-gradient(to bottom, rgba(250, 238, 214, 0) 0%, rgba(250, 238, 214, 0.78) 30%, rgba(250, 238, 214, 0.92) 100%); }
+.jeu .poeme { background: radial-gradient(ellipse at 50% 50%, rgba(2, 3, 10, 0.55), rgba(2, 3, 10, 0.1) 70%); padding-top: 7cqw; }
+.jeu .texte .temps { opacity: 0; filter: blur(0.5cqw); transition: opacity 900ms ease, filter 1200ms ease; }
+.jeu .texte .temps.vu { opacity: 1; filter: blur(0); }
+.jeu .texte .temps.passe { opacity: 0.4; }
+.jeu .texte .temps.cache { display: none; }
+.jeu .poeme .temps.passe { opacity: 0.55; }
+.jeu h1.chapitre.carton { position: absolute; left: 0; right: 0; top: 36%; font-size: 10cqw; opacity: 0; z-index: 4; pointer-events: none;
+  transition: opacity 1400ms ease, top 1800ms ease, font-size 1800ms ease; }
+.jeu h1.chapitre.carton.vu { opacity: 1; }
+.jeu h1.chapitre.carton.range { top: 11cqw; font-size: 5cqw; opacity: 0.85; }
+
+.suite {
+  position: absolute; right: 5cqw; bottom: 4cqw; width: 6cqw; height: 6cqw; border: 0; padding: 0; margin: 0;
+  background: none; color: var(--or); font-size: 4.4cqw; line-height: 6cqw; cursor: pointer; opacity: 0;
+  transition: opacity 500ms; z-index: 5;
+}
+.suite.pret { opacity: 0.9; animation: pouls 1.8s ease-in-out infinite; }
+@keyframes pouls { 50% { transform: translateY(-0.6cqw); opacity: 0.55; } }
+
+.barre { position: absolute; top: 3cqw; right: 3cqw; display: flex; gap: 2cqw; z-index: 20; }
+.jeu .barre { display: flex; }
+.barre button {
+  font: inherit; font-size: 2.8cqw; color: #efe6d2; background: rgba(8, 10, 20, 0.55);
+  border: 0.15cqw solid rgba(244, 197, 106, 0.45); border-radius: 5cqw; padding: 1cqw 2.6cqw; cursor: pointer;
+}
+.barre button[aria-pressed="false"] { opacity: 0.6; }
+
+.consigne {
+  position: absolute; left: 4cqw; right: 4cqw; text-align: center; font-family: "Unna", serif; font-style: italic;
+  font-size: 3.6cqw; color: var(--or-pale); text-shadow: var(--ombre-texte); opacity: 0; transition: opacity 700ms;
+  pointer-events: none; z-index: 6;
+}
+.consigne.vu { opacity: 0.95; }
+
+.bouton-porte {
+  font-family: "Unna", serif; font-size: 4.6cqw; letter-spacing: 0.12em; color: #1a1208;
+  background: linear-gradient(#ffe2a0, #e9b75c); border: 0; border-radius: 1cqw; padding: 2cqw 7cqw; cursor: pointer;
+  box-shadow: 0 0 4cqw rgba(255, 200, 110, 0.5);
+}
+
+canvas.toile { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+svg.jeu-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 3; }
+.lumiere-flot { position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 8;
+  background: radial-gradient(ellipse at 50% 55%, #fffaf0 0%, #ffe3a0 35%, rgba(255, 210, 120, 0) 75%); }
+
+/* fin de l'extrait et carnet des portes */
+.fin-extrait { position: absolute; left: 6cqw; right: 6cqw; top: 8cqw; padding: 4cqw 5cqw; border-radius: 2cqw;
+  background: rgba(20, 12, 4, 0.84); color: #f7ecd6; font-size: 3.4cqw; text-align: center; opacity: 0;
+  transition: opacity 1.2s; pointer-events: none; z-index: 10; }
+.jeu .fin-extrait.vu { opacity: 1; pointer-events: auto; }
+.fin-extrait .fin-titre { font-family: "Unna", serif; font-variant: small-caps; font-size: 5.4cqw; color: #ffe2a0; margin: 0 0 2cqw; }
+.fin-extrait p { margin: 0 0 2cqw; }
+.fin-extrait button { font: inherit; font-size: 3.2cqw; margin: 1cqw; padding: 1.4cqw 3.2cqw; border-radius: 5cqw; cursor: pointer;
+  border: 0.2cqw solid #f4c56a; background: rgba(244, 197, 106, 0.15); color: #ffe7b0; }
+.carnet { position: absolute; inset: 0; background: rgba(3, 5, 14, 0.95); z-index: 30; padding: 10cqw 7cqw; font-size: 3.6cqw; }
+.jeu .carnet { display: none; }
+.jeu .carnet.ouvert { display: block; }
+.carnet h2 { font-family: "Unna", serif; font-variant: small-caps; font-weight: 400; color: var(--or-pale); font-size: 6cqw; margin: 0 0 3cqw; text-align: center; }
+.carnet svg { width: 100%; height: auto; display: block; margin: 2cqw 0 4cqw; }
+.carnet p { margin: 0 0 2cqw; }
+.appel-au-pere .texte .voix { text-shadow: 0 0 2cqw rgba(255, 220, 150, 0.8), var(--ombre-texte); }
+
+/* édition web : les bandes autour de la scène reprennent le décor, flouté */
+#ambiance { position: fixed; inset: -8%; background-size: cover; background-position: center;
+  filter: blur(3.5vmax) brightness(0.45) saturate(1.2); z-index: -1; }
+
+/* mouvement réduit : pas de flou, pas de secousses, fondus courts */
+@media (prefers-reduced-motion: reduce) {
+  .jeu .texte .temps { filter: none; transition: opacity 200ms; }
+  .suite.pret { animation: none; }
+}
+
+/* sans script, sur le web : les scènes se suivent comme les pages d'un album */
+html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
+
+/* ------------------------------------------------------------ interface d'objet
+   La fiche s'ouvre sur la scène : un gros plan qu'on peut tourner du doigt, le nom de
+   l'objet, les phrases du livre déjà lues qui le décrivent, et les gestes possibles à
+   cet instant. Rien n'y est inventé : les phrases sont vérifiées contre le livre. */
+.jeu .fiche { position: absolute; inset: 0; z-index: 40; display: none; }
+.jeu .fiche.ouverte { display: block; }
+.fiche-fond { position: absolute; inset: 0; background: rgba(3, 5, 14, 0.58); opacity: 0; transition: opacity 350ms;
+  -webkit-backdrop-filter: blur(0.7cqw); backdrop-filter: blur(0.7cqw); }
+.fiche.visible .fiche-fond { opacity: 1; }
+/* La carte entre par une diagonale (façon Persona) et repart par le même chemin. */
+.fiche-carte { position: absolute; left: 5cqw; right: 5cqw; bottom: 5cqw; max-height: 84%; overflow: auto;
+  background: linear-gradient(rgba(22, 27, 52, 0.97), rgba(10, 13, 30, 0.98));
+  border: 0.2cqw solid rgba(244, 197, 106, 0.55); border-radius: 2.4cqw;
+  box-shadow: 0 2cqw 6cqw rgba(0, 0, 0, 0.6), inset 0 0 0 0.7cqw rgba(244, 197, 106, 0.06);
+  padding: 4cqw 6cqw 5cqw; transform: translateX(-3%) skewX(-3deg);
+  -webkit-clip-path: polygon(0 0, 0 0, -35% 100%, -35% 100%); clip-path: polygon(0 0, 0 0, -35% 100%, -35% 100%);
+  transition: -webkit-clip-path 480ms cubic-bezier(.25, .8, .25, 1), clip-path 480ms cubic-bezier(.25, .8, .25, 1),
+    transform 560ms cubic-bezier(.2, 1.3, .4, 1); }
+.fiche.visible .fiche-carte { transform: none;
+  -webkit-clip-path: polygon(0 0, 135% 0, 100% 100%, -35% 100%); clip-path: polygon(0 0, 135% 0, 100% 100%, -35% 100%); }
+.fiche-carte::after { content: ""; position: absolute; top: 0; bottom: 0; left: -50%; width: 30%; pointer-events: none; opacity: 0;
+  background: linear-gradient(100deg, rgba(255, 244, 222, 0), rgba(255, 244, 222, 0.2), rgba(255, 244, 222, 0)); transform: skewX(-18deg); }
+.fiche.visible .fiche-carte::after { animation: reflet 900ms 280ms ease-out; }
+@keyframes reflet { from { left: -50%; opacity: 1; } to { left: 130%; opacity: 1; } }
+.fiche.visible .fiche-visuel svg { animation: fiche-objet 700ms 120ms cubic-bezier(.2, 1.2, .35, 1) both, balance 5s 820ms ease-in-out infinite; }
+@keyframes fiche-objet { from { transform: rotateY(-180deg) scale(0.4); opacity: 0; } to { transform: rotateY(-9deg) rotateX(4deg); opacity: 1; } }
+.fiche.visible h2 { animation: fiche-titre 420ms 220ms cubic-bezier(.2, 1.5, .4, 1) both; }
+@keyframes fiche-titre { from { opacity: 0; transform: scale(1.8) skewX(-10deg); } to { opacity: 1; transform: none; } }
+.fiche.visible blockquote { animation: fiche-ligne 460ms cubic-bezier(.2, 1, .3, 1) both; }
+@keyframes fiche-ligne { from { opacity: 0; transform: translateX(-8cqw); } to { opacity: 1; transform: none; } }
+.fiche-carte:focus { outline: none; }
+.fiche-visuel { height: 34cqw; display: flex; align-items: center; justify-content: center; perspective: 150cqw;
+  margin: 0 0 2cqw; cursor: grab; touch-action: none; }
+.fiche-visuel svg { width: 70%; height: auto; transition: transform 500ms cubic-bezier(.2, .9, .3, 1.2);
+  filter: drop-shadow(0 1.6cqw 2cqw rgba(0, 0, 0, 0.65)); animation: balance 5s ease-in-out infinite; }
+/* une fois l'objet manié, il ne rejoue plus son entrée : il se balance seulement */
+.fiche.visible .fiche-visuel.manie svg { animation: balance 5s ease-in-out infinite; }
+.fiche.visible .fiche-visuel.tenu svg, .fiche-visuel.tenu svg { transition: none; animation: none; }
+@keyframes balance { 0%, 100% { transform: rotateY(-9deg) rotateX(4deg); } 50% { transform: rotateY(9deg) rotateX(-3deg); } }
+.fiche-surtitre { font-family: "Unna", serif; font-variant: small-caps; letter-spacing: 0.14em; color: var(--or);
+  font-size: 3.2cqw; margin: 0; text-align: center; min-height: 1em; }
+.fiche-surtitre.etiquette { display: table; margin: 0 auto; padding: 0.3cqw 2.6cqw 0.5cqw; background: var(--sindoor); color: var(--creme);
+  transform: skewX(-12deg); box-shadow: 0.8cqw 0.8cqw 0 rgba(0, 0, 0, 0.45); }
+.fiche h2 { font-family: "Unna", serif; font-weight: 400; font-size: 6.6cqw; color: var(--or-pale); text-align: center;
+  margin: 0.4cqw 0 3.2cqw; outline: none; }
+.fiche blockquote { margin: 0 0 2.6cqw; padding-left: 3cqw; border-left: 0.3cqw solid rgba(244, 197, 106, 0.45);
+  font-style: italic; font-size: 3.9cqw; line-height: 1.45; color: #efe6d2; }
+.fiche blockquote cite { display: block; font-style: normal; font-variant: small-caps; letter-spacing: 0.08em;
+  font-size: 2.9cqw; color: #aaa5b9; margin-top: 0.6cqw; }
+.fiche-liste { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3cqw; margin: 1cqw 0 2cqw; }
+.fiche-liste button { display: grid; justify-items: center; gap: 1cqw; font: inherit; font-size: 3.4cqw; color: var(--or-pale);
+  background: rgba(244, 197, 106, 0.07); border: 0.2cqw solid rgba(244, 197, 106, 0.35); border-radius: 1.6cqw;
+  padding: 2.4cqw 1.6cqw; cursor: pointer; }
+.fiche-liste svg { width: 80%; height: 13cqw; }
+.fiche-vide { text-align: center; color: #aaa5b9; font-style: italic; margin: 2cqw 0; }
+.fiche-actions { display: flex; flex-wrap: wrap; gap: 2.4cqw; justify-content: center; margin-top: 3cqw; }
+.fiche-actions button { font: inherit; font-size: 3.6cqw; padding: 1.6cqw 4.4cqw; border-radius: 5cqw; cursor: pointer;
+  border: 0.2cqw solid var(--or); background: rgba(244, 197, 106, 0.16); color: var(--or-pale); }
+.fiche-actions button.secondaire { border-color: rgba(239, 230, 210, 0.35); background: none; color: #d9d2c4; }
+.fiche button:focus-visible, .barre button:focus-visible, .nouvel-objet:focus-visible { outline: 0.4cqw solid var(--or-pale); outline-offset: 0.5cqw; }
+
+/* annonce « Nouvel objet » : un bandeau oblique qui claque depuis la gauche */
+.nouvel-objet { position: absolute; left: 0; top: 13cqw; z-index: 30; display: flex; align-items: center; gap: 2.4cqw;
+  padding: 1.8cqw 6cqw 1.8cqw 5cqw; border: 0; border-left: 1.6cqw solid var(--sindoor); border-radius: 0;
+  background: rgba(7, 9, 26, 0.95); color: var(--or-pale); font: inherit; font-size: 3.4cqw; text-align: left; cursor: pointer;
+  box-shadow: 1.2cqw 1.2cqw 0 rgba(244, 197, 106, 0.85);
+  transform: translateX(-115%) skewX(-12deg); transition: transform 560ms cubic-bezier(.2, 1.3, .4, 1); }
+.nouvel-objet.vu { transform: translateX(5cqw) skewX(-12deg); }
+.nouvel-objet > span { display: block; transform: skewX(12deg); }
+.nouvel-objet .icone { width: 11cqw; height: 6cqw; }
+.nouvel-objet .icone svg { width: 100%; height: 100%; }
+.nouvel-objet .icone.parti { visibility: hidden; }
+.nouvel-objet small { display: block; font-family: "Unna", serif; font-variant: small-caps; letter-spacing: 0.12em; color: var(--or); font-size: 2.8cqw; }
+.barre .objets .compte { display: inline-block; min-width: 1.6em; margin-left: 0.4em; border-radius: 1em; background: var(--or);
+  color: #1a1208; font-size: 0.85em; text-align: center; }
+.barre .objets { transition: opacity 300ms, transform 460ms cubic-bezier(.2, 1.6, .4, 1); }
+.barre .objets.arrivee { opacity: 0; transform: scale(0.4); }
+.barre .objets.pulse { animation: pulse-objets 900ms ease-out 2; }
+@keyframes pulse-objets { 50% { box-shadow: 0 0 0 1.4cqw rgba(244, 197, 106, 0.35); } }
+
+/* halo de l'objet qui attend un geste */
+.halo-interet { opacity: 0; }
+.halo-interet.actif { animation: respire 2.2s ease-in-out infinite; }
+@keyframes respire { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.8; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fiche-visuel svg, .fiche.visible .fiche-visuel svg, .fiche.visible h2, .fiche.visible blockquote { animation: none; }
+  .fiche-carte { -webkit-clip-path: none; clip-path: none; transform: none; opacity: 0; transition: opacity 200ms; }
+  .fiche.visible .fiche-carte { opacity: 1; }
+  .fiche-carte::after { display: none; }
+  .nouvel-objet { transition: opacity 200ms; transform: translateX(5cqw) skewX(-12deg); opacity: 0; }
+  .nouvel-objet.vu { opacity: 1; }
+  .barre .objets { transition: opacity 200ms; }
+  .barre .objets.arrivee { transform: none; }
+  .halo-interet.actif { animation: none; opacity: 0.6; }
+}
+
+/* ------------------------------------------------------------ transitions
+   Balayages entre scènes (calque SVG .tr, dessiné par le moteur), et effets d'objet :
+   frisson (petit changement d'état), éclat (métamorphose), envol (l'objet rejoint le sac). */
+.tr { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 60; overflow: visible; }
+.tr.tr-leger { z-index: 12; pointer-events: none; }
+
+.eclat { position: absolute; inset: 0; z-index: 45; overflow: hidden; }
+.eclat.joue { animation: eclat-secousse 300ms 900ms linear; }
+@keyframes eclat-secousse { 20% { transform: translate(0.8cqw, -0.5cqw); } 40% { transform: translate(-0.7cqw, 0.4cqw); }
+  60% { transform: translate(0.5cqw, 0.3cqw); } 80% { transform: translate(-0.3cqw, -0.2cqw); } }
+.eclat-bande { position: absolute; left: -25%; width: 150%; transform: skewY(-12deg) translateX(-110%); }
+.eclat .b1 { top: 18%; height: 44%; background: var(--encre); }
+.eclat .b2 { top: 60%; height: 4.5%; background: var(--sindoor); transform: skewY(-12deg) translateX(110%); }
+.eclat .b3 { top: 64.2%; height: 1.4%; background: var(--or); }
+.eclat .b4 { top: 13.5%; height: 3.2%; background: var(--sindoor); transform: skewY(-12deg) translateX(110%); }
+.eclat .b5 { top: 65.4%; height: 13%; background: var(--encre); }
+.eclat.joue .eclat-bande { animation: eclat-bande 460ms cubic-bezier(.18, 1.3, .4, 1) both; }
+@keyframes eclat-bande { to { transform: skewY(-12deg) translateX(0); } }
+.eclat.sort .eclat-bande { animation: eclat-sort-g 420ms cubic-bezier(.6, 0, .9, .5) both; }
+.eclat.sort .b2, .eclat.sort .b4 { animation-name: eclat-sort-d; }
+/* les bandes arrivent, puis repartent, l'une après l'autre (règles placées après les raccourcis) */
+.eclat.joue .b2 { animation-delay: 70ms; }
+.eclat.joue .b3 { animation-delay: 140ms; }
+.eclat.joue .b4 { animation-delay: 40ms; }
+.eclat.joue .b5 { animation-delay: 110ms; }
+@keyframes eclat-sort-g { from { transform: skewY(-12deg) translateX(0); } to { transform: skewY(-12deg) translateX(110%); } }
+@keyframes eclat-sort-d { from { transform: skewY(-12deg) translateX(0); } to { transform: skewY(-12deg) translateX(-110%); } }
+.eclat-trame { position: absolute; left: -25%; width: 150%; top: 18%; height: 60%; opacity: 0; transform: skewY(-12deg);
+  background-image: radial-gradient(circle, rgba(244, 197, 106, 0.55) 30%, rgba(244, 197, 106, 0) 34%); background-size: 1.6cqw 1.6cqw;
+  -webkit-mask-image: linear-gradient(90deg, transparent 8%, #000 42%, #000 58%, transparent 92%);
+  mask-image: linear-gradient(90deg, transparent 8%, #000 42%, #000 58%, transparent 92%); }
+.eclat.joue .eclat-trame { animation: eclat-trame 2s 200ms ease-out both; }
+@keyframes eclat-trame { 0% { opacity: 0; background-position: 0 0; } 20% { opacity: 0.9; } 100% { opacity: 0.5; background-position: 6cqw 0; } }
+.eclat-etoiles { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.eclat-etoiles path { opacity: 0; transform-box: fill-box; transform-origin: center; }
+.eclat.joue .eclat-etoiles path { animation: eclat-etoile 1.6s ease-out both; }
+@keyframes eclat-etoile { 0% { opacity: 0; transform: scale(0) rotate(-90deg); } 25% { opacity: 1; transform: scale(1.3) rotate(0); }
+  60% { opacity: 0.8; transform: scale(0.9); } 100% { opacity: 0.9; transform: scale(1); } }
+.eclat-objet { position: absolute; left: 15%; width: 70%; top: 24%; height: 26%; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: rotate(-260deg) scale(0.15); filter: drop-shadow(0 0 2.4cqw rgba(255, 215, 140, 0.75)); }
+.eclat-objet svg { width: 100%; height: 100%; }
+.eclat.joue .eclat-objet { animation: eclat-objet 720ms 160ms cubic-bezier(.2, 1.25, .35, 1) both; }
+@keyframes eclat-objet { to { opacity: 1; transform: rotate(-9deg) scale(1); } }
+.eclat-nom { position: absolute; left: 0; right: 0; top: 49%; margin: 0; text-align: center; white-space: nowrap;
+  font-family: "Unna", Georgia, serif; font-style: italic; font-size: 16cqw; line-height: 1; color: var(--creme);
+  -webkit-text-stroke: 0.3cqw var(--encre); text-shadow: 1cqw 1cqw 0 var(--sindoor), 2cqw 2cqw 0 rgba(7, 9, 26, 0.6);
+  opacity: 0; transform: rotate(-12deg) skewX(-8deg) scale(2.4); }
+.eclat.joue .eclat-nom { animation: eclat-nom 380ms 520ms cubic-bezier(.2, 1.5, .4, 1) both; }
+@keyframes eclat-nom { to { opacity: 1; transform: rotate(-12deg) skewX(-8deg) scale(1); } }
+.eclat-fragment { position: absolute; right: 6%; top: 68%; margin: 0; padding: 1cqw 3cqw; background: var(--or); color: var(--encre);
+  font-style: italic; font-size: 5cqw; white-space: nowrap; transform: skewX(-12deg) translateX(130%); }
+.eclat.joue .eclat-fragment { animation: eclat-fragment 420ms 780ms cubic-bezier(.2, 1.3, .4, 1) both; }
+@keyframes eclat-fragment { to { transform: skewX(-12deg) translateX(0); } }
+.eclat.sort .eclat-objet { animation: eclat-objet-sort 380ms cubic-bezier(.6, 0, .9, .5) both; }
+@keyframes eclat-objet-sort { from { opacity: 1; transform: rotate(-9deg) scale(1); } to { opacity: 0; transform: rotate(8deg) scale(1.6); } }
+.eclat.sort .eclat-nom { animation: eclat-nom-sort 300ms ease-in both; }
+@keyframes eclat-nom-sort { from { opacity: 1; transform: rotate(-12deg) skewX(-8deg) scale(1); } to { opacity: 0; transform: rotate(-12deg) skewX(-8deg) scale(0.8); } }
+.eclat.sort .eclat-fragment { animation: eclat-fragment-sort 300ms ease-in both; }
+@keyframes eclat-fragment-sort { from { transform: skewX(-12deg) translateX(0); } to { transform: skewX(-12deg) translateX(130%); } }
+.eclat.sort .eclat-trame, .eclat.sort .eclat-etoiles { animation: eclat-efface 260ms ease-in both; }
+@keyframes eclat-efface { from { opacity: 0.6; } to { opacity: 0; } }
+/* mouvement réduit : l'éclat devient un simple fondu, sans rien qui glisse ni ne tourne */
+.eclat.calme .eclat-bande, .eclat.calme .eclat-objet, .eclat.calme .eclat-nom, .eclat.calme .eclat-fragment,
+.eclat.calme .eclat-trame, .eclat.calme .eclat-etoiles path { animation: none; opacity: 0; transition: opacity 260ms; }
+.eclat.calme .eclat-bande, .eclat.calme .eclat-trame { transform: skewY(-12deg); }
+.eclat.calme .eclat-objet { transform: rotate(-9deg); }
+.eclat.calme .eclat-nom { transform: rotate(-12deg) skewX(-8deg); }
+.eclat.calme .eclat-fragment { transform: skewX(-12deg); }
+.eclat.calme.joue .eclat-bande, .eclat.calme.joue .eclat-objet, .eclat.calme.joue .eclat-nom, .eclat.calme.joue .eclat-fragment { opacity: 1; }
+.eclat.calme.joue { animation: none; }
+.eclat.calme.sort .eclat-bande, .eclat.calme.sort .eclat-objet, .eclat.calme.sort .eclat-nom, .eclat.calme.sort .eclat-fragment { opacity: 0; }
+
+.envol { position: absolute; z-index: 35; pointer-events: none; display: flex; align-items: center; justify-content: center;
+  filter: drop-shadow(0 0 1.2cqw rgba(255, 215, 140, 0.9)); }
+.envol svg { width: 100%; height: 100%; }
+
+/* banc d'essai des transitions (édition web) */
+.banc-titre { position: absolute; top: 4cqw; left: 5cqw; right: 26cqw; margin: 0; font-family: "Unna", serif; font-weight: 400;
+  font-size: 5.6cqw; line-height: 1.1; color: var(--or-pale); text-shadow: var(--ombre-texte); }
+.banc-legende { position: absolute; left: 5cqw; right: 5cqw; bottom: 57cqw; margin: 0; font-size: 3.6cqw; line-height: 1.4;
+  text-shadow: var(--ombre-texte); }
+.banc-credit { position: absolute; left: 5cqw; right: 5cqw; bottom: 50cqw; margin: 0; font-size: 2.6cqw; color: #d9d2c4; text-shadow: var(--ombre-texte); }
+.banc-legende, .banc-credit { background: rgba(7, 9, 26, 0.6); padding: 0.8cqw 2cqw; border-radius: 1cqw; }
+.banc-decors { display: none; }
+.jeu .banc-boutons { position: absolute; left: 4cqw; right: 4cqw; bottom: 5cqw; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.8cqw; z-index: 20; }
+.banc-boutons button { font: inherit; font-size: 3.2cqw; padding: 1.8cqw 1cqw; border-radius: 1cqw; cursor: pointer;
+  border: 0.2cqw solid rgba(244, 197, 106, 0.6); background: rgba(7, 9, 26, 0.82); color: var(--or-pale); }
+.banc-boutons button.julie { border-color: rgba(239, 230, 210, 0.6); background: rgba(24, 26, 32, 0.85); color: #efe6d2; }
+.banc-boutons button.objet { border-color: var(--sindoor); }
+
+/* ------------------------------------------------------------ livre entier : plans du décor, texte, gestes
+   Une page peut avoir plusieurs plans (l'effet « decor » passe de l'un à l'autre) : un seul
+   est visible, même sans script. La caméra déplace tout le décor. */
+.decor .plan { opacity: 0; transition: opacity 1200ms ease; }
+.decor .plan.vu { opacity: 1; }
+.decor { transform-origin: 50% 50%; }
+.decor .manquant { background: #223; }
+.aube { position: absolute; inset: 0; opacity: 0; transition: opacity 5s; pointer-events: none;
+  background: radial-gradient(ellipse 90% 30% at 50% 102%, rgba(255, 214, 150, 0.75), rgba(255, 170, 90, 0.25) 45%, rgba(0, 0, 0, 0) 75%); }
+
+/* places et tons du texte */
+.texte.nu { background: none; }
+.jeu .texte.nu { background: none; }
+.texte.lettre { top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; padding: 10cqw 11cqw;
+  color: #2a1c10; text-shadow: none; background: none; font-size: 4cqw; }
+.jeu .texte.lettre { background: none; }
+.texte p.dedicace { font-style: italic; text-align: right; }
+.texte p.lettre-ligne, .texte p.sanskrit { font-style: italic; }
+.texte.lettre .voix, .texte.lettre p.lettre-ligne { color: #2a1c10; }
+.grand .texte { font-size: 4.8cqw; }
+.grand .poeme { font-size: 4.5cqw; }
+
+/* lecteurs d'écran : lu, pas vu */
+.annonceur, .lu-seulement { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; margin: -1px; padding: 0; border: 0; }
+
+/* gestes : le calque des halos et des indices, le bouton « Faire le geste » */
+.geste-calque { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; overflow: visible; }
+.faire-geste { position: absolute; left: 50%; top: 58%; transform: translateX(-50%); z-index: 7; font: inherit; font-size: 3.4cqw;
+  padding: 1.4cqw 4cqw; border-radius: 5cqw; cursor: pointer; border: 0.2cqw solid var(--or); background: rgba(7, 9, 26, 0.78);
+  color: var(--or-pale); animation: apparait 600ms ease both; }
+@keyframes apparait { from { opacity: 0; } to { opacity: 1; } }
+.faire-geste:focus-visible { outline: 0.4cqw solid var(--or-pale); outline-offset: 0.5cqw; }
+
+/* barre : le carnet et le menu à côté des objets */
+.barre .carnet-bouton { transition: opacity 300ms; }
+.barre .carnet-bouton.pulse { animation: pulse-objets 900ms ease-out 2; }
+.sans-magie .suite { color: #b89a6a; }
+
+/* panneaux : objets de deux sacs, carnet des portes, menu */
+.fiche h3.fiche-sac { font-family: "Unna", serif; font-weight: 400; font-variant: small-caps; letter-spacing: 0.12em;
+  color: var(--or); font-size: 3.4cqw; margin: 3cqw 0 1cqw; text-align: center; }
+.carte-carnet svg { width: 100%; height: auto; display: block; margin: 1cqw 0 3cqw; }
+.carnet-liste { margin: 0 0 3cqw; padding-left: 5cqw; font-size: 3.6cqw; line-height: 1.5; color: #efe6d2; }
+.carnet-liste li { margin-bottom: 1cqw; }
+.fleche { display: inline-block; width: 1.5em; height: 0.75em; margin: 0 0.3em; vertical-align: middle; color: var(--or); }
+.menu-reglages { display: grid; gap: 2cqw; margin: 2cqw 0 3cqw; }
+.menu-reglages > button { font: inherit; font-size: 3.6cqw; text-align: left; padding: 1.6cqw 3cqw; border-radius: 1.6cqw; cursor: pointer;
+  border: 0.2cqw solid rgba(244, 197, 106, 0.45); background: rgba(244, 197, 106, 0.08); color: var(--or-pale); }
+.bascule::after { content: ""; float: right; width: 6cqw; height: 3cqw; margin-top: 0.6cqw; border-radius: 3cqw; background: rgba(239, 230, 210, 0.25);
+  box-shadow: inset 0 0 0 0.2cqw rgba(239, 230, 210, 0.4); }
+.bascule[aria-pressed="true"]::after { background: var(--or); box-shadow: none; }
+.curseur { display: grid; grid-template-columns: 1fr 1.6fr; align-items: center; gap: 2cqw; font-size: 3.4cqw; color: #efe6d2; padding: 0 3cqw; }
+.curseur input { width: 100%; accent-color: #f4c56a; }
+.menu-chapitres { display: grid; gap: 0.6cqw; margin: 0 0 2cqw; }
+.menu-chapitres .lien { font: inherit; font-size: 3.6cqw; text-align: left; background: none; border: 0; cursor: pointer;
+  color: var(--or-pale); padding: 1.2cqw 2cqw; border-bottom: 0.1cqw solid rgba(244, 197, 106, 0.2); }
+.menu-reglages > button:focus-visible, .menu-chapitres .lien:focus-visible, .curseur input:focus-visible { outline: 0.4cqw solid var(--or-pale); outline-offset: 0.3cqw; }
+.revenir-jeu { position: absolute; top: 3cqw; right: 3cqw; z-index: 20; font: inherit; font-size: 2.8cqw; padding: 1cqw 2.6cqw; border-radius: 5cqw;
+  border: 0.15cqw solid rgba(244, 197, 106, 0.45); background: rgba(8, 10, 20, 0.6); color: #efe6d2; cursor: pointer; }
+
+/* chez Julie, la fiche est une carte de téléphone */
+.fiche-carte.carte-julie { background: linear-gradient(#f7f5f0, #e7e3da); border-color: rgba(20, 20, 20, 0.18); color: #1b1b1b; }
+.carte-julie h2 { color: #1b1b1b; }
+.carte-julie blockquote { color: #2e2e2e; border-left-color: rgba(20, 20, 20, 0.25); }
+.carte-julie blockquote cite { color: #6d6a64; }
+.carte-julie .fiche-surtitre { color: #8a2a24; }
+.carte-julie .fiche-actions button { color: #1b1b1b; border-color: #1b1b1b; background: rgba(0, 0, 0, 0.05); }
+.carte-julie .fiche-actions button.secondaire { border-color: rgba(20, 20, 20, 0.3); color: #444; }
+
+@media (prefers-reduced-motion: reduce) {
+  .decor .plan { transition-duration: 200ms; }
+  .faire-geste { animation: none; }
+}
+.calme .texte .temps { filter: none; transition: opacity 200ms; }
+.calme .suite.pret { animation: none; }
+
+/* page de titre : la dédicace prend place dans la colonne du titre, au-dessus de la porte */
+.titre-livre .texte, .jeu .titre-livre .texte { position: static; padding: 0 12cqw; margin: 0 0 6cqw; min-height: 0; background: none;
+  font-size: 3.1cqw; line-height: 1.45; cursor: default; align-self: stretch; }
+.titre-livre .texte p { margin: 0 0 1.4cqw; }
+.titre-livre .edition { font-family: "Unna", serif; font-variant: small-caps; letter-spacing: 0.12em; font-size: 2.9cqw; color: #bfb39c; margin: 1cqw 0 6cqw; }
+.titre-livre .genre { margin: 0; }
+.boutons-seuil { display: flex; gap: 3cqw; justify-content: center; }
+.jeu .boutons-seuil { display: flex; }
+.bouton-reprendre { font-family: "Unna", serif; font-size: 4.2cqw; letter-spacing: 0.08em; color: var(--or-pale); background: rgba(7, 9, 26, 0.6);
+  border: 0.2cqw solid var(--or); border-radius: 1cqw; padding: 2cqw 5cqw; cursor: pointer; }
+.bouton-porte:focus-visible, .bouton-reprendre:focus-visible { outline: 0.4cqw solid var(--or-pale); outline-offset: 0.6cqw; }
+
+/* texte nu : à l'encre, sur le papier des dernières pages (la magie est morte) */
+.texte.nu { color: #2a1c10; text-shadow: none; }
+.texte.nu .voix { color: #6b3b0c; }
+.jeu .texte.nu.poeme { background: none; }
+
+/* la fin du livre : « Fin », à l'encre, et de quoi relire */
+.fin-livre { position: absolute; left: 0; right: 0; bottom: 18cqw; text-align: center; opacity: 0; transition: opacity 2.4s ease; z-index: 6; }
+.fin-livre.vu { opacity: 1; }
+.fin-livre .fin-titre { font-family: "Unna", serif; font-variant: small-caps; letter-spacing: 0.2em; font-size: 5cqw; color: #2a1c10; margin: 0 0 4cqw; }
+.fin-livre button { font: inherit; font-size: 3.4cqw; padding: 1.4cqw 4cqw; border-radius: 5cqw; cursor: pointer;
+  border: 0.2cqw solid #6b3b0c; background: none; color: #2a1c10; }
+.fin-livre button:focus-visible { outline: 0.4cqw solid #6b3b0c; outline-offset: 0.5cqw; }
+.sans-magie .consigne, .texte.nu ~ .consigne { color: #6b3b0c; text-shadow: none; }
+
+/* ------------------------------------------------------------ états de page (synthèse, partie 3.3) */
+/* la barre de Julie (4.1 à 5.1) : les boutons de Darshan s'effacent (le carnet), seul son sac reste */
+.barre-julie .barre .carnet-bouton { display: none; }
+/* le voile des temps forts : la barre à 35 %, toujours utilisable */
+.voile-page .barre { opacity: 0.35; transition: opacity 1.2s; }
+.voile-page .barre:hover, .voile-page .barre:focus-within { opacity: 0.9; }
+/* sans magie (après 7.14) : ni objets, ni carnet, ni halo, ni « Faire le geste » ; le menu reste */
+.sans-magie-page .barre .objets, .sans-magie-page .barre .carnet-bouton, .sans-magie-page .faire-geste,
+.sans-magie-page .halo-interet { display: none; }
+/* répliques de Darshan : en or tant qu'il a sa magie, en clair ensuite */
+.texte p.de-darshan { color: var(--or-pale); }
+.texte.clair p.de-darshan { color: #7a4a10; }
+.repliques-claires .texte p.de-darshan { color: inherit; }
+/* l'aiguille de la boussole, sur le bouton « Carnet » */
+.barre .carnet-bouton .aiguille-bouton { width: 1.2em; height: 1.2em; vertical-align: -0.2em; margin-right: 0.35em; }
+.carte-carnet .lien-porte { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer;
+  text-decoration: underline; text-decoration-color: rgba(244, 197, 106, 0.45); text-underline-offset: 0.2em; }
+.carte-carnet .lien-porte:focus-visible { outline: 0.3cqw solid var(--or-pale); outline-offset: 0.3cqw; }
+.fiche h2.titre-porte { font-size: 4.6cqw; }
+/* le compte à rebours, en haut de la page */
+.compte-page { position: absolute; top: 3.4cqw; left: 50%; transform: translateX(-50%); z-index: 19; white-space: nowrap;
+  font-family: "Unna", serif; font-variant: small-caps; letter-spacing: 0.12em; font-size: 3.4cqw; color: var(--or-pale);
+  text-shadow: 0 0 1.4cqw rgba(255, 200, 110, 0.5), var(--ombre-texte); opacity: 0; transition: opacity 900ms; pointer-events: none; }
+.compte-page.vu { opacity: 1; }
+.compte-page.julie { font-family: "Amiri", serif; font-variant: normal; letter-spacing: 0.04em; color: #fff; text-shadow: none;
+  background: rgba(40, 42, 48, 0.72); padding: 0.6cqw 2.6cqw; border-radius: 3cqw; }
+/* le regard : la page vue à travers deux verres fumés */
+.regard { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 9; pointer-events: none; opacity: 0; transition: opacity 700ms; }
+.jeu .regard { display: block; }
+.regard.vu { opacity: 1; }
+
+/* ------------------------------------------------------------ mécaniques (équipe des mécaniques : src/js/mecaniques.js)
+   Les calques des gestes (sous le texte : « couche-geste » ; les aides par-dessus : « geste-calque »),
+   la couleur des aides selon le monde de la page (or chez Darshan, blanc et graphite chez Julie,
+   rien après 7.14), les paupières, l'écran de la galerie, les listes de 6.2, les étals de 5.2,
+   l'écriture à la plume de 7.7. */
+.scene { --aide: #ffe7a8; --aide-fond: rgba(7, 9, 26, 0.78); --aide-texte: var(--or-pale); }
+.scene.monde-julie { --aide: #ffffff; --aide-fond: rgba(36, 38, 44, 0.86); --aide-texte: #ffffff; }
+.geste-calque .aide { stroke: var(--aide); }
+.geste-calque .aide-plein { fill: var(--aide); }
+.geste-calque { transition: opacity 450ms; }
+.geste-calque.efface { opacity: 0; }
+.halo-interet.hesite.actif { animation-duration: 3.6s; }
+.scene.sans-magie .geste-calque .aide, .scene.sans-magie .geste-calque .aide-plein,
+.sans-magie-page .geste-calque .aide, .sans-magie-page .geste-calque .aide-plein { display: none; }
+.scene.geste-attendu { touch-action: none; -webkit-user-select: none; user-select: none; }
+.monde-julie .consigne { font-family: "Amiri", serif; font-style: normal; color: #ffffff; left: 50%; right: auto; transform: translateX(-50%);
+  width: max-content; max-width: 84cqw; padding: 0.8cqw 3cqw; border-radius: 4cqw; background: rgba(36, 38, 44, 0.78); text-shadow: none; }
+.monde-julie .consigne:empty { display: none; }
+.monde-julie .faire-geste { border-color: #ffffff; background: rgba(36, 38, 44, 0.86); color: #ffffff; }
+.monde-julie .faire-geste:focus-visible { outline-color: #ffffff; }
+
+/* les calques des gestes : sous le texte, ou par-dessus (attente, échos, hublot) */
+.couche-geste { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.couche-geste.attente-calque, .couche-geste.echo-calque { z-index: 4; overflow: visible; }
+.couche-geste.hublot-calque { z-index: 3; }
+
+/* les paupières (7.1, 7.10, 7.11) : deux voiles au bord flou ; derrière elles, le monde se trouble */
+.paupieres { visibility: hidden; }
+.paupiere { position: absolute; left: -2%; right: -2%; height: 62%; transform: translateY(-100%); }
+.paupiere.haut { top: 0; }
+.paupiere.bas { bottom: 0; transform: translateY(100%); }
+.paupieres-trouble { position: absolute; inset: 0; opacity: 0; background: rgba(20, 8, 4, 0.18);
+  -webkit-backdrop-filter: blur(0.6cqw); backdrop-filter: blur(0.6cqw); }
+.calme .paupieres-trouble { opacity: 1; }
+/* respirer (3.10) : le fleuve s'assombrit d'un cran à chaque souffle */
+.assombrir { position: absolute; inset: 0; background: #02030a; opacity: 0; transition: opacity 1.4s ease; }
+
+/* l'écran du téléphone de Julie en pleine page (5.6, 5.7) : des vignettes, aucun texte */
+.galerie-ecran { visibility: hidden; background: #000; }
+.galerie-grille { position: absolute; left: 2cqw; right: 2cqw; top: 13cqw; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7cqw; }
+.galerie-grille .vignette { aspect-ratio: 1 / 1; overflow: hidden; background: #16171b; }
+.galerie-grille .vignette img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.galerie-grille .vignette img.attente { filter: blur(0.5cqw) brightness(0.85); transform: scale(1.12); }
+
+/* les listes de 6.2 : Darshan à gauche (au pinceau d'or), Julie à droite (au stylo) ; empilées en grand texte */
+.liste-geste { opacity: 0; overflow: visible; }
+.liste-articles { position: absolute; top: 16cqw; width: 41cqw; margin: 0; padding: 2.6cqw 3cqw; list-style: none; border-radius: 1.4cqw;
+  font-size: 3.5cqw; line-height: 1.3; }
+.liste-geste.darshan .liste-articles { left: 5cqw; color: var(--or-pale); background: rgba(7, 9, 26, 0.72); text-shadow: var(--ombre-texte); }
+.liste-geste.julie .liste-articles { right: 5cqw; font-family: "Amiri", serif; color: #1b1b1b; background: rgba(247, 245, 240, 0.92); }
+.grand .liste-articles { width: auto; left: 7cqw; right: 7cqw; font-size: 4.1cqw; }
+.grand .liste-geste.darshan .liste-articles { top: 12cqw; }
+.grand .liste-geste.julie .liste-articles { top: 58cqw; }
+.liste-article { display: flex; align-items: center; gap: 1.8cqw; margin: 0 0 1.3cqw; }
+.liste-article:last-child { margin-bottom: 0; }
+.liste-article .case { position: relative; flex: none; width: 3.2cqw; height: 3.2cqw; border: 0.22cqw solid currentColor; border-radius: 0.4cqw; opacity: 0.8; }
+.liste-article .case .coche { position: absolute; left: -0.6cqw; top: -1.3cqw; width: 4.6cqw; height: 4.6cqw; overflow: visible; }
+.liste-article.coche .mot { opacity: 0.85; }
+.liste-article .echo { transition: color 900ms, text-shadow 900ms; }
+.liste-geste.darshan .echo.rallume { color: #fff4d6; text-shadow: 0 0 1.4cqw rgba(255, 210, 120, 0.9); }
+.liste-geste.julie .echo.rallume { color: #7a4a10; text-shadow: 0 0 1cqw rgba(244, 197, 106, 0.9); }
+.calme .liste-article .echo { transition: none; }
+
+/* les étals de 5.2 : les marchandises (calques du décor), et un bouton par étal pour le clavier */
+.marchandises { pointer-events: none; }
+.marchandises .marchandise { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.etal-bouton { position: absolute; z-index: 4; margin: 0; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
+.etal-bouton:focus-visible { outline: 0.4cqw dashed var(--aide); outline-offset: -0.4cqw; }
+.etal-source { position: absolute; pointer-events: none; }
+.barre .ploie { animation: ploie 650ms cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes ploie { 35% { transform: translateY(0.9cqw) scaleY(0.9); } 70% { transform: translateY(-0.2cqw) scaleY(1.02); } }
+.calme .barre .ploie { animation: none; }
+
+/* 7.7 : la plume révèle le texte du livre lettre à lettre ; la lettre écrite reste entière */
+.jeu .texte .temps.en-ecriture { opacity: 1; filter: none; transition: none; }
+.lettre-plume { opacity: 0; transition: opacity 160ms; }
+.lettre-plume.ecrite { opacity: 1; }
+.calme .lettre-plume { transition: opacity 300ms; }
+.jeu .texte.lettre .lettre-ligne .temps.passe { opacity: 1; }
+.texte.encre-foncee, .texte.lettre.encre-foncee .lettre-ligne { color: #1a1008; transition: color 1.5s; }
+
+/* 6.11 : la moitié de Julie bat doucement ; la réglette de 4.2, le téléphone de 4.3 et 4.7 */
+.pouls-attente { position: absolute; left: 50%; top: 0; width: 50%; height: 100%; opacity: 0;
+  background: radial-gradient(ellipse 70% 45% at 50% 55%, rgba(255, 236, 214, 0.9), rgba(255, 236, 214, 0) 70%); }
+.reglette-entree { pointer-events: none; }
+.texte-telephone { font-family: "Amiri", serif; }
+.chiffre-reglette, .chiffre-grand { font-family: "Amiri", serif; }
+.chiffre-grand { paint-order: stroke; stroke: rgba(0, 0, 0, 0.45); stroke-width: 6; }
+
+/* ------------------------------------------------------------ report de la synthèse : places du texte, plans sans script
+   (direction) Le panneau suit la lumière de l'image (arbitrage 4) : clair en haut sur une image claire,
+   bleu de nuit sur un ciel, à l'encre sur le papier des dernières pages. */
+.texte.en-haut.clair, .jeu .texte.en-haut.clair { color: #1d140c; text-shadow: 0 0 0.8cqw rgba(255, 244, 222, 0.9);
+  background: linear-gradient(to top, rgba(250, 238, 214, 0) 0%, rgba(250, 238, 214, 0.78) 30%, rgba(250, 238, 214, 0.93) 100%); }
+.texte.en-haut.clair .voix { color: #6b3b0c; }
+.texte.ciel, .jeu .texte.ciel { background: linear-gradient(to bottom, rgba(8, 16, 52, 0) 0%, rgba(8, 16, 52, 0.62) 30%, rgba(8, 16, 52, 0.84) 100%); }
+.texte.en-haut.papier, .jeu .texte.en-haut.papier { color: #2a1c10; text-shadow: none;
+  background: linear-gradient(to top, rgba(244, 236, 220, 0) 0%, rgba(244, 236, 220, 0.9) 28%, #f4ecdc 100%); }
+.texte.en-haut.papier .voix { color: #6b3b0c; }
+.texte.en-haut.papier p.de-darshan, .texte.nu p.de-darshan { color: #7a4a10; }
+/* sans script, une page montre son premier plan, ou ses plans « sans-script », qui passent par-dessus
+   (build.py, PLANS_SANS_SCRIPT : 7.3, 7.11 à 7.15) */
+html:not(.jeu) .decor .plan.sans-script { opacity: 1; }

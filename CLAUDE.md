@@ -59,6 +59,17 @@ dans le dépôt Willwonderc/PexelsWillwonder.
   P3) reste joint au fichier. Noms en minuscules sans espaces ni accents. Jamais de TIFF,
   PSD ni PDF d'impression dans le dépôt : il est public.
 - Polices hébergées dans `fonts/` : aucun appel à Google Fonts.
+- Darshan jouable : évaluation, piste retenue et chantiers D1 à D10 dans
+  `docs/plan-darshan.md` ; interface (fiches d'objet, carnet, regard, monde de Julie) et
+  chantiers I1 à I6 dans `docs/plan-darshan-interface.md` ; découpage de tout le livre en
+  85 tableaux (gestes, objets, transitions, photos de Karl, repérages) dans
+  `docs/darshan-decoupage.md`, écrit par `outils/darshan/decoupage.py` (modifier le
+  programme, jamais le document) ; mise en scène (direction de création, puis traitement
+  narratif de chaque scène par une équipe créative) dans `docs/darshan-mise-en-scene/` ;
+  prototype (extrait jouable, EPUB et web, banc d'essai des transitions) dans
+  `outils/darshan/`, relié à aucune page. Le texte y est lu dans
+  `livres/darshan.epub`, jamais recopié ni modifié ; les coquilles de l'annexe A, acceptées
+  par Karl le 30 septembre 2026, se corrigent à la fabrication, chacune listée.
 - Section Photographie : elle lit à chaque visite `https://photos.karlforterre.fr/apercu.json`,
   écrit chaque nuit par `vitrine/build.py` du dépôt PexelsWillwonder (sélection, séries,
   galeries, chiffres). La liste `photosIntegrees` de `script.js` ne sert qu'en secours.
