@@ -479,3 +479,18 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 .regard { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 9; pointer-events: none; opacity: 0; transition: opacity 700ms; }
 .jeu .regard { display: block; }
 .regard.vu { opacity: 1; }
+
+/* ------------------------------------------------------------ report de la synthèse : places du texte, plans sans script
+   (direction) Le panneau suit la lumière de l'image (arbitrage 4) : clair en haut sur une image claire,
+   bleu de nuit sur un ciel, à l'encre sur le papier des dernières pages. */
+.texte.en-haut.clair, .jeu .texte.en-haut.clair { color: #1d140c; text-shadow: 0 0 0.8cqw rgba(255, 244, 222, 0.9);
+  background: linear-gradient(to top, rgba(250, 238, 214, 0) 0%, rgba(250, 238, 214, 0.78) 30%, rgba(250, 238, 214, 0.93) 100%); }
+.texte.en-haut.clair .voix { color: #6b3b0c; }
+.texte.ciel, .jeu .texte.ciel { background: linear-gradient(to bottom, rgba(8, 16, 52, 0) 0%, rgba(8, 16, 52, 0.62) 30%, rgba(8, 16, 52, 0.84) 100%); }
+.texte.en-haut.papier, .jeu .texte.en-haut.papier { color: #2a1c10; text-shadow: none;
+  background: linear-gradient(to top, rgba(244, 236, 220, 0) 0%, rgba(244, 236, 220, 0.9) 28%, #f4ecdc 100%); }
+.texte.en-haut.papier .voix { color: #6b3b0c; }
+.texte.en-haut.papier p.de-darshan, .texte.nu p.de-darshan { color: #7a4a10; }
+/* sans script, une page montre son premier plan, ou ses plans « sans-script », qui passent par-dessus
+   (build.py, PLANS_SANS_SCRIPT : 7.3, 7.11 à 7.15) */
+html:not(.jeu) .decor .plan.sans-script { opacity: 1; }

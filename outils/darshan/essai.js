@@ -59,7 +59,7 @@ fs.mkdirSync(dossier, { recursive: true });
   await pause(300); await photo('toit-carton');
   await pause(1500); await photo('toit-p18');
   await suite(3000); await photo('toit-filantes');
-  await suite(1500); await suite(2000); await photo('toit-voix-du-pere');
+  await suite(1500); await suite(2000); await photo('toit-appel-au-pere');
   await suite(1500); await suite(1500); await pret(); await page.keyboard.press('ArrowRight');
   await balayage('encre', 'tuiles', 450);
   await etape('tuiles');

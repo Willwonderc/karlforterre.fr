@@ -14,21 +14,23 @@ Le livre entier est découpé en 85 tableaux dans
 
 Rien ici n'est encore relié au site : aucune page ne pointe vers ce dossier.
 
-## Chantier en cours : le livre entier (pause du 29 septembre 2026)
+## Chantier en cours : le livre entier (état au 30 septembre 2026)
 
-La réalisation du livre entier a commencé le 29 septembre ; elle s'est arrêtée à mi-chemin
-des fondations, à la demande de Karl. Ce qui est en place :
+La pré-production est terminée (`docs/darshan-mise-en-scene/`, avec sa synthèse) et reportée
+dans la fabrication. Le livre se fabrique et se joue de bout en bout ; restent les mécaniques,
+les effets et les scènes propres à chaque page, des décors et des sons. Ce qui est en place :
 
 | Fichier | État |
 |---|---|
 | `texte.py` | Fait. Le texte du livre, commun à la fabrication et au découpage, avec les italiques du livre imprimé rétablies. |
-| `livre.py` | Fait. Les réglages de production des 85 tableaux : décors, gestes, effets, objets gagnés ou perdus, portes franchies. |
-| `objets.ini` | Fait, à relire par Karl. Les 17 objets, leur nom, et les phrases du livre qui en parlent (vérifiées mot pour mot). |
-| `interface.ini` | Fait, à valider par Karl. Tous les textes d'interface : consignes des 67 gestes, boutons, menu, carnet des portes. |
-| `build.py` | Réécrit pour les 85 pages : 377 temps, 67 gestes, effets, sacs et portes calculés page après page, vérifications. Il signale les gestes, effets et scènes que le moteur ne connaît pas encore (erreur avec `--strict`). L'EPUB jouable complet passe EPUBCheck sans erreur ni avertissement (30 septembre). |
-| `src/js/` | Le nouveau moteur, en fragments, tous écrits le 30 septembre : `base`, `son`, `dessins` (en cours), `visuels`, `transitions`, `interface`, `recit`, `mecaniques`, `effets`, `scenes`, `depart`. Le livre se joue de bout en bout, au toucher et au clavier. Restent, d'après la synthèse des équipes : les mécaniques et les effets propres à chaque scène (un geste inconnu devient pour l'instant un simple toucher), et les scènes écrites à la main du chapitre 6 (listes), du chapitre 7 (porte du père) et de la clôture. |
+| `decoupage.py` | Fait (report de la synthèse, 30 septembre). Les 85 tableaux, avec les trois frontières déplacées (2.9/2.10, 7.7/7.8, 7.15/7.16), 58 gestes, les sons et leurs variantes, 43 repérages (S1 à S10), le catalogue des 27 mécaniques. |
+| `livre.py` | Fait (report de la synthèse). Les réglages des 85 tableaux aux noms uniques de la synthèse : 115 décors, gestes, effets, objets gagnés ou perdus, portes franchies, répliques de Darshan (`REPLIQUES`). |
+| `objets.ini`, `portes.ini` | Faits, à relire par Karl. Les 18 objets (68 phrases) et les fiches des 7 portes du carnet (19 phrases), chaque phrase vérifiée mot pour mot. |
+| `interface.ini` | Fait, à valider par Karl. Tous les textes d'interface : consignes des 58 gestes, 13 actions, boutons, menu, carnet des portes, générique ; les textes nouveaux sont marqués « à valider par Karl ». |
+| `build.py` | Fait pour les 85 pages : 446 temps, 58 gestes, sacs, portes et les sept états de page (père, barre de Julie, voile, regard, compte à rebours, boussole, répliques) calculés page après page, vérifications. Il signale les gestes, effets et scènes que le moteur ne connaît pas encore (erreur avec `--strict`). L'EPUB jouable complet passe EPUBCheck sans erreur ni avertissement (30 septembre). |
+| `src/js/` | Le nouveau moteur, en fragments, tous écrits le 30 septembre : `base`, `son`, `dessins` (en cours), `visuels`, `transitions`, `interface`, `recit`, `mecaniques`, `effets`, `scenes`, `depart`. Le livre se joue de bout en bout, au toucher et au clavier. L'interface lit les sept états de page. En cours : les 19 mécaniques et les 76 effets qui restent (un geste inconnu devient pour l'instant un simple toucher) ; à suivre : les 5 scènes écrites à la main (plier, vision, listes, rue-de-rungis, clôture) et les transitions `bandes-photo` et `bandes-julie`. |
 | `src/js/son.js` | Fait pour les lieux (30 septembre) : les 18 ambiances, les couches (cœurs, pluie, feu, télévision sans parole, vibreur, la ballade composée pour le livre), l'appel et l'accord du père ; équilibrage (ambiances autour de -30 dB, crêtes sous -1,4 dBFS) ; son coupé, rien n'est fabriqué ; chaque ambiance arrête toutes ses sources. En cours : les effets ponctuels de la synthèse (partie 5.4), les couches qui manquent et le son `autre-cote` des portes. Banc d'essai : `essai-son.js`. |
-| `decors.py` | Fait. Fabrique les décors en 1600 × 2400 (WebP) : `python3 outils/darshan/decors.py [noms]`. 63 décors sur 72 sont dans `src/img/decors/` (20 Mo) : toutes les photos et toutes les encres. |
+| `decors.py`, `art.py` | En cours (30 septembre) : les décors de la synthèse (115), dessins, recadrages et photos nouvelles, en 1600 × 2400 (WebP) : `python3 outils/darshan/decors.py [noms]`. `build.py` liste ceux qui manquent. |
 | `classique.py` | Fait, à relire par Karl. L'EPUB classique (refusionnable), aux mentions de Karl, texte vérifié au caractère près. Couverture : celle de 2023 (photographie d'Arianna Jadé), fournie en grand par Karl le 30 septembre ; EPUBCheck et Ace passent sans rien relever. Son en-tête dit où il en est et ce que Karl doit trancher (colophon, libellés, langue de दर्शन, date d'édition). Décidé par Karl le 29 septembre : « nouvelle » sur la page de titre ; ISBN à demander à l'AFNIL (constante `ISBN`, vide en attendant). |
 
 Polices : refaites le 30 septembre par `polices.py`, avec le « ā » de « mudrā » (il
