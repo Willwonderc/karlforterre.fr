@@ -35,7 +35,8 @@ Polices : refaites le 30 septembre par `polices.py`, avec le « ā » de « mudr
 manquait déjà dans l'EPUB de 2023), en WOFF2 pour l'édition jouable et en TTF pour
 l'édition classique. Aucune police du livre n'a la flèche « → » des étiquettes du carnet
 des portes : le moteur la dessinera. L'édition classique passe EPUBCheck 5.4.0 sans erreur
-ni avertissement (essai avec une couverture provisoire, le 30 septembre).
+ni avertissement, et Ace by DAISY 1.4.6 sans aucune violation (essai avec une couverture
+provisoire, le 30 septembre).
 
 Pour les décors, il reste :
 - **les 9 dessins** de `art.py` (local-nuit, mur-terre, cosmos, pekin, desert-nuit,

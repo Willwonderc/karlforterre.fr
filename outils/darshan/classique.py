@@ -17,15 +17,17 @@ Vérification intégrée : l'EPUB est d'abord écrit à côté, relu, et son tex
 paragraphe par paragraphe, dans l'ordre de lecture) doit être identique, caractère pour
 caractère, à texte.texte_du_livre(). Sinon le programme échoue et n'écrit pas le livre.
 
-ÉTAT AU 29 SEPTEMBRE 2026 (session interrompue, à reprendre) :
+ÉTAT AU 30 SEPTEMBRE 2026 :
 - FAIT : tout le livre, métadonnées d'accessibilité, sommaire et repères, vérification du
-  texte à chaque fabrication (essai réussi avec une couverture provisoire, hors du dépôt).
-- MANQUE la couverture src/img/couverture.jpg (en fabrication par ailleurs) : sans elle, le
-  programme s'arrête avec un message clair, sans écrire de livre.
-- PAS ENCORE FAIT : EPUBCheck 5.4.0, Ace by DAISY et les captures dans Chromium. Tant
-  qu'EPUBCheck et Ace n'ont pas passé, CONFORMITE_A11Y reste False : le livre ne déclare
-  pas dcterms:conformsTo.
-- POLICES : refaites le 30 septembre par polices.py, avec le « ā » de « mudrā », en TTF.
+  texte à chaque fabrication. Polices refaites par polices.py, avec le « ā » de « mudrā »,
+  en TTF.
+- CONTRÔLÉ le 30 septembre, sur un essai avec une couverture provisoire (hors du dépôt) :
+  EPUBCheck 5.4.0, aucune erreur ni avertissement ; Ace by DAISY 1.4.6, aucune violation.
+- MANQUE la couverture src/img/couverture.jpg : sans elle, le programme s'arrête avec un
+  message clair, sans écrire de livre.
+- RESTE, une fois la couverture faite : refaire EPUBCheck et Ace sur le vrai livre, les
+  captures dans Chromium, une relecture à la main (ordre de lecture, texte de la
+  couverture), puis passer CONFORMITE_A11Y à True pour déclarer dcterms:conformsTo.
 
 Essai sans la vraie couverture (jamais dans dist/) :
     python3 outils/darshan/classique.py --couverture essai.jpg --sortie /tmp/essai.epub
