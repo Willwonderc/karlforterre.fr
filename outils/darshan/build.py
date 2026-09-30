@@ -822,7 +822,7 @@ def moteur_source():
 POLICES = ["Amiri-Regular.woff2", "Amiri-Italic.woff2", "Amiri-Bold.woff2", "Unna-Regular.woff2",
            "Unna-Italic.woff2", "Tiro-Darshan.woff2"]
 LICENCES = ["OFL-Amiri.txt", "OFL-Unna.txt", "OFL-Tiro.txt"]
-TYPES = {".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".woff2": "font/woff2",
+TYPES = {".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".svg": "image/svg+xml", ".woff2": "font/woff2",
          ".txt": "text/plain", ".js": "application/javascript", ".css": "text/css"}
 
 
@@ -868,6 +868,18 @@ def decors_utilises():
             if livre.DECORS[nom]["type"] in ("photo", "encre", "dessin") and decor_existe(nom)]
 
 
+def extras_des_decors():
+    """Les calques et extras que decors.py range avec les décors (src/img/decors/) sans en faire un
+    décor de livre.py : clichés et vignettes de la galerie, calques du marché, de la fenêtre et du
+    placard, bande de la lune, esquisse du théâtre, planche des photographies… Le moteur les
+    appelle par leur nom (DONNEES.images)."""
+    dossier = SRC / "img" / "decors"
+    if not dossier.exists():
+        return []
+    return sorted(f.name for f in dossier.iterdir()
+                  if f.suffix in (".webp", ".svg") and f.stem not in livre.DECORS)
+
+
 def fichiers_prototype():
     """Les fichiers du prototype (src/img/) que le livre emploie et qui sont déjà là."""
     fichiers = []
@@ -888,6 +900,8 @@ def images_des_decors():
             images[nom] = [f for f in d["fichiers"] if (SRC / "img" / f).exists()]
         elif d["type"] != "uni" and decor_existe(nom):
             images[nom] = [f"decors/{nom}.webp"]
+    for f in extras_des_decors():
+        images[pathlib.Path(f).stem] = [f"decors/{f}"]
     return images
 
 
@@ -900,6 +914,8 @@ def copier_ressources(racine, pages):
         shutil.copy(SRC / "img" / f, racine / "img" / f)
     for nom in decors_utilises():
         shutil.copy(SRC / "img" / "decors" / f"{nom}.webp", racine / "img" / "decors" / f"{nom}.webp")
+    for f in extras_des_decors():
+        shutil.copy(SRC / "img" / "decors" / f, racine / "img" / "decors" / f)
     (racine / "js" / "moteur.js").write_text(moteur_source(), encoding="utf-8")
     (racine / "js" / "donnees.js").write_text(fichier_donnees(pages), encoding="utf-8")
 
@@ -1069,6 +1085,8 @@ def epub(pages):
         manifeste.append(f'<item id="i-{f.split(".")[0]}" href="img/{f}" media-type="{TYPES[pathlib.Path(f).suffix]}"/>')
     for nom in decors_utilises():
         manifeste.append(f'<item id="d-{nom}" href="img/decors/{nom}.webp" media-type="image/webp"/>')
+    for f in extras_des_decors():
+        manifeste.append(f'<item id="x-{pathlib.Path(f).stem}" href="img/decors/{f}" media-type="{TYPES[pathlib.Path(f).suffix]}"/>')
     if couverture.exists():
         manifeste.append('<item id="couverture" href="img/couverture.jpg" media-type="image/jpeg" properties="cover-image"/>')
     for pg in pages:
