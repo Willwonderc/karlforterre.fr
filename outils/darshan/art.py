@@ -1680,31 +1680,41 @@ def sujet(nom, boite, rng):
 
 
 def couple(rng, couleur=False):
-    """La toile du couple : deux silhouettes en longs traits sinueux, étirées par le mouvement, qui
-    tournent l'une autour de l'autre, les mains jointes au centre (610, 333) ; couleur=True : leur
+    """La toile du couple : deux silhouettes sinueuses et étirées, qui ondulent comme deux flammes,
+    penchées l'une vers l'autre, les mains jointes au centre (610, 333) ; chaque corps entre deux
+    longs traits d'encre, elle à gauche, ses cheveux dénoués, lui à droite. couleur=True : leur
     aquarelle seule, l'orange pour elle, le jaune pour lui, arrêtée aux berges d'encre."""
-    elle = [(528, 168), (548, 236), (552, 318), (528, 420), (486, 518)]
-    lui = [(700, 170), (684, 240), (672, 330), (700, 440), (752, 528)]
-    bras_elle = [(546, 246), (582, 298), (608, 331)]
-    bras_lui = [(682, 256), (642, 300), (613, 334)]
-    robe = [(556, 300), (600, 392), (648, 462), (700, 500)]
+    elle = ([(550, 196), (534, 252), (522, 318), (532, 396), (510, 468), (466, 544)],
+            [(566, 204), (572, 262), (564, 330), (572, 412), (556, 494), (524, 552)])
+    lui = ([(664, 194), (680, 252), (694, 326), (684, 406), (702, 480), (748, 546)],
+           [(650, 200), (648, 264), (656, 340), (650, 420), (664, 500), (694, 554)])
+    bras = ([(566, 238), (590, 292), (607, 331)], [(650, 234), (632, 290), (613, 333)])
+    tetes = ((552, 172, 18, "#e8862a"), (664, 168, 19, "#e8c42a"))
+    cheveux = [(540, 160), (514, 180), (500, 224), (510, 266), (498, 300)]
+
+    def corps(av, ar):
+        return poly(catmull_rom(av, 6) + catmull_rom(ar[::-1], 6))
     if couleur:
         rc = random.Random(5)
-        return (lavis(trait(elle, 50, rc, 0.2, 0.55, 0.1), "#e8862a", 0.8, "aquarelle") +
-                lavis(trait(robe, 22, rc, 0.2, 0.7, 0.2), "#e8862a", 0.7, "aquarelle") +
-                lavis(trait(bras_elle, 12, rc, 0.2, 0.3, 0.1), "#e8862a", 0.8, "aquarelle") +
-                lavis(trait(lui, 54, rc, 0.2, 0.55, 0.1), "#e8c42a", 0.8, "aquarelle") +
-                lavis(trait(bras_lui, 13, rc, 0.2, 0.3, 0.1), "#e8c42a", 0.8, "aquarelle") +
-                '<circle cx="610" cy="333" r="16" fill="#e8a62a" opacity="0.8" filter="url(#aquarelle)"/>' +
-                '<circle cx="522" cy="150" r="16" fill="#e8862a" opacity="0.75" filter="url(#aquarelle)"/>' +
-                '<circle cx="705" cy="152" r="17" fill="#e8c42a" opacity="0.75" filter="url(#aquarelle)"/>')
+        out = []
+        for (av, ar), br, (x, y, r, c) in zip((elle, lui), bras, tetes):
+            out.append(lavis(corps(av, ar), c, 0.85, "aquarelle"))
+            out.append(lavis(trait(br, 12, rc, 0.2, 0.3, 0.1), c, 0.8, "aquarelle"))
+            out.append(f'<circle cx="{x}" cy="{y}" r="{r - 2}" fill="{c}" opacity="0.8" filter="url(#aquarelle)"/>')
+        out.append(lavis(trait(cheveux, 16, rc, 0.2, 0.7, 0.3), "#d8641a", 0.6, "aquarelle"))
+        out.append('<circle cx="610" cy="333" r="15" fill="#e8a62a" opacity="0.8" filter="url(#aquarelle)"/>')
+        return "".join(out)
     out = []
-    for corps, bras, tete, r in ((elle, bras_elle, (522, 150), 20), (lui, bras_lui, (705, 152), 21)):
-        out.append(lavis(trait(corps, 56, rng, 0.2, 0.55, 0.1), "#2a2a38", 0.12, "aquarelle"))
-        out.append(trait_toile(corps, 5.5, rng, fin="volute"))
-        out.append(trait_toile(bras, 3.4, rng, fin="volute"))
-        out.append(f'<circle cx="{tete[0]}" cy="{tete[1]}" r="{r}" fill="none" stroke="{ENCRE}" stroke-width="4.5" filter="url(#bord-encre)"/>')
-    out.append(trait_toile(robe, 3.2, rng, fin="racine"))
+    for (av, ar), br, (x, y, r, _) in zip((elle, lui), bras, tetes):
+        out.append(lavis(corps(av, ar), "#2a2a38", 0.16, "aquarelle"))
+        out.append(trait_toile(av, 5.2, rng, fin="volute"))
+        out.append(trait_toile(ar, 3.4, rng, fin="racine"))
+        out.append(trait_toile(br, 3.2, rng, fin="volute"))
+        tour = [(x + r * math.cos(a), y + r * math.sin(a)) for a in [2.2 + k * 0.62 for k in range(10)]]
+        out.append(f'<circle cx="{x}" cy="{y}" r="{r}" fill="#2a2a38" opacity="0.14" filter="url(#aquarelle)"/>')
+        out.append(f'<path d="{trait(tour, 4.4, rng, 0.1, 0.4, 0.2)}" fill="{ENCRE}" opacity="0.9"/>')
+    out.append(trait_toile(cheveux, 3.0, rng, fin="volute"))
+    out.append(f'<circle cx="610" cy="333" r="6" fill="{ENCRE}" opacity="0.85" filter="url(#bord-encre)"/>')
     return "".join(out)
 
 
@@ -1728,7 +1738,7 @@ def toiles(calque=None, graine=91):
         out.append(sujet(nom, boite, rng))
     x0, y0, x1, y1 = TOILE_COUPLE
     out.append(toile_de_lin(x0, y0, x1, y1, rng))
-    out.append(couple(rng))
+    out.append(f'<g clip-path="url(#toile-couple)">{couple(rng)}</g>')
     # la table basse laquée, et ce qui est posé dessus
     out.append(f'<rect x="330" y="1040" width="540" height="60" fill="#3a2a20" opacity="0.35" filter="url(#flou-toile)"/>')
     out.append(lavis(poly([(350, 994), (850, 994), (872, 1020), (328, 1020)]), "#4a1a14", 1.0, "aquarelle-douce"))
@@ -1743,7 +1753,7 @@ def toiles(calque=None, graine=91):
     out.append(f'<path d="{trait([(600, 984), (599, 1000 - 72)], 2.6, rng, 0.02, 0.05, 0.05)}" fill="#6a3a1a"/>')
     out.append(f'<circle cx="599" cy="928" r="3.2" fill="#ff7a2a"/>')
     out.append(f'<rect width="{W}" height="{H}" fill="url(#lumiere-toiles)"/>')
-    defs = DEFS_AQUARELLE + FILTRE_ENCRE + """
+    defs = DEFS_AQUARELLE + FILTRE_ENCRE + f'<clipPath id="toile-couple"><rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}"/></clipPath>' + """
 <linearGradient id="mur-toiles" x1="0" y1="0" x2="1" y2="0.3">
   <stop offset="0" stop-color="#f7f1e4"/><stop offset="1" stop-color="#ddd3c0"/>
 </linearGradient>
@@ -1821,7 +1831,7 @@ def placard(etat="entrouverte", graine=97):
         fond = (f'<path d="M0,0 H{W} V{H} H0 Z M{ox0},{oy0} H{ox1} V{oy1} H{ox0} Z" fill="url(#mur-placard)" fill-rule="evenodd"/>'
                 f'<path d="M0,1230 H{W} V{H} H0 Z" fill="#6a5440"/>')
     corps = [f'<rect x="248" y="1100" width="770" height="140" fill="#2a1a0e" opacity="0.4" filter="url(#flou-placard)"/>']
-    trou = f"M250,150 H1010 V1190 H250 Z M{ox0},{oy0} H{ox1} V{oy1} H{ox0} Z"
+    trou = f"M250,150 H1010 V1190 H250 Z M{ox0},{oy0} V{oy1} H{ox1} V{oy0} Z"      # le trou tourne à l'envers : il reste vide
     corps.append(lavis(trou if etat == "ouverte" else "M250,150 H1010 V1190 H250 Z", "#3e2718", 1.0, "aquarelle-douce"))
     corps.append(lavis("M225,108 H1035 L1022,152 H238 Z", "#5a3a24", 1.0, "aquarelle-douce"))
     corps.append(lavis("M232,152 H1028 V166 H232 Z", "#2a180c", 1.0, "aquarelle-douce"))
