@@ -110,18 +110,23 @@ section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBChec
    papier (peut-être le `filter` de `.temps`) ; dans `livre.py`, à décider : `objet="lunettes"`
    en 1.9, `teinte="couchant"` en 7.10, `consigne_immediate` en 1.2, `dessin="cle-placard"` en
    6.13, `suit_geste` pour les braises de 3.10.
-6. **Les essais** (synthèse, partie 12, étape 9) : `essai-livre.js` en mouvement réduit, en
-   mouvement normal et depuis 3.10 ; les pages de l'EPUB jouées au clavier dans Chromium, en
+6. **Les essais** (synthèse, partie 12, étape 9) : `essai-livre.js` à chaque étape (le 30
+   septembre, en mouvement réduit comme en mouvement normal, toutes les pages sont jouées
+   jusqu'à 8.1 sans panne ; les seules erreurs sont les effets pas encore écrits) et depuis 3.10 ; les pages de l'EPUB jouées au clavier dans Chromium, en
    commençant par celles des gestes (1.3, 1.4, 2.2, 3.9, 3.10, 4.2, 4.3, 5.2, 5.6, 5.11, 6.2,
    6.8, 6.11, 6.12, 7.7, 7.9, 7.11, 7.13) ; VoiceOver et TalkBack ; grand texte ; sans script ;
    Apple Books sur iPhone et iPad (essai de Karl : aucun geste ne doit tourner la page).
-7. **Ce qui attend Karl** : les 44 questions (page « Décisions pour Darshan ») ; les textes
-   nouveaux d'`interface.ini`, d'`objets.ini` et de `portes.ini` ; les repérages (synthèse,
-   partie 9 : la main de Julie, la rue de Rungis, le tartare et le pain perdu, la lettre de sa
-   main, le mur de torchis, la porte de planches la nuit, la clé de laiton, le velours, le
-   recueil, la porte battante, la Charlotte, les lunettes et les clichés de la galerie, le
-   carrelet et le tabouret, la patinoire) ; les coquilles (annexe A du plan) ; l'ISBN ; la
-   relecture de l'édition classique.
+7. **Les réponses de Karl** (30 septembre, `docs/darshan-mise-en-scene/README.md`, partie 13) :
+   les reporter dans la fabrication, dont la correction des coquilles, la commande du dessert
+   en 2.7, la chemise boutonnée en 1.8 et l'effet de Jivan en 1.5 ; lui présenter ce qui est
+   fait pour le Kerala et un plan pour l'illustrer sans photos d'Inde ; lui reposer, mieux
+   expliquées, les questions 12, 19, 23, 25 et 43.
+8. **Ce qui attend encore Karl** : les textes nouveaux d'`interface.ini`, d'`objets.ini` et
+   de `portes.ini` ; les repérages (synthèse, partie 9 : la main de Julie, la rue de Rungis,
+   le tartare et le pain perdu, la lettre de sa main, le mur de torchis, la porte de
+   planches la nuit, la clé de laiton, le velours, le recueil, la porte battante, la
+   Charlotte, les lunettes et les clichés de la galerie, le carrelet et le tabouret, la
+   patinoire) ; l'ISBN ; la relecture de l'édition classique ; l'essai dans Apple Books.
 
 ## Jouer
 

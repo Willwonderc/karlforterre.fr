@@ -68,8 +68,8 @@ dans le dépôt Willwonderc/PexelsWillwonder.
   narratif de chaque scène par une équipe créative) dans `docs/darshan-mise-en-scene/` ;
   prototype (extrait jouable, EPUB et web, banc d'essai des transitions) dans
   `outils/darshan/`, relié à aucune page. Le texte y est lu dans
-  `livres/darshan.epub`, jamais recopié ni modifié ; les coquilles de l'annexe A attendent
-  l'accord de Karl.
+  `livres/darshan.epub`, jamais recopié ni modifié ; les coquilles de l'annexe A, acceptées
+  par Karl le 30 septembre 2026, se corrigent à la fabrication, chacune listée.
 - Section Photographie : elle lit à chaque visite `https://photos.karlforterre.fr/apercu.json`,
   écrit chaque nuit par `vitrine/build.py` du dépôt PexelsWillwonder (sélection, séries,
   galeries, chiffres). La liste `photosIntegrees` de `script.js` ne sert qu'en secours.

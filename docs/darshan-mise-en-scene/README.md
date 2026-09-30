@@ -392,3 +392,45 @@ Décisions prises à la lecture des premiers traitements ; elles valent pour tou
   l'on voit le visage de Darshan : la galerie du téléphone de Julie (5.6, 5.7) n'en montre
   aucun. Elle reste l'illustration de l'édition de 2023 : la porte du père du livre jouable
   est la porte d'Irun (arbitrage 9 ci-dessus, point 29 de la synthèse).
+
+**30 septembre 2026 : réponses aux 44 questions de la synthèse (partie 10)**
+
+Karl a répondu sur la page « Décisions pour Darshan ». À reporter dans la fabrication à la
+reprise du chantier.
+
+- **Accord sur la proposition de la synthèse** (35) : 1 (essai dans Apple Books), 2 (la porte
+  du père), 3 (le désenchantement), 4 (le son du père), 5 (le tartare), 6 (la lettre, de sa
+  main), 7 (le compte à rebours et la boussole), 8 (« Regarder à travers »), 9 (l'éclipse de
+  Galice : « superbe idée »), 10 (l'attente de 6.11), 14 (« Tu es là ! » lettre à lettre),
+  17 (la dédicace), 18 (le théâtre), 20 (le couple de la toile), 22 (« l'accord tacite »),
+  26 (le générique), 28 (Paris dans le fleuve), 29 (Julie peinte), 30 (*Amour* et l'arche),
+  31 (le parvis), 32 (la nuit à une seule lumière), 33 (*Sur les quais du Covid*), 34
+  (l'hôpital), 35 (Villandry et le curry), 36 (les paysages de 6.12), 37 (la rue au
+  couchant), 38 (le poème), 39 (l'heure à Aluva), 41 (les gestes retirés), 42 (les petits
+  plaisirs), et, avec une précision :
+  - 13 : c'est **Darshan** qui commande le dessert et pense « Si j'avais su » (2.7) : le
+    lecteur passe la commande sur une carte, un geste de plus ;
+  - 15 : les vers au pinceau (3.7) en **Amiri**, la police du livre, tracée ;
+  - 16 : Jivan n'est nommé nulle part avant le texte ; le sens de son nom, « la vie », est
+    voulu : un effet en lien avec lui, qui reste élégant (1.5) ;
+  - 24 : rien n'illustre « Y aurait-il un successeur » (7.16) ; c'est une fin ouverte vers
+    une suite possible ;
+  - 44 : **les coquilles sont à corriger** (annexe A du plan, partie 11 de la synthèse). Le
+    fichier du livre (`livres/darshan.epub`) reste intact : les corrections se font à la
+    fabrication, chacune listée.
+- **Réponses libres** :
+  - 11 (la ballade) : Karl a un abonnement ElevenLabs qui peut servir à produire une musique
+    ou un son, ici ou ailleurs, à condition que ce soit toujours cohérent, narratif et
+    expressif avec le reste de l'œuvre ;
+  - 21 (« Le lac Ladoga » de Théodore Banzy, 6.8, 6.9) : Karl valide la proposition (sa
+    photo de la barque vide, en noir et blanc, dans le tableau) et laisse la direction
+    choisir parmi ses photos ;
+  - 40 (la chemise, 1.8) : **boutonnée**.
+- **Le Kerala** (27, « autre ») : Karl n'a pas de photos de l'Inde. Il faut illustrer Aluva
+  et le Kerala avec les ressources de l'équipe, un travail important de recherche. D'abord,
+  lui présenter ce qui est déjà fait pour ces pages (1.4 à 1.9, 3.9 à 3.14, 5.2 à 5.5,
+  7.6 à 7.8) et un plan qui réponde à cet objectif.
+- **À expliquer davantage, puis à reposer** (5) : 12 (qui dit « Il est incroyable. », 5.8 :
+  avec un extrait plus large et une analyse plus poussée), 19 (la fenêtre de 6.13), 23 (le
+  doigt de dieu, 7.1), 25 (les confettis : la question n'était pas claire), 43 (les
+  repérages).
