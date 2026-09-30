@@ -110,7 +110,11 @@ section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBChec
    papier (peut-être le `filter` de `.temps`) ; dans `livre.py`, à décider : `objet="lunettes"`
    en 1.9, `teinte="couchant"` en 7.10, `consigne_immediate` en 1.2, `dessin="cle-placard"` en
    6.13, `suit_geste` pour les braises de 3.10.
-6. **Les essais** (synthèse, partie 12, étape 9) : `essai-livre.js` à chaque étape (le 30
+6. **Les essais** (synthèse, partie 12, étape 9). Premier essai de Karl dans Apple Books sur
+   iPhone, le 30 septembre : la page de titre convainc ; mais chaque toucher faisait paraître le
+   menu d'Apple Books (sa barre et les vignettes des pages), et « Ouvrir » ne menait nulle part.
+   Corrigé le jour même (`installerTouchers` dans `depart.js`, essai `essai-touchers.js`) : à
+   refaire sur l'iPhone. Puis : `essai-livre.js` à chaque étape (le 30
    septembre, en mouvement réduit comme en mouvement normal, toutes les pages sont jouées
    jusqu'à 8.1 sans panne ; les seules erreurs sont les effets pas encore écrits) et depuis 3.10 ; les pages de l'EPUB jouées au clavier dans Chromium, en
    commençant par celles des gestes (1.3, 1.4, 2.2, 3.9, 3.10, 4.2, 4.3, 5.2, 5.6, 5.11, 6.2,
@@ -187,6 +191,7 @@ Dans une session Claude (Playwright et Chromium y sont installés), depuis `outi
 
 ```
 NODE_PATH=/opt/node22/lib/node_modules node essai-livre.js
+NODE_PATH=/opt/node22/lib/node_modules node essai-touchers.js
 NODE_PATH=/opt/node22/lib/node_modules node essai.js telephone
 NODE_PATH=/opt/node22/lib/node_modules node essai.js calme
 NODE_PATH=/opt/node22/lib/node_modules node essai-transitions.js telephone
@@ -196,7 +201,9 @@ NODE_PATH=/opt/node22/lib/node_modules node captures.js
 `essai-livre.js` joue le livre entier dans l'édition web, au clavier (`calme` par défaut,
 `normal` pour les animations complètes, et un numéro de tableau pour partir d'une page), et
 photographie chaque page dans `captures/livre/` avec un rapport (temps passé, erreurs du
-moteur). `essai.js` joue l'extrait de bout en bout (`telephone`, `ordinateur`, ou `calme` pour le
+moteur). `essai-touchers.js` touche les pages de l'EPUB comme sur un téléphone : le livre
+garde les touchers qui lui servent (Apple Books ne montre alors ni son menu ni ne tourne la
+page), laisse les bords et la page lue à la liseuse, et les gestes se font au doigt. `essai.js` joue l'extrait de bout en bout (`telephone`, `ordinateur`, ou `calme` pour le
 mouvement réduit) et photographie chaque étape, balayages compris, dans `captures/` (non
 suivi par Git) ; `essai-transitions.js` photographie chaque transition du banc d'essai à
 plusieurs instants et vérifie qu'aucun calque ne reste derrière elle ; `captures.js`

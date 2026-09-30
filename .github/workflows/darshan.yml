@@ -72,6 +72,10 @@ jobs:
         working-directory: outils/darshan
         run: NODE_PATH="$RUNNER_TEMP/outils/node_modules" node essai-livre.js calme
 
+      - name: Toucher les pages de l'EPUB comme sur un téléphone
+        working-directory: outils/darshan
+        run: NODE_PATH="$RUNNER_TEMP/outils/node_modules" node essai-touchers.js
+
       - name: Joindre les éditions, les photos et les rapports
         if: always()
         uses: actions/upload-artifact@v4
