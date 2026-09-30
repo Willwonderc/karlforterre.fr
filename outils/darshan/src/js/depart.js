@@ -174,21 +174,28 @@ function installerTouchers() {
   }, true);
 }
 
+// Le son ne part qu'après un geste du lecteur. Sur iPhone et iPad, le doigt posé (pointerdown)
+// ne suffit pas à l'autoriser : il faut le doigt levé (touchend) ou un clic. Chaque geste de ce
+// genre relance donc le son tant qu'il ne joue pas (Son.init reprend un contexte suspendu, et ne
+// fait rien quand il joue ou que le son est coupé).
+function reveillerLeSon() {
+  ['pointerdown', 'touchend', 'click', 'keydown'].forEach(function (type) {
+    doc.addEventListener(type, function () { Son.init(); }, true);
+  });
+}
+
 function depart() {
   scenes.forEach(installerBarre);
   installerTouchers();
   if (estEpub) {
-    // dans l'EPUB, une page = une scène ; le son démarre au premier toucher de la page
+    // dans l'EPUB, une page = une scène ; le son démarre au premier geste sur la page
     var s = scenes[0];
     if (!s) return;
     s.classList.add('active');
     entrerDansScene(s);
     var a = s.getAttribute('data-son');
     if (a) Son.ambiance(a);
-    doc.addEventListener('pointerdown', function premier() {
-      doc.removeEventListener('pointerdown', premier);
-      Son.init();
-    });
+    reveillerLeSon();
     Transitions.entree(s);
     Scenes.jouer(s);
     return;
@@ -197,9 +204,7 @@ function depart() {
   var cible = window.location.hash ? doc.getElementById(window.location.hash.slice(1)) : null;
   var i = cible ? scenes.indexOf(cible) : 0;
   Navigation.aller(i < 0 ? 0 : i);
-  if (i > 0) {
-    doc.addEventListener('pointerdown', function premier() { doc.removeEventListener('pointerdown', premier); Son.init(); });
-    doc.addEventListener('keydown', function premier() { doc.removeEventListener('keydown', premier); Son.init(); });
-  }
+  // depuis la page de titre, le son part avec « Ouvrir » ; ailleurs, au premier geste
+  if (i > 0) reveillerLeSon();
 }
 if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', depart); else depart();

@@ -13,7 +13,8 @@ function verifier(nom, ok, detail) {
 }
 
 (async () => {
-  const navigateur = await chromium.launch();
+  // le son n'est permis qu'après un geste, comme sur iPhone
+  const navigateur = await chromium.launch({ args: ['--autoplay-policy=user-gesture-required'] });
   const contexte = await navigateur.newContext({
     viewport: { width: 1200, height: 1800 }, deviceScaleFactor: 0.5, hasTouch: true, isMobile: true
   });
@@ -21,6 +22,13 @@ function verifier(nom, ok, detail) {
   await contexte.addInitScript(() => {
     window.__touchers = [];
     window.addEventListener('touchstart', (ev) => { window.__touchers.push(ev.defaultPrevented); });
+    // les contextes audio du livre, pour savoir s'ils jouent
+    const AC = window.AudioContext;
+    window.__sons = [];
+    if (AC) {
+      window.AudioContext = function (o) { const c = new AC(o); window.__sons.push(c); return c; };
+      window.AudioContext.prototype = AC.prototype;
+    }
   });
   const page = await contexte.newPage();
   const erreurs = [];
@@ -45,6 +53,8 @@ function verifier(nom, ok, detail) {
   let garde = await toucher(600, 900);
   verifier('1.5 : un toucher sur le décor fait avancer le texte, sans le menu de la liseuse', garde === true && await vus() > avant,
     'gardé : ' + garde + ', temps vus ' + avant + ' → ' + await vus());
+  const son = await page.evaluate(() => window.__sons.map((x) => x.state).join(', ') || 'aucun');
+  verifier('1.5 : le son part au premier toucher', /running/.test(son), 'contexte audio : ' + son);
   avant = await vus();
   garde = await toucher(40, 900);
   verifier('1.5 : un toucher au bord reste à la liseuse (tourner la page)', garde === false && await vus() === avant, 'gardé : ' + garde);

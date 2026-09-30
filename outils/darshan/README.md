@@ -114,7 +114,13 @@ section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBChec
    iPhone, le 30 septembre : la page de titre convainc ; mais chaque toucher faisait paraître le
    menu d'Apple Books (sa barre et les vignettes des pages), et « Ouvrir » ne menait nulle part.
    Corrigé le jour même (`installerTouchers` dans `depart.js`, essai `essai-touchers.js`) : à
-   refaire sur l'iPhone. Puis : `essai-livre.js` à chaque étape (le 30
+   refaire sur l'iPhone. Karl n'avait pas non plus de son : le moteur ne demandait le son qu'au
+   premier doigt posé (`pointerdown`), qu'iOS ne compte pas comme un geste qui autorise le son
+   (il lui faut le doigt levé ou un clic). Il le redemande désormais à chaque doigt levé, clic ou
+   touche, tant que le son ne joue pas (`reveillerLeSon`). À vérifier aussi sur l'iPhone : que le
+   bouton du mode silencieux n'est pas mis (iOS y fait taire les sons du Web) ; si le son manque
+   encore, Apple Books refuse peut-être le son fabriqué par le script (Web Audio), et il faudra
+   des fichiers audio. Puis : `essai-livre.js` à chaque étape (le 30
    septembre, en mouvement réduit comme en mouvement normal, toutes les pages sont jouées
    jusqu'à 8.1 sans panne ; les seules erreurs sont les effets pas encore écrits) et depuis 3.10 ; les pages de l'EPUB jouées au clavier dans Chromium, en
    commençant par celles des gestes (1.3, 1.4, 2.2, 3.9, 3.10, 4.2, 4.3, 5.2, 5.6, 5.11, 6.2,
