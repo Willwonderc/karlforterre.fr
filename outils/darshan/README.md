@@ -50,6 +50,9 @@ L'extrait jouable du 28 septembre se refabrique avec la version précédente du 
 
 ### Reprendre après la pause
 
+Le travail qui reste est découpé en trois sessions distinctes, avec leurs consignes prêtes à
+coller : [docs/darshan-sessions-restantes.md](../../docs/darshan-sessions-restantes.md).
+
 Méthode suivie jusqu'ici : une équipe par fichier (un seul propriétaire par fichier, chacun sa
 section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBCheck avec
 `--failonwarnings` et `essai-livre.js` en mouvement réduit puis normal ; la tâche GitHub
