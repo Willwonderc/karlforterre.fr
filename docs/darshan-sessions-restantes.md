@@ -7,6 +7,72 @@ première partie ; sa seconde partie (les essais d'ensemble) attend que les pull
 sessions 1 et 2 soient fusionnées. Estimation : 20 à 30 % d'une semaine d'usage en tout (session
 1 : 8 à 11 %, session 2 : 6 à 9 %, session 3 : 7 à 10 %).
 
+## Quel modèle pour quelle session
+
+Tarifs officiels (septembre 2026) : Opus 5.5, 4 $ par million de mots-jetons lus et 20 $ écrits ;
+Sonnet 5.5, 2 $ et 10 $ ; mais la relecture du contexte déjà en mémoire (le cache) coûte le même
+prix, 0,20 $, aux deux. Dans une longue session de travail, cette relecture pèse lourd (dans la
+session du 28 au 30 septembre, environ 43 % du coût) : à travail égal, Sonnet coûte donc environ
+25 à 30 % de moins, pas 50 %. Le levier le plus fort reste ailleurs : des sessions neuves, au
+contexte court, et des sous-agents qui ne relisent pas tout l'historique.
+
+- **Session 1 (les effets)** : Sonnet 5.5 convient, avec le protocole ci-dessous et une relecture
+  par Opus à chaque chapitre. Les effets sont nombreux et bien décrits (synthèse, partie 3.2, et
+  traitements page par page).
+- **Session 2 (les scènes, les transitions, les réponses de Karl)** : Opus 5.5 de préférence. Ce
+  sont les sommets narratifs du livre (la vision, la rue de Rungis, la clôture), là où la
+  finesse compte le plus. Si Sonnet la mène, la relecture par Opus se fait à chaque scène.
+- **Session 3 (le son, les photos, les questions, les essais)** : Sonnet 5.5 convient, avec une
+  relecture par Opus du second tour de questions et du plan du Kerala avant de les montrer à Karl.
+
+Réglage conseillé pour Sonnet : effort élevé (high). Estimation avec ce partage : 19 à 26 %
+d'une semaine au lieu de 20 à 30 % ; davantage d'économie si l'abonnement compte Sonnet plus
+légèrement qu'Opus.
+
+## Protocole d'exigence (toute session menée par Sonnet 5.5)
+
+```
+Protocole d'exigence, à suivre en plus de ta consigne de session :
+
+1. Lire avant d'écrire. Pour chaque élément (un effet, une scène, un son) : son entrée dans la
+   synthèse, les paragraphes du traitement de sa page (docs/darshan-mise-en-scene/chapitre-N.md),
+   ses réglages dans outils/darshan/livre.py, et l'en-tête des fragments du moteur qu'il emploie
+   (base.js, effets.js, mecaniques.js, scenes.js, son.js) : n'écris jamais à nouveau un outil
+   qui existe déjà (Fx, Gestes, Geste, Recit, Transitions, Visuels, Son).
+2. Un élément à la fois, en entier. Après chacun : python3 outils/darshan/build.py ; depuis
+   outils/darshan/, essai-livre.js calme puis normal à partir de sa page (par exemple
+   « node essai-livre.js calme 3.10 ») ; regarde les photos de la page avec l'outil Read et
+   compare-les au traitement : l'effet dit-il ce que le texte dit à ce moment ? Le texte
+   reste-t-il lisible ? Rien ne chevauche le texte ni les boutons ?
+3. « Fini » veut dire, sans exception : fidèle au traitement (cite en commentaire, au-dessus du
+   code, la ligne du traitement qu'il sert) ; un équivalent sans mouvement en mouvement réduit ;
+   le geste au toucher simple et au clavier ; aucun texte en dur (ui('cle'), interface.ini,
+   8 mots au plus, « à valider par Karl ») ; tout s'arrête avec la page (minuteries,
+   écouteurs, sons, toiles, trois toiles au plus) ; toute erreur rattrapée (signaler) ; la page
+   ouverte seule dans l'EPUB est juste ; essai-livre sans panne ; EPUBCheck sans avertissement.
+4. Pièges déjà rencontrés : un filtre CSS, même nul (blur(0)), rogne ce qui dépasse (la pente
+   des italiques) : écris none ; dans Apple Books, un toucher qui sert au livre passe par
+   installerTouchers (depart.js), sinon Apple Books montre son menu, et aucun long glissement
+   horizontal ; sur iPhone, le son ne s'autorise qu'au doigt levé ou au clic (reveillerLeSon) ;
+   l'édition web garde les 85 pages dans un seul document : libère ce que la page quittée
+   allumait (une fuite a déjà fait planter Chromium au-delà de 10 Go) ; Apple Books isole chaque
+   page : un état qui dure vient de build.py (attributs data-*), jamais d'une variable ; le
+   texte du livre n'est jamais modifié, le père ne parle jamais, aucune voix de synthèse ni voix
+   métallique ; images : celles de Karl seulement, depuis images.pexels.com.
+5. Relecture par Opus à chaque jalon (chaque chapitre en session 1, chaque scène en session 2,
+   chaque bloc en session 3) : lance un sous-agent avec l'outil Agent et model: "opus", en lui
+   donnant le diff du jalon, les chemins des photos des pages et les extraits du traitement.
+   Demande-lui : fidélité au traitement et à l'orientation de Karl (la dimension narrative et
+   expressive d'abord), lisibilité, accessibilité, robustesse (fuites, Apple Books), et un
+   verdict « prêt » ou « à reprendre » avec des corrections précises. Il ne modifie aucun
+   fichier. Applique ses corrections avant de passer au jalon suivant.
+6. Enregistre et pousse après chaque jalon vérifié, README à jour (fait, reste) : un arrêt doit
+   toujours être propre. Reste dans tes fichiers ; ce qu'il faut ailleurs va dans la
+   description de ta pull request.
+7. Pas plus de deux sous-agents de travail à la fois, chacun sur ses fonctions, pour garder
+   l'usage sous contrôle ; demande à Karl son pourcentage au début et convenez du seuil d'arrêt.
+```
+
 ---
 
 ## Session 1 : les effets
