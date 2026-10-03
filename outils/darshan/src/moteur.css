@@ -774,6 +774,45 @@ html:not(.jeu) .decor .plan.sans-script { opacity: 1; }
 .jeu .texte-assourdi .texte .temps.vu { opacity: 0.55; filter: blur(0.6px); }
 .calme.jeu .texte-assourdi .texte .temps.vu { filter: none; }
 
+/* ---- chapitre 3 : la légende de Pékin (3.1, 3.2) */
+/* les étoiles de la porte d'étoiles (3.1, 3.2) scintillent doucement, chacune à son rythme */
+.fx-scintille { animation: fx-scintille 3.8s ease-in-out infinite; }
+@keyframes fx-scintille { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+.calme .fx-scintille { animation: none; }
+
+/* ---- chapitre 3 : la bibliothèque de Pékin (3.7, 3.8) */
+/* 3.7 : les deux vers du recueil s'écrivent au pinceau sur la page de droite, en Amiri italique (la police du livre) ; chaque
+   lettre paraît mouillée, puis l'encre sèche. Le vers quitte le panneau ; le panneau vidé s'efface. */
+.fx-calligraphie { position: absolute; margin: 0; }
+.fx-calli-vers { margin: 0 0 3cqw; font-family: "Amiri", Georgia, serif; font-style: italic; font-size: 3.7cqw; line-height: 1.3;
+  color: #1c130a; opacity: 0.93; text-align: left; }
+.fx-calli-mot { white-space: nowrap; }
+.fx-calli-lettre { opacity: 0; text-shadow: 0 0 0.6cqw rgba(28, 19, 10, 0.75); transition: opacity 140ms ease-out, text-shadow 1400ms ease-out; }
+.fx-calli-lettre.ecrite { opacity: 1; text-shadow: 0 0 0.12cqw rgba(28, 19, 10, 0.35); }
+.calme .fx-calli-lettre { opacity: 1; text-shadow: 0 0 0.12cqw rgba(28, 19, 10, 0.35); transition: none; }
+.fx-calli-parti { display: none; }
+.texte.fx-calli-vide { opacity: 0; transition: opacity 500ms ease; }
+.calme .texte.fx-calli-vide { transition-duration: 200ms; }
+/* 3.8 : la porte battante (le vantail est un morceau de l'image, tourné autour de sa charnière) et ce que laisse voir l'entrebâillement */
+.fx-battant-vantail { position: absolute; overflow: hidden; transform-origin: 0 50%; will-change: transform; }
+.fx-battant-fond { position: absolute; opacity: 0; background: linear-gradient(to right, #c58a2c 0%, #ffcf6e 40%, #ffe29a 78%, #fff1c4 100%); }
+.fx-battant-halo { position: absolute; opacity: 0; background: linear-gradient(to right, rgba(255, 226, 150, 0), rgba(255, 238, 184, 0.9), rgba(255, 226, 150, 0)); }
+
+/* ---- chapitre 3 : le soir d'Aluva (3.9 à 3.12), les compléments des effets (3.3, 3.5, 3.6) */
+/* le sceau du mudrā (3.9, 3.10) reste en filigrane et respire */
+.fx-sceau-respire { animation: fx-sceau-respire 7s ease-in-out infinite; }
+@keyframes fx-sceau-respire { 0%, 100% { opacity: 0.72; } 50% { opacity: 1; } }
+.calme .fx-sceau-respire { animation: none; }
+/* la poussière grise des livres (3.6) : elle éteint les couleurs (saturation) et pose sa poudre et sa brume ; le papier chaud
+   qui revient quand elle s'envole ; le voile bas qui remplace les grains de 3.3 en mouvement réduit */
+.fx-poussiere-sat { background: rgba(142, 142, 148, 0.8); mix-blend-mode: saturation; }
+.fx-poussiere-voile { background-color: rgba(186, 186, 192, 0.34); }
+.fx-papier-chaud { background: #ffe3a0; mix-blend-mode: multiply; }
+.fx-poussiere-leger { background: radial-gradient(ellipse 85% 30% at 50% 60%, rgba(212, 212, 220, 0.85), rgba(212, 212, 220, 0) 75%); }
+
+/* 3.13 : le bouton « Carnet » luit une fois, doucement, quand la fiche de la porte du père reçoit la règle */
+.barre .carnet-bouton.fx-luit { animation: pulse-objets 600ms ease-out 1; }
+
 /* ============================================================ effets nouveaux, chapitres 0 à 3 (fin) */
 
 /* ============================================================ effets nouveaux, chapitres 4 à 8 (début)
