@@ -260,8 +260,8 @@ REPLIQUES = {
     # 2. Un pain perdu s'il vous plaît.
     45: "julie", 46: "darshan", 47: "julie", 48: "darshan", 49: "julie", 50: "darshan",
     51: "julie", 52: "darshan", 53: "julie", 55: "darshan", 57: "darshan", 58: "julie",
-    59: "darshan",     # « Si j’avais su… » : sans tiret, la pensée de Darshan (réponse 13 de Karl, 30 septembre) ;
-                       # en italique, comme ses autres pensées (moteur.css, #s-2-7)
+    59: "pensee-darshan",   # « Si j’avais su… » : sans tiret, la pensée de Darshan (réponse 13 de Karl, 30 septembre) ;
+                            # en italique et dans sa couleur, comme ses autres pensées (build.py : de-darshan et voix)
     # 3. Entre deux mondes
     87: "darshan", 88: "jivan", 89: "darshan", 90: "jivan", 91: "darshan", 92: "jivan",
     93: "darshan", 94: "jivan", 95: "darshan", 96: "jivan", 97: "darshan",

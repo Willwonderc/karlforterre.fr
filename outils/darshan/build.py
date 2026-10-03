@@ -37,12 +37,14 @@ qu'il est quand elle s'ouvre (synthèse de la pré-production, partie 3.3) :
   change jusqu'à la fin de son chapitre (celle de 2.9 ne dure que sa page) ; absent sinon ;
 - data-boussole : « nord », « perdue » ou « eteinte » (depuis 5.3) ; absent avant ;
 - data-repliques : « or », puis « clair » après la virgule de 7.14 : la couleur des répliques de
-  Darshan, dont les paragraphes portent la classe « de-darshan » (livre.REPLIQUES).
+  Darshan, dont les paragraphes portent la classe « de-darshan » (livre.REPLIQUES ; « pensee-darshan » : une
+  pensée de Darshan sans tiret, classes « de-darshan » et « voix », 2.7).
 Sur chaque plan du décor : data-genre (photo, encre, dessin ou uni), que les effets lisent pour ne
 toucher que les photos (le froid, le gel, l'effacement : genre_du_decor).
 Et, du découpage et de livre.py : data-son (l'ambiance de la page) et data-son-variantes (ses
 variantes, séparées par des espaces : « soir », « vaste »…), data-entree (la transition
-d'entrée, et d'où elle part) et data-entree-<réglage> (ses réglages : 5.1, palette et grain).
+d'entrée, et d'où elle part ; « plan » pour le même plan, « — » au découpage) et
+data-entree-<réglage> (ses réglages : 1.9, couleur ; 5.1, palette et grain).
 Les images nommées par les réglages (reflets, clichés, calques…) sont copiées avec les décors,
 et DARSHAN.images donne le fichier de chaque décor employé (chemin depuis img/). Sans script, une
 page montre son premier plan (classe « vu »), ou les plans marqués « sans-script » (PLANS_SANS_SCRIPT).
@@ -499,8 +501,10 @@ def classes_du_paragraphe(p, a):
         c.append("sanskrit")
     if lignes[p].startswith("—"):
         c.append("replique")
-    if livre.REPLIQUES.get(p) == "darshan":
+    if livre.REPLIQUES.get(p) in ("darshan", "pensee-darshan"):
         c.append("de-darshan")          # en or tant que data-repliques="or" (synthèse 2.2, ligne 42)
+    if livre.REPLIQUES.get(p) == "pensee-darshan" and "voix" not in c:
+        c.append("voix")                # une pensée de Darshan, en italique comme ses voix intérieures (2.7)
     if a > 0:
         c.append("suite-para")
     return c
@@ -530,7 +534,7 @@ CLASSES_TEXTE = {"bas": "", "haut": "en-haut", "bas clair": "clair", "haut clair
                  "poeme": "poeme", "nu poeme": "nu poeme"}
 
 
-def balisage_texte(pg, classe_sup=""):
+def balisage_texte(pg, classe_sup="", apres=""):
     s = pg["s"]
     classe = " ".join(x for x in ("texte", CLASSES_TEXTE[s["texte"]], classe_sup) if x)
     corps = []
@@ -541,7 +545,16 @@ def balisage_texte(pg, classe_sup=""):
         c = classes_du_paragraphe(p, morceaux[0][0])
         cl = f' class="{" ".join(c)}"' if c else ""
         corps.append(f"<p{cl}>{''.join(span_temps(p, a, b) for a, b in morceaux)}</p>")
-    return f'<div class="{classe}">{"".join(corps)}</div>'
+    return f'<div class="{classe}">{"".join(corps)}{apres}</div>'
+
+
+def balisage_generique():
+    """Le générique de la page « Fin » (8.1), écrit en clair après le poème : lisible sans script ; en jeu, la scène
+    « cloture » montre le sien (finDuLivre, scenes.js) et la feuille de style cache celui-ci."""
+    return ('<div class="generique-clair">'
+            f'<p class="fin-titre">{e_(UI["fin"])}</p>'
+            f'<p class="fin-generique">{e_(UI["generique_auteur"])}</p>'
+            f'<p class="fin-couverture">{e_(UI["generique_couverture"])}</p></div>')
 
 
 def src_image(nom, img):
@@ -693,15 +706,18 @@ def section(pg, img, web):
     }
     if t["entree"] != "—":
         attrs["data-entree"] = (t["entree"] + " " + POINTS_D_ENTREE.get(n, "")).strip()
-        for cle, valeur in s["entree"].items():      # les réglages de la transition (5.1 : palette, grain)
+        for cle, valeur in s["entree"].items():      # les réglages de la transition (1.9 : couleur ; 5.1 : palette, grain)
             attrs[f"data-entree-{cle}"] = str(valeur)
+    elif n != "0.1":
+        # « — » : le même plan (3.10, 3.11, 6.2…) ; sur le web, rien ne couvre la page (transitions.js, plan)
+        attrs["data-entree"] = "plan"
     if not web:
         attrs["epub:type"] = "titlepage" if n == "0.1" else "bodymatter chapter" if n in DEBUT_CHAPITRE.values() else "bodymatter"
     a = " ".join(f'{k}="{attr(v)}"' for k, v in attrs.items() if v != "" or k in ("data-sac", "data-portes"))
     if s["special"] == "seuil":
         corps = balisage_decor(pg, img, web) + balisage_seuil(pg, img)
     else:
-        corps = balisage_decor(pg, img, web) + balisage_texte(pg)
+        corps = balisage_decor(pg, img, web) + balisage_texte(pg, apres=balisage_generique() if s["special"] == "cloture" else "")
     return f'<section {a}>{corps}<script type="application/json" class="config">{config_json(pg)}</script></section>'
 
 
@@ -765,7 +781,7 @@ def verifier(pages):
     # qui parle : des paragraphes du livre, des personnages connus
     for p, qui in livre.REPLIQUES.items():
         assert livre_texte.PREMIER <= p <= livre_texte.DERNIER, f"livre.REPLIQUES : paragraphe {p} hors du livre"
-        assert qui in ("darshan", "julie", "jivan", None), f"livre.REPLIQUES : {p} : « {qui} » inconnu"
+        assert qui in ("darshan", "pensee-darshan", "julie", "jivan", None), f"livre.REPLIQUES : {p} : « {qui} » inconnu"
     # les décors nommés par les réglages (reflets, clichés, calques…) : fabriqués ou signalés
     for n, nom in decors_employes():
         d = livre.DECORS[nom]
@@ -989,12 +1005,16 @@ BANC = [
     ("lumiere", "Lumière", "darshan", "Un éblouissement : la lumière s’étend, puis se dissipe.", {}),
     ("obturateur", "Obturateur", "julie", "Le monde de Julie, photographié : les lames d’un obturateur.", {}),
     ("glissement", "Glissement", "julie", "Le téléphone de Julie : on passe d’une photo à l’autre.", {}),
+    ("bandes-photo", "Bandes photo", "julie", "On entre dans le monde de Julie : les bandes du chapitre, puis l’obturateur découvre la photo.", {"titre": "Un pain perdu s’il vous plaît."}),
+    ("bandes-julie", "Bandes Julie", "julie", "Un chapitre de Julie : ses bandes de papier photo, au grain argentique ; l’obturateur les ouvre.", {"titre": "Amélie et Julie"}),
+    ("bandes-julie", "Bandes lilas", "julie", "Chapitre 5 : les bandes de Julie en lilas, leur grain devenu confettis.", {"titre": "Douceurs et confettis", "palette": "lilas", "grain": "confettis"}),
+    ("plan", "Même plan", "julie", "Même plan : rien ne couvre la page ; si l’image change, elle se fond dans la suivante.", {}),
     ("frisson", "Frisson", "", "Un objet change d’état : les lunettes ôtées, la clé dans la serrure.", {}),
     ("eclat", "Éclat", "", "Un objet se métamorphose : les lunettes deviennent une clé.", {}),
     ("envol", "Envol", "", "Un nouvel objet rejoint le sac.", {}),
     ("fiche", "Fiche", "", "La fiche d’un objet s’ouvre en diagonale.", {}),
 ]
-IMAGES_BANC = ["photo-metro.jpg", "photo-haussmann.jpg", "photo-pluie.jpg", "encre-34762346.jpg"]
+IMAGES_BANC = ["photo-metro.jpg", "photo-haussmann.jpg", "photo-pluie.jpg", "encre-34762346.jpg", "aluva.jpg"]
 
 
 def banc(img):
