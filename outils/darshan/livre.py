@@ -332,14 +332,14 @@ SCENES = {
              bilan=[E("remplacer", de="lunettes", vers="cle")]),
     "1.4": S("aluva", texte="haut clair",
              coupes={23: ["Face à lui s’écoule"], 24: ["En son sein", "Darshan emprunte", "Il s’applique la mousse"]},
-             debut=[E("eblouir"), E("remplacer", de="cle", vers="lunettes", discret=True),
+             debut=[E("remplacer", de="cle", vers="lunettes", discret=True), E("eblouir"),      # l'étoile de la porte file quand l'éblouissement retombe
                     E("porte", id="pigeonnier", depuis=[600, 900])],
              gestes=[G("tracer", chemin=[[490, 1590], [545, 1550], [600, 1565], [655, 1550], [710, 1590]],
                        trait="mousse", flou=True, effets=[E("son", effet="coutelas", n=3)])],
              moments=[E("poussiere"), E("chaleur", zone=[200, 880, 1000, 1500]),
                       E("eclabousse", x=938, y=1470), E("son", effet="bombe")]),
     "1.5": S(["palmes", "filet"], texte="haut clair",
-             moments=[E("decor", i=1),
+             moments=[E("decor", i=1, fondu=1000),                                      # « on passe au filet (fondu, 1 s) »
                       [E("son", effet="tabouret"), E("eclabousse", x=600, y=1720, delai=1600)],
                       None]),
     "1.6": S(["filet", "periyar"], texte="haut clair",
@@ -357,7 +357,7 @@ SCENES = {
              moments=[[E("decor", i=1, fondu=8000), E("silence", garder="fleuve")]]),
     "1.9": S(["montre", "local-or", "filet-soir"], texte="haut clair",
              gestes=[G("toucher", cible=[600, 1560, 200],
-                       effets=[E("eclat-court", de="lunettes", vers="cle"),
+                       effets=[E("eclat-court", de="lunettes", vers="cle", x=600, y=1560),      # les lunettes au bas de la vue (1.9)
                                E("jour", fente=PORTE_LOCAL, son="autre-cote", lieu="paris-midi"),
                                E("eblouir", sens="monte", depuis=[600, 1050]), E("son", effet="tictac", arret=True),
                                E("porte", id="local-paris", depuis=[600, 1050])])],
