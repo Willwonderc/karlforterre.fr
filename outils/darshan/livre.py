@@ -619,7 +619,8 @@ SCENES = {
              gestes=[G("liste", cote="darshan", items=["Veste", "barbiche comme il faut", "bague", "chemise des grands jours"]),
                      G("liste", cote="julie", items=["Bague", "boucles d’oreilles", "gâteau", "sac à main",
                                                      "maquillage des grands jours", "frange qui décoiffe"],
-                       echos={"Bague": "bague", "maquillage des grands jours": "chemise des grands jours"})],
+                       echos={"Bague": "bague", "maquillage des grands jours": "chemise des grands jours"},
+                       briller=["gâteau", "sac à main"])],          # scène « listes » : le bouton des objets luit
              moments=[E("coin-de-rue", i=2)]),
     "6.3": S(["haussmann", "porte-bleue"], texte="bas clair", regard="porte-bleue",
              moments=[[E("halo", couleur="ble", bande=[600, 1050]), E("compte", valeur=""),

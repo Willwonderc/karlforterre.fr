@@ -509,6 +509,28 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 .vision-braises-toile { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 .vision-braises-lueur { position: absolute; left: 0; right: 0; bottom: 0; height: 45%; opacity: 0;
   background: radial-gradient(ellipse 80% 70% at 50% 100%, rgba(255, 138, 48, 0.55), rgba(255, 100, 20, 0.16) 55%, rgba(255, 90, 10, 0) 75%); }
+/* listes (6.2) : l'écran partagé ; Julie dans la moitié droite (en bas en grand texte : l'arête à y 670) ;
+   l'arête de pierre, verticale ou horizontale ; la photo de la façade pour le coin de rue */
+.listes-partage { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.listes-droite { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden;
+  -webkit-clip-path: inset(0 0 0 50%); clip-path: inset(0 0 0 50%); }
+.listes-droite img, .listes-photo { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.listes-droite img { transform: translateX(30%); }
+.grand .listes-droite { -webkit-clip-path: inset(37.22% 0 0 0); clip-path: inset(37.22% 0 0 0); }
+.grand .listes-droite img { transform: translateY(18%); }
+.listes-photo { opacity: 0; }
+.listes-arete.horizontale, .grand .listes-arete.verticale { display: none; }
+.grand .listes-arete.horizontale { display: block; }
+/* les deux listes sont des voix intérieures, en italique dans le livre ; la fin de la phrase, sans case */
+.listes-cote { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+.listes-cote .liste-articles { font-style: italic; }
+.listes-cote.darshan .liste-articles { left: 2.5cqw; }
+.listes-cote.julie .liste-articles { right: 2.5cqw; }
+.grand .listes-cote .liste-articles { left: 7cqw; right: 7cqw; }
+.liste-fin { margin: 1.7cqw 0 0; line-height: 1.32; }
+/* la phrase entière reste au panneau pour les lecteurs d'écran ; à l'écran, elle se lit dans sa moitié */
+.jeu .scene[data-special="listes"] .texte .temps.listes-ailleurs { position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; padding: 0; }
 /* ------------------------------------------------------------ scènes et transitions (fin) */
 
 /* ------------------------------------------------------------ mécaniques (équipe des mécaniques : src/js/mecaniques.js)

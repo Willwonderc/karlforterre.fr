@@ -1064,6 +1064,134 @@ var Scenes = (function () {
     });
   };
 
+  // ---------------------------------------------------------------- listes (6.2)
+  /* Les deux listes (docs/darshan-mise-en-scene/chapitre-6.md, 6.2 et section 6). « Écran partagé, en deux
+     moitiés verticales. La ligne qui les sépare n'est pas un trait neutre : c'est l'arête de pierre d'un
+     coin de rue, un peu irrégulière. À gauche Darshan, au pied de la bâtisse ; à droite Julie, dans sa
+     rue. » La façade à l'encre est le premier plan de la page ; la photo de 6.1 glisse dans la moitié
+     droite à l'ouverture. Les deux listes (mécanique `liste`) se posent chacune dans sa moitié
+     (scene.listes = { darshan, julie }) ; la fin de chaque phrase paraît sous sa liste quand elle est
+     cochée, et le panneau garde le récit (la phrase entière y reste, pour les lecteurs d'écran) ; sans
+     script, le texte est à sa place, dans l'ordre du livre. Au dernier temps, `coin-de-rue`. En grand
+     texte, les listes s'empilent, Darshan au-dessus, et l'arête devient horizontale. Mouvement réduit :
+     des fondus. */
+  var PARTAGE_GRAND = 670;   // en grand texte, l'arête horizontale, entre les deux listes empilées
+  speciales.listes = function (scene, cfg) {
+    var plans = $$('.decor .plan', scene), decors = cfg.decors || [], temps = $$('.texte .temps', scene), t = $('.texte', scene);
+    $$('.listes-partage, .listes-cote', scene).forEach(retirer);
+    plans.forEach(function (p, i) { p.classList.toggle('vu', i === 0); });
+    function avantTexte(e) { if (t && t.parentNode === scene) scene.insertBefore(e, t); else scene.appendChild(e); return e; }
+    var racine = avantTexte(el('div', { 'class': 'listes-partage', 'aria-hidden': 'true' }));
+    // à droite, Julie dans sa rue (la photo de 6.1, centrée sur elle) ; à gauche, la façade à l'encre du décor
+    var droite = el('div', { 'class': 'listes-droite' }, racine);
+    var julie = Fx.image(Fx.sourceImage(scene, decors[1] || 'rencontre'), {}, droite);
+    var aretes = [areteDePierre(racine, true), areteDePierre(racine, false)];
+    var photo = Fx.image(Fx.sourceImage(scene, decors[2] || 'haussmann'), { 'class': 'listes-photo' }, racine);
+    scene.listes = {
+      darshan: avantTexte(el('div', { 'class': 'liste-geste darshan listes-cote', 'aria-hidden': 'true' })),
+      julie: avantTexte(el('div', { 'class': 'liste-geste julie listes-cote', 'aria-hidden': 'true' }))
+    };
+    // la photo de 6.1 glisse dans sa moitié (x : 0 plein cadre, 1 la moitié de Julie)
+    function partager(x) {
+      var e = lisse(x), grand = html.classList.contains('grand');
+      var clip = grand ? 'inset(' + (PARTAGE_GRAND / H * 100 * e).toFixed(2) + '% 0 0 0)' : 'inset(0 0 0 ' + (50 * e).toFixed(2) + '%)';
+      droite.style.webkitClipPath = clip; droite.style.clipPath = clip;
+      julie.style.transform = grand ? 'translateY(' + (18 * e).toFixed(2) + '%)' : 'translateX(' + (30 * e).toFixed(2) + '%)';
+    }
+    function partage() { droite.style.webkitClipPath = ''; droite.style.clipPath = ''; julie.style.transform = ''; }  // la feuille de style
+    if (calme) racine.style.opacity = '0';
+    else { partager(0); aretes.forEach(function (a) { opacite(a, 0); }); }
+
+    // les temps des deux listes : leur fin paraît sous la liste cochée, avec les mots du livre ; le
+    // panneau garde le récit qui les précède
+    var fins = {};
+    cfg.gestes.forEach(function (g) {
+      if (g.meca !== 'liste' || !temps[g.avant]) return;
+      var texte = temps[g.avant].textContent.replace(/\s+/g, ' ').trim(), debut = (g.items || []).join(', ') + ', ';
+      if (texte.indexOf(debut) !== 0 || texte.length <= debut.length) return;   // sinon la phrase reste au panneau
+      fins[g.avant] = { cote: g.cote === 'julie' ? 'julie' : 'darshan', texte: texte.slice(debut.length) };
+      temps[g.avant].classList.add('listes-ailleurs');
+      // « Cocher “gâteau” fait briller le paquet dans le sac de Julie ; cocher “sac à main” fait briller
+      // le bouton de son sac. Les sacs ne changent pas. »
+      if (g.briller) {
+        var vus = {};
+        g.progres = function () {
+          var L = scene.listesGeste && scene.listesGeste[fins[g.avant].cote];
+          (L ? L.lignes : []).forEach(function (l) {
+            if (!l.coche || vus[l.texte]) return;
+            vus[l.texte] = true;
+            if (g.briller.indexOf(l.texte) >= 0) Fx.marquer(scene, 'objets', 'pulse', 1900);
+          });
+        };
+      }
+    });
+    function surTemps(j) {
+      var f = fins[j];
+      if (!f) return;
+      for (var k = j - 1; k >= 0; k--) {
+        if (fins[k] || !temps[k]) continue;
+        temps[k].classList.remove('cache'); temps[k].classList.add('passe');
+        break;
+      }
+      var L = scene.listesGeste && scene.listesGeste[f.cote], ol = L && L.parent.querySelector('ol');
+      if (!ol) return;
+      var li = el('li', { 'class': 'liste-fin' }, ol);
+      li.textContent = f.texte;
+      if (!calme) { li.style.opacity = '0'; Fx.animer(scene, 900, function (x) { li.style.opacity = lisse(x).toFixed(3); }); }
+    }
+    scene.effetsLocaux = {
+      // « Julie qui vient de contrôler furtivement dans le reflet d'une vitrine son allure, passe le coin de
+      // rue qui la sépare de Darshan. » : l'arête s'efface (0,8 s) ; la façade à l'encre se développe en
+      // photo (même photo, même cadre) et la moitié de Julie s'y fond (1,5 s) ; ce qui n'était qu'un dessin
+      // devient réel. La page finit sur la photo, où 6.3 s'ouvre.
+      'coin-de-rue': function (sc, e) {
+        var i = e.i === undefined ? 2 : e.i;
+        function poser(v) { photo.style.filter = v >= 1 ? 'none' : 'sepia(' + (0.7 * (1 - v)).toFixed(3) + ') contrast(' + (0.72 + 0.28 * v).toFixed(3) + ')'; }
+        var fin = calme ?
+          animerPage(scene, 600, 600, function (x) { aretes.forEach(function (a) { opacite(a, 1 - x); }); photo.style.opacity = x.toFixed(3); }) :
+          Fx.animer(scene, 2000, function (x) {
+            var tt = x * 2, v = lisse(borne((tt - 0.35) / 1.5));
+            aretes.forEach(function (a) { opacite(a, 1 - lisse(borne(tt / 0.8))); });
+            photo.style.opacity = v.toFixed(3); poser(v);
+          });
+        return fin.then(function () {
+          poser(1);
+          plans.forEach(function (p, k) { p.style.transitionDuration = '0ms'; p.classList.toggle('vu', k === i); });
+          retirer(racine);
+        });
+      }
+    };
+    derouler(scene, cfg, { attente: 600, surTemps: surTemps });
+    quandEntree(scene).then(function () {
+      if (calme) return animerPage(scene, 600, 600, function (x) { racine.style.opacity = x.toFixed(3); });
+      return Fx.animer(scene, 1300, partager).then(function () {
+        partage();
+        return Fx.animer(scene, 500, function (x) { aretes.forEach(function (a) { opacite(a, x); }); });
+      });
+    }).then(null, signaler);
+  };
+  // L'arête de pierre d'un coin de rue : une chaîne d'angle, ses pierres alternées, un peu irrégulières,
+  // la face éclairée et la face dans l'ombre. Verticale au milieu de la page ; horizontale en grand texte.
+  function areteDePierre(parent, verticale) {
+    var s = svgEl('svg', { 'class': 'scene-svg listes-arete ' + (verticale ? 'verticale' : 'horizontale'), viewBox: '0 0 ' + W + ' ' + H,
+      preserveAspectRatio: 'none', 'aria-hidden': 'true', focusable: 'false' }, parent);
+    var rnd = hasard(verticale ? 61 : 67), c = verticale ? 600 : PARTAGE_GRAND, fin = verticale ? H : W, a = -20, k = 0;
+    var ombre = svgEl('g', { fill: '#000', opacity: 0.28 }, s), pierres = svgEl('g', { stroke: '#7a6e58', 'stroke-width': 2.2, 'stroke-linejoin': 'round' }, s);
+    function pt(u, v) { return verticale ? f1(c + v) + ',' + f1(u) : f1(u) + ',' + f1(c + v); }
+    while (a < fin + 20) {
+      var h = 78 + rnd() * 46, b = a + h, gros = k % 2 === 0, w0 = (gros ? 30 : 13) + rnd() * 5, w1 = (gros ? 13 : 30) + rnd() * 5;
+      var j = function () { return (rnd() - 0.5) * 6; };
+      var d = 'M' + pt(a + j(), -w0) + 'L' + pt(a + j(), w1) + 'L' + pt(b + j(), w1 + j()) + 'L' + pt(b + j(), -w0 + j()) + 'Z';
+      svgEl('path', { d: d, transform: verticale ? 'translate(7 3)' : 'translate(3 7)' }, ombre);
+      svgEl('path', { d: d, fill: k % 3 === 1 ? '#ddd1b7' : '#e8ddc6' }, pierres);
+      // la face dans l'ombre, d'un côté de l'arête
+      svgEl('path', { d: 'M' + pt(a + 2, 1) + 'L' + pt(a + 2, w1 - 2) + 'L' + pt(b - 2, w1 - 2) + 'L' + pt(b - 2, 1) + 'Z', fill: '#000', opacity: 0.14, stroke: 'none' }, pierres);
+      a = b; k++;
+    }
+    svgEl('path', { d: 'M' + pt(-20, 0) + 'L' + pt(fin + 20, 0), stroke: '#fff7e6', 'stroke-width': 1.6, opacity: 0.55 }, s);
+    return s;
+  }
+
   // Un point du pourtour d'un rectangle aux coins arrondis (u de 0 à 1) et sa normale vers l'intérieur :
   // [x, y, nx, ny]. Les bords ondulants de la pierre (vision) partent de lui.
   function pourtour(u, x0, y0, x1, y1) {
