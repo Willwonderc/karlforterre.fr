@@ -2096,6 +2096,124 @@ var FxA = (function () {
   };
 })();
 
+// ================================================================ chapitre 3 : la bibliothèque de Pékin (3.7, 3.8)
+(function () {
+  // une longueur en unités de page, en pixels CSS : la largeur de mise en page de la scène (offsetWidth), que ne change
+  // aucune mise à l'échelle de la liseuse
+  function pxCss(scene, u) { return u * (scene.offsetWidth || W) / W; }
+
+  // ---------------------------------------------------------------- calligraphie (3.7)
+  // « L'amour est le lit de la famille. », puis « La clé de sa chambre est la sincérité et sa porte la réciprocité. »
+  // (traitement : « chaque vers quitte le panneau et s'écrit au pinceau, noir d'encre, au milieu de la page de droite, de
+  // gauche à droite (2,5 s, puis 4 s), avec une légère bavure. C'est du vrai texte (lu par VoiceOver, sélectionnable), le
+  // seul moment typographique du chapitre ; en mouvement réduit, le vers paraît en fondu, déjà écrit ») ; décision 15 de
+  // Karl : en Amiri, la police du livre, tracée. Le vers quitte le panneau (le panneau, vidé, s'efface) et s'écrit dans la
+  // page de droite du recueil, lettre après lettre, d'un rythme qui hésite entre les mots, chaque lettre encore mouillée
+  // quand elle paraît (l'encre sèche en 1,4 s) ; le frottement d'un pinceau sonne par groupes de lettres. Le premier vers
+  // reste, le second s'écrit dessous. `duree` : le temps de l'écriture ; `zone` [x0, y0, x1] : où s'écrit le texte (le
+  // haut du premier vers et la largeur : la page de droite du recueil dessiné) ; `angle` : l'inclinaison des lignes, comme
+  // celle de la page. Le texte est réel : il reste lisible pour les lecteurs d'écran (le panneau, lui, ne l'est plus).
+  // Mouvement réduit : le vers paraît en fondu, déjà écrit.
+  Effets.calligraphie = function (scene, e) {
+    var t = Fx.tempsCourant(scene);
+    if (!t || !t.parentNode) return;
+    var fx = Fx.etat(scene), duree = e.duree || 3000, zone = e.zone && e.zone.length === 3 ? e.zone : [650, 520, 985];
+    var angle = e.angle === undefined ? -6 : e.angle, texte = $('.texte', scene), boite = fx.calligraphie;
+    if (!boite || !boite.parentNode) {
+      boite = el('div', { 'class': 'fx fx-calligraphie' });
+      if (texte && texte.parentNode === scene) scene.insertBefore(boite, texte); else scene.appendChild(boite);
+      boite.style.left = Fx.pc(zone[0], W); boite.style.top = Fx.pc(zone[1], H); boite.style.width = Fx.pc(zone[2] - zone[0], W);
+      boite.style.transformOrigin = '0 0'; boite.style.transform = 'rotate(' + angle + 'deg)';
+      fx.calligraphie = boite;
+      Fx.niveauAmbiance(0.15, 1500);                        // « la rumeur de la bibliothèque s'éteint avant le premier vers »
+    }
+    // le vers quitte le panneau ; le panneau n'a plus rien à dire : il s'efface
+    t.parentNode.classList.add('fx-calli-parti');
+    if (texte) {
+      var reste = $$('.temps.vu', texte).filter(function (x) {
+        return !x.classList.contains('cache') && !(x.parentNode && x.parentNode.classList.contains('fx-calli-parti'));
+      });
+      if (!reste.length) texte.classList.add('fx-calli-vide');
+    }
+    // le vers, mot par mot, lettre par lettre : un mot ne se coupe jamais en fin de ligne
+    var vers = el('p', { 'class': 'fx-calli-vers', lang: 'fr' }, boite), lettres = [], poids = [], debutDeMot = [];
+    t.textContent.replace(/\s+/g, ' ').replace(/^ | $/g, '').split(' ').forEach(function (mot, i) {
+      if (i) vers.appendChild(doc.createTextNode(' '));
+      var m = el('span', { 'class': 'fx-calli-mot' }, vers), k;
+      for (k = 0; k < mot.length; k++) {
+        var c = mot.charAt(k), s = el('span', { 'class': 'fx-calli-lettre' }, m);
+        s.textContent = c; lettres.push(s);
+        debutDeMot.push(k === 0);
+        // le pinceau hésite avant un mot et à une majuscule, appuie à la fin de la phrase, file sur l'apostrophe
+        poids.push(/[.!?]/.test(c) ? 2.4 : /[’']/.test(c) ? 0.5 : k === 0 ? (i ? 1.9 : 1.5) : /[A-ZÀ-ÖÉ]/.test(c) ? 1.4 : 1);
+      }
+    });
+    var total = poids.reduce(function (a, b) { return a + b; }, 0), quand = [], cumul = 0;
+    poids.forEach(function (w) { quand.push(cumul / total * duree); cumul += w; });
+    if (calme || !lettres.length) {
+      vers.style.opacity = 0;
+      return Fx.animer(scene, 600, function (x) { vers.style.opacity = lisse(x).toFixed(3); });
+    }
+    var i = 0, dernier = -1000, ok, fin = new Promise(function (r) { ok = r; });
+    Fx.tache(scene, function (tt) {
+      var ms = tt * 1000;
+      while (i < lettres.length && quand[i] <= ms) {
+        lettres[i].classList.add('ecrite');
+        if (debutDeMot[i] && ms - dernier > 650) { dernier = ms; Fx.sonner('pinceau'); }
+        i++;
+      }
+      if (i >= lettres.length) { ok(); return false; }
+    });
+    Fx.minuterie(scene, ok, duree + 700, true);            // la page quittée : rien ne reste en attente
+    return { suite: fin, fin: fin };
+  };
+
+  // ---------------------------------------------------------------- battant (3.8)
+  // « Poussez la porte » (traitement : « au toucher, la porte bat une première fois : dans l'entrebâillement, un éclair de
+  // soleil chaud qui n'a rien à faire à Pékin ; elle revient, bat une seconde fois, plus grand : c'est par là ») : la porte
+  // dessinée s'ouvre et revient, `n` fois, 0,5 s par battement (0,05 s d'écart, comme le son `battant`, qui bat deux
+  // fois). Le vantail est le morceau de l'image lui-même, tourné autour de sa charnière (à gauche) sous une
+  // perspective : il s'éloigne, sa tranche vient vers la charnière, il revient ; derrière lui, l'entrebâillement
+  // laisse passer la lumière du Periyar, de plus en plus large à chaque battement. Le `jour` de la porte (suite
+  // de la liste) commence avec le second battement. `zone` [x0, y0, x1, y1] : le vantail (3.8 : porte-personnel, mesuré
+  // sur l'image). Mouvement réduit : le vantail ne bouge pas ; une lueur passe deux fois au bord de la porte.
+  var VANTAUX = { 'porte-personnel': [486, 626, 716, 1166] };
+  Effets.battant = function (scene, e) {
+    var n = e.n || 2, i = Fx.planVisible(scene), nom = Fx.nomDuPlan(scene, i), plan = Fx.plans(scene)[i];
+    var r = e.zone && e.zone.length === 4 ? e.zone : VANTAUX[nom] || [484, 626, 716, 1166];
+    var x0 = r[0], y0 = r[1], l = r[2] - r[0], h = r[3] - r[1], k;
+    Fx.sonner('battant', e);
+    var calque = Fx.calque(scene, 'battant', 4, false);
+    if (calme) {
+      var halo = el('div', { 'class': 'fx-battant-halo' }, calque);
+      Fx.poser(halo, r[2] - 30, y0, 44, h);
+      return Fx.animer(scene, 500 * n + 100, function (x) {
+        var u = x * n, f = u - Math.floor(Math.min(u, n - 0.0001));
+        halo.style.opacity = (0.85 * Math.sin(Math.PI * f)).toFixed(3);
+      }).then(function () { retirer(calque); });
+    }
+    var src = plan && plan.getAttribute('src');
+    if (!src) { retirer(calque); return; }
+    var fond = el('div', { 'class': 'fx-battant-fond' }, calque), vantail = el('div', { 'class': 'fx-battant-vantail' }, calque);
+    Fx.poser(fond, x0, y0, l, h); Fx.poser(vantail, x0, y0, l, h);
+    var img = Fx.image(src, {}, vantail);
+    img.style.cssText = 'position:absolute;max-width:none;object-fit:cover;width:' + (W / l * 100).toFixed(3) + '%;height:' + (H / h * 100).toFixed(3) +
+      '%;left:' + (-x0 / l * 100).toFixed(3) + '%;top:' + (-y0 / h * 100).toFixed(3) + '%;';
+    var perspective = pxCss(scene, 1100), AMPLEUR = [], fin;
+    for (k = 0; k < n; k++) AMPLEUR.push(n > 1 ? 22 + 14 * k / (n - 1) : 30);      // chaque battement est plus grand que le précédent
+    var duree = ((n - 1) * 0.55 + 0.5) * 1000, haut = AMPLEUR[n - 1];
+    function poser(t) {
+      var k = Math.min(n - 1, Math.floor(t / 0.55)), u = t - k * 0.55, a = 0;
+      if (u >= 0 && u <= 0.5) a = AMPLEUR[k] * Math.sin(Math.PI * Math.pow(u / 0.5, 0.8));      // il part vite, revient plus doucement
+      vantail.style.transform = 'perspective(' + perspective.toFixed(1) + 'px) rotateY(' + a.toFixed(2) + 'deg)';
+      fond.style.opacity = Math.min(1, Math.pow(a / haut, 0.7)).toFixed(3);
+    }
+    poser(0);
+    fin = Fx.animer(scene, duree, function (x) { poser(x * duree / 1000); }).then(function () { retirer(calque); });
+    return { suite: n > 1 ? Fx.pause(scene, 550) : fin, fin: fin };
+  };
+})();
+
 // ================================================================ effets nouveaux, chapitres 0 à 3 (fin)
 
 // ================================================================ effets nouveaux, chapitres 4 à 8 (début)
