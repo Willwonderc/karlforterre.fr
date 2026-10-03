@@ -211,7 +211,7 @@ PRODUCTION = [
       "le cœur sous le doigt : chamade, puis deux cœurs à trois contre deux (maintenir, balance, valse)",
       "photo qui devient peinture, sous un masque ; la voix lettre à lettre, à l'encre",
       "réveil au toucher de lecture : question assourdie, obturateur (assourdi, net)",
-      "gros plan inséré, regard qui se baisse (decor avec camera)", "carnet du serveur, à une seule ligne (commande)",
+      "gros plan inséré, regard qui se baisse (decor avec camera)", "carte des desserts, commande de Darshan (toucher, commande)",
       "marche lente, on passe à côté (camera avec avance, passe)",
       "première mesure de la ballade, compte, porte épaisse, envol (melodie, compte, decor)",
       "rêve à l'encre sur le ciel, que l'ombre d'un nuage fait pâlir (esquisse, nuage)"]),
@@ -642,15 +642,17 @@ TABLEAUX = [
       note="Le gros plan montre un tartare de bœuf : exception à l'arbitrage 7, à valider par Karl ; sinon, la séance S1 d'abord.",
       reperages=[("S1", "Un tartare de saumon aux herbes fraîches, à peine entamé")]),
     T("2.7", "Le pain perdu", (56, None), "Le restaurant", "Julie", "fondu",
-      "La table, floue : le temps a passé ; le carnet du serveur ; son côté à elle, net ; "
+      "La table, floue : le temps a passé ; la carte des desserts, seule nette ; son côté à elle, net ; "
       "puis le pain perdu sur sa porcelaine jaune tournesol.",
       photos=[(34532663, "photo")],
-      moments=[("Ce sera un pain perdu", "le carnet du serveur monte : une seule ligne, le titre du chapitre"),
-               ("Il sera servi dans une porcelaine",
+      gestes=[("Ce sera un pain perdu", "passer la commande : toucher son dessert sur la carte ; la commande de "
+                                        "Darshan paraît, le titre du chapitre", "toucher, Entrée")],
+      moments=[("Il sera servi dans une porcelaine",
                 "son côté à elle, net ; puis le pain perdu, net (quand Karl l'aura photographié)")],
       son="restaurant ; assiettes, crayon, porcelaine",
-      note="Le livre ne dit pas qui commande : la commande paraît sans qu'on sache qui l'a passée. "
-           "« Si j’avais su… » reste du récit, sans couleur de personnage.",
+      note="C'est Darshan qui commande le dessert et pense « Si j’avais su » (réponse 13 de Karl) : le lecteur "
+           "passe la commande sur la carte, dont les autres lignes restent floues ; la pensée prend l'italique et "
+           "l'or de ses autres pensées.",
       reperages=[("S1", "Pain perdu de brioche, portion menue, sur porcelaine à motif fleuri, fond jaune "
                         "tournesol")]),
     T("2.8", "Montsouris", (60, None), "Paris, le parc Montsouris", "Julie", "obturateur",

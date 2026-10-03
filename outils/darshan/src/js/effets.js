@@ -1871,6 +1871,79 @@ var FxA = (function () {
 // ================================================================ effets des réponses de Karl (début)
 /* Les effets qu'appellent les réponses de Karl (2.7 : Darshan commande le dessert ; 1.5 : Jivan,
    « la vie »), écrits avec les scènes ; chacun juste au-dessus de la ligne « (fin) » ci-dessous. */
+(function () {
+  // ---------------------------------------------------------------- commande (2.7)
+  // Réponse 13 de Karl (30 septembre) : « c'est Darshan qui commande le dessert et pense « Si j'avais su » (2.7) :
+  // le lecteur passe la commande sur une carte, un geste de plus ».
+  // « un serveur vient débarrasser la table et prendre la commande du dessert. » : la carte des desserts monte du
+  // bas, seule nette sur la table floue (la mise au point suit l'attention de Darshan : la grammaire du chapitre).
+  // Les autres lignes sont floues, illisibles : aucun autre dessert n'est écrit, seulement le sien, `plat` (« Ce
+  // sera un pain perdu »). Le lecteur passe la commande (le geste 2.7.1, `toucher`, dont cet effet suit le
+  // progrès) : un trait d'or, celui de Darshan, souligne le dessert, et sa commande, `ligne`, le titre du chapitre,
+  // paraît au-dessus de la carte, dans la police et l'or des titres : le lecteur découvre que ce titre est une
+  // phrase de tous les jours, et qu'elle est de Darshan. La carte redescend ; la commande reste pendant que le récit
+  // la confirme, et s'efface au temps `jusqua` (2 : « Il sera servi dans une porcelaine »). La carte et la commande
+  // passent au-dessus du panneau de texte (son voile les couvrirait), sous les aides du geste et la consigne ;
+  // pendant que la carte est là, le halo prend le graphite des aides de Julie (le blanc ne se verrait pas sur le
+  // papier). Décoratif pour les lecteurs d'écran : le texte dit la commande. Sans geste, la commande passe d'elle-même.
+  // Mouvement réduit : la carte paraît et s'efface en fondu, le trait aussi.
+  Effets.commande = function (scene, e) {
+    var LC = 600, HC = 470, Y0 = e.y || 1250, jusqua = e.jusqua === undefined ? 2 : e.jusqua;
+    var calqueC = Fx.dessus(scene, 'commande', 2);
+    var carte = Fx.poser(el('div', { 'class': 'fx-carte' }, calqueC), (W - LC) / 2, Y0, LC, HC);
+    el('div', { 'class': 'fx-carte-cadre' }, carte);
+    el('div', { 'class': 'fx-carte-titre' }, carte).textContent = ui('carte_desserts');
+    el('div', { 'class': 'fx-carte-filet' }, carte);
+    var h = Fx.alea(27);
+    [36, 47, 81, 91].forEach(function (y) {
+      var l = el('div', { 'class': 'fx-carte-flou' }, carte), w = Fx.entre(h, 30, 54);
+      l.style.left = ((100 - w) / 2).toFixed(2) + '%'; l.style.width = w.toFixed(2) + '%'; l.style.top = y + '%';
+    });
+    var mot = el('span', {}, el('div', { 'class': 'fx-carte-plat' }, carte));
+    mot.textContent = e.plat || '';
+    var trait = el('span', { 'class': 'fx-carte-trait' }, mot);
+    var ligne = el('div', { 'class': 'fx-commande-ligne' }, calqueC);
+    ligne.textContent = e.ligne || '';
+    ligne.style.top = Fx.pc(e.y_ligne || 1150, H);
+    scene.classList.add('fx-commande-attente');
+    Fx.surDepart(scene, function () { scene.classList.remove('fx-commande-attente'); });
+    // la carte monte du bas de la vue
+    var bas = 'translateY(' + ((H - Y0) / HC * 100 + 8).toFixed(1) + '%)';
+    if (calme) { carte.style.opacity = 0; carte.style.transition = 'opacity 350ms ease'; trait.style.transform = 'none'; trait.style.opacity = 0; }
+    else { carte.style.transform = bas; carte.style.transition = 'transform 450ms cubic-bezier(0.2, 0.8, 0.3, 1)'; }
+    Fx.ensuite(function () { if (calme) carte.style.opacity = 1; else carte.style.transform = 'none'; });
+    Fx.sonner('papier', { force: 0.5 });
+    var commandee = null;
+    function commander() {
+      if (commandee) return commandee;
+      scene.classList.remove('fx-commande-attente');
+      // Darshan choisit son dessert : le trait d'or
+      trait.style.transition = calme ? 'opacity 300ms ease' : 'transform 380ms ease-out';
+      Fx.ensuite(function () { if (calme) trait.style.opacity = 1; else trait.style.transform = 'scaleX(1)'; });
+      // sa commande, le titre du chapitre ; puis la carte redescend
+      Fx.minuterie(scene, function () { ligne.classList.add('vu'); }, calme ? 150 : 280);
+      Fx.minuterie(scene, function () {
+        if (calme) { carte.style.opacity = 0; return; }
+        carte.style.transition = 'transform 480ms cubic-bezier(0.5, 0, 0.75, 0.4)';
+        carte.style.transform = bas;
+      }, calme ? 900 : 1150);
+      Fx.surTemps(scene, function (t, i) {
+        if (i < jusqua) return true;
+        ligne.classList.remove('vu');
+        Fx.minuterie(scene, function () { retirer(calqueC); }, 900, true);
+        return false;
+      }, true);
+      commandee = Fx.pause(scene, calme ? 1100 : 1750);
+      return commandee;
+    }
+    if (e.suit_geste && e.geste) {
+      return new Promise(function (ok) {
+        e.geste.suivre(function (x, fini) { if (x >= 1 || fini) commander().then(ok, ok); });
+      });
+    }
+    return Fx.pause(scene, calme ? 600 : 1400).then(commander);
+  };
+})();
 // ================================================================ effets des réponses de Karl (fin)
 
 // ================================================================ effets nouveaux, chapitres 6 et 7 (début)

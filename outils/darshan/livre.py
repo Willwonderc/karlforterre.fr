@@ -260,7 +260,8 @@ REPLIQUES = {
     # 2. Un pain perdu s'il vous plaît.
     45: "julie", 46: "darshan", 47: "julie", 48: "darshan", 49: "julie", 50: "darshan",
     51: "julie", 52: "darshan", 53: "julie", 55: "darshan", 57: "darshan", 58: "julie",
-    59: None,          # « Si j’avais su… » : sans tiret, du récit ; Karl dira qui le pense (question 13)
+    59: "darshan",     # « Si j’avais su… » : sans tiret, la pensée de Darshan (réponse 13 de Karl, 30 septembre) ;
+                       # en italique, comme ses autres pensées (moteur.css, #s-2-7)
     # 3. Entre deux mondes
     87: "darshan", 88: "jivan", 89: "darshan", 90: "jivan", 91: "darshan", 92: "jivan",
     93: "darshan", 94: "jivan", 95: "darshan", 96: "jivan", 97: "darshan",
@@ -396,14 +397,17 @@ SCENES = {
              gestes=[G("glisser", sens="bas",
                        effets=[E("decor", i=1, camera="baisse"), E("son", effet="fourchette", delai=900)])]),
     # tant que le pain perdu n'est pas photographié ; ensuite : S(["resto-table", "pain-perdu"], …) et,
-    # au second moment, [E("decor", i=1), E("net"), E("son", effet="porcelaine")].
-    # « Si j’avais su… » est sans tiret : du récit, sans couleur de personnage tant que Karl n'a pas
-    # dit qui le pense.
+    # au moment de la porcelaine, [E("decor", i=1), E("net"), E("son", effet="porcelaine")].
+    # Réponse 13 de Karl : « c'est Darshan qui commande le dessert et pense « Si j'avais su » : le lecteur passe la
+    # commande sur une carte, un geste de plus ». La carte des desserts n'a qu'une ligne lisible, son dessert (« Ce
+    # sera un pain perdu ») ; sa commande est le titre du chapitre. « Si j’avais su… » : sa pensée (REPLIQUES, 59).
     "2.7": S("resto-table", debut=[E("flou", force=16)],
              coupes={56: ["Ce sera un pain perdu", "Il sera servi", "C’est beau"]},
-             moments=[E("commande", ligne="Un pain perdu s’il vous plaît."),
-                      [E("son", effet="porcelaine"), E("flou", garde=[600, 360, 520], force=12)]],
-             extra={"Si j’avais su": E("silence", duree=500)}),
+             gestes=[G("toucher", cible=[600, 1550, 150], y_consigne=1170, effet="crayon",     # le serveur note
+                       effets=[E("commande", ligne="Un pain perdu s’il vous plaît.", plat="Pain perdu", suit_geste=True)])],
+             moments=[[E("son", effet="porcelaine"), E("flou", garde=[600, 360, 520], force=12)]],
+             extra={"Après quelques bouchées": E("son", effet="assiettes"),                  # le serveur débarrasse
+                    "Si j’avais su": E("silence", duree=500)}),
     "2.8": S(["rocaille", "amoureux", "maison-lierre"], texte="bas clair",
              gestes=[G("glisser", sens="haut", lent=True, effets=[E("camera", avance=True, lent=True, suit_geste=True)])],
              moments=[[E("decor", i=1), E("son", effet="merle")], E("passe"), E("decor", i=2)]),
