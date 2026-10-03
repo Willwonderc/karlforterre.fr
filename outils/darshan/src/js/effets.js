@@ -224,17 +224,16 @@ var Fx = (function () {
     i.setAttribute('decoding', 'async');
     return i;
   }
-  // Les décors qui ne sont pas des photos (dessins, encres, calques) : le froid, le gel et le
-  // papier de l'effacement ne s'appliquent qu'aux photos. Le graffiti « aime » garde ses couleurs
-  // (6.11). À remplacer par un attribut de build.py sur chaque plan (voir le rapport).
-  var PAS_PHOTO = ['graffiti', 'fenetre', 'salon', 'placard', 'porte-pere', 'porte-pere-traits', 'porte-pere-rue',
-    'porte-pere-rue-traits', 'toiles', 'velours', 'tableau-ladoga', 'tableau-barque', 'papier-lettre', 'local-nuit',
-    'local-or', 'desert-nuit', 'desert-jour', 'noir', 'papier'];
+  // Le genre d'un plan (data-genre, écrit par build.py) : « photo », « encre », « dessin » ou « uni ».
+  // Le froid, le gel et le papier de l'effacement ne touchent que les photos ; le graffiti « aime »,
+  // photo lui aussi, garde ses couleurs (6.11 : le froid ne le touche pas).
+  function genreDuPlan(scene, i) {
+    var p = plans(scene)[i] || (i === 0 ? decor(scene) : null);
+    return (p && p.getAttribute('data-genre')) || null;
+  }
   function estPhoto(scene, i) {
-    var p = plans(scene)[i], g = p && p.getAttribute('data-genre');
-    if (g) return g === 'photo' || g === 'prototype';
-    var nom = nomDuPlan(scene, i);
-    return !!nom && PAS_PHOTO.indexOf(nom) < 0;
+    if (nomDuPlan(scene, i) === 'graffiti') return false;
+    return genreDuPlan(scene, i) === 'photo';
   }
 
   // ================================================================ les calques
@@ -419,7 +418,7 @@ var Fx = (function () {
     pause: pause, surDepart: surDepart, nouveauTemps: nouveauTemps, surTemps: surTemps, tempsCourant: tempsCourant,
     px: px, pc: pc, plans: plans, planVisible: planVisible,
     nomDuPlan: nomDuPlan, indexDuPlan: indexDuPlan, fichierDecor: fichierDecor, sourceImage: sourceImage, image: image,
-    estPhoto: estPhoto, decor: decor, calque: calque, dessous: dessous, dessus: dessus, poser: poser, ensuite: ensuite,
+    estPhoto: estPhoto, genreDuPlan: genreDuPlan, decor: decor, calque: calque, dessous: dessous, dessus: dessus, poser: poser, ensuite: ensuite,
     copie: copie, pointBouton: pointBouton, mondeJulie: mondeJulie, alea: alea, entre: entre, sonner: sonner,
     variantes: variantes, ambianceDeLaPage: ambianceDeLaPage, niveauAmbiance: niveauAmbiance, vibrer: vibrer,
     toile: toile, fichierCalque: fichierCalque, chargerImage: chargerImage, chargerSvg: chargerSvg, voler: voler,

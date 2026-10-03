@@ -38,6 +38,8 @@ qu'il est quand elle s'ouvre (synthèse de la pré-production, partie 3.3) :
 - data-boussole : « nord », « perdue » ou « eteinte » (depuis 5.3) ; absent avant ;
 - data-repliques : « or », puis « clair » après la virgule de 7.14 : la couleur des répliques de
   Darshan, dont les paragraphes portent la classe « de-darshan » (livre.REPLIQUES).
+Sur chaque plan du décor : data-genre (photo, encre, dessin ou uni), que les effets lisent pour ne
+toucher que les photos (le froid, le gel, l'effacement : genre_du_decor).
 Et, du découpage et de livre.py : data-son (l'ambiance de la page) et data-son-variantes (ses
 variantes, séparées par des espaces : « soir », « vaste »…), data-entree (la transition
 d'entrée, et d'où elle part) et data-entree-<réglage> (ses réglages : 5.1, palette et grain).
@@ -569,6 +571,21 @@ def decor_existe(nom):
 PLANS_SANS_SCRIPT = {"7.3": [-1], "7.11": [-1], "7.15": [-1], "7.12": [0, 1], "7.13": [0, 1], "7.14": [0, 1]}
 
 
+# Le genre de chaque plan, écrit dans data-genre pour que les effets sachent ce qu'ils peuvent toucher
+# (synthèse, partie 3.2 : le froid, le gel et l'effacement ne touchent que les photos) :
+# « photo » (une photo de Karl telle quelle), « encre » (une photo passée à l'encre et à l'aquarelle),
+# « dessin » (un dessin du programme) et « uni » (un aplat). Les fichiers du prototype sont le ciel de
+# Karl (une photo, sous la ville dessinée) et la porte du pigeonnier (un dessin).
+PROTOTYPES_DESSINES = {"porte-pigeonnier"}
+
+
+def genre_du_decor(nom):
+    d = livre.DECORS[nom]
+    if d["type"] == "prototype":
+        return "dessin" if nom in PROTOTYPES_DESSINES else "photo"
+    return d["type"]
+
+
 def balisage_decor(pg, img, web):
     s, n = pg["s"], pg["t"]["n"]
     noms = s["decor"]
@@ -579,30 +596,31 @@ def balisage_decor(pg, img, web):
         if noms[0] in ("toits", "voute"):
             # un ciel qui tourne, et devant lui un calque fixe (la ville ; les arbres du poème, 0.2)
             devant = f'<img src="{img}{f[1]}" alt=""/>' if fichier_existe(f[1]) else ""
-            return (f'<div class="decor" aria-hidden="true"><div class="ciel-tournant calque-anime"><img src="{img}{f[0]}" alt=""/></div>'
+            return (f'<div class="decor" data-genre="{genre_du_decor(noms[0])}" aria-hidden="true"><div class="ciel-tournant calque-anime"><img src="{img}{f[0]}" alt=""/></div>'
                     f'{devant}</div>')
         if noms[0] == "tuiles":
-            return (f'<div class="decor" aria-hidden="true"><div class="monde calque-anime">'
+            return (f'<div class="decor" data-genre="{genre_du_decor(noms[0])}" aria-hidden="true"><div class="monde calque-anime">'
                     f'<img src="{img}{f[0]}" alt=""/><img src="{img}{f[1]}" alt=""/></div></div>')
         if noms[0] == "porte-pigeonnier":
-            return f'<div class="decor calque-anime" aria-hidden="true"><img src="{img}{f[0]}" alt=""/></div>'
-        return f'<div class="decor" aria-hidden="true"><img src="{img}{f[0]}" alt=""/></div>'
+            return f'<div class="decor calque-anime" data-genre="{genre_du_decor(noms[0])}" aria-hidden="true"><img src="{img}{f[0]}" alt=""/></div>'
+        return f'<div class="decor" data-genre="{genre_du_decor(noms[0])}" aria-hidden="true"><img src="{img}{f[0]}" alt=""/></div>'
     plans = []
     for k, nom in enumerate(noms):
         d = livre.DECORS[nom]
         classe = ("plan vu" if k == 0 else "plan") + (" sans-script" if k in sans_script else "")
+        genre = genre_du_decor(nom)
         if d["type"] == "uni":
-            plans.append(f'<div class="{classe} uni" data-plan="{k}" style="background:{d["couleur"]}"></div>')
+            plans.append(f'<div class="{classe} uni" data-plan="{k}" data-genre="{genre}" style="background:{d["couleur"]}"></div>')
             continue
         if d["type"] == "prototype":          # un fichier du prototype en plan (6.11 : le ciel de l'appel)
-            plans.append(f'<img class="{classe}" data-plan="{k}" src="{img}{d["fichiers"][0]}" alt=""/>')
+            plans.append(f'<img class="{classe}" data-plan="{k}" data-genre="{genre}" src="{img}{d["fichiers"][0]}" alt=""/>')
             continue
         if not decor_existe(nom):
             avertir(f"{n} : décor « {nom} » pas encore fabriqué (python3 outils/darshan/decors.py {nom})")
-            plans.append(f'<div class="{classe} uni manquant" data-plan="{k}" style="background:#223"></div>')
+            plans.append(f'<div class="{classe} uni manquant" data-plan="{k}" data-genre="{genre}" style="background:#223"></div>')
             continue
         charge = ' loading="lazy" decoding="async"' if web and (k > 0 or pg["rang"] > 1) else ""
-        plans.append(f'<img class="{classe}" data-plan="{k}" src="{src_image(nom, img)}" alt=""{charge}/>')
+        plans.append(f'<img class="{classe}" data-plan="{k}" data-genre="{genre}" src="{src_image(nom, img)}" alt=""{charge}/>')
     monde = "julie" if livre.DECORS[noms[0]]["type"] == "photo" else "darshan"
     return f'<div class="decor decor-{monde}" aria-hidden="true">{"".join(plans)}</div>'
 
