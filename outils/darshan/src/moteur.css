@@ -737,6 +737,12 @@ html:not(.jeu) .decor .plan.sans-script { opacity: 1; }
 .jeu .texte-assourdi .texte .temps.vu { opacity: 0.55; filter: blur(0.6px); }
 .calme.jeu .texte-assourdi .texte .temps.vu { filter: none; }
 
+/* ---- chapitre 3 : la légende de Pékin (3.1, 3.2) */
+/* les étoiles de la porte d'étoiles (3.1, 3.2) scintillent doucement, chacune à son rythme */
+.fx-scintille { animation: fx-scintille 3.8s ease-in-out infinite; }
+@keyframes fx-scintille { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+.calme .fx-scintille { animation: none; }
+
 /* ============================================================ effets nouveaux, chapitres 0 à 3 (fin) */
 
 /* ============================================================ effets nouveaux, chapitres 4 à 8 (début)

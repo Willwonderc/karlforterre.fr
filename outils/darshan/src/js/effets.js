@@ -1880,6 +1880,222 @@ var FxA = (function () {
   }
 })();
 
+// ================================================================ chapitre 3 : la légende de Pékin (3.1, 3.2)
+(function () {
+  var OR_PALE = '#ffe9b0', OR_FIL = '#f4c56a';
+  function entreDeux(a, b, k) { return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k]; }
+  function pt(p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }
+
+  // ---------------------------------------------------------------- alignement (3.1, 3.2)
+  // 3.1, « Ce Bohème est né de l'alignement de forces anciennes » (traitement : « sept étoiles glissent (2,4 s) et
+  // s'alignent, puis la ligne se plie en deux montants et un linteau droit : une porte d'étoiles, qui palpite une fois
+  // et reste ») ; 3.2, `fixe` : la porte d'étoiles est déjà formée à l'ouverture, à la place et à la forme de la porte
+  // bleue qui la remplace (`porte` : centre x, centre y, largeur, hauteur). Les étoiles sont celles du carnet. Elles
+  // viennent des deux côtés du ciel, s'alignent de bas en haut sur l'axe de la porte (un tintement montant par étoile
+  // qui prend sa place : le son `tinte`, `note` de 0 à 6 pour ré, mi, sol, la, si, ré, mi, sans do dièse), puis la ligne,
+  // pliée en deux au linteau, s'ouvre en montants : les deux moitiés d'une même ligne s'écartent comme deux battants.
+  // La porte palpite une fois et reste, ses étoiles scintillent doucement. Mouvement réduit : tout est à sa place
+  // finale, en fondu.
+  var DEPARTS = [[180, 1150], [110, 830], [160, 430], [700, 250], [1040, 370], [1090, 770], [1020, 1100]];     // d'où vient chaque étoile, dans l'ordre du contour
+  var T_PREMIERE = 0.55, T_PAS = 0.12, T_PLI = 1.4, T_PLI_DUREE = 0.65, T_PALPITE = 2.05, T_FIN = 2.4;
+  // Les étoiles de la porte : D, leur place dans la porte (dans l'ordre du contour : pied gauche, montant gauche,
+  // coin, milieu du linteau, coin, montant droit, pied droit) ; L, leur place sur la ligne droite, où la porte est
+  // encore pliée en deux (chaque moitié, d'un côté de l'axe, à une hauteur à elle) ; rang, l'ordre d'arrivée sur la
+  // ligne (de bas en haut).
+  function geometrie(n, p) {
+    var cx = p[0], x0 = cx - p[2] / 2, x1 = cx + p[2] / 2, y0 = p[1] - p[3] / 2, y1 = p[1] + p[3] / 2, h = y1 - y0, j, D = [];
+    if (n === 7) D = [[x0, y1], [x0, (y0 + y1) / 2], [x0, y0], [cx, y0], [x1, y0], [x1, (y0 + y1) / 2], [x1, y1]];
+    else {
+      var total = h + p[2] + h;
+      for (j = 0; j < n; j++) {
+        var s = n > 1 ? total * j / (n - 1) : 0;
+        D.push(s <= h ? [x0, y1 - s] : s <= h + p[2] ? [x0 + (s - h), y0] : [x1, y0 + (s - h - p[2])]);
+      }
+    }
+    var m = (n - 1) / 2, ordre = D.map(function (d, i) { return i; }).sort(function (a, b) {
+      var da = Math.abs(a - m), db = Math.abs(b - m);
+      return da !== db ? da - db : a - b;          // à égale distance du milieu, la gauche d'abord
+    });
+    var L = [], rang = [];
+    ordre.forEach(function (i, r) { L[i] = [cx, y0 + r * h / Math.max(1, n - 1)]; rang[i] = n - 1 - r; });
+    return { D: D, L: L, rang: rang, haut: [cx, y0], bas: [cx, y1] };
+  }
+  Effets.alignement = function (scene, e) {
+    var n = e.n || 7, p = e.porte && e.porte.length === 4 ? e.porte : [565, 865, 470, 530], G = geometrie(n, p);
+    var svg = Fx.calque(scene, 'alignement', 5, true), g = svgEl('g', {}, svg);
+    var axe = svgEl('line', { x1: G.haut[0], y1: G.haut[1], x2: G.bas[0], y2: G.bas[1], stroke: OR_PALE, 'stroke-width': 2, 'stroke-linecap': 'round', opacity: 0 }, g);
+    var lueur = svgEl('polyline', { fill: 'none', stroke: OR_FIL, 'stroke-width': 14, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: 0 }, g);
+    var fil = svgEl('polyline', { fill: 'none', stroke: '#ffe6a8', 'stroke-width': 3.2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: 0 }, g);
+    var etoiles = G.D.map(function () {
+      var s = svgEl('g', {}, g), peau = svgEl('g', {}, s);
+      svgEl('circle', { r: 40, fill: OR_FIL, opacity: 0.16 }, peau);
+      svgEl('circle', { r: 25, fill: OR_FIL, opacity: 0.28 }, peau);
+      svgEl('path', { d: etoile(24), fill: '#fff4d6' }, peau);
+      return { g: s, peau: peau, sonne: false };
+    });
+    function depart(j) { return DEPARTS[j % DEPARTS.length]; }
+    function poser(t, avecSon) {
+      var pli = lisse((t - T_PLI) / T_PLI_DUREE), palpite = t > T_PALPITE ? Math.sin(Math.PI * Math.min(1, (t - T_PALPITE) / (T_FIN - T_PALPITE))) : 0;
+      var places = G.D.map(function (d, j) {
+        var arrivee = T_PREMIERE + T_PAS * G.rang[j], u = vif(borne(t / arrivee));
+        var pos = entreDeux(entreDeux(depart(j), G.L[j], u), d, pli);
+        var a = lisse(t / 0.3), arrive = t >= arrivee ? Math.sin(Math.PI * Math.min(1, (t - arrivee) / 0.28)) : 0;
+        var k = 1 + 0.35 * arrive + 0.45 * palpite, et = etoiles[j];
+        et.g.setAttribute('transform', 'translate(' + pt(pos) + ') scale(' + k.toFixed(3) + ')');
+        et.g.style.opacity = a.toFixed(3);
+        if (avecSon && !et.sonne && t >= arrivee) { et.sonne = true; Fx.sonner('tinte', { note: G.rang[j], notes: n }); }
+        return pos;
+      });
+      var points = places.map(pt).join(' '), contour = lisse((t - T_PLI) / 0.5);
+      lueur.setAttribute('points', points); fil.setAttribute('points', points);
+      lueur.setAttribute('opacity', ((0.16 + 0.36 * palpite) * contour).toFixed(3)); lueur.setAttribute('stroke-width', (14 + 10 * palpite).toFixed(1));
+      fil.setAttribute('opacity', (0.9 * contour).toFixed(3));
+      axe.setAttribute('opacity', (0.5 * lisse((t - 1.0) / 0.3) * (1 - lisse((t - T_PLI) / 0.35))).toFixed(3));
+    }
+    function scintiller() {
+      if (calme) return;
+      etoiles.forEach(function (et, j) { et.peau.setAttribute('class', 'fx-scintille'); et.peau.style.animationDelay = (-j * 0.83).toFixed(2) + 's'; });
+    }
+    if (e.fixe) { poser(T_FIN, false); scintiller(); return; }
+    if (calme) {
+      poser(T_FIN, false);
+      g.style.opacity = 0;
+      return Fx.animer(scene, 450, function (x) { g.style.opacity = lisse(x).toFixed(3); });
+    }
+    poser(0, false);
+    return Fx.animer(scene, T_FIN * 1000, function (x) { poser(x * T_FIN, true); }).then(scintiller);
+  };
+
+  // ---------------------------------------------------------------- barque (3.1)
+  // « mène sa barque au gré des courants de la providence » : une barque minuscule, un trait d'encre de 40 unités et une
+  // étincelle d'or à la proue, dérive une minute le long de la Voie lactée, d'un point à l'autre, au gré d'un léger
+  // roulis ; on la remarque ou non. Un fond : la lecture ne l'attend pas. Mouvement réduit : immobile, au point de départ.
+  Effets.barque = function (scene, e) {
+    var de = e.depart || [140, 250], vers = e.vers || [400, 1150], duree = (e.duree || 60000) / 1000;
+    var svg = Fx.calque(scene, 'barque', 5, true), g = svgEl('g', {}, svg), corps = svgEl('g', {}, g);
+    // le trait d'encre : une coque creuse, dont le bord clair se devine sur la nuit
+    svgEl('path', { d: 'M-20,-1 Q0,10 20,-5', fill: 'none', stroke: '#8f97cc', 'stroke-width': 2, 'stroke-linecap': 'round', opacity: 0.3, transform: 'translate(0 3)' }, corps);
+    svgEl('path', { d: 'M-20,-1 Q0,10 20,-5', fill: 'none', stroke: '#03040c', 'stroke-width': 6, 'stroke-linecap': 'round', opacity: 0.96 }, corps);
+    var etincelle = svgEl('g', { transform: 'translate(24 -12)' }, corps);
+    svgEl('circle', { r: 20, fill: OR_FIL, opacity: 0.2 }, etincelle);
+    svgEl('circle', { r: 11, fill: OR_FIL, opacity: 0.34 }, etincelle);
+    svgEl('path', { d: etoile(8.5), fill: '#fff4d6' }, etincelle);
+    function poser(t) {
+      var u = Math.min(1, t / duree), p = entreDeux(de, vers, u);
+      var dx = 14 * Math.sin(t * 0.7 + 0.7), dy = 6 * Math.sin(t * 0.43);        // au gré des courants
+      g.setAttribute('transform', 'translate(' + (p[0] + dx).toFixed(1) + ' ' + (p[1] + dy).toFixed(1) + ') rotate(' + (4 * Math.sin(t * 1.25)).toFixed(2) + ')');
+      etincelle.style.opacity = (0.8 + 0.2 * Math.sin(t * 5.6)).toFixed(3);
+    }
+    if (calme) { poser(0); return; }
+    g.style.opacity = 0;
+    var dernier = -1;
+    Fx.tache(scene, function (t) {
+      if (t - dernier < 0.033) return;                       // trente images par seconde suffisent à une dérive de cette lenteur
+      dernier = t;
+      g.style.opacity = lisse(t / 2.2).toFixed(3);
+      poser(t);
+      if (t > duree) return false;
+    });
+  };
+
+  // ---------------------------------------------------------------- diaporama (3.2)
+  // « La peur des prédateurs… » : la porte d'étoiles devient la porte bleue, puis le défilé remonte le temps : les portes
+  // de Karl, passées à l'encre, défilent de plus en plus vite (`intervalles`, en ms : le temps de chaque plan, fondu
+  // compris) jusqu'au plan `jusqua` ; `traverser` : chaque plan grandit un peu en se fondant dans le suivant, comme si
+  // l'on passait au travers (l'ouverture du plan est le point d'où il grandit). La porte d'étoiles s'éteint sous la
+  // porte bleue, à la même place, sans que celle-ci bouge. Mouvement réduit : des fondus à intervalles égaux, sans
+  // rien qui grandisse. Le temps suivant attend la fin du défilé. Sous le défilé, la nappe du cosmos baisse.
+  var OUVERTURES = [[565, 865], [565, 865], [600, 850], [580, 700], [560, 1100], [450, 760], [600, 800]];      // pour chaque plan de 3.2 : cosmos, porte bleue, porte rouge, portail, porte rustique, trèfle, mur
+  Effets.diaporama = function (scene, e) {
+    var plans = Fx.plans(scene), depart = Fx.planVisible(scene), n = e.jusqua === undefined ? plans.length - 1 : e.jusqua, fx = Fx.etat(scene);
+    var inter = e.intervalles && e.intervalles.length ? e.intervalles : [2000, 1600, 1300, 1000, 800];
+    if (!plans.length || n <= depart || n >= plans.length) return;
+    function remettre() {
+      plans.forEach(function (q) { q.style.zIndex = ''; q.style.transformOrigin = ''; });
+    }
+    Fx.surDepart(scene, remettre);
+    // un plan en remplace un autre : l'état est pris sans transition, puis les transitions reviennent
+    function finDEtape(a, b) {
+      a.style.transition = 'none'; b.style.transition = 'none';
+      a.classList.remove('vu'); b.classList.add('vu');
+      a.style.opacity = ''; a.style.transform = ''; b.style.opacity = ''; b.style.transform = '';
+      a.style.zIndex = ''; b.style.zIndex = ''; a.style.transformOrigin = '';
+      void a.offsetWidth;
+      a.style.transition = ''; b.style.transition = '';
+    }
+    function etape(i) {
+      var a = plans[i], b = plans[i + 1], ms = calme ? 1100 : (inter[i - depart] || inter[inter.length - 1]), o = OUVERTURES[i] || [600, 900];
+      var calque = i === depart ? fx.calques['alignement'] : null;
+      a.style.transition = 'none'; b.style.transition = 'none'; a.style.opacity = '1'; b.style.opacity = '1';
+      a.style.zIndex = '2'; b.style.zIndex = '1';                    // le plan qui part est dessus et se fond ; le suivant attend dessous
+      a.style.transformOrigin = pourcent(o[0], W) + ' ' + pourcent(o[1], H);
+      return Fx.animer(scene, ms, function (x) {
+        var fondu = lisse(borne((x - 0.45) / 0.55));
+        a.style.opacity = (1 - fondu).toFixed(3);
+        // la porte bleue prend la place de la porte d'étoiles : elle ne bouge pas ; les suivantes grandissent
+        if (e.traverser && !calme && i > depart) a.style.transform = 'scale(' + (1 + 0.16 * Math.pow(x, 1.7)).toFixed(4) + ')';
+        if (calque) calque.style.opacity = (1 - fondu).toFixed(3);
+      }).then(function () { finDEtape(a, b); if (calque) retirer(calque); });
+    }
+    Fx.sonner('souffle');
+    Fx.niveauAmbiance(0.4, 1800);                       // « cosmos, très bas » sous le défilé ; l'entrée rend la nappe
+    var suite = Promise.resolve(), i;
+    for (i = depart; i < n; i++) (function (k) {
+      suite = suite.then(function () { return Fx.vivante(scene, fx) ? etape(k) : null; });
+    })(i);
+    return suite;
+  };
+
+  // ---------------------------------------------------------------- entree (3.2)
+  // « Touchez le trou » : le lecteur voit, pour la première fois, une entrée là où il n'y avait qu'un trou (traitement :
+  // « la lumière passe aussitôt de l'autre côté, un souffle d'air traverse le mur, des poussières dorées flottent dans le
+  // faisceau »). Au point (x, y) : la lumière emplit le trou, six rayons doux en sortent, des poussières d'or flottent
+  // dans le faisceau, le souffle de l'air (1,8 s). La lumière reste, plus douce : à la sortie, c'est le trou lumineux
+  // que la page suivante reprend ; la nappe du cosmos revient. Mouvement réduit : la lumière et les rayons paraissent en fondu, sans poussière.
+  var ANGLES = [-88, -32, 28, 84, 140, 205], LONGUEURS = [980, 700, 860, 640, 780, 600];
+  Effets.entree = function (scene, e) {
+    var x = e.x || 600, y = e.y || 800, svg = Fx.calque(scene, 'entree', 5, true);
+    svg.style.mixBlendMode = 'screen';
+    var rayons = svgEl('g', { opacity: 0 }, svg), coeur;
+    ANGLES.forEach(function (deg, k) {
+      var r = deg * Math.PI / 180, ux = Math.cos(r), uy = Math.sin(r), L = LONGUEURS[k];
+      var dg = FxA.degrade(svg, 'linearGradient', { x1: x, y1: y, x2: x + ux * L, y2: y + uy * L, gradientUnits: 'userSpaceOnUse' },
+        [[0, '#fff6d8', 0.7], [0.3, '#ffe2a0', 0.34], [1, '#ffd080', 0]]);
+      // cinq couches de plus en plus fines : un faisceau sans bord dur
+      [0.085, 0.066, 0.048, 0.032, 0.018].forEach(function (w) {
+        var hw = L * w, px = -uy * hw, py = ux * hw;
+        svgEl('polygon', { points: pt([x, y]) + ' ' + pt([x + ux * L + px, y + uy * L + py]) + ' ' + pt([x + ux * L - px, y + uy * L - py]), fill: dg, opacity: 0.22 }, rayons);
+      });
+    });
+    // la lumière qui déborde du trou et éclaire le mur autour, puis le cœur, blanc doré, qui emplit le trou
+    var db = FxA.degrade(svg, 'radialGradient', { cx: 0.5, cy: 0.5, r: 0.5 }, [[0, '#ffe6a6', 0.62], [0.4, '#ffc462', 0.26], [1, '#ff9d3a', 0]]);
+    var bloom = svgEl('circle', { cx: x, cy: y, r: 120, fill: db, opacity: 0 }, svg);
+    var dc = FxA.degrade(svg, 'radialGradient', { cx: 0.5, cy: 0.5, r: 0.5 }, [[0, '#fffbe6'], [0.3, '#ffeab4', 0.96], [0.62, '#ffcb6c', 0.5], [1, '#ffb050', 0]]);
+    coeur = svgEl('circle', { cx: x, cy: y, r: 40, fill: dc, opacity: 0 }, svg);
+    function poser(p) {
+      coeur.setAttribute('r', (40 + 160 * vif(borne(p / 0.55))).toFixed(1));
+      coeur.setAttribute('opacity', (0.97 * lisse(p / 0.35) - 0.1 * lisse((p - 0.6) / 0.4)).toFixed(3));
+      bloom.setAttribute('r', (120 + 250 * vif(borne(p / 0.7))).toFixed(1));
+      bloom.setAttribute('opacity', (0.9 * lisse(p / 0.5) - 0.3 * lisse((p - 0.7) / 0.3)).toFixed(3));
+      rayons.setAttribute('opacity', (0.9 * lisse((p - 0.15) / 0.5) - 0.38 * lisse((p - 0.7) / 0.3)).toFixed(3));
+    }
+    poser(0);
+    Fx.sonner('souffle');
+    Fx.niveauAmbiance(1, 1500);                         // « la nappe revient »
+    if (calme) return Fx.animer(scene, 600, poser);
+    // les poussières d'or dans le faisceau : elles sortent du trou, portées par le souffle, et flottent
+    var G = FxA.grains(scene), hasard = Fx.alea(31), liste = [], k;
+    for (k = 0; k < 52; k++) {
+      var an = ANGLES[k % ANGLES.length] * Math.PI / 180 + Fx.entre(hasard, -0.16, 0.16), v = Fx.entre(hasard, 55, 150), ray = Fx.entre(hasard, 0, 110);
+      liste.push({ x: x + Math.cos(an) * ray, y: y + Math.sin(an) * ray * 0.8, vx: Math.cos(an) * v, vy: Math.sin(an) * v, r: Fx.entre(hasard, 1.7, 4.2),
+        a: Fx.entre(hasard, 0.6, 1), entree: 0.35, sortie: 1, vie: Fx.entre(hasard, 2.2, 3.5), retard: Fx.entre(hasard, 0.1, 1.3),
+        couleur: 'rgb(255, 232, 160)', balance: Fx.entre(hasard, 6, 20), p: hasard() * 6, attend: true });
+    }
+    G.jeter(liste);
+    return Fx.animer(scene, 1800, poser);
+  };
+})();
+
 // ================================================================ effets nouveaux, chapitres 0 à 3 (fin)
 
 // ================================================================ effets nouveaux, chapitres 4 à 8 (début)
