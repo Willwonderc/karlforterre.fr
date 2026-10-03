@@ -3831,4 +3831,179 @@ var FxB = {
 // ================================================================ effets nouveaux, chapitre 7 (début)
 /* Les effets qui manquaient, dont la première page est au chapitre 7, s'ajoutent ici, chacun juste
    au-dessus de la ligne « (fin) » ci-dessous (l'équipe du chapitre 6 écrit plus haut). */
+// Les outils communs des effets de ce chapitre (rangés sous un seul nom, comme FxA et FxB : les fragments partagent une portée).
+var FxD = {
+  // une note de la première mesure de la ballade ou des notes montantes de 1.2, sans jamais lever d'erreur
+  note: function (nom, k) { try { Son.note(nom, k); } catch (e) { signaler(e); } }
+};
+
+// ---------------------------------------------------------------- chapitre 7 : le désert (7.1 à 7.3)
+(function () {
+  // ---- filantes, `larmes` (7.1)
+  // Traitement, 7.1 : « « sur elle ruissellent des astres fuyants » : à travers les paupières, sept étoiles se détachent et coulent vers
+  // le bas, lentement, avec leur traînée, comme des larmes sur une vitre. En 1.1, « Des étincelles passent et se chassent » d'un bord
+  // à l'autre ; ici, elles tombent » ; synthèse : « sept étoiles coulent lentement, avec leur traînée, comme des larmes sur une vitre ».
+  // Les étoiles se dessinent sur une toile sous le texte, au-dessus des paupières (on les voit à travers elles) ; chacune naît en
+  // place, puis glisse comme une goutte sur une vitre : sa vitesse hésite, elle dérive un peu de côté, sa traînée scintille. Elles
+  // pâlissent avec `morsure`. Mouvement réduit : les étoiles paraissent en fondu, sur place, sans rien qui coule.
+  var LARMES = [[210, 170, 0.1, 150, 7, 0.4], [470, 330, 0.9, 135, -5, 1.9], [690, 120, 1.6, 160, 6, 3.1], [910, 390, 2.4, 140, -8, 4.4],
+    [340, 600, 3.1, 128, 6, 5.5], [800, 650, 3.8, 145, -4, 0.9], [1040, 230, 4.5, 138, 5, 2.6]];     // x, y de naissance ; retard (s) ; vitesse (unités/s) ; dérive ; phase
+  var SCINTILLES = [0.16, 0.33, 0.5, 0.67, 0.84];
+  function traineeDeLarme(c, s, a) {
+    var h = s.trace, n = h.length, j, k;
+    c.lineCap = 'round'; c.strokeStyle = '#ffeec8';
+    for (j = n - 1; j > 0; j--) {
+      var u = (n - 1 - j) / Math.max(1, n - 1);              // 0 près de la tête, 1 au bout
+      c.globalAlpha = a * 0.6 * Math.pow(1 - u, 1.7); c.lineWidth = 1.8 + 3.2 * (1 - u);
+      c.beginPath(); c.moveTo(h[j][0], h[j][1]); c.lineTo(h[j - 1][0], h[j - 1][1]); c.stroke();
+    }
+    // des points qui scintillent le long de la traînée
+    c.fillStyle = '#fff6dc';
+    for (k = 0; k < SCINTILLES.length && n > 6; k++) {
+      var p = h[n - 1 - Math.floor(SCINTILLES[k] * (n - 1))];
+      c.globalAlpha = a * (0.25 + 0.75 * Math.abs(Math.sin(s.age * 6.3 + k * 2.4 + s.phase))) * (1 - SCINTILLES[k]);
+      c.beginPath(); c.arc(p[0] + Math.sin(k * 5.1 + s.phase) * 4, p[1], 1.9, 0, 6.2832); c.fill();
+    }
+  }
+  function teteDeLarme(c, s, a) {
+    c.fillStyle = '#fff2d2'; c.globalAlpha = a * 0.22; c.beginPath(); c.arc(s.x, s.y, 17, 0, 6.2832); c.fill();
+    c.globalAlpha = a * 0.6; c.fillRect(s.x - 15, s.y - 0.9, 30, 1.8); c.fillRect(s.x - 0.9, s.y - 15, 1.8, 30);
+    c.globalAlpha = a; c.fillStyle = '#fff9ea'; c.beginPath(); c.arc(s.x, s.y, 3.8, 0, 6.2832); c.fill();
+  }
+  var filantesAvant = Effets.filantes;
+  Effets.filantes = function (scene, e) {
+    if (!e.larmes) return filantesAvant(scene, e);
+    var fx = Fx.etat(scene), n = Math.max(1, Math.min(e.n || LARMES.length, LARMES.length)), T = Fx.toile(scene, 'larmes', 3, 0.5, 'dessous'), c = T.x;
+    var etoiles = LARMES.slice(0, n).map(function (l) {
+      return { x0: l[0], y0: l[1], retard: l[2], v: l[3], derive: l[4], phase: l[5], age: -l[2], x: l[0], y: l[1], trace: [], pose: 0 };
+    });
+    if (calme) {
+      // sur place : chacune un peu plus bas que sa naissance, sa traînée droite derrière elle
+      etoiles.forEach(function (s) {
+        s.age = 0; s.y = s.y0 + 140;
+        for (var i = 0; i <= 30; i++) s.trace.push([s.x0, s.y - (30 - i) * 4.5]);
+      });
+      return Fx.animer(scene, 600, function (p) {
+        c.clearRect(0, 0, W, H);
+        etoiles.forEach(function (s) { traineeDeLarme(c, s, lisse(p)); teteDeLarme(c, s, lisse(p)); });
+      });
+    }
+    fx.larmes = Fx.tache(scene, function (t, dt) {
+      c.clearRect(0, 0, W, H);
+      var vivantes = 0;
+      etoiles.forEach(function (s) {
+        s.age += dt;
+        if (s.age < 0) { vivantes++; return; }                 // pas encore née
+        if (s.y > 1560) return;                                 // sortie par le bas
+        vivantes++;
+        var m = 0.5 + 0.5 * Math.sin(s.age * 1.7 + s.phase), allure = lisse(borne(s.age / 1.6)) * (0.32 + 0.68 * m * m);
+        s.y += s.v * allure * dt;
+        s.x = s.x0 + s.derive * s.age + 11 * Math.sin(s.age * 0.8 + s.phase);
+        if (s.age - s.pose >= 0.04) { s.pose = s.age; s.trace.push([s.x, s.y]); if (s.trace.length > 70) s.trace.shift(); }
+        var a = lisse(borne(s.age / 0.8)) * (1 - lisse(borne((s.y - 1230) / 260)));
+        traineeDeLarme(c, s, a); teteDeLarme(c, s, a);
+      });
+      if (!vivantes) return false;
+    });
+    return { suite: Promise.resolve(), fin: Fx.pause(scene, 1800) };
+  };
+
+  // ---- morsure (7.1)
+  // « il accepte la morsure du soleil » : « le temps passe en trois secondes : les étoiles pâlissent, le voile des paupières passe du noir
+  // bleuté au rouge sombre, puis à l'orangé, la couleur du soleil qu'on voit les yeux fermés. Mouvement réduit : les étoiles s'éteignent
+  // sur place ; le rouge vient en fondu. » Son : « Au troisième temps, le vent tombe ; reste une chaleur sèche, un souffle aigu presque
+  // inaudible » (le désert : le vent à zéro, puis le jour). Le voile est celui des paupières du geste (Gestes.paupieres) ; si la page
+  // s'ouvre sans lui, les paupières sont posées closes.
+  Effets.morsure = function (scene, e) {
+    var fx = Fx.etat(scene), duree = e.duree || 3000, ms = calme ? 400 : duree;
+    var P = scene.paupieres || Gestes.paupieres(scene, { teinte: 'nuit', ferme: true });
+    var ciel = fx.calques['dessous-larmes'];
+    if (ciel && ciel.parentNode) {
+      ciel.style.transition = 'opacity ' + ms + 'ms ease'; ciel.style.opacity = 0;
+      Fx.minuterie(scene, function () { if (fx.larmes) fx.larmes.arreter(); retirer(ciel); }, ms + 150, true);
+    }
+    if (Fx.ambianceDeLaPage(scene) === 'desert') Son.ambiance('desert', { vent: 0, jour: true });
+    P.teinte('rouge', duree * 0.45).then(function () { return P.teinte('orange', duree * 0.55); }).then(null, signaler);
+    return { suite: Promise.resolve(), fin: Fx.pause(scene, calme ? 700 : duree) };
+  };
+
+  // ---- tele (7.2)
+  // « Julie fixe sa télé » : « la lumière bleue de la télévision bat sur la couette, irrégulière, comme les plans d'une série.
+  // Mouvement réduit : une lumière bleue, fixe. » La couche `tele` (le son, derrière la porte) est celle d'origine. La lumière est un
+  // voile bleu posé en `multiply` sur la photo, dont l'intensité change comme change un plan : un nouveau niveau toutes les 0,3 à 2,3 s,
+  // atteint en une dizaine de centièmes.
+  var teleAvant = Effets.tele;
+  Effets.tele = function (scene, e) {
+    teleAvant(scene, e);
+    var fx = Fx.etat(scene);
+    if (fx.teleVue) return;
+    fx.teleVue = true;
+    var lumiere = Fx.calque(scene, 'tele', 5, false);
+    lumiere.style.opacity = 0;
+    if (calme) { lumiere.style.transition = 'opacity 400ms ease'; Fx.ensuite(function () { lumiere.style.opacity = 0.78; }); return; }
+    var h = Fx.alea(72), cible = 0.55, courant = 0, suivant = 0;
+    Fx.tache(scene, function (t, dt) {
+      if (t >= suivant) { cible = 0.25 + 0.75 * h(); suivant = t + 0.3 + 2 * h(); }
+      courant += (cible - courant) * (1 - Math.exp(-10 * dt));
+      lumiere.style.opacity = (lisse(borne(t / 1.2)) * (0.4 + 0.58 * courant)).toFixed(3);
+    });
+  };
+
+  // ---- goutte (7.3)
+  // « Une larme ne fait pas une oasis » : « une goutte de condensation coule le long du verre (1,5 s) » ; Son : « le glaçon tinte dans
+  // le verre ». Elle naît en (x, y) (le glaçon : 640, 960), grossit, glisse en accélérant et laisse sa trace mouillée, qui sèche
+  // ensuite. Mouvement réduit : rien (le tintement reste).
+  Effets.goutte = function (scene, e) {
+    Fx.sonner('glacon');
+    if (calme) return;
+    var x = e.x === undefined ? 640 : e.x, y = e.y === undefined ? 960 : e.y, longueur = e.longueur || 430;
+    var svg = Fx.calque(scene, 'goutte', 5, true);
+    var verre = FxA.degrade(svg, 'radialGradient', { cx: 0.36, cy: 0.3, r: 0.75 }, [[0, '#ffffff', 0.9], [0.4, '#e2eefa', 0.34], [1, '#0d131c', 0.45]]);
+    var trace = svgEl('path', { d: 'M' + x + ',' + y + 'L' + x + ',' + y, fill: 'none', stroke: '#e9f2ff', 'stroke-width': 7, 'stroke-linecap': 'round', opacity: 0.3 }, svg);
+    var g = svgEl('g', { opacity: 0 }, svg);
+    svgEl('ellipse', { rx: 11, ry: 16, fill: verre, stroke: 'rgba(8,12,18,0.5)', 'stroke-width': 1.6 }, g);
+    svgEl('ellipse', { cx: -3.5, cy: -6, rx: 3, ry: 5, fill: '#ffffff', opacity: 0.85 }, g);
+    var fin = Fx.animer(scene, 1500, function (p) {
+      var q = Math.pow(p, 1.7), py = y + longueur * q, px = x + 7 * Math.sin(p * 5.2);
+      g.setAttribute('transform', 'translate(' + px.toFixed(1) + ' ' + py.toFixed(1) + ') scale(' + (0.3 + 0.7 * lisse(borne(p / 0.2))).toFixed(3) + ')');
+      g.setAttribute('opacity', lisse(borne(p / 0.15)).toFixed(3));
+      trace.setAttribute('d', 'M' + x + ',' + y + 'Q' + (x + 3).toFixed(1) + ',' + (y + (py - y) * 0.5).toFixed(1) + ' ' + px.toFixed(1) + ',' + py.toFixed(1));
+    });
+    // la goutte reste accrochée un instant, puis la trace sèche
+    var sechee = fin.then(function () {
+      return Fx.animer(scene, 2400, function (p) { g.setAttribute('opacity', (1 - lisse(p)).toFixed(3)); trace.setAttribute('opacity', (0.3 * (1 - lisse(p))).toFixed(3)); });
+    }).then(function () { retirer(svg); });
+    void sechee;
+    return fin;
+  };
+
+  // ---- sable (7.3)
+  // « Aux côtés de dunes » : « un souffle de sable traverse la page en grains fins (« chaque grain de sable se consterne »). Mouvement
+  // réduit : fondus courts, sans souffle de sable » ; Son : « le sable siffle ». Un souffle qui monte et retombe : cent quatre-vingt-dix
+  // grains partent du bord gauche (le doigt de dieu), portés vers la droite, le plus souvent au ras des dunes (la toile de grains de la page).
+  Effets.sable = function (scene, e) {
+    Fx.sonner('sable');
+    if (calme) return;
+    var G = FxA.grains(scene), h = Fx.alea(19), liste = [], n = e.n || 190, k;
+    var COULEURS = ['#c79b5a', '#e3c58c', '#a97c45', '#f0dcae'];
+    for (k = 0; k < n; k++) {
+      var bas = h() < 0.7;
+      liste.push({ x: -30 - h() * 140, y: bas ? Fx.entre(h, 950, 1560) : Fx.entre(h, 380, 950), vx: Fx.entre(h, 620, 1150), vy: Fx.entre(h, -60, 30), gy: 0,
+        r: Fx.entre(h, 1.5, 3.3), a: Fx.entre(h, 0.55, 1), entree: 0.15, sortie: 0.5, vie: Fx.entre(h, 1.9, 2.8),
+        retard: Math.max(0, 1.1 + (h() + h() + h() - 1.5) * 1.1), couleur: COULEURS[k % COULEURS.length], balance: Fx.entre(h, 8, 30), p: h() * 6 });
+    }
+    G.jeter(liste);
+    return { suite: Promise.resolve(), fin: Fx.pause(scene, 1200) };
+  };
+
+  // ---- pause (7.5, 7.16)
+  // « Rien à toucher : ni ✦, ni coin de page, pas de suite ; la page attend » : le ✦ (le coin de page n'est que lui, sur les pages
+  // d'un mortel) s'éteint dès que l'attente commence ; le récit le rallume quand le temps a tout fini.
+  var pauseAvant = Effets.pause;
+  Effets.pause = function (scene, e) {
+    if (scene.recit && typeof scene.recit.pret === 'function') scene.recit.pret(false);
+    return pauseAvant(scene, e);
+  };
+})();
+
 // ================================================================ effets nouveaux, chapitre 7 (fin)
