@@ -1245,7 +1245,7 @@ var Scenes = (function () {
     var gFente = svgEl('g', { opacity: 0 }, s), gFenetres = svgEl('g', {}, s), gPorte = svgEl('g', {}, s);
     var P = PorteDuPere(scene, { id: id, svg: s, parent: gPorte, y0: 620, chaine: -560,
       traits: fichierDecor('porte-pere-rue-traits'), facades: RUE.facades });
-    var L = P.L, A = null, debout = false, zoom = 1;
+    var A = null, debout = false, zoom = 1;   // A : l'accord du père, après le départ du récit
 
     // ---- la fente : « une fente court sur le trottoir, au bas de l'image, et s'ouvre en étoile (dessinée d'après
     // Fracture, 19059625, le verre étoilé de Karl) » ; le trottoir est vu de biais : l'étoile est aplatie
