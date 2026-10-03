@@ -487,6 +487,21 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 
 /* ------------------------------------------------------------ scènes écrites à la main (scenes.js) et transitions
    Les règles nouvelles des scènes et des transitions s'ajoutent ici, au-dessus de la ligne « (fin) ». */
+/* les calques SVG des scènes (plier, vision, listes) : sous le texte, sans toucher */
+.scene-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+/* 3.4, 3.10, 3.11 : seuls les temps déjà lus prennent place ; le texte reste en bas et laisse le haut
+   de l'image aux étoiles, à la lanterne et à la porte (« tout reste au-dessus du texte ») */
+.jeu .scene[data-special="plier"] .texte .temps:not(.vu),
+.jeu .scene[data-special="vision"] .texte .temps:not(.vu) { display: none; }
+.jeu .scene[data-special="plier"] .texte .temps.vu,
+.jeu .scene[data-special="vision"] .texte .temps.vu { animation: temps-parait 900ms ease backwards; }
+@keyframes temps-parait { from { opacity: 0; filter: blur(0.5cqw); } to { opacity: 1; filter: none; } }
+.calme .scene[data-special="plier"] .texte .temps.vu,
+.calme .scene[data-special="vision"] .texte .temps.vu { animation: temps-parait-calme 200ms ease backwards; }
+@keyframes temps-parait-calme { from { opacity: 0; } to { opacity: 1; } }
+/* plier (3.4) : les noms des deux étoiles du carnet, en petites capitales d'or pâle */
+.plier-nom { font-family: "Unna", Georgia, serif; font-size: 40px; font-variant: small-caps; letter-spacing: 0.14em;
+  fill: var(--or-pale); stroke: rgba(5, 8, 22, 0.75); stroke-width: 6px; paint-order: stroke; }
 /* ------------------------------------------------------------ scènes et transitions (fin) */
 
 /* ------------------------------------------------------------ mécaniques (équipe des mécaniques : src/js/mecaniques.js)

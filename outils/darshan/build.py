@@ -768,7 +768,8 @@ def verifier(pages):
             if not speciaux and g["meca"] not in mecaniques:
                 manquent.setdefault(("mécanique", g["meca"]), []).append(n)
             for e in g.get("effets", []):
-                if e["nom"] not in effets:
+                # (les effets d'un geste aussi : une scène écrite à la main peut les jouer à sa façon)
+                if e["nom"] not in effets and not (speciaux and e["nom"] in locaux):
                     manquent.setdefault(("effet", e["nom"]), []).append(n)
         # (une scène écrite à la main peut jouer un effet à sa façon : scene.effetsLocaux)
         for e in [x for l in pg["effets"].values() for x in l] + pg["s"]["debut"]:

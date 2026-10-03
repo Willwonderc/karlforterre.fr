@@ -432,8 +432,9 @@ SCENES = {
                       E("decor", i=6)]),
     "3.3": S("voies", debut=[E("camera", avance=True, duree=30000, zoom=1.05)],
              moments=[E("poussiere", sens="retombe", couleur="gris")]),
+    # scène « plier » : l'indice du geste sous l'étoile d'Aluva, la consigne entre lui et le texte
     "3.4": S("cosmos", texte="bas ciel", special="plier",
-             gestes=[G("glisser", sens="haut", vif=True, suivre=True,
+             gestes=[G("glisser", sens="haut", vif=True, suivre=True, y=1180, y_consigne=1290,
                        effets=[E("fonte", objet="lunettes", legende=True),
                                E("pli", axe=700, de=[600, 1000], vers=[600, 400])])],
              moments=[[E("lentilles", gauche="toits", droite="periyar"), E("regard")]]),

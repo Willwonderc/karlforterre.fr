@@ -383,5 +383,229 @@ var Scenes = (function () {
     });
   };
 
+  // ---------------------------------------------------------------- outils des scènes du livre entier
+  /* Les scènes plier, vision et listes dessinent dans leurs propres calques (classes « scene-… », jamais
+     « fx », que l'équipe des effets nettoie quand une page est rejouée) et animent par Fx.tache et
+     Fx.animer, qui s'arrêtent avec la page. Les identifiants SVG portent le numéro de la page : l'édition
+     web garde les 85 pages dans un seul document. */
+  function prefixe(scene, nom) { return nom + (scene.getAttribute('data-scene') || '').replace(/\D/g, '-'); }
+  function svgDepuis(balisage) {
+    return doc.importNode(new DOMParser().parseFromString(balisage, 'image/svg+xml').documentElement, true);
+  }
+  // Un calque SVG de la scène (1200 × 1800), sous le texte : avant le panneau, et avant les calques que
+  // les gestes poseront ensuite (ils viennent donc par-dessus).
+  function calqueScene(scene, classe, defs) {
+    var s = svgDepuis('<svg xmlns="http://www.w3.org/2000/svg" class="scene-svg ' + classe + '" viewBox="0 0 ' + W + ' ' + H +
+      '" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs>' + (defs || '') + '</defs></svg>');
+    var t = $('.texte', scene);
+    if (t && t.parentNode === scene) scene.insertBefore(s, t); else scene.appendChild(s);
+    return s;
+  }
+  function entre(a, b, t) { return a + (b - a) * t; }
+  function f1(v) { return (+v).toFixed(1); }
+  function opacite(e, v) { if (e) e.setAttribute('opacity', borne(v).toFixed(3)); }
+  // Une animation de la page (arrêtée avec elle), plus courte en mouvement réduit.
+  function animerPage(scene, duree, dureeCalme, pas) { return Fx.animer(scene, calme ? dureeCalme : duree, pas); }
+  // Le fichier d'un décor, ou le n-ième fichier d'un décor composé (« toits » : le ciel, puis la ville).
+  function fichierDecor(nom, n) {
+    var f = DONNEES.images && DONNEES.images[nom];
+    return f && f[n || 0] ? Fx.DOSSIER + f[n || 0] : null;
+  }
+  // Une étoile du carnet (✦ crème sur un halo d'or), centrée en (x, y).
+  function etoileSvg(parent, x, y, r, o) {
+    o = o || {};
+    var g = svgEl('g', { transform: 'translate(' + f1(x) + ' ' + f1(y) + ')' }, parent);
+    svgEl('circle', { r: f1(r * 1.7), fill: OR, opacity: o.halo === undefined ? 0.22 : o.halo }, g);
+    var p = svgEl('path', { d: etoile(r), fill: CREME }, g);
+    if (o.filtre) p.setAttribute('filter', 'url(#' + o.filtre + ')');
+    return g;
+  }
+
+  // ---------------------------------------------------------------- plier (3.4)
+  /* Des lunettes qui plient l'espace (docs/darshan-mise-en-scene/chapitre-3.md, 3.4 et section 6). Le
+     lecteur refait le geste vif du pigeonnier (1.3), avec la même consigne, et découvre ce qu'il faisait
+     sans le savoir : du même mouvement, les lunettes fondent en clé et le ciel se plie, Aluva sur Paris.
+     Les lunettes et la clé sont les dessins de la scène du pigeonnier, rendus en or ; les deux étoiles et
+     leur fil pointillé sont ceux du carnet. Les deux effets du geste (`fonte`, `pli`) suivent le doigt
+     (glisser avec `suivre`) ; `lentilles` met un monde dans chaque verre. Mouvement réduit : rien ne
+     plie ni ne glisse ; la clé paraît, l'étoile d'Aluva se fond dans celle de Paris, par des fondus. */
+  speciales.plier = function (scene, cfg) {
+    var id = prefixe(scene, 'pl'), g0 = cfg.gestes[0] || {};
+    var pli = (g0.effets || []).filter(function (e) { return e.nom === 'pli'; })[0] || {};
+    var axe = pli.axe || 700, de = pli.de || [600, 1000], vers = pli.vers || [600, 400], ECHELLE = 1.35;
+    $$('.plier-svg', scene).forEach(retirer);
+    var s = calqueScene(scene, 'plier-svg',
+      '<filter id="' + id + '-goo" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="f"/>' +
+      '<feColorMatrix in="f" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9" result="g"/>' +
+      '<feComposite in="SourceGraphic" in2="g" operator="atop"/></filter>' +
+      '<filter id="' + id + '-lueur" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6" result="b"/>' +
+      '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>' +
+      '<linearGradient id="' + id + '-or" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe7b0"/>' +
+      '<stop offset=".5" stop-color="#f4c56a"/><stop offset="1" stop-color="#b8862f"/></linearGradient>' +
+      '<radialGradient id="' + id + '-eclat"><stop offset="0" stop-color="#fff8ea"/><stop offset=".35" stop-color="#ffe3a0" stop-opacity=".8"/>' +
+      '<stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>' +
+      '<clipPath id="' + id + '-bas"><rect x="-200" y="' + axe + '" width="1600" height="' + (H - axe + 200) + '"/></clipPath>' +
+      '<clipPath id="' + id + '-vg"><circle cx="-105" cy="0" r="66"/></clipPath>' +
+      '<clipPath id="' + id + '-vd"><circle cx="105" cy="0" r="66"/></clipPath>');
+    var lieux = (DONNEES.carte && DONNEES.carte.lieux) || {};
+    function nom(parent, lieu, x, y) {
+      var t = svgEl('text', { x: x + 52, y: y + 13, 'class': 'plier-nom' }, parent);
+      t.textContent = (lieux[lieu] && lieux[lieu].nom) || '';
+      return t;
+    }
+    function fil(parent, y0, y1) {
+      return svgEl('line', { x1: vers[0], y1: y0, x2: vers[0], y2: y1, stroke: OR, 'stroke-width': 3, 'stroke-dasharray': '3 9',
+        'stroke-linecap': 'round', opacity: 0.8 }, parent);
+    }
+    // « Paris en haut (600, 400) et Aluva plus bas (600, 1 000), reliées par un fil d'or, avec leurs noms
+    // en petites capitales » ; tout reste au-dessus du texte.
+    var haut = svgEl('g', {}, s);
+    fil(haut, vers[1], axe);
+    var lueurParis = svgEl('circle', { cx: vers[0], cy: vers[1], r: 90, fill: 'url(#' + id + '-eclat)', opacity: 0 }, haut);
+    etoileSvg(haut, vers[0], vers[1], 24, { filtre: id + '-lueur' });
+    var nomParis = nom(haut, 'paris', vers[0], vers[1]);
+    // sous la moitié qui se plie : la nuit nue, l'espace replié découvre le vide
+    var vide = svgEl('rect', { x: -100, y: axe, width: 1400, height: H - axe + 100, fill: '#02030a', opacity: 0 }, s);
+    // la moitié basse du ciel : la même image que le décor, qui se replie autour de l'axe comme une page
+    var rabat = svgEl('g', {}, s);
+    Gestes.image(rabat, Fx.sourceImage(scene, 'cosmos'), { x: 0, y: 0, width: W, height: H, preserveAspectRatio: 'none',
+      'clip-path': 'url(#' + id + '-bas)' });
+    fil(rabat, axe, de[1]);
+    var aluva = etoileSvg(rabat, de[0], de[1], 24, { filtre: id + '-lueur' });
+    var nomAluva = nom(rabat, 'aluva', de[0], de[1]);
+    var ombre = svgEl('rect', { x: -100, y: axe, width: 1400, height: H - axe + 100, fill: '#000', opacity: 0 }, rabat);
+    var pliure = svgEl('line', { x1: 0, y1: axe, x2: W, y2: axe, stroke: OR, 'stroke-width': 3, opacity: 0, filter: 'url(#' + id + '-lueur)' }, s);
+    var eclat = svgEl('circle', { cx: vers[0], cy: vers[1], r: 40, fill: 'url(#' + id + '-eclat)', opacity: 0 }, s);
+    // les lunettes du pigeonnier, en traits d'or, posées sur l'axe du pli ; la clé, en or, dans le même groupe
+    var objet = svgEl('g', { transform: 'translate(' + vers[0] + ' ' + axe + ') scale(' + ECHELLE + ')' }, s);
+    var visqueux = svgEl('g', {}, objet);
+    var trait = { fill: 'none', stroke: 'url(#' + id + '-or)', 'stroke-linecap': 'round' };
+    var vg = svgEl('circle', Fx.copie(trait, { cx: -105, cy: 0, r: 72, fill: 'rgba(14,10,24,.5)', 'stroke-width': 9 }), visqueux);
+    var vd = svgEl('circle', Fx.copie(trait, { cx: 105, cy: 0, r: 72, fill: 'rgba(14,10,24,.5)', 'stroke-width': 9 }), visqueux);
+    var pont = svgEl('path', Fx.copie(trait, { d: 'M-38,-10 Q0,-38 38,-10', 'stroke-width': 9 }), visqueux);
+    var bg = svgEl('path', Fx.copie(trait, { 'stroke-width': 8 }), visqueux), bd = svgEl('path', Fx.copie(trait, { 'stroke-width': 8 }), visqueux);
+    var cle = svgEl('g', { opacity: 0, fill: 'url(#' + id + '-or)' }, visqueux);
+    svgEl('circle', { cx: -150, cy: 0, r: 58, fill: 'none', stroke: 'url(#' + id + '-or)', 'stroke-width': 22 }, cle);
+    svgEl('rect', { x: -96, y: -12, width: 330, height: 24, rx: 6 }, cle);
+    svgEl('rect', { x: 170, y: 10, width: 22, height: 46 }, cle);
+    svgEl('rect', { x: 204, y: 10, width: 16, height: 30 }, cle);
+    svgEl('rect', { x: 226, y: 10, width: 10, height: 52 }, cle);
+    var reflets = svgEl('g', { fill: '#fff' }, objet);
+    svgEl('ellipse', { cx: -132, cy: -30, rx: 26, ry: 10, opacity: 0.22, transform: 'rotate(-20 -132 -30)' }, reflets);
+    svgEl('ellipse', { cx: 78, cy: -30, rx: 26, ry: 10, opacity: 0.16, transform: 'rotate(-20 78 -30)' }, reflets);
+    // « dans le verre gauche paraît Paris (les toits), dans le droit le Periyar »
+    var lentilles = svgEl('g', { opacity: 0 }, objet);
+    function monde(clip, src, x, y, l) {
+      if (!src) return;
+      Gestes.image(svgEl('g', { 'clip-path': 'url(#' + id + '-' + clip + ')' }, lentilles), src,
+        { x: f1(x), y: f1(y), width: f1(l), height: f1(l * 1.5), preserveAspectRatio: 'none' });
+    }
+    function lentille(x, nomDecor, cx, cy, largeur) {
+      var k = 132 / largeur;   // la région choisie du décor emplit le verre
+      [0, 1].forEach(function (n) { monde(x < 0 ? 'vg' : 'vd', fichierDecor(nomDecor, n), x - cx * k, -cy * k, W * k); });
+    }
+    var reglage = (cfg.effets && [].concat.apply([], Object.keys(cfg.effets).map(function (k) { return cfg.effets[k]; }))
+      .filter(function (e) { return e.nom === 'lentilles'; })[0]) || {};
+    lentille(-105, reglage.gauche || 'toits', 380, 1080, 620);     // la tour et les toits, sous le ciel de nuit
+    lentille(105, reglage.droite || 'periyar', 600, 820, 700);     // l'eau du fleuve sous les arbres
+    svgEl('circle', { cx: -105, cy: 0, r: 66, fill: 'rgba(30,18,6,.22)' }, lentilles);
+    svgEl('circle', { cx: 105, cy: 0, r: 66, fill: 'rgba(30,18,6,.22)' }, lentilles);
+
+    // ---- la fonte : les lunettes deviennent la clé du pigeonnier (t : 0 lunettes, 1 clé)
+    // les formes de la fonte de 1.3 : le verre gauche devient l'anneau, la branche droite la tige
+    function formes(t) {
+      vg.setAttribute('cx', f1(-105 - 45 * t)); vg.setAttribute('r', f1(72 - 14 * t));
+      vd.setAttribute('cx', f1(105 + 60 * t)); vd.setAttribute('r', f1(72 * (1 - t) + 4));
+      pont.setAttribute('stroke-width', f1(9 + 10 * t));
+      bd.setAttribute('d', 'M' + f1(entre(177, 115, t)) + ',' + f1(entre(-12, 0, t)) + ' C' + f1(entre(235, 160, t)) + ',' + f1(entre(-22, 0, t)) +
+        ' ' + f1(entre(292, 200, t)) + ',' + f1(entre(-42, 0, t)) + ' ' + f1(entre(332, 240, t)) + ',' + f1(entre(-74, 0, t)));
+      bg.setAttribute('d', 'M' + f1(entre(-177, -150, t)) + ',' + f1(entre(-12, 0, t)) + ' C' + f1(entre(-235, -160, t)) + ',' + f1(entre(-22, 0, t)) +
+        ' ' + f1(entre(-292, -165, t)) + ',' + f1(entre(-42, 0, t)) + ' ' + f1(entre(-332, -170, t)) + ',' + f1(entre(-74, 0, t)));
+      vg.setAttribute('fill', 'rgba(14,10,24,' + (0.5 * (1 - t)).toFixed(3) + ')');
+      vd.setAttribute('fill', 'rgba(14,10,24,' + (0.5 * (1 - t)).toFixed(3) + ')');
+    }
+    formes(0);
+    var fonte = -1;
+    function fondre(t) {
+      t = borne(t);
+      if (Math.abs(t - fonte) < 0.0005) return;
+      fonte = t;
+      // en mouvement réduit, rien ne bouge : les lunettes s'effacent, la clé paraît
+      if (!calme) formes(t);
+      if (t > 0.001 && t < 0.999 && !calme) visqueux.setAttribute('filter', 'url(#' + id + '-goo)'); else visqueux.removeAttribute('filter');
+      [vg, vd, pont, bd].forEach(function (e) { opacite(e, 1 - t); });
+      opacite(bg, 1 - (calme ? 1 : 1.6) * t); opacite(reflets, 1 - (calme ? 1 : 2) * t);
+      opacite(cle, t);
+    }
+    // ---- le pli : la moitié basse du ciel se replie vers le haut autour de l'axe, comme une page
+    // (u : 0 à plat, 1 replié : le point d'Aluva vient sur celui de Paris)
+    function plier(u) {
+      u = borne(u);
+      opacite(nomParis, 1 - u * 8); opacite(nomAluva, 1 - u * 8);
+      if (calme) { opacite(aluva, 1 - u); opacite(lueurParis, u); return; }
+      var th = Math.PI * u, c = Math.cos(th);
+      if (Math.abs(c) < 0.002) c = c < 0 ? -0.002 : 0.002;
+      rabat.setAttribute('transform', 'matrix(1 0 0 ' + c.toFixed(4) + ' 0 ' + f1(axe * (1 - c)) + ')');
+      opacite(ombre, 0.62 * Math.sin(th) + (c < 0 ? 0.14 * (1 - u) : 0));
+      opacite(vide, lisse(borne(u * 6)));
+      opacite(pliure, 0.9 * Math.sin(th));
+    }
+    fondre(0); plier(0);
+
+    // ---- le geste : les deux effets suivent le même doigt ; l'image le rattrape en douceur (un geste
+    // vif claque d'un coup, il ne saute pas) ; au bout, l'éclat et le tintement, Aluva posée sur Paris
+    var suivi = null;
+    function suivre(e) {
+      if (!suivi) {
+        var fin = null;
+        suivi = { x: 0, vu: 0, fini: false, sonFonte: false, sonPli: false, fait: new Promise(function (ok) { fin = ok; }) };
+        Fx.tache(scene, function (t, dt) {
+          var k = calme ? 1 : 1 - Math.exp(-dt / 0.07);
+          suivi.vu += (suivi.x - suivi.vu) * k;
+          if (Math.abs(suivi.x - suivi.vu) < 0.003) suivi.vu = suivi.x;
+          if (!suivi.sonFonte && suivi.vu > 0.04) { suivi.sonFonte = true; Fx.sonner('fonte'); }
+          if (!suivi.sonPli && suivi.vu > 0.26) { suivi.sonPli = true; Fx.sonner('papier'); }
+          fondre(suivi.vu / 0.4);
+          plier(suivi.vu <= 0.22 ? 0 : lisse((suivi.vu - 0.22) / 0.78));
+          if (suivi.fini && suivi.vu >= 1) { fin(); return false; }
+        });
+        // le geste rejoué sans doigt (un toucher, Entrée, la fiche) : 0,9 s, comme glisser le fait
+        if (!e.geste) Fx.animer(scene, calme ? 300 : 900, function (x) { suivi.x = lisse(x); if (x >= 1) suivi.fini = true; });
+      }
+      if (e.geste) e.geste.suivre(function (x, fini) { suivi.x = Math.max(0, Math.min(1, x)); if (fini) { suivi.x = 1; suivi.fini = true; } });
+      return suivi.fait;
+    }
+    scene.effetsLocaux = {
+      // « ses lunettes aux visages déformés adoptent l'allure de la précédente clé » : la fonte de 1.3,
+      // en or, dans le décor (le sac ne change pas)
+      fonte: function (sc, e) { return suivre(e); },
+      // « Dans le même temps qu'elles se plient, elles en font autant de l'espace, faisant plus que de
+      // vulgaires bottes de sept lieux » : au bout, un éclat et un tintement ; le pli tient une seconde,
+      // puis se déplie (1,5 s)
+      pli: function (sc, e) {
+        return suivre(e).then(function () {
+          Fx.sonner('tinte');
+          animerPage(scene, 800, 400, function (x) {
+            eclat.setAttribute('r', f1(calme ? 150 : 40 + 230 * vif(x)));
+            opacite(eclat, calme ? Math.sin(Math.PI * x) : 1 - x);
+          });
+          return Fx.pause(scene, calme ? 500 : 1000);
+        }).then(function () {
+          return animerPage(scene, 1500, 400, function (x) { plier(1 - lisse(x)); });
+        });
+      },
+      // « Elles portent sa vue plus loin… » : la clé redevient lunettes, et un monde paraît dans chaque
+      // verre ; le bouton Objets luit au même instant (l'effet `regard`, qui suit)
+      lentilles: function () {
+        var retour = animerPage(scene, 1200, 300, function (x) { fondre(1 - lisse(x)); });
+        var mondes = retour.then(function () {
+          return animerPage(scene, 1500, 400, function (x) { opacite(lentilles, lisse(x)); });
+        });
+        return { suite: retour, fin: mondes };
+      }
+    };
+    derouler(scene, cfg, { attente: 500 });
+  };
+
   return { jouer: jouer, config: config, sortir: sortir, speciales: speciales };
 })();
