@@ -638,6 +638,69 @@
       });
     }
 
+    // ---- le murmure : des gens qui parlent, sans qu'on comprenne un mot
+    // Mesuré sur un vrai restaurant parisien (enregistrement du domaine public, un midi) : l'énergie
+    // est entre 250 et 2 000 Hz (le maximum vers 500 Hz, 12 dB de moins à 126 Hz, 15 dB de moins à
+    // 3 kHz), et l'enveloppe fluctue à tous les rythmes, de 0,8 à 32 Hz, avec la même énergie par
+    // octave : phrases, syllabes, consonnes. Chaque « personne » est ici un chuchotement : un bruit
+    // qui passe par trois résonances (les formants d'une voyelle, qui change à chaque syllabe), des
+    // syllabes de 110 à 260 ms, des phrases de quelques syllabes, des pauses, parfois une consonne
+    // qui siffle. Aucune hauteur, aucun mot, jamais une voix qu'on dirait fabriquée ; plusieurs
+    // personnes ensemble font la rumeur. o : voix (7), clair (1 : tout le spectre ; moins : ce qui
+    // reste de l'aigu), vitesse (1), pauses (1 ; plus : moins de monde parle), large (0,7 : la
+    // largeur stéréo), niv. Rend le gain du groupe.
+    var VOYELLES = [[700, 1200, 2500], [400, 2200, 2900], [550, 1900, 2600], [290, 2300, 3000], [450, 800, 2500],
+      [310, 800, 2300], [420, 1500, 2400], [520, 1000, 2400], [640, 1450, 2500], [360, 1600, 2300]];
+    function murmure(v, sortie, o) {
+      var n = o.voix || 7, clair = nombre(o.clair, 1), vitesse = nombre(o.vitesse, 1), pauses = nombre(o.pauses, 1), large = nombre(o.large, 0.7);
+      var somme = ampli(nombre(o.niv, 1)), gens = [], i;
+      var haut = biquad('highpass', 170, 0.7, sortie), bas = biquad('lowpass', 900 + 2200 * clair, 0.6, haut);
+      somme.connect(bas);
+      for (i = 0; i < n; i++) (function () {
+        var p = pan(n > 1 ? -large + 2 * large * (i + hasard(-0.3, 0.3)) / (n - 1) : 0, somme), g = ampli(0.0001, p);
+        var sx = hasard(0.86, 1.18), s = source('rose', v), res = [];   // sx : la longueur du conduit, propre à chacun
+        [[3, 1], [6, 0.4 * (0.3 + 0.7 * clair)], [8, 0.1 * clair]].forEach(function (k) {
+          var b = biquad('bandpass', VOYELLES[0][res.length] * sx * (res.length ? 1 : 1.12), k[0]); s.connect(b); b.connect(ampli(k[1], g)); res.push(b);
+        });
+        gens.push({ g: g, p: p, res: res, sx: sx, t: 0, reste: 0, pause: true, niv: hasard(0.5, 1) });
+      })();
+      cadence(v, function (debut, fin) {
+        gens.forEach(function (x) {
+          if (x.t < debut) x.t = debut + hasard(0, 0.3);
+          while (x.t < fin) {
+            var t = x.t;
+            if (x.reste <= 0) {
+              if (!x.pause) { x.g.gain.linearRampToValueAtTime(0.0001, t + 0.12); x.pause = true; x.t = t + hasard(0.4, 3) * pauses; continue; }
+              x.pause = false; x.reste = 3 + Math.floor(Math.random() * 10);
+              x.g.gain.setValueAtTime(0.0001, t);   // la phrase part du silence
+            }
+            var d = (hasard(0.09, 0.22) + (Math.random() < 0.25 ? hasard(0.08, 0.25) : 0)) / vitesse, vy = choix(VOYELLES), a = x.niv * hasard(0.35, 1) * (x.reste === 1 ? 0.6 : 1);
+            x.res.forEach(function (b, k) { b.frequency.setTargetAtTime(vy[k] * x.sx * (k ? 1 : 1.12) * hasard(0.94, 1.06), t, 0.03); });
+            x.g.gain.linearRampToValueAtTime(a, t + d * 0.35); x.g.gain.linearRampToValueAtTime(a * 0.4, t + d);
+            if (clair > 0.2 && Math.random() < 0.35) grain(x.p, t, 'blanc', 'bandpass', hasard(3500, 6000), 1.2, 0.1 * a * clair, 0.012, hasard(0.04, 0.09));
+            x.reste--; x.t = t + d;
+          }
+        });
+      });
+      return somme;
+    }
+    // Un rire de salle (la télévision) : six personnes, chacune quelques « ha » qui s'espacent et
+    // retombent, chuchotés (une voyelle ouverte), à peu près ensemble.
+    function rire(sortie, t, duree, niv) {
+      for (var i = 0; i < 6; i++) {
+        var t0 = t + hasard(0, 0.3), sx = hasard(0.9, 1.15), s = ctx.createBufferSource(), g = ctx.createGain(), p = pan(hasard(-0.6, 0.6), sortie);
+        s.buffer = bruit('rose'); s.loop = true; s.start(t0, Math.random() * 4);
+        [[780, 4, 1], [1300, 5, 0.5]].forEach(function (f) { var b = biquad('bandpass', f[0] * sx, f[1]); s.connect(b); b.connect(ampli(f[2], g)); });
+        g.gain.setValueAtTime(0.0001, t0); g.connect(p);
+        var tt = t0, pas = hasard(0.15, 0.2), a = niv * hasard(0.6, 1);
+        while (tt < t + duree) {
+          g.gain.linearRampToValueAtTime(a, tt + 0.03); g.gain.linearRampToValueAtTime(a * 0.15, tt + pas * 0.85);
+          tt += pas; pas *= 1.07; a *= 0.86 + 0.06 * Math.random();
+        }
+        g.gain.linearRampToValueAtTime(0.0001, tt + 0.1); s.stop(tt + 0.2);
+      }
+    }
+
     // ---- les ambiances (une par lieu) : ambiances[nom](v, reglages) ; v.sortie est le gain de
     // l'ambiance ; rend, si elle le peut, { regler(reglages) } pour changer sans recommencer
     // (regler rend false quand il faut recommencer).
@@ -693,15 +756,12 @@
       // couverts, deux verres, une assiette posée, les pas du serveur, une chaise ; une petite salle.
       restaurant: function (v) {
         var s = salle(v, 0.9, 0.55, 0.28);
-        nappe(v, 'rose', 'lowpass', 1600, 0.5, 0.05, v.sortie);
-        [[280, -0.5], [520, 0.4], [850, -0.1]].forEach(function (x) {
-          var n = nappe(v, 'rose', 'bandpass', x[0], 1.3, 0.12, pan(x[1], s));
-          derive(v, n.g.gain, 0.04, 0.2, 0.25, 1.1);
-        });
-        souvent(v, function (t) {
-          var k = 1 + Math.floor(Math.random() * 3), p = pan(hasard(-0.8, 0.8), s);
-          for (var i = 0; i < k; i++) tinter(p, t + i * hasard(0.08, 0.2), hasard(2300, 4200), [1, 2.76, 5.4], hasard(0.02, 0.06), hasard(0.08, 0.2));
-        }, 1.2, 4.5);
+        derive(v, murmure(v, s, { voix: 14, niv: 0.5 }).gain, 0.43, 0.56, 6, 14);   // la salle se remplit et se vide un peu
+        souvent(v, function (t) {   // des couverts : le plus souvent des chocs secs, parfois un verre qui tinte
+          var k = 1 + Math.floor(Math.random() * 3), p = pan(hasard(-0.8, 0.8), s), i;
+          if (Math.random() < 0.6) for (i = 0; i < k + 1; i++) grain(p, t + i * hasard(0.05, 0.22), 'blanc', 'bandpass', hasard(2200, 4800), hasard(1.5, 4), hasard(0.03, 0.09), 0.001, hasard(0.012, 0.04));
+          else for (i = 0; i < k; i++) tinter(p, t + i * hasard(0.08, 0.2), hasard(2300, 4200), [1, 2.76, 5.4], hasard(0.012, 0.035), hasard(0.08, 0.2));
+        }, 2, 6.5);
         souvent(v, function (t) {
           var p = pan(hasard(-0.7, 0.7), s), f = hasard(1700, 2400);
           tinter(p, t, f, [1, 2.32, 4.25], 0.05, 0.9); tinter(p, t + 0.012, f * 1.07, [1, 2.32, 4.25], 0.035, 0.7);
@@ -1113,31 +1173,32 @@
       });
       return { regler: function () { return true; } };
     }
-    // La télévision derrière une porte (7.2), sans une parole : une rumeur (des phrases de bruit,
-    // jamais des mots), la musique d'une série inventée pour le livre, des rires étouffés ; tout
-    // passe par la porte (un passe-bas) et la pièce d'à côté.
+    // La télévision derrière une porte (7.2), sans une parole : le générique d'une série inventée pour
+    // le livre, puis des voix chuchotées qu'on ne comprend pas (trois personnes, dont il ne reste que
+    // le grave : voir le murmure), des rires de salle ; tout passe par la porte (un passe-bas) et la
+    // pièce d'à côté. Les voix se taisent pendant le générique.
     var GENERIQUE = [   // sol majeur, 112 à la noire ; [hauteur MIDI, durée en croches]
       [[76, 2], [79, 1], [76, 1], [74, 2], [72, 2]], [[72, 2], [76, 2], [74, 4]],
       [[77, 2], [76, 1], [74, 1], [72, 2], [69, 2]], [[71, 2], [74, 2], [79, 4]]
     ];
     var BASSE_GENERIQUE = [[43, 43, 50, 50], [40, 40, 47, 47], [36, 36, 43, 43], [38, 38, 45, 42]];
+    // Des cuivres de synthétiseur : deux dents de scie à peine désaccordées, un filtre qui s'ouvre sur la note.
+    function cuivre(sortie, a, d, midi, niv) {
+      var f = biquad('lowpass', 700, 0.8), g = ctx.createGain();
+      f.frequency.setValueAtTime(700, a); f.frequency.linearRampToValueAtTime(2000, a + 0.1);
+      g.gain.setValueAtTime(0, a); g.gain.linearRampToValueAtTime(niv, a + 0.025); g.gain.setValueAtTime(niv, Math.max(a + 0.03, a + d - 0.05)); g.gain.linearRampToValueAtTime(0, a + d);
+      f.connect(g); g.connect(sortie);
+      [-7, 7].forEach(function (c) { var o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = hz(midi); o.detune.value = c; o.connect(f); o.start(a); o.stop(a + d + 0.02); });
+    }
     function generique(v, sortie, t, court) {
       var c = 60 / 112 / 2, debut = court ? 2 : 0;
       for (var m = debut; m < 4; m++) {
         var t0 = t + (m - debut) * 8 * c, x = 0;
-        GENERIQUE[m].forEach(function (n) {   // la mélodie : une onde carrée, des cuivres de télévision
-          var o = ctx.createOscillator(); o.type = 'square'; o.frequency.value = hz(n[0]);
-          var g = ctx.createGain(), a = t0 + x * c; g.gain.setValueAtTime(0, a); g.gain.linearRampToValueAtTime(0.05, a + 0.02);
-          g.gain.setValueAtTime(0.05, a + n[1] * c - 0.04); g.gain.linearRampToValueAtTime(0, a + n[1] * c);
-          o.connect(g); g.connect(sortie); o.start(a); o.stop(a + n[1] * c + 0.02); x += n[1];
-        });
+        GENERIQUE[m].forEach(function (n) { cuivre(sortie, t0 + x * c, n[1] * c, n[0], 0.03); x += n[1]; });   // la mélodie
         BASSE_GENERIQUE[m].forEach(function (b, i) {   // la basse, les noires ; un accord sur les contretemps ; la batterie
           var a = t0 + i * 2 * c, o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = hz(b);
           var g = ctx.createGain(); enveloppe(g, a, 0.01, 0.25, 0.3); o.connect(g); g.connect(sortie); o.start(a); o.stop(a + 0.4);
-          [b + 24, b + 28, b + 31].forEach(function (h) {
-            var k = ctx.createOscillator(); k.type = 'square'; k.frequency.value = hz(h);
-            var gk = ctx.createGain(); enveloppe(gk, a + c, 0.005, 0.012, 0.12); k.connect(gk); gk.connect(sortie); k.start(a + c); k.stop(a + c + 0.2);
-          });
+          [b + 24, b + 28, b + 31].forEach(function (h) { cuivre(sortie, a + c, 0.14, h, 0.006); });
           if (i % 2 === 0) { var kick = ctx.createOscillator(); kick.frequency.setValueAtTime(120, a); kick.frequency.exponentialRampToValueAtTime(45, a + 0.1); var gkk = ctx.createGain(); enveloppe(gkk, a, 0.002, 0.4, 0.15); kick.connect(gkk); gkk.connect(sortie); kick.start(a); kick.stop(a + 0.2); }
           else grain(sortie, a, 'blanc', 'bandpass', 1800, 0.8, 0.12, 0.002, 0.1);
         });
@@ -1147,25 +1208,15 @@
     function tele(v) {
       var porte = biquad('lowpass', 850, 0.8, v.sortie), piece = ampli(1, porte), conv = convolueur(v, 0.6, 0.6);
       piece.connect(conv); conv.connect(ampli(0.35, porte));
-      var rumeur = nappe(v, 'rose', 'bandpass', 480, 1.4, 0, piece);
-      var musique = ctx.currentTime + 0.2 + (enMarche() ? generique(v, piece, ctx.currentTime + 0.2, false) : 0);   // le générique, d'abord
-      (function phrase() {   // la rumeur se tait tant que la musique joue
-        var t = ctx.currentTime + 0.05, fin = t + hasard(1.5, 4), g = rumeur.g.gain;
-        if (t > musique && enMarche()) {
-          while (t < fin) { var d = hasard(0.1, 0.28); g.setValueAtTime(0.0001, t); g.linearRampToValueAtTime(hasard(0.15, 0.35), t + d * 0.4); g.linearRampToValueAtTime(0.0001, t + d); t += d + hasard(0.02, 0.12); }
-        }
-        v.plusTard(phrase, (fin - ctx.currentTime + hasard(0.4, 1.8)) * 1000);
-      })();
-      souvent(v, function (t) { var court = Math.random() < 0.5; musique = t + generique(v, piece, t, court); }, 28, 60, 30);
-      souvent(v, function (t) {   // des rires étouffés : trois nappes qui palpitent chacune à son rythme
-        var d = hasard(1.5, 3);
-        [700, 1100, 1500].forEach(function (f) {
-          var s = ctx.createBufferSource(); s.buffer = bruit('rose'); s.loop = true;
-          var g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.2, t + 0.3); g.gain.setValueAtTime(0.2, t + d - 0.8); g.gain.linearRampToValueAtTime(0, t + d);
-          var am = ampli(0.5); lfo(hasard(4.5, 6.5), 0.5, am.gain).stop(t + d + 0.1);
-          s.connect(biquad('bandpass', f, 2, am)); am.connect(g); g.connect(piece); s.start(t, Math.random() * 4); s.stop(t + d + 0.1);
-        });
-      }, 10, 26, 6);
+      var voix = ampli(1, piece);   // les voix se taisent pendant le générique
+      murmure(v, voix, { voix: 3, clair: 0.12, vitesse: 0.9, pauses: 1.3, large: 0.3, niv: 1.2 });
+      function musiquer(t, court) {
+        var d = generique(v, piece, t, court);
+        voix.gain.setTargetAtTime(0.05, Math.max(0, t - 0.1), 0.15); voix.gain.setTargetAtTime(1, t + d, 0.5);
+      }
+      if (enMarche()) musiquer(ctx.currentTime + 0.2, false);   // le générique, d'abord
+      souvent(v, function (t) { musiquer(t, Math.random() < 0.5); }, 28, 60, 30);
+      souvent(v, function (t) { rire(piece, t, hasard(1.6, 3), 0.3); }, 10, 26, 6);   // des rires de salle
       return { regler: function () { return true; } };
     }
 
@@ -1217,6 +1268,7 @@
     // deux cordes par note, accordées à un souffle près.
     function pincer(sortie, t, midi, sorte, force, fin, vibrato) {
       var mando = sorte === 'mandoline', g = ctx.createGain();
+      if (mando) grain(sortie, t, 'blanc', 'bandpass', 3400, 1.2, force * 0.05, 0.0004, 0.006);   // le coup de médiator
       g.gain.setValueAtTime(force * (mando ? 0.6 : 1), t);
       if (fin) { g.gain.setValueAtTime(force * (mando ? 0.6 : 1), fin); g.gain.linearRampToValueAtTime(0, fin + 0.06); }
       g.connect(sortie);
@@ -1273,7 +1325,7 @@
       if (filtre === 'telephone') {   // le petit haut-parleur : ni grave ni aigu, un peu saturé, avec le vent et la rue de la vidéo
         var hp = biquad('highpass', 650, 0.7), pk = biquad('peaking', 1700, 1), lpt = biquad('lowpass', 3400, 0.9), sat = ctx.createWaveShaper();
         pk.gain.value = 6; sat.curve = courbeDouce(2.2);
-        melange.connect(hp); hp.connect(pk); pk.connect(lpt); lpt.connect(sat); sat.connect(ampli(0.25, v.sortie));
+        melange.connect(hp); hp.connect(pk); pk.connect(lpt); lpt.connect(sat); sat.connect(biquad('lowpass', 3600, 0.7, ampli(0.25, v.sortie)));   // la saturation fabrique des aigus qu'un petit haut-parleur ne rend pas
         var fond = nappe(v, 'rose', 'bandpass', 900, 0.6, 0.05, hp); derive(v, fond.g.gain, 0.02, 0.07, 0.4, 1.5);
       } else if (filtre === 'assourdi' || filtre === 'eau') {
         melange.connect(biquad('lowpass', filtre === 'eau' ? 560 : 450, filtre === 'eau' ? 1.4 : 0.7, v.sortie));
@@ -1545,7 +1597,7 @@
     // pondérée K) ; couches et effets : au-dessus, sans jamais crever le plafond.
     var NIVEAUX = {
       ambiances: {
-        cosmos: 0.62, nuit: 1.06, kerala: 0.72, vent: 0.63, restaurant: 1.41, rue: 1.03, parc: 1.55, bibliotheque: 3.9,
+        cosmos: 0.62, nuit: 1.06, kerala: 0.72, vent: 0.63, restaurant: 1.0, rue: 1.03, parc: 1.55, bibliotheque: 3.9,
         vision: 1.55, metro: 0.84, hopital: 2.6, chambre: 1.21, marche: 1.34, patisserie: 2.11, appartement: 2.0,
         desert: 0.42, pluie: 0.75
       },

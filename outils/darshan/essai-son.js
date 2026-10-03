@@ -1,9 +1,16 @@
 // Banc d'essai du son : rend hors ligne, dans Chromium, chaque ambiance, chaque couche et chaque
 // effet de src/js/son.js (dans un OfflineAudioContext, par Son._essai), puis écrit leurs mesures.
 // Usage, depuis outils/darshan/ :
-//   NODE_PATH=/opt/node22/lib/node_modules node essai-son.js [--wav] [nom…]
+//   NODE_PATH=/opt/node22/lib/node_modules node essai-son.js [--wav] [--son fichier.js] [nom…]
+//   NODE_PATH=/opt/node22/lib/node_modules node essai-son.js --ecoute dossier [--son fichier.js] [nom…]
 // Sans nom : tout ; avec des noms (ou des débuts de noms), seulement ceux-là. --wav : écrit aussi
-// chaque rendu (la sortie, en stéréo) dans captures/son/, dossier non suivi par Git.
+// chaque rendu (la sortie, en stéréo) dans captures/son/, dossier non suivi par Git. --son : essaie
+// un autre son.js (une version plus ancienne, par exemple), sans toucher à celui du dépôt.
+// --ecoute dossier : n'essaie rien, écrit seulement les fichiers d'écoute pour Karl (WAV stéréo, 16
+// bits, 48 kHz) : la rumeur du restaurant (2.1), la télévision de 7.2, la ballade de 5.7, et ce qu'on
+// entend par une porte ; le hasard est figé (même graine), donc deux versions de son.js se comparent
+// à l'oreille ; chaque fichier est relevé de la même façon pour que deux versions gardent le niveau
+// qu'elles auraient dans le livre (+ 12 dB pour qu'on les entende sans monter le volume).
 //
 // Colonnes (niveaux en dBFS, rendus à 48 kHz, volumes du lecteur au maximum) :
 //   bus     RMS du bus (ambiance et effets, avant le compresseur), sur la fenêtre de mesure
@@ -27,7 +34,9 @@ const path = require('path');
 
 const args = process.argv.slice(2);
 const avecWav = args.includes('--wav');
-const choisis = args.filter((a) => !a.startsWith('--'));
+const valeur = (nom) => { const i = args.indexOf(nom); return i >= 0 ? args[i + 1] : null; };
+const dossierEcoute = valeur('--ecoute'), fichierSon = valeur('--son'), suffixe = valeur('--suffixe');
+const choisis = args.filter((a, i) => !a.startsWith('--') && !['--ecoute', '--son', '--suffixe'].includes(args[i - 1]));
 const CIBLE = -30;   // niveau perçu visé pour les ambiances, sur le bus
 
 // ---------------------------------------------------------------- les scénarios
@@ -132,6 +141,25 @@ function scenarios(noms) {
   return liste;
 }
 
+// ---------------------------------------------------------------- les fichiers d'écoute (--ecoute)
+// Ce que Karl peut écouter, tel que le livre le joue. `gain` : de combien on relève le fichier (dB) ;
+// `graine` : le hasard est figé, pour que deux versions de son.js diffèrent par leur écriture seule.
+function ecoutes() {
+  const plus = 12;
+  const f = (nom, duree, actions, mesure) => ({ sorte: 'ecoute', nom, duree, actions, mesure: mesure || [3, duree - 1], fin: null, gain: plus, graine: 20260930 });
+  return [
+    // 2.1 : la salle du restaurant, d'un bout à l'autre de la page (la rumeur, les couverts, les verres)
+    f('2.1-restaurant', 44, [[0, 'ambiance', 'restaurant']]),
+    // 7.2 : « Julie fixe sa télé » : la chambre, et la télévision derrière la porte (son générique, puis
+    // sa rumeur et ses rires)
+    f('7.2-television', 45, [[0, 'ambiance', 'chambre'], [0.3, 'couche', 'tele', true]]),
+    // 5.7 : la ballade entière, par le haut-parleur du téléphone (la vidéo de la lune)
+    f('5.7-ballade', 26, [[0, 'ambiance', 'chambre'], [1, 'couche', 'melodie', true, { mode: 'entiere', filtre: 'telephone' }]]),
+    // 7.10 : la même, claire, au baiser
+    f('7.10-ballade-claire', 26, [[0, 'ambiance', 'rue', { ete: true }], [1, 'couche', 'melodie', true, { mode: 'entiere' }]]),
+  ];
+}
+
 // ---------------------------------------------------------------- ce qui tourne dans la page
 function dansLaPage() {
   const K = [   // la pondération K à 48 kHz (ITU-R BS.1770) : un plateau aigu, puis un passe-haut
@@ -182,15 +210,18 @@ function dansLaPage() {
     const courbe = Array.from(bandes, (p) => { const x = p > 0 ? 10 * Math.log10(p / max) : -99; return blocs[Math.max(0, Math.min(7, Math.floor((x + 42) / 6)))]; }).join('');
     return { gma: gma.map((x) => Math.round(100 * x / tot)), courbe };
   }
-  function enWav(L, R, sr) {   // 16 bits, stéréo, en base 64
+  function enWav(L, R, sr, gain) {   // 16 bits, stéréo, en base 64 ; gain : facteur linéaire (réduit au besoin pour ne pas écrêter)
     const n = L.length, buf = new ArrayBuffer(44 + n * 4), v = new DataView(buf);
+    let crete = 0;
+    for (let i = 0; i < n; i++) crete = Math.max(crete, Math.abs(L[i] || 0), Math.abs(R[i] || 0));
+    gain = Math.min(gain || 1, crete > 0 ? 0.98 / crete : 1);
     const ecrire = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
     ecrire(0, 'RIFF'); v.setUint32(4, 36 + n * 4, true); ecrire(8, 'WAVEfmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true);
     v.setUint16(22, 2, true); v.setUint32(24, sr, true); v.setUint32(28, sr * 4, true); v.setUint16(32, 4, true); v.setUint16(34, 16, true);
     ecrire(36, 'data'); v.setUint32(40, n * 4, true);
     for (let i = 0; i < n; i++) {
-      v.setInt16(44 + i * 4, Math.max(-1, Math.min(1, L[i] || 0)) * 32767, true);
-      v.setInt16(46 + i * 4, Math.max(-1, Math.min(1, R[i] || 0)) * 32767, true);
+      v.setInt16(44 + i * 4, Math.max(-1, Math.min(1, (L[i] || 0) * gain)) * 32767, true);
+      v.setInt16(46 + i * 4, Math.max(-1, Math.min(1, (R[i] || 0) * gain)) * 32767, true);
     }
     const octets = new Uint8Array(buf); let s = '';
     for (let i = 0; i < octets.length; i += 0x8000) s += String.fromCharCode.apply(null, octets.subarray(i, i + 0x8000));
@@ -241,6 +272,17 @@ function dansLaPage() {
   window.rendre = async function (item, avecWav) {
     const sr = 48000, n = Math.ceil(sr * item.duree);
     const ctx = new OfflineAudioContext(6, n, sr);
+    // un hasard figé (Mulberry32) : les fichiers d'écoute se refont à l'identique
+    const hasardNormal = Math.random;
+    if (item.graine) {
+      let a = item.graine >>> 0;
+      Math.random = function () {
+        a = (a + 0x6D2B79F5) >>> 0; let t = a;
+        t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+    try {
     const e = window.Son._essai(ctx);
     // deux prises stéréo (un son mono y devient deux canaux égaux, comme à l'oreille) : la sortie, le bus
     const stereo = () => { const g = ctx.createGain(); g.channelCount = 2; g.channelCountMode = 'explicit'; g.channelInterpretation = 'speakers'; return g; };
@@ -287,15 +329,16 @@ function dansLaPage() {
     };
     const table = { ambiance: 'ambiances', couche: 'couches', effet: 'effets' }[item.sorte];
     if (table && item.cle) r.niveau = e.niveaux && e.niveaux[table] && typeof e.niveaux[table][item.cle] === 'number' ? e.niveaux[table][item.cle] : 1;
-    if (avecWav) r.wav = enWav(L, R, sr);
+    if (avecWav) r.wav = enWav(L, R, sr, Math.pow(10, (item.gain || 0) / 20));
     return r;
+    } finally { Math.random = hasardNormal; }
   };
 }
 
 // ---------------------------------------------------------------- en avant
 (async () => {
   const racine = __dirname;
-  const son = fs.readFileSync(path.join(racine, 'src/js/son.js'), 'utf8');
+  const son = fs.readFileSync(fichierSon ? path.resolve(fichierSon) : path.join(racine, 'src/js/son.js'), 'utf8');
   const nav = await chromium.launch();
   const page = await nav.newPage();
   const erreursPage = [];
@@ -303,9 +346,24 @@ function dansLaPage() {
   page.on('console', (m) => { if (m.type() === 'error') erreursPage.push(m.text()); });
   await page.setContent('<!doctype html><meta charset="utf-8"><title>Banc d’essai du son</title>');
   // son.js est un fragment du moteur : on lui fournit ce que base.js lui donne (reglages, ecrire)
-  await page.addScriptTag({ content: "window.Son = (function () {\n'use strict';\nvar reglages = { son: true, ambiance: 1, effets: 1 };\nfunction ecrire() {}\n" + son + '\nreturn Son;\n})();' });
+  await page.addScriptTag({ content: "window.Son = (function () {\n'use strict';\nvar doc = document;\nvar reglages = { son: true, ambiance: 1, effets: 1 };\nfunction ecrire() {}\n" + son + '\nreturn Son;\n})();' });
   await page.addScriptTag({ content: '(' + dansLaPage.toString() + ')();' });
   const noms = await page.evaluate(() => window.noms());
+  if (dossierEcoute) {   // les fichiers d'écoute : rien d'autre
+    fs.mkdirSync(path.resolve(dossierEcoute), { recursive: true });
+    let l = ecoutes();
+    if (choisis.length) l = l.filter((s) => choisis.some((c) => s.nom.startsWith(c)));
+    for (const s of l) {
+      const r = await page.evaluate(([item, w]) => window.rendre(item, w), [s, true]);
+      const fichier = path.join(path.resolve(dossierEcoute), s.nom + (suffixe ? '-' + suffixe : '') + '.wav');
+      fs.writeFileSync(fichier, Buffer.from(r.wav, 'base64'));
+      console.log(`${path.basename(fichier)} : ${s.duree} s, niveau perçu ${r.busK.toFixed(1)} dBFS (avant relèvement de ${s.gain} dB), crête ${r.crete.toFixed(1)} dBFS` +
+        (r.erreurs.length ? ', erreurs : ' + r.erreurs.join(' ; ') : ''));
+    }
+    if (erreursPage.length) console.log('erreurs de la page : ' + erreursPage.join(' ; '));
+    await nav.close();
+    return;
+  }
   let liste = scenarios(noms);
   if (choisis.length) liste = liste.filter((s) => choisis.some((c) => s.nom.startsWith(c)));
   const dossierWav = path.join(racine, 'captures', 'son');
