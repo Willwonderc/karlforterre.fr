@@ -3827,3 +3827,8 @@ var FxB = {
 /* Les effets qui manquaient, dont la première page est aux chapitres 6 et 7, s'ajoutent ici, chacun
    juste au-dessus de la ligne « (fin) » ci-dessous (l'équipe des chapitres 4 et 5 écrit plus haut). */
 // ================================================================ effets nouveaux, chapitres 6 et 7 (fin)
+
+// ================================================================ effets nouveaux, chapitre 7 (début)
+/* Les effets qui manquaient, dont la première page est au chapitre 7, s'ajoutent ici, chacun juste
+   au-dessus de la ligne « (fin) » ci-dessous (l'équipe du chapitre 6 écrit plus haut). */
+// ================================================================ effets nouveaux, chapitre 7 (fin)
