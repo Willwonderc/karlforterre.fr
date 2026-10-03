@@ -401,6 +401,13 @@ var Scenes = (function () {
     if (t && t.parentNode === scene) scene.insertBefore(s, t); else scene.appendChild(s);
     return s;
   }
+  // L'édition web rend les images d'une page quittée (img[src]) ; celles des calques SVG aussi, ici : une
+  // page quittée n'est jamais remontrée sans être rejouée (le menu la rejoue), et ses calques refaits.
+  function rendreImages(scene, racine) {
+    Fx.surDepart(scene, function () {
+      $$('image', racine).forEach(function (i) { i.removeAttribute('href'); i.removeAttributeNS('http://www.w3.org/1999/xlink', 'href'); });
+    });
+  }
   function entre(a, b, t) { return a + (b - a) * t; }
   function f1(v) { return (+v).toFixed(1); }
   function opacite(e, v) { if (e) e.setAttribute('opacity', borne(v).toFixed(3)); }
@@ -605,6 +612,7 @@ var Scenes = (function () {
       }
     };
     derouler(scene, cfg, { attente: 500 });
+    rendreImages(scene, s);
   };
 
   // ---------------------------------------------------------------- la lanterne du père
@@ -1055,6 +1063,7 @@ var Scenes = (function () {
     scene.ecouteAccord = geste;
     doc.addEventListener('pointerup', geste);
     doc.addEventListener('keydown', geste);
+    rendreImages(scene, s);
     Fx.surDepart(scene, function () {
       lacher();
       bordsEnMarche = false;
