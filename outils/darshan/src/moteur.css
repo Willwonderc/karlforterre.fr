@@ -490,14 +490,18 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 /* les calques SVG des scènes (plier, vision, listes) : sous le texte, sans toucher */
 .scene-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
 /* 3.4, 3.10, 3.11 : seuls les temps déjà lus prennent place ; le texte reste en bas et laisse le haut
-   de l'image aux étoiles, à la lanterne et à la porte (« tout reste au-dessus du texte ») */
+   de l'image aux étoiles, à la lanterne et à la porte (« tout reste au-dessus du texte ») ; 7.12 à 7.15 : le
+   texte en haut, la porte et sa lanterne dessous */
 .jeu .scene[data-special="plier"] .texte .temps:not(.vu),
-.jeu .scene[data-special="vision"] .texte .temps:not(.vu) { display: none; }
+.jeu .scene[data-special="vision"] .texte .temps:not(.vu),
+.jeu .scene[data-special="rue-de-rungis"] .texte .temps:not(.vu) { display: none; }
 .jeu .scene[data-special="plier"] .texte .temps.vu,
-.jeu .scene[data-special="vision"] .texte .temps.vu { animation: temps-parait 900ms ease backwards; }
+.jeu .scene[data-special="vision"] .texte .temps.vu,
+.jeu .scene[data-special="rue-de-rungis"] .texte .temps.vu { animation: temps-parait 900ms ease backwards; }
 @keyframes temps-parait { from { opacity: 0; filter: blur(0.5cqw); } to { opacity: 1; filter: none; } }
 .calme .scene[data-special="plier"] .texte .temps.vu,
-.calme .scene[data-special="vision"] .texte .temps.vu { animation: temps-parait-calme 200ms ease backwards; }
+.calme .scene[data-special="vision"] .texte .temps.vu,
+.calme .scene[data-special="rue-de-rungis"] .texte .temps.vu { animation: temps-parait-calme 200ms ease backwards; }
 @keyframes temps-parait-calme { from { opacity: 0; } to { opacity: 1; } }
 /* plier (3.4) : les noms des deux étoiles du carnet, en petites capitales d'or pâle */
 .plier-nom { font-family: "Unna", Georgia, serif; font-size: 40px; font-variant: small-caps; letter-spacing: 0.14em;
@@ -531,6 +535,37 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 /* la phrase entière reste au panneau pour les lecteurs d'écran ; à l'écran, elle se lit dans sa moitié */
 .jeu .scene[data-special="listes"] .texte .temps.listes-ailleurs { position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; padding: 0; }
+/* rue-de-rungis (7.12 à 7.15) : seul le temps en cours reste à l'écran, pour que la porte et sa lanterne restent
+   dégagées, sauf la prière de 7.14, qui se garde entière ; le panneau, moins haut */
+.jeu .scene[data-special="rue-de-rungis"]:not(.rue-priere) .texte .temps.passe { display: none; }
+.jeu .scene[data-special="rue-de-rungis"] .texte.en-haut { padding-bottom: 8cqw; }
+/* 7.14 : l'or qui quitte les mots ; les deux premiers temps de la prière, presque effacés, puis revenus */
+.jeu .scene[data-special="rue-de-rungis"] .texte p { transition: color 1.5s ease; }
+.jeu .scene[data-special="rue-de-rungis"] .texte .temps.vu.rue-efface { opacity: 0.1; transition: opacity 1.2s ease; }
+/* le contre-jour : le soleil qui déborde autour de la pierre (entre la photo de la rue et la porte) */
+.decor .rue-contre-jour { opacity: 0; pointer-events: none;
+  background: radial-gradient(ellipse 50% 28% at 50% 65%, rgba(255, 249, 228, 0.9), rgba(255, 222, 150, 0.45) 45%, rgba(255, 200, 110, 0) 100%); }
+/* 7.13, mouvement réduit : le cadre se ferme un peu quand Darshan recule, au lieu du recul ; il se rouvre au geste */
+.rue-cadre { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 1.5s ease;
+  background: radial-gradient(ellipse 72% 58% at 50% 52%, rgba(6, 6, 10, 0) 55%, rgba(6, 6, 10, 0.62) 100%); }
+.rue-cadre.vu { opacity: 1; }
+/* 7.14 : la clé et sa poussière, au-dessus du texte, sous la barre ; la lueur d'or de sa naissance */
+.rue-dessus { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 4; }
+.rue-dessus canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.rue-cle { position: absolute; }
+.rue-cle::before { content: ""; position: absolute; left: -12%; right: -12%; top: -30%; bottom: -30%;
+  background: radial-gradient(closest-side, rgba(255, 214, 140, 0.55), rgba(255, 200, 110, 0)); }
+.rue-cle svg { position: relative; display: block; width: 100%; height: 100%; overflow: visible; }
+/* le coin de page (à partir du désenchantement, 7.14) : ✦ devient un coin de papier corné, en bas à droite ; il
+   garde ses noms pour les lecteurs d'écran ; il ne bouge pas : il pâlit et revient */
+.jeu .scene .suite::before { content: ""; position: absolute; right: -5cqw; bottom: -4cqw; width: 10.5cqw; height: 10.5cqw;
+  opacity: 0; transition: opacity 1s ease; pointer-events: none;
+  background: linear-gradient(315deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 48%, rgba(42, 28, 16, 0.45) 49.4%, #efe3c8 51%, #dccba6 100%); }
+.jeu .scene.sans-magie .suite { color: rgba(184, 154, 106, 0); transition: color 1s ease, opacity 500ms; }
+.jeu .scene.sans-magie .suite::before { opacity: 1; }
+.jeu .scene.sans-magie .suite.pret { animation: coin-page 2.6s ease-in-out infinite; }
+.calme .scene.sans-magie .suite.pret { animation: none; }
+@keyframes coin-page { 50% { opacity: 0.55; } }
 /* ------------------------------------------------------------ scènes et transitions (fin) */
 
 /* ------------------------------------------------------------ mécaniques (équipe des mécaniques : src/js/mecaniques.js)
