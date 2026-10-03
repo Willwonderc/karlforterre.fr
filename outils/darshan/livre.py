@@ -432,8 +432,9 @@ SCENES = {
                       E("decor", i=6)]),
     "3.3": S("voies", debut=[E("camera", avance=True, duree=30000, zoom=1.05)],
              moments=[E("poussiere", sens="retombe", couleur="gris")]),
+    # scène « plier » : l'indice du geste sous l'étoile d'Aluva, la consigne entre lui et le texte
     "3.4": S("cosmos", texte="bas ciel", special="plier",
-             gestes=[G("glisser", sens="haut", vif=True, suivre=True,
+             gestes=[G("glisser", sens="haut", vif=True, suivre=True, y=1180, y_consigne=1290,
                        effets=[E("fonte", objet="lunettes", legende=True),
                                E("pli", axe=700, de=[600, 1000], vers=[600, 400])])],
              moments=[[E("lentilles", gauche="toits", droite="periyar"), E("regard")]]),
@@ -472,7 +473,7 @@ SCENES = {
     "3.11": S("porte-pere", special="vision",
               debut=[E("lanterne", allumee=True), E("ornements", calque="porte-pere-traits", deja=True),
                      E("son", effet="pere", tenu=True)],
-              gestes=[G("tendre", depart=[600, 1300], cible=[600, 760], arret=1000)],
+              gestes=[G("tendre", depart=[600, 1300], cible=[600, 760], arret=1000, y_consigne=1290)],   # au-dessus du texte
               moments=[E("voix", lettres=True, eclat=False, halo=False, son=False),
                        [E("lanterne", eteindre=True), E("draper"), E("son", effet="pere", eteindre=3000)],
                        [E("happe"), E("porte", id="pere", anneau=True)]]),
@@ -618,7 +619,8 @@ SCENES = {
              gestes=[G("liste", cote="darshan", items=["Veste", "barbiche comme il faut", "bague", "chemise des grands jours"]),
                      G("liste", cote="julie", items=["Bague", "boucles d’oreilles", "gâteau", "sac à main",
                                                      "maquillage des grands jours", "frange qui décoiffe"],
-                       echos={"Bague": "bague", "maquillage des grands jours": "chemise des grands jours"})],
+                       echos={"Bague": "bague", "maquillage des grands jours": "chemise des grands jours"},
+                       briller=["gâteau", "sac à main"])],          # scène « listes » : le bouton des objets luit
              moments=[E("coin-de-rue", i=2)]),
     "6.3": S(["haussmann", "porte-bleue"], texte="bas clair", regard="porte-bleue",
              moments=[[E("halo", couleur="ble", bande=[600, 1050]), E("compte", valeur=""),
