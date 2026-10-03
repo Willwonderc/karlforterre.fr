@@ -2214,6 +2214,196 @@ var FxA = (function () {
   };
 })();
 
+// ================================================================ chapitre 3 : le soir d'Aluva (3.9, 3.10, 3.12) et les étincelles de 7.6
+(function () {
+  function pt(p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }
+
+  // ---------------------------------------------------------------- sceau (3.9, 3.10)
+  // « Un mudrā est un sceau permettant de canaliser l'énergie » : l'ovale d'or que ferment les deux pouces du lecteur
+  // (traitement : « deux cercles d'or naissent sous eux, les suivent et glissent l'un vers l'autre, puis se fondent en un
+  // ovale d'or, le sceau » ; « l'ovale d'or reste en filigrane jusqu'à la fin du tableau »). Il naît où les deux cercles du
+  // geste `deux-pouces` s'arrêtent (rayon 52, centres à 34 du milieu) : leur contour réuni, un ovale ; les deux cercles et
+  // leur lentille y restent en trait fin. Une lueur le traverse à sa naissance (1 s), puis il respire doucement ; pendant ce
+  // temps l'ambiance baisse de moitié. `deja` (3.10) : il est déjà là à l'ouverture. `defaire` (3.10, « Les poignets de
+  // Darshan se relâchent. ») : son trait se défait tout autour, les deux cercles s'écartent, la lueur s'éteint (1,8 s).
+  // Mouvement réduit : il paraît et disparaît en fondu.
+  var R = 52, DEMI = 34, LENTILLE = Math.sqrt(R * R - DEMI * DEMI);
+  function batirSceau(svg, x, y) {
+    var haut = svgEl('g', {}, svg), respire = svgEl('g', {}, haut);
+    var ovale = 'M' + pt([x - DEMI, y - R]) + ' H' + (x + DEMI).toFixed(1) + ' A' + R + ',' + R + ' 0 0 1 ' + pt([x + DEMI, y + R]) + ' H' + (x - DEMI).toFixed(1) +
+      ' A' + R + ',' + R + ' 0 0 1 ' + pt([x - DEMI, y - R]) + ' Z';
+    var lentille = svgEl('path', { d: 'M' + pt([x, y - LENTILLE]) + ' A' + R + ',' + R + ' 0 0 1 ' + pt([x, y + LENTILLE]) + ' A' + R + ',' + R + ' 0 0 1 ' + pt([x, y - LENTILLE]) + ' Z',
+      fill: '#f4c56a', opacity: 0.16 }, respire);
+    var lueur = svgEl('path', { d: ovale, fill: 'none', stroke: '#f4c56a', 'stroke-width': 16, 'stroke-linejoin': 'round', opacity: 0.2 }, respire);
+    var cercles = [-1, 1].map(function (s) {
+      return svgEl('circle', { cx: x + s * DEMI, cy: y, r: R, fill: 'none', stroke: '#f4c56a', 'stroke-width': 1.6, opacity: 0.5 }, respire);
+    });
+    var trait = svgEl('path', { d: ovale, fill: 'none', stroke: '#ffe2a0', 'stroke-width': 3.2, 'stroke-linejoin': 'round', pathLength: 1, 'stroke-dasharray': '1 1', 'stroke-dashoffset': 0 }, respire);
+    return { haut: haut, respire: respire, lentille: lentille, lueur: lueur, cercles: cercles, trait: trait, x: x };
+  }
+  Effets.sceau = function (scene, e) {
+    var x = e.x || 600, y = e.y || 1150, fx = Fx.etat(scene), S = fx.sceau;
+    if (e.defaire) {
+      if (!S || !S.haut.parentNode) return;
+      fx.sceau = null;
+      if (calme) return Fx.animer(scene, 600, function (p) { S.haut.style.opacity = (1 - lisse(p)).toFixed(3); }).then(function () { retirer(S.haut); });
+      return Fx.animer(scene, 1800, function (p) {
+        var t = lisse(p);
+        S.trait.setAttribute('stroke-dashoffset', (-t).toFixed(4));                 // le trait se défait tout autour
+        S.lentille.setAttribute('opacity', (0.16 * (1 - lisse(p / 0.4))).toFixed(3));
+        S.lueur.setAttribute('opacity', (0.2 * (1 - lisse(p / 0.8))).toFixed(3));
+        S.cercles.forEach(function (c, i) {                                         // les deux pouces se séparent
+          c.setAttribute('cx', (S.x + (i ? 1 : -1) * (DEMI + 30 * t)).toFixed(1));
+          c.setAttribute('opacity', (0.5 * (1 - lisse((p - 0.15) / 0.85))).toFixed(3));
+        });
+        S.haut.style.opacity = (1 - lisse((p - 0.55) / 0.45)).toFixed(3);
+      }).then(function () { retirer(S.haut); });
+    }
+    if (S && S.haut.parentNode) return;
+    var svg = Fx.calque(scene, 'sceau', 5, true);
+    S = fx.sceau = batirSceau(svg, x, y);
+    function respirer() { if (!calme) S.respire.setAttribute('class', 'fx-sceau-respire'); }
+    if (e.deja) { respirer(); return; }
+    Fx.niveauAmbiance(0.5, 1800);                              // pendant le sceau, l'ambiance baisse de moitié
+    S.haut.style.opacity = 0;
+    if (calme) return Fx.animer(scene, 700, function (p) { S.haut.style.opacity = lisse(p).toFixed(3); });
+    return Fx.animer(scene, 1000, function (p) {
+      var a = Math.sin(Math.PI * p);
+      S.haut.style.opacity = lisse(p / 0.5).toFixed(3);
+      S.lueur.setAttribute('stroke-width', (16 + 22 * a).toFixed(1)); S.lueur.setAttribute('opacity', (0.2 + 0.4 * a).toFixed(3));
+      S.trait.setAttribute('stroke-width', (3.2 + 3 * a).toFixed(2));
+      S.lentille.setAttribute('opacity', (0.16 + 0.3 * a).toFixed(3));
+    }).then(respirer);
+  };
+
+  // ---------------------------------------------------------------- etincelles (3.12, 7.6)
+  // 3.12, « Je sais ! Mon ami j'ai trouvé le chemin ! » (traitement : « une gerbe d'étincelles d'or jaillit du bas de
+  // l'image, les « gerbes d'enthousiasme » ») : quelque quatre-vingts étincelles d'or partent en éventail du bas de la page,
+  // montent, retombent ; un éclair de lueur à leur départ. 7.6, `etoile` (« la braise rougit sous le doigt, des
+  // étincelles montent ; la dernière monte jusqu'en haut de la page et y reste, étoile parmi les étoiles ») : moins
+  // d'étincelles, parties de la braise (600, 1350) ; la dernière, une étoile du carnet, monte seule jusqu'à `vers` (en haut)
+  // en semant de petites étincelles, et y reste, scintillante. `x`, `y` : le départ. Mouvement réduit : « la braise
+  // rougit, sans étincelle » : une lueur à l'endroit où elles partiraient, qui reste ; l'étoile de 7.6 paraît en haut,
+  // en fondu.
+  var COULEURS = ['rgb(255, 214, 120)', 'rgb(255, 238, 176)', 'rgb(255, 190, 92)', 'rgb(255, 226, 150)'];
+  Effets.etincelles = function (scene, e) {
+    var etoileFinale = !!e.etoile, x = e.x || 600, y = e.y || (etoileFinale ? 1350 : 1790);
+    var vers = e.vers && e.vers.length === 2 ? e.vers : [720, 230];
+    var svg = Fx.calque(scene, 'etincelles', 5, true);
+    // la lueur du départ : celle d'une braise qui rougit (7.6), d'or ailleurs
+    var teinte = etoileFinale ? [['#ffd9a0', 0.9], ['#ff6a2a', 0.55], ['#d83a1a', 0]] : [['#fff0c0', 0.6], ['#ffc462', 0.28], ['#ff9d3a', 0]];
+    var dg = FxA.degrade(svg, 'radialGradient', { cx: 0.5, cy: 0.5, r: 0.5 }, [[0, teinte[0][0], teinte[0][1]], [0.4, teinte[1][0], teinte[1][1]], [1, teinte[2][0], teinte[2][1]]]);
+    var lueur = svgEl('circle', { cx: x, cy: y, r: etoileFinale ? 300 : 320, fill: dg, opacity: 0 }, svg);
+    var astre = null;
+    function batirAstre() {
+      var g = svgEl('g', { transform: 'translate(' + pt(vers) + ')', opacity: 0 }, svg), peau = svgEl('g', {}, g);
+      svgEl('circle', { r: 42, fill: '#f4c56a', opacity: 0.16 }, peau);
+      svgEl('circle', { r: 24, fill: '#f4c56a', opacity: 0.28 }, peau);
+      svgEl('path', { d: etoile(20), fill: '#fff4d6' }, peau);
+      return { g: g, peau: peau };
+    }
+    function scintiller() { if (astre && !calme) astre.peau.setAttribute('class', 'fx-scintille'); }
+    if (calme) {
+      if (etoileFinale) astre = batirAstre();
+      return Fx.animer(scene, 900, function (p) {
+        lueur.setAttribute('opacity', (0.75 * lisse(p / 0.6) - 0.3 * lisse((p - 0.7) / 0.3)).toFixed(3));
+        if (astre) astre.g.setAttribute('opacity', lisse(p).toFixed(3));
+      });
+    }
+    Fx.sonner('etincelles', e);
+    var G = FxA.grains(scene), hasard = Fx.alea(etoileFinale ? 67 : 53), liste = [], n = etoileFinale ? 42 : 84, k;
+    var pesanteur = etoileFinale ? 1300 : 1500;
+    for (k = 0; k < n; k++) {
+      var alpha = Fx.entre(hasard, -1, 1) * (etoileFinale ? 0.5 : 0.72), apex = Fx.entre(hasard, etoileFinale ? 200 : 140, etoileFinale ? 620 : 720);
+      var v = Math.sqrt(2 * pesanteur * apex), cote = Math.sin(alpha);
+      liste.push({ x: x + Fx.entre(hasard, -40, 40), y: y, vx: v * cote * 0.8, vy: -v * Math.cos(alpha), gy: pesanteur, trait: 0.03, r: Fx.entre(hasard, 2.2, 4.6),
+        a: Fx.entre(hasard, 0.75, 1), entree: 0.04, sortie: 0.5, vie: 2 * v / pesanteur + Fx.entre(hasard, 0.1, 0.45), retard: Math.pow(hasard(), 2) * 0.55,
+        couleur: COULEURS[k % COULEURS.length], attend: true });
+    }
+    G.jeter(liste);
+    var duree = 2400;
+    if (!etoileFinale) {
+      return { suite: Promise.resolve(), fin: Fx.animer(scene, 900, function (p) {
+        lueur.setAttribute('opacity', (0.8 * Math.sin(Math.PI * Math.min(1, p * 1.15))).toFixed(3));
+      }).then(function () { retirer(lueur); return Fx.pause(scene, 600); }) };
+    }
+    // 7.6 : la braise rougit et reste rouge ; la dernière étincelle, l'étoile, monte jusqu'en haut en semant des étincelles
+    astre = batirAstre();
+    var fin = Fx.animer(scene, duree, function (p) {
+      var t = vif(borne((p - 0.12) / 0.88)), px = x + (vers[0] - x) * t + 36 * Math.sin(t * Math.PI * 1.5) * (1 - t), py = y + (vers[1] - y) * t;
+      astre.g.setAttribute('transform', 'translate(' + pt([px, py]) + ') scale(' + (0.45 + 0.55 * lisse(p / 0.4)).toFixed(3) + ')');
+      astre.g.setAttribute('opacity', lisse(p / 0.15).toFixed(3));
+      lueur.setAttribute('opacity', (0.85 * lisse(p / 0.25) - 0.35 * lisse((p - 0.5) / 0.5)).toFixed(3));
+      if (p < 0.8 && Math.random() < 0.5) {
+        G.jeter([{ x: px, y: py, vx: Fx.entre(hasard, -20, 20), vy: Fx.entre(hasard, 10, 50), r: 1.6, a: 0.8, entree: 0.05, sortie: 0.6, vie: 0.9, couleur: COULEURS[0], attend: true }]);
+      }
+    }).then(scintiller);
+    return fin;
+  };
+})();
+
+// ================================================================ chapitre 3 : l'eau du Periyar qui se calme (3.9)
+(function () {
+  // Le plan visible (l'élément img), et de quoi le dessiner dans une toile : l'image est cadrée comme par « object-fit: cover »
+  // dans la scène (1200 x 1800).
+  function planImg(scene) {
+    var p = Fx.plans(scene)[Fx.planVisible(scene)];
+    return p && p.tagName && p.tagName.toLowerCase() === 'img' ? p : null;
+  }
+  function cadrage(img) {
+    var nw = img.naturalWidth || 1600, nh = img.naturalHeight || 2400, s = Math.max(W / nw, H / nh);
+    return { s: s, ox: (W - nw * s) / 2, oy: (H - nh * s) / 2 };
+  }
+
+  // ---------------------------------------------------------------- eau (3.9)
+  // « Joignez les deux pouces, et gardez-les » (traitement, geste : « l'eau se calme (les reflets cessent de trembler), le
+  // son baisse. Sensation : l'immobilité, à deux mains ; aller vite ne sert à rien » ; intention : « le fleuve s'apaise »).
+  // À l'ouverture de la page, les reflets du fleuve tremblent doucement (une ondulation horizontale, plus forte au premier
+  // plan : l'image de l'eau est redessinée par bandes, que l'onde déplace de côté) ; avec `calmer` et `suit_geste`, ils se
+  // calment à mesure que les pouces se rejoignent, et s'arrêtent tout à fait quand le sceau se ferme ; lâcher trop tôt les
+  // rend. `zone` [x0, y0, x1, y1] : l'eau. Mouvement réduit : l'eau ne tremble pas, elle est calme d'emblée.
+  Effets.eau = function (scene, e) {
+    var fx = Fx.etat(scene), eau = fx.eauA;
+    if (e.calmer) {
+      if (!e.geste) { if (eau) eau.calme = 1; return; }
+      return new Promise(function (ok) {
+        e.geste.suivre(function (x, fini) {
+          if (eau) eau.calme = fini ? 1 : x;
+          if (fini) ok();
+        });
+      });
+    }
+    var img = planImg(scene);
+    if (calme || !img) return;
+    var z = e.zone && e.zone.length === 4 ? e.zone : [0, 880, 1200, 1800], zx = z[0], zy = z[1], zw = z[2] - z[0], zh = z[3] - z[1];
+    var T = Fx.toile(scene, 'eau', 1, 1), c = T.x, bande = 8, dernier = -1000;
+    eau = fx.eauA = { calme: 0 };
+    // la fonte du haut : la zone se fond dans l'image au ras de l'horizon
+    var fonteV = c.createLinearGradient(0, zy, 0, zy + zh);
+    [[0, 0], [0.1, 1], [1, 1]].forEach(function (a) { fonteV.addColorStop(a[0], 'rgba(0,0,0,' + a[1] + ')'); });
+    Fx.tache(scene, function (t) {
+      if (planImg(scene) !== img) { retirer(T.calque); return false; }
+      if (eau.calme >= 1) { retirer(T.calque); return false; }         // l'eau est immobile : l'image seule le dit
+      if (t * 1000 - dernier < 33) return;                              // trente images par seconde suffisent à ce tremblement
+      dernier = t * 1000;
+      if (!img.complete || !img.naturalWidth) return;
+      var k = cadrage(img), n = Math.ceil(zh / bande), i, vive = 1 - eau.calme;
+      c.globalCompositeOperation = 'source-over';
+      c.clearRect(0, 0, W, H);
+      for (i = 0; i < n; i++) {
+        var y = zy + i * bande, u = (y - zy) / zh;
+        // plus forte au premier plan ; deux ondes qui montent à des vitesses différentes ; nulle quand l'eau est calme
+        var a = 9 * vive * (0.2 + 0.8 * Math.pow(u, 1.2));
+        var dx = a * (Math.sin(y / 38 - t * 1.7) * 0.6 + Math.sin(y / 91 - t * 1.1 + 1.3) * 0.4);
+        c.drawImage(img, (zx - dx - k.ox) / k.s, (y - k.oy) / k.s, zw / k.s, (bande + 1.5) / k.s, zx, y, zw, bande + 1.5);
+      }
+      c.globalCompositeOperation = 'destination-in';
+      c.fillStyle = fonteV; c.fillRect(zx, zy, zw, zh);
+      c.globalCompositeOperation = 'source-over';
+    });
+  };
+})();
+
 // ================================================================ effets nouveaux, chapitres 0 à 3 (fin)
 
 // ================================================================ effets nouveaux, chapitres 4 à 8 (début)

@@ -761,6 +761,18 @@ html:not(.jeu) .decor .plan.sans-script { opacity: 1; }
 .fx-battant-fond { position: absolute; opacity: 0; background: linear-gradient(to right, #c58a2c 0%, #ffcf6e 40%, #ffe29a 78%, #fff1c4 100%); }
 .fx-battant-halo { position: absolute; opacity: 0; background: linear-gradient(to right, rgba(255, 226, 150, 0), rgba(255, 238, 184, 0.9), rgba(255, 226, 150, 0)); }
 
+/* ---- chapitre 3 : le soir d'Aluva (3.9 à 3.12), les compléments des effets (3.3, 3.5, 3.6) */
+/* le sceau du mudrā (3.9, 3.10) reste en filigrane et respire */
+.fx-sceau-respire { animation: fx-sceau-respire 7s ease-in-out infinite; }
+@keyframes fx-sceau-respire { 0%, 100% { opacity: 0.72; } 50% { opacity: 1; } }
+.calme .fx-sceau-respire { animation: none; }
+/* la poussière grise des livres (3.6) : elle éteint les couleurs (saturation) et pose sa poudre et sa brume ; le papier chaud
+   qui revient quand elle s'envole ; le voile bas qui remplace les grains de 3.3 en mouvement réduit */
+.fx-poussiere-sat { background: rgba(142, 142, 148, 0.8); mix-blend-mode: saturation; }
+.fx-poussiere-voile { background-color: rgba(186, 186, 192, 0.34); }
+.fx-papier-chaud { background: #ffe3a0; mix-blend-mode: multiply; }
+.fx-poussiere-leger { background: radial-gradient(ellipse 85% 30% at 50% 60%, rgba(212, 212, 220, 0.85), rgba(212, 212, 220, 0) 75%); }
+
 /* ============================================================ effets nouveaux, chapitres 0 à 3 (fin) */
 
 /* ============================================================ effets nouveaux, chapitres 4 à 8 (début)
