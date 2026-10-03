@@ -693,7 +693,9 @@ SCENES = {
               gestes=[G("main", apres=True, effets=[E("decor", i=2, delai=500)]),     # immobile, puis elle se retire
                       G("tourner", apres=True, centre=[932, 680], rayon=260, angle=-90)],
               moments=[E("decor", i=3),
-                       [E("embrasure", cadre="placard", image="verdure"), E("ambiance", id="parc")]]),
+                       [E("embrasure", cadre="placard", image="verdure"), E("ambiance", id="parc")]],
+              # « Il la ferme et cache par là même les linges de bains » : la porte fermée, la clé de laiton dans la serrure
+              extra={"Il la ferme et cache": E("embrasure", cadre="placard", fermee=True)}),
     "6.14": S(["verdure", "placard", "maison-lierre"], texte="bas",
               debut=[E("refroidir", instant=True), E("embrasure", cadre="placard", image="verdure", instant=True)],
               moments=[E("embrasure", cadre="placard", image="maison-lierre")]),

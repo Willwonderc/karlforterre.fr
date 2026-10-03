@@ -3733,4 +3733,151 @@ var Fx6 = (function () {
   };
 })();
 
+// ---------------------------------------------------------------- chapitre 6 (fin) : le placard, l'embrasure (6.13 à 6.15)
+(function () {
+  // ---- embrasure (6.13 à 6.15) : la porte de l'armoire s'ouvre sur un autre lieu
+  // Traitement, 6.13 : « sur « le placard donne sur un espace de verdure proche du parc Montsouris » : `embrasure` (nouveau) » ;
+  // synthèse : « La porte de l'armoire pivote et découvre, dans son cadre d'encre (y 320 à 1 040), le plan `image` ; changer d'image :
+  // fondu dans le cadre ; `agrandir` avec `suit_geste` : le cadre grandit sous le doigt jusqu'à sortir de la page ; `fermer` : les
+  // traces d'encre aux bords se retirent, avec le son d'une porte » (0,8 s ; 1 s ; mouvement réduit : fondus) ; 6.15 : « pendant le
+  // geste, le cadre s'élargit sous le doigt jusqu'aux bords de la page et disparaît : Julie est chez elle, la photo occupe tout. Sur
+  // « Derrière elle, Darshan ferme la porte », les dernières traces d'encre se retirent des bords de l'image ».
+  // Le décor `placard` a trois états (decors.py) : l'armoire entrouverte (le plan), `placard-fermee` (la porte fermée, la clé dans la
+  // serrure) et `placard-ouverte` (la porte grande ouverte, l'ouverture transparente : x 330 à 870, y 321 à 1 041). L'image vue dedans
+  // est une photo entière réduite à 45 %, calée pour que, grandie 2,22 fois autour de (600, 500), elle recouvre exactement la page : à
+  // la fin du geste, elle se confond avec le plan de la page (le même), et le cadre peut disparaître sans que rien ne saute. La porte
+  // pivote autour de ses gonds (x 296) jusqu'à 104°, où elle prend la place que le dessin ouvert lui donne. `fermee` (6.13, « Il la
+  // ferme… ») pose la porte fermée sur l'armoire entrouverte. Mouvement réduit : des fondus.
+  var PORTE = [296, 207, 963, 1131], BOITE = [330, 275, 540, 810], CENTRE = [600, 500], GRAND = 1 / 0.45, ANGLE = 104;
+  function pleinePage(img) { img.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;max-width:none;object-fit:cover;'; }
+  // l'image de la page entière, calée dans une boîte [x0, x1] × [y0, y1] qui n'en montre que cette part
+  function caler(img, x0, y0, x1, y1) {
+    img.style.cssText = 'position:absolute;max-width:none;object-fit:cover;left:' + (-x0 / (x1 - x0) * 100).toFixed(3) + '%;top:' + (-y0 / (y1 - y0) * 100).toFixed(3) +
+      '%;width:' + (W / (x1 - x0) * 100).toFixed(3) + '%;height:' + (H / (y1 - y0) * 100).toFixed(3) + '%;';
+  }
+  function dedansDe(scene, nom, parent) {
+    var im = Fx.image(Fx.sourceImage(scene, nom), {}, parent);
+    Fx.poser(im, BOITE[0], BOITE[1], BOITE[2], BOITE[3]);
+    im.style.objectFit = 'cover'; im.style.maxWidth = 'none';
+    Fx6.refroidi(scene, im);
+    return im;
+  }
+  // le cadre ouvert, avec l'image `nom` vue dedans
+  function monter(scene, cadre, nom) {
+    var fx = Fx.etat(scene), cal = Fx.calque(scene, 'embrasure', 1, false), racine = el('div', { 'class': 'embrasure' }, cal);
+    racine.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;transform-origin:' + pourcent(CENTRE[0], W) + ' ' + pourcent(CENTRE[1], H) + ';';
+    var dedans = dedansDe(scene, nom, racine), ouverte = Fx.image(Fx.fichierCalque(cadre + '-ouverte'), {}, racine);
+    pleinePage(ouverte);
+    return (fx.embrasure = { cal: cal, racine: racine, dedans: dedans, ouverte: ouverte, cadre: cadre, nom: nom, ouvert: false });
+  }
+  // la porte fermée, sur l'armoire entrouverte (6.13 : « Il la ferme et cache par là même les linges de bains »)
+  function fermee(scene, cadre, fx) {
+    if (fx.fermee) return;
+    var cal = Fx.calque(scene, 'embrasure', 1, false), img = Fx.image(Fx.fichierCalque(cadre + '-fermee'), { 'class': 'embrasure-fermee' }, cal);
+    pleinePage(img); img.style.opacity = 0; fx.fermee = img;
+    return Fx.animer(scene, calme ? 300 : 600, function (p) { img.style.opacity = lisse(p).toFixed(3); });
+  }
+  function pivoter(scene, cadre, nom, fx) {
+    var cal = Fx.calque(scene, 'embrasure', 1, false), F = fx.fermee;
+    if (!F) { F = Fx.image(Fx.fichierCalque(cadre + '-fermee'), { 'class': 'embrasure-fermee' }, cal); pleinePage(F); fx.fermee = F; }
+    var E = monter(scene, cadre, nom);
+    if (calme) {
+      // un fondu : le cadre ouvert paraît sur la porte fermée
+      E.racine.style.opacity = 0;
+      return Fx.animer(scene, 600, function (p) { E.racine.style.opacity = lisse(p).toFixed(3); }).then(function () { retirer(F); fx.fermee = null; E.ouvert = true; });
+    }
+    // la clé que le geste vient de tourner ne reste pas devant la porte qui s'ouvre
+    $$('.cle-calque', scene).forEach(function (c) { c.style.transition = 'opacity 260ms ease'; c.style.opacity = 0; });
+    // le cadre ouvert ne montre pas encore le battant ouvert (à gauche des gonds) : la porte fermée le cache
+    var clip = 'inset(0 0 0 ' + (PORTE[0] / W * 100).toFixed(2) + '%)';
+    E.ouverte.style.webkitClipPath = clip; E.ouverte.style.clipPath = clip;
+    // le battant : la porte fermée, qui pivote autour de ses gonds
+    var D = el('div', { 'class': 'embrasure-battant' }, cal), im = Fx.image(Fx.fichierCalque(cadre + '-fermee'), {}, D);
+    Fx.poser(D, PORTE[0], PORTE[1], PORTE[2] - PORTE[0], PORTE[3] - PORTE[1]);
+    D.style.overflow = 'hidden'; D.style.transformOrigin = '0% 50%'; D.style.willChange = 'transform';
+    caler(im, PORTE[0], PORTE[1], PORTE[2], PORTE[3]);
+    Fx.sonner('porte', { force: 0.7 });
+    return Fx.animer(scene, 800, function (p) {
+      var th = ANGLE * lisse(p) * Math.PI / 180;
+      D.style.transform = 'scale(' + Math.cos(th).toFixed(4) + ',' + (1 + 0.09 * Math.sin(th)).toFixed(4) + ')';
+    }).then(function () {
+      E.ouverte.style.webkitClipPath = ''; E.ouverte.style.clipPath = '';
+      retirer(D); retirer(F); fx.fermee = null; E.ouvert = true;
+    });
+  }
+  // une autre image dans le cadre : un fondu (1 s)
+  function changer(scene, E, nom) {
+    if (E.nom === nom) return;
+    var neuf = dedansDe(scene, nom, E.racine);
+    E.racine.insertBefore(neuf, E.ouverte);
+    neuf.style.opacity = 0;
+    return Fx.animer(scene, calme ? 400 : 1000, function (p) { neuf.style.opacity = lisse(p).toFixed(3); }).then(function () { retirer(E.dedans); E.dedans = neuf; E.nom = nom; });
+  }
+  // les dernières traces d'encre, aux bords de l'image, quand le cadre a gagné la page ; elles se retirent avec `fermer`
+  function traces(scene, fx) {
+    var svg = Fx.calque(scene, 'embrasure-traces', 4, true), rnd = hasard(88), T = { svg: svg, bandes: [] };
+    var enc = Fx6.filtreEncre(svg, { freq: 0.03, octaves: 2, echelle: 16, graine: 21 });
+    var g = svgEl('g', { filter: 'url(#' + enc + ')', fill: Fx6.ENCRE, opacity: 0.94 }, svg);
+    function bande(cote) {
+      var pts = [], n = 16, i, e, t;
+      for (i = 0; i <= n; i++) {
+        t = i / n; e = 5 + rnd() * 17 + (rnd() < 0.16 ? 20 : 0);
+        if (cote === 'g') pts.push([e, t * H]); else if (cote === 'd') pts.push([W - e, t * H]); else pts.push([t * W, e]);
+      }
+      var d = cote === 'g' ? 'M0,0' : cote === 'd' ? 'M' + W + ',0' : 'M0,0';
+      pts.forEach(function (p) { d += 'L' + p[0].toFixed(1) + ',' + p[1].toFixed(1); });
+      d += cote === 'g' ? 'L0,' + H + 'Z' : cote === 'd' ? 'L' + W + ',' + H + 'Z' : 'L' + W + ',0Z';
+      T.bandes.push({ g: svgEl('path', { d: d }, g), cote: cote });
+    }
+    bande('g'); bande('d'); bande('h');
+    fx.traces = T;
+    if (!calme) { svg.style.opacity = 0; Fx.animer(scene, 400, function (p) { svg.style.opacity = lisse(p).toFixed(3); }); }
+  }
+  function agrandir(scene, e, fx) {
+    var E = fx.embrasure || monter(scene, e.cadre || 'placard', e.image), racine = E.racine;
+    E.ouvert = true;
+    racine.style.willChange = 'transform';
+    function pas(x) {
+      if (calme) return;
+      racine.style.transform = 'scale(' + (1 + (GRAND - 1) * x).toFixed(4) + ')';
+      E.ouverte.style.opacity = (1 - lisse(borne((x - 0.8) / 0.2))).toFixed(3);
+    }
+    function fin() { retirer(racine); fx.embrasure = null; traces(scene, fx); }
+    return new Promise(function (ok) {
+      if (e.geste) e.geste.suivre(function (x, fini) { pas(x); if (fini) ok(); });
+      else Fx.animer(scene, calme ? 300 : 2400, pas).then(ok);
+    }).then(function () {
+      // le cadre a gagné les bords de la page : la photo occupe tout (le plan de la page, le même, est dessous)
+      if (!calme) { fin(); return; }
+      return Fx.animer(scene, 500, function (p) { racine.style.opacity = (1 - lisse(p)).toFixed(3); }).then(fin);
+    });
+  }
+  function fermer(scene, fx) {
+    var T = fx.traces;
+    if (fx.embrasure) { retirer(fx.embrasure.racine); fx.embrasure = null; }
+    if (!T) return;
+    fx.traces = null;
+    return Fx.animer(scene, calme ? 300 : 800, function (p) {
+      var s = 1 - lisse(p);
+      if (calme) { T.svg.style.opacity = s.toFixed(3); return; }
+      T.bandes.forEach(function (b) {
+        b.g.setAttribute('transform', b.cote === 'g' ? 'scale(' + s.toFixed(3) + ' 1)' : b.cote === 'd' ? 'translate(' + W + ' 0) scale(' + s.toFixed(3) + ' 1) translate(' + (-W) + ' 0)' : 'scale(1 ' + s.toFixed(3) + ')');
+      });
+    }).then(function () { retirer(T.svg); });
+  }
+  Effets.embrasure = function (scene, e) {
+    var fx = Fx.etat(scene), E = fx.embrasure, cadre = e.cadre || (E && E.cadre) || 'placard';
+    if (e.fermer) return fermer(scene, fx);
+    if (e.agrandir) return agrandir(scene, e, fx);
+    if (e.fermee) return fermee(scene, cadre, fx);
+    if (!e.image) return;
+    if (e.instant) {
+      if (!E) { E = monter(scene, cadre, e.image); E.ouvert = true; }
+      return;
+    }
+    if (E && E.ouvert) return changer(scene, E, e.image);
+    return pivoter(scene, cadre, e.image, fx);
+  };
+})();
+
 // ================================================================ effets nouveaux, chapitres 6 et 7 (fin)
