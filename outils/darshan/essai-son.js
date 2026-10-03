@@ -507,9 +507,11 @@ async function essaiLivre(nav, banc, noms) {
     const r = await banc.evaluate(([item]) => window.rendre(item, false), [{ sorte: 'livre', nom: String(p.page), duree, mesure: [3, duree - 1], fin: null, actions }]);
     const rem = [];
     if (r.crete > -1) rem.push('CRÊTE'); if (r.creteComp > -1) rem.push('crête avant plafond ' + f(r.creteComp, 0));
-    if (r.busK > -22) rem.push('FORT'); if (r.erreurs.length) rem.push('erreurs : ' + r.erreurs.join(' ; '));
+    const pere = p.appels.some((j) => j.m === 'effet' && String(j.a[0]) === 'pere');   // l'accord du père est voulu à −20 : il domine ces pages
+    const note = [];   // une remarque qui n'est pas un problème
+    if (r.busK > -22) { if (pere) note.push('accord du père : voulu fort'); else rem.push('FORT'); } if (r.erreurs.length) rem.push('erreurs : ' + r.erreurs.join(' ; '));
     if (rem.length) problemes.push(`page ${p.page} : ${rem.join(', ')}`);
-    console.log(String(p.page).padEnd(6) + ' ' + ambiances.join('>').slice(0, 29).padEnd(29) + ' ' + String(couches.length ? couches.join(',') : '').slice(0, 16).padEnd(16) + ' ' + String(effets.length).padStart(6) + f(r.busK, 10) + f(r.moment, 8) + f(r.crete, 7) + (Math.round(r.silence * 100) + ' %').padStart(8) + '  ' + rem.join(', '));
+    console.log(String(p.page).padEnd(6) + ' ' + ambiances.join('>').slice(0, 29).padEnd(29) + ' ' + String(couches.length ? couches.join(',') : '').slice(0, 16).padEnd(16) + ' ' + String(effets.length).padStart(6) + f(r.busK, 10) + f(r.moment, 8) + f(r.crete, 7) + (Math.round(r.silence * 100) + ' %').padStart(8) + '  ' + rem.concat(note).join(', '));
   }
   const cles = Object.keys(inconnus).sort();
   console.log(cles.length ? '\nSons demandés par les fiches et que son.js ne sait pas (encore) faire :\n' + cles.map((k) => `- ${k} (${[...new Set(inconnus[k])].join(', ')})`).join('\n') : '\nTous les sons demandés par les fiches sont connus de son.js.');
