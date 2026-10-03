@@ -630,3 +630,8 @@ var Fx = (function () {
 /* Les effets qui manquaient, dont la première page est aux chapitres 4 à 8, s'ajoutent ici, chacun
    juste au-dessus de la ligne « (fin) » ci-dessous. */
 // ================================================================ effets nouveaux, chapitres 4 à 8 (fin)
+
+// ================================================================ effets des réponses de Karl (début)
+/* Les effets qu'appellent les réponses de Karl (2.7 : Darshan commande le dessert ; 1.5 : Jivan,
+   « la vie »), écrits avec les scènes ; chacun juste au-dessus de la ligne « (fin) » ci-dessous. */
+// ================================================================ effets des réponses de Karl (fin)
