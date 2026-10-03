@@ -42,7 +42,8 @@ Sur chaque plan du décor : data-genre (photo, encre, dessin ou uni), que les ef
 toucher que les photos (le froid, le gel, l'effacement : genre_du_decor).
 Et, du découpage et de livre.py : data-son (l'ambiance de la page) et data-son-variantes (ses
 variantes, séparées par des espaces : « soir », « vaste »…), data-entree (la transition
-d'entrée, et d'où elle part) et data-entree-<réglage> (ses réglages : 5.1, palette et grain).
+d'entrée, et d'où elle part ; « plan » pour le même plan, « — » au découpage) et
+data-entree-<réglage> (ses réglages : 1.9, couleur ; 5.1, palette et grain).
 Les images nommées par les réglages (reflets, clichés, calques…) sont copiées avec les décors,
 et DARSHAN.images donne le fichier de chaque décor employé (chemin depuis img/). Sans script, une
 page montre son premier plan (classe « vu »), ou les plans marqués « sans-script » (PLANS_SANS_SCRIPT).
@@ -693,8 +694,11 @@ def section(pg, img, web):
     }
     if t["entree"] != "—":
         attrs["data-entree"] = (t["entree"] + " " + POINTS_D_ENTREE.get(n, "")).strip()
-        for cle, valeur in s["entree"].items():      # les réglages de la transition (5.1 : palette, grain)
+        for cle, valeur in s["entree"].items():      # les réglages de la transition (1.9 : couleur ; 5.1 : palette, grain)
             attrs[f"data-entree-{cle}"] = str(valeur)
+    elif n != "0.1":
+        # « — » : le même plan (3.10, 3.11, 6.2…) ; sur le web, rien ne couvre la page (transitions.js, plan)
+        attrs["data-entree"] = "plan"
     if not web:
         attrs["epub:type"] = "titlepage" if n == "0.1" else "bodymatter chapter" if n in DEBUT_CHAPITRE.values() else "bodymatter"
     a = " ".join(f'{k}="{attr(v)}"' for k, v in attrs.items() if v != "" or k in ("data-sac", "data-portes"))
@@ -989,12 +993,16 @@ BANC = [
     ("lumiere", "Lumière", "darshan", "Un éblouissement : la lumière s’étend, puis se dissipe.", {}),
     ("obturateur", "Obturateur", "julie", "Le monde de Julie, photographié : les lames d’un obturateur.", {}),
     ("glissement", "Glissement", "julie", "Le téléphone de Julie : on passe d’une photo à l’autre.", {}),
+    ("bandes-photo", "Bandes photo", "julie", "On entre dans le monde de Julie : les bandes du chapitre, puis l’obturateur découvre la photo.", {"titre": "Un pain perdu s’il vous plaît."}),
+    ("bandes-julie", "Bandes Julie", "julie", "Un chapitre de Julie : ses bandes de papier photo, au grain argentique ; l’obturateur les ouvre.", {"titre": "Amélie et Julie"}),
+    ("bandes-julie", "Bandes lilas", "julie", "Chapitre 5 : les bandes de Julie en lilas, leur grain devenu confettis.", {"titre": "Douceurs et confettis", "palette": "lilas", "grain": "confettis"}),
+    ("plan", "Même plan", "julie", "Même plan : rien ne couvre la page ; si l’image change, elle se fond dans la suivante.", {}),
     ("frisson", "Frisson", "", "Un objet change d’état : les lunettes ôtées, la clé dans la serrure.", {}),
     ("eclat", "Éclat", "", "Un objet se métamorphose : les lunettes deviennent une clé.", {}),
     ("envol", "Envol", "", "Un nouvel objet rejoint le sac.", {}),
     ("fiche", "Fiche", "", "La fiche d’un objet s’ouvre en diagonale.", {}),
 ]
-IMAGES_BANC = ["photo-metro.jpg", "photo-haussmann.jpg", "photo-pluie.jpg", "encre-34762346.jpg"]
+IMAGES_BANC = ["photo-metro.jpg", "photo-haussmann.jpg", "photo-pluie.jpg", "encre-34762346.jpg", "aluva.jpg"]
 
 
 def banc(img):

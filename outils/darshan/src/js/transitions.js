@@ -7,7 +7,11 @@
    deux ; dans l'EPUB, où chaque page est un document à part, la page joue la seconde en
    s'ouvrant. Les changements d'état d'un objet ont les leurs : frisson (petit changement),
    éclat (métamorphose), envol (l'objet rejoint le sac). Mouvement réduit : des fondus courts,
-   rien ne glisse ni ne tourne. Repris du prototype du 28 septembre. */
+   rien ne glisse ni ne tourne. Repris du prototype du 28 septembre.
+   Ajouts de la pré-production (synthèse, partie 2.2, ligne 23 : « Quatre variantes, un nom » ; partie 8.3,
+   `TRANSITIONS`) : bandes-photo (2.1, 6.1 : les bandes de chapitre, dont la seconde moitié découvre la photo
+   par les lames de l'obturateur, avec son double déclic), bandes-julie (4.1 ; 5.1 en lilas, le grain devenu
+   confettis) ; et le même plan (« — » au découpage), qui ne couvre rien. */
 
 var numeros = 0;              // identifiants uniques des calques SVG
 function plusLoin(c) {  // du point au coin le plus éloigné de la scène
@@ -30,6 +34,124 @@ function ondes(n, rnd, pas) {
   return v;
 }
 function trace(points) { return 'M' + points.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join('L') + 'Z'; }
+
+// Les couleurs des bandes d'ouverture. Darshan : encre, vermillon, or, la trame de points d'or. Julie :
+// « mêmes bandes obliques et même durée, en anthracite, gris et blanc de papier photo ; un grain argentique à
+// la place de la trame de points ; […] Ni or ni vermillon » (chapitre-4.md, section 6). 5.1 : « en lilas, et
+// leur grain devient une pluie de confettis rose, menthe et citron […]. Ni or ni vermillon » (chapitre-5.md,
+// 5.1). titre : la face, le contour, l'ombre ; lames : celles de l'obturateur qui les ouvre.
+var PALETTES = {
+  darshan: { fond: ENCRE, vif: SINDOOR, filet: OR, grain: 'trame', titre: [CREME, ENCRE, SINDOOR], lames: ['#15171c', '#1c1f25', '#4a505c'] },
+  julie: { fond: '#1c1e23', vif: '#686d76', filet: '#eeeae1', grain: 'argentique', titre: ['#f4f1ea', '#1c1e23', '#80858e'], lames: ['#15171c', '#1c1f25', '#4a505c'] },
+  lilas: { fond: '#4b3c68', vif: '#a490ca', filet: '#f6eefc', grain: 'confettis', titre: ['#fdf8ff', '#4b3c68', '#e9a3c2'], lames: ['#2f2645', '#382c51', '#7d6c9f'] }
+};
+function palette(o) {
+  if (o.type === 'bandes-julie') return o.palette === 'lilas' ? PALETTES.lilas : PALETTES.julie;
+  return PALETTES.darshan;
+}
+// Le grain des bandes : la trame de points d'or (Darshan), un grain d'argent (Julie), ou des confettis (5.1).
+// Un motif SVG dessiné une fois (hasard reproductible), qui suit la bande quand elle glisse.
+function motifGrain(defs, sorte, grain) {
+  var id = 'grain' + (++numeros), rnd = hasard(31), m, i;
+  if (sorte === 'confettis') {
+    var couleurs = ['#f4a6c4', '#a2e3c8', '#f4e48b'];       // rose, menthe, citron
+    m = svgEl('pattern', { id: id, width: 170, height: 170, patternUnits: 'userSpaceOnUse' }, defs);
+    for (i = 0; i < 20; i++) {
+      var x = 10 + rnd() * 150, y = 10 + rnd() * 150, c = couleurs[i % 3];
+      if (i % 4 === 3) svgEl('circle', { cx: x.toFixed(1), cy: y.toFixed(1), r: (3 + rnd() * 2).toFixed(1), fill: c }, m);
+      else svgEl('rect', { x: -7, y: -2.6, width: 14, height: 5.2, rx: 1.2, fill: c,
+        transform: 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + Math.round(rnd() * 180) + ')' }, m);
+    }
+  } else if (sorte === 'argentique') {
+    m = svgEl('pattern', { id: id, width: 96, height: 96, patternUnits: 'userSpaceOnUse' }, defs);
+    for (i = 0; i < 110; i++) {
+      svgEl('circle', { cx: (rnd() * 96).toFixed(1), cy: (rnd() * 96).toFixed(1), r: (0.6 + rnd() * 1.5).toFixed(2),
+        fill: i % 3 ? '#ffffff' : '#000000', opacity: (0.08 + rnd() * 0.26).toFixed(2) }, m);
+    }
+  } else {
+    m = svgEl('pattern', { id: id, width: 18, height: 18, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(20)' }, defs);
+    svgEl('circle', { cx: 9, cy: 9, r: 4.2, fill: grain || OR, opacity: 0.45 }, m);
+  }
+  return 'url(#' + id + ')';
+}
+// Les bandes obliques qui claquent l'une après l'autre, avec le titre du chapitre sur la plus large.
+// Rend { groupe, poser(t, sortie), avant() } : poser(t, false) les fait entrer, poser(t, true) sortir.
+function dessinerBandes(s, o, pal) {
+  var pente = 150, defs = svgEl('defs', {}, s), titre = null, groupe = svgEl('g', {}, s);
+  var grain = motifGrain(defs, o.grain || pal.grain);      // o.grain : le réglage de la page (5.1 : confettis)
+  var plan = [[-220, 330, 'fond'], [110, 100, 'vif'], [210, 330, 'fond', 'trame'], [540, 34, 'filet'], [574, 470, 'fond', 'titre'],
+              [1044, 70, 'vif'], [1114, 360, 'fond', 'trame'], [1474, 620, 'fond']];
+  var bandes = plan.map(function (b, i) {
+    var g = svgEl('g', {}, groupe), y0 = b[0], y1 = b[0] + b[1] + 40;   // chaque bande glisse sous la suivante
+    var pts = '-220,' + (y0 + pente) + ' 1420,' + (y0 - pente) + ' 1420,' + (y1 - pente) + ' -220,' + (y1 + pente);
+    svgEl('polygon', { points: pts, fill: pal[b[2]] }, g);
+    if (b[3] === 'trame') svgEl('polygon', { points: pts, fill: grain }, g);
+    if (b[3] === 'titre' && o.titre) titre = ecrireTitre(g, o.titre, b[0] + b[1] / 2, pal.titre);
+    return { g: g, sens: i % 2 ? 1 : -1, i: i };
+  });
+  return {
+    groupe: groupe,
+    poser: function (t, sortie) {
+      bandes.forEach(function (b) {
+        var x = borne((t - b.i * 0.05) / 0.62);
+        var dx = sortie ? -b.sens * 1700 * elan(x) : b.sens * 1700 * (1 - ressort(x));
+        b.g.setAttribute('transform', 'translate(' + dx.toFixed(1) + ' 0)');
+      });
+    },
+    avant: function () {    // le titre claque sur sa bande et reste un instant
+      if (!titre) return attendre(150);
+      Son.effet('coup');
+      return anime(340, function (x) {
+        titre.setAttribute('transform', 'scale(' + (2.3 - 1.3 * ressort(x, 2.2)).toFixed(3) + ')');
+        titre.setAttribute('opacity', borne(x * 3));
+      }).then(function () { return attendre(1300); });
+    }
+  };
+}
+// Les lames d'un obturateur, autour de C ; ouverture(r) : r = R (le plus loin des coins), tout est ouvert.
+function dessinerLames(s, C, couleurs) {
+  var n = 7, R = plusLoin(C), lames = [];
+  for (var i = 0; i < n; i++) {
+    lames.push(svgEl('polygon', { fill: couleurs[i % 2 ? 1 : 0], stroke: couleurs[2], 'stroke-width': 4, 'stroke-linejoin': 'round' }, s));
+  }
+  function ouverture(r) {
+    var torsion = 0.9 * (1 - r / R), L = 3000;
+    lames.forEach(function (l, i) {
+      var a = i * 2 * Math.PI / n + torsion, ux = Math.cos(a), uy = Math.sin(a), vx = -uy, vy = ux;
+      function p(u, v) { return (C[0] + ux * u + vx * v).toFixed(1) + ',' + (C[1] + uy * u + vy * v).toFixed(1); }
+      l.setAttribute('points', [p(r, -L), p(r, L), p(r + L, L), p(r + L, -L)].join(' '));
+    });
+  }
+  ouverture(R);
+  return { R: R, ouverture: ouverture };
+}
+// Les bandes d'un chapitre qui entre dans le monde de Julie : elles claquent, le titre s'y pose, puis
+// l'obturateur se déclenche sur elles (ses lames se ferment, 30 % du temps) et s'ouvre sur la photo.
+function bandesEtObturateur(s, o) {
+  var pal = palette(o), bandes = dessinerBandes(s, o, pal), lames = dessinerLames(s, o.vers || [600, 900], pal.lames);
+  return {
+    duree: [640, 880], sons: ['bandes', 'declic'], pause: 60,     // declic : le double déclic de l'obturateur
+    couvrir: function (t) { bandes.poser(t, false); },
+    decouvrir: function (t) {
+      if (t < 0.3) { bandes.groupe.removeAttribute('display'); lames.ouverture(lames.R * (1 - lisse(t / 0.3))); return; }
+      bandes.groupe.setAttribute('display', 'none');
+      lames.ouverture(lames.R * lisse((t - 0.3) / 0.7));
+    },
+    avant: bandes.avant
+  };
+}
+// L'image que montre une page : son plan visible (ou le premier, ou l'image de son décor). { src } ou { couleur }.
+function imageDuPlan(scene) {
+  var l = $$('.decor .plan', scene), p = null, i;
+  for (i = l.length - 1; i >= 0 && !p; i--) if (l[i].classList.contains('vu')) p = l[i];
+  p = p || l[0] || $('.decor img', scene);
+  if (!p) return null;
+  if (p.tagName.toLowerCase() === 'img') {
+    var src = p.getAttribute('src') || p.getAttribute('data-src');
+    return src ? { src: src } : null;
+  }
+  return p.style.backgroundColor ? { couleur: p.style.backgroundColor } : null;
+}
 // Le corps d'un coup de pinceau, couché sur l'axe x de 0 à L : bords ondulés et rugueux.
 function formeDeCoup(L, ep, rnd) {
   var n = 90, haut = [], bas = [], onde1 = ondes(n + 1, rnd, 15), onde2 = ondes(n + 1, rnd, 15);
@@ -100,39 +222,43 @@ var Balayages = {
       decouvrir: function (t) { poser(t, true); }
     };
   },
-  // des bandes obliques qui claquent l'une après l'autre, avec le titre du chapitre
+  // des bandes obliques qui claquent l'une après l'autre, avec le titre du chapitre (1.1, 3.1, 7.1)
   bandes: function (s, o) {
-    var pente = 150, defs = svgEl('defs', {}, s), id = 'trame' + (++numeros), titre = null;
-    var motif = svgEl('pattern', { id: id, width: 18, height: 18, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(20)' }, defs);
-    svgEl('circle', { cx: 9, cy: 9, r: 4.2, fill: OR, opacity: 0.45 }, motif);
-    var plan = [[-220, 330, ENCRE], [110, 100, SINDOOR], [210, 330, ENCRE, 'trame'], [540, 34, OR], [574, 470, ENCRE, 'titre'],
-                [1044, 70, SINDOOR], [1114, 360, ENCRE, 'trame'], [1474, 620, ENCRE]];
-    var bandes = plan.map(function (b, i) {
-      var g = svgEl('g', {}, s), y0 = b[0], y1 = b[0] + b[1] + 40;   // chaque bande glisse sous la suivante
-      var pts = '-220,' + (y0 + pente) + ' 1420,' + (y0 - pente) + ' 1420,' + (y1 - pente) + ' -220,' + (y1 + pente);
-      svgEl('polygon', { points: pts, fill: b[2] }, g);
-      if (b[3] === 'trame') svgEl('polygon', { points: pts, fill: 'url(#' + id + ')' }, g);
-      if (b[3] === 'titre' && o.titre) titre = ecrireTitre(g, o.titre, b[0] + b[1] / 2);
-      return { g: g, sens: i % 2 ? 1 : -1, i: i };
-    });
-    function poser(t, sortie) {
-      bandes.forEach(function (b) {
-        var x = borne((t - b.i * 0.05) / 0.62);
-        var dx = sortie ? -b.sens * 1700 * elan(x) : b.sens * 1700 * (1 - ressort(x));
-        b.g.setAttribute('transform', 'translate(' + dx.toFixed(1) + ' 0)');
-      });
-    }
+    var bandes = dessinerBandes(s, o, PALETTES.darshan);
     return {
       duree: [640, 680], sons: ['bandes', 'bandes'],
-      couvrir: function (t) { poser(t, false); },
-      decouvrir: function (t) { poser(t, true); },
-      avant: function () {    // le titre claque sur sa bande et reste un instant
-        if (!titre) return attendre(150);
-        Son.effet('coup');
-        return anime(340, function (x) {
-          titre.setAttribute('transform', 'scale(' + (2.3 - 1.3 * ressort(x, 2.2)).toFixed(3) + ')');
-          titre.setAttribute('opacity', borne(x * 3));
-        }).then(function () { return attendre(1300); });
+      couvrir: function (t) { bandes.poser(t, false); },
+      decouvrir: function (t) { bandes.poser(t, true); },
+      avant: bandes.avant
+    };
+  },
+  // 2.1 et 6.1 : « les bandes d'ouverture portent le titre du chapitre ; leur seconde moitié découvre la photo
+  // par les lames de l'obturateur, avec son double déclic […] : on entre dans le monde de Julie » (chapitre-6.md, 6.1)
+  'bandes-photo': bandesEtObturateur,
+  // 4.1 : les bandes de Julie (anthracite, gris, papier photo, grain argentique), sorties par l'obturateur ;
+  // 5.1 : les mêmes en lilas, le grain en confettis (data-entree-palette="lilas", data-entree-grain="confettis")
+  'bandes-julie': bandesEtObturateur,
+  // Le même plan (« — » au découpage : 3.10, 3.11, 6.2…) : rien ne couvre la page, le texte change et l'image
+  // reste, comme d'une page de la rue de Rungis à la suivante (7.12 à 7.15). Si la page suivante ne s'ouvre pas
+  // sur la même image, l'image qui part se fond dans la nouvelle (0,9 s), jamais par le noir. o.image : l'image
+  // de la page qui part (Transitions.passer la lit) ; o.couleur="none" (la rue) : rien du tout.
+  plan: function (s, o) {
+    var avant = o.image, apres = imageDuPlan(s.parentNode), voile = null;
+    var meme = apres && avant && (avant.src ? avant.src === apres.src : avant.couleur === apres.couleur);
+    var fondre = !!avant && o.couleur !== 'none' && !meme;
+    return {
+      duree: [0, fondre ? 900 : 0], pause: 0,
+      couvrir: function () {},
+      decouvrir: function (t) {
+        if (!fondre) return;
+        if (!voile) {
+          if (avant.src) {
+            voile = svgEl('image', { x: 0, y: 0, width: W, height: H, preserveAspectRatio: 'xMidYMid slice' }, s);
+            voile.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', avant.src);
+            voile.setAttribute('href', avant.src);
+          } else voile = svgEl('rect', { x: 0, y: 0, width: W, height: H, fill: avant.couleur }, s);
+        }
+        voile.setAttribute('opacity', (1 - lisse(t)).toFixed(3));
       }
     };
   },
@@ -201,22 +327,11 @@ var Balayages = {
   },
   // le monde de Julie : les lames d'un obturateur se ferment, puis s'ouvrent sur la photo suivante
   obturateur: function (s, o) {
-    var n = 7, C = o.de || [600, 900], R = plusLoin(C), lames = [];
-    for (var i = 0; i < n; i++) {
-      lames.push(svgEl('polygon', { fill: i % 2 ? '#1c1f25' : '#15171c', stroke: '#4a505c', 'stroke-width': 4, 'stroke-linejoin': 'round' }, s));
-    }
-    function ouverture(r) {
-      var torsion = 0.9 * (1 - r / R), L = 3000;
-      lames.forEach(function (l, i) {
-        var a = i * 2 * Math.PI / n + torsion, ux = Math.cos(a), uy = Math.sin(a), vx = -uy, vy = ux;
-        function p(u, v) { return (C[0] + ux * u + vx * v).toFixed(1) + ',' + (C[1] + uy * u + vy * v).toFixed(1); }
-        l.setAttribute('points', [p(r, -L), p(r, L), p(r + L, L), p(r + L, -L)].join(' '));
-      });
-    }
+    var lames = dessinerLames(s, o.de || [600, 900], PALETTES.darshan.lames), R = lames.R;
     return {
       duree: [420, 520], sons: ['declic', null], pause: 90,
-      couvrir: function (t) { ouverture(R * (1 - lisse(t))); },
-      decouvrir: function (t) { ouverture(R * lisse(t)); }
+      couvrir: function (t) { lames.ouverture(R * (1 - lisse(t))); },
+      decouvrir: function (t) { lames.ouverture(R * lisse(t)); }
     };
   },
   // le téléphone de Julie : un panneau glisse, comme on passe d'une photo à l'autre
@@ -233,8 +348,10 @@ var Balayages = {
   }
 };
 
-// Le titre d'un chapitre, posé sur sa bande : face crème, contour d'encre, ombre vermillon.
-function ecrireTitre(g, texte, y) {
+// Le titre d'un chapitre, posé sur sa bande : face crème, contour d'encre, ombre vermillon ; chez Julie, face de
+// papier photo, contour anthracite, ombre grise (couleurs : [face, contour, ombre]).
+function ecrireTitre(g, texte, y, couleurs) {
+  couleurs = couleurs || PALETTES.darshan.titre;
   var pose = svgEl('g', { transform: 'translate(600 ' + y + ') rotate(-10.4) skewX(-8)' }, g);
   var titre = svgEl('g', { opacity: 0 }, pose);
   var taille = Math.min(132, Math.round(2000 / Math.max(8, texte.length)));
@@ -243,8 +360,8 @@ function ecrireTitre(g, texte, y) {
     for (var k in attrs) { if (attrs.hasOwnProperty(k)) t.setAttribute(k, attrs[k]); }
     t.textContent = texte;
   }
-  ligne({ x: 11, y: 11, fill: SINDOOR });
-  ligne({ x: 0, y: 0, fill: CREME, stroke: ENCRE, 'stroke-width': 4, 'paint-order': 'stroke' });
+  ligne({ x: 11, y: 11, fill: couleurs[2] });
+  ligne({ x: 0, y: 0, fill: couleurs[0], stroke: couleurs[1], 'stroke-width': 4, 'paint-order': 'stroke' });
   return titre;
 }
 
@@ -254,18 +371,36 @@ var Transitions = (function () {
     return svgEl('svg', { 'class': classe || 'tr', viewBox: '0 0 ' + W + ' ' + H, 'aria-hidden': 'true', focusable: 'false' }, scene);
   }
   function sonner(m, i) { var n = m.sons && m.sons[i]; if (n) Son.effet(n); }
-  // L'entrée d'une scène : data-entree="type x y…" (les nombres : où s'ouvre le balayage).
+  // L'entrée d'une scène : data-entree="type x y…" (les nombres : où s'ouvre le balayage), et ses réglages,
+  // que build.py écrit d'après livre.py (entree=dict(…)) : data-entree-couleur (1.9 : « fondu au blanc
+  // #f8efdc », après la chemise de 1.8), data-entree-palette et data-entree-grain (5.1 : le lilas, les confettis).
   function lireEntree(scene) {
     var a = (scene.getAttribute('data-entree') || '').split(/\s+/).filter(Boolean);
     if (!a.length) return null;
     var o = { type: a[0] }, nombres = a.slice(1).map(Number), h = scene.querySelector('h1.chapitre');
     if (nombres.length) o.vers = nombres;
     if (h) o.titre = h.textContent;
+    [].slice.call(scene.attributes).forEach(function (at) {
+      if (at.name.indexOf('data-entree-') === 0) o[at.name.slice(12)] = at.value;
+    });
     return o;
   }
   function fabriquer(scene, o) {
-    var type = (calme || !Balayages[o.type]) ? 'fondu' : o.type, s = voile(scene);
+    var type = Balayages[o.type] ? o.type : 'fondu';
+    // Mouvement réduit : un fondu court (le même plan reste ce qu'il est) ; celui des bandes de Julie passe par
+    // leur couleur, l'anthracite ou le lilas, plutôt que par le noir.
+    if (calme && type !== 'plan') {
+      if (type === 'bandes-julie' && !o.couleur) o.couleur = palette(o).fond;
+      type = 'fondu';
+    }
+    var s = voile(scene, type === 'plan' ? 'tr tr-plan' : 'tr');
     return { s: s, m: Balayages[type](s, o) };
+  }
+  // Une moitié de balayage ; sans durée (le même plan), sa pose finale tout de suite.
+  function jouerMoitie(duree, pas) {
+    if (duree > 0) return anime(duree, pas);
+    pas(1);
+    return Promise.resolve();
   }
   // Couvre tout de suite la scène qui arrive ; renvoie de quoi la découvrir.
   function preparer(scene, o) {
@@ -275,7 +410,7 @@ var Transitions = (function () {
     scene.entreeFaite = new Promise(function (ok) { fin = ok; });
     return function () {
       return Promise.resolve(b.m.avant ? b.m.avant() : null)
-        .then(function () { sonner(b.m, 1); return anime(b.m.duree[1], b.m.decouvrir); })
+        .then(function () { sonner(b.m, 1); return jouerMoitie(b.m.duree[1], b.m.decouvrir); })
         .then(function () { retirer(b.s); occupe--; fin(); });
     };
   }
@@ -362,21 +497,24 @@ var Transitions = (function () {
     passer: function (avant, apres, changer, o) {
       var e = lireEntree(apres) || { type: 'fondu' };
       if (o) { for (var k in o) { if (o.hasOwnProperty(k)) e[k] = o[k]; } }
+      // le même plan : l'image de la page qui part, lue avant qu'elle ne rende ses images (liberer, depart.js)
+      if (e.type === 'plan' && !e.image) e.image = imageDuPlan(avant);
       var b = fabriquer(avant, e);
       b.m.couvrir(0);
       occupe++;
       sonner(b.m, 0);
-      return anime(b.m.duree[0], b.m.couvrir).then(function () {
-        var decouvrir = preparer(apres, e);
+      return jouerMoitie(b.m.duree[0], b.m.couvrir).then(function () {
+        var decouvrir = preparer(apres, e), pause = 'pause' in b.m ? b.m.pause : 80;
         changer();
         retirer(b.s); occupe--;
-        return attendre(b.m.pause || 80).then(decouvrir);
+        return (pause ? attendre(pause) : Promise.resolve()).then(decouvrir);
       });
     },
-    // EPUB : la page s'ouvre couverte, puis se découvre.
+    // EPUB : la page s'ouvre couverte, puis se découvre. Le même plan n'a rien à découvrir : la page
+    // s'ouvre telle quelle (Apple Books tourne la page).
     entree: function (scene) {
       var e = lireEntree(scene);
-      if (!e) return Promise.resolve();
+      if (!e || e.type === 'plan') return Promise.resolve();
       var decouvrir = preparer(scene, e);
       return quandVisible().then(function () { return attendre(200); }).then(decouvrir);
     },

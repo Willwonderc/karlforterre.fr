@@ -621,6 +621,10 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 /* ---- 1.8, la chemise boutonnée (réponse 40) : la consigne, sur le lin blanc, prend une pastille */
 .scene.fx-lin-sur .consigne { left: 50%; right: auto; transform: translateX(-50%); width: max-content; max-width: 84cqw;
   padding: 0.8cqw 3cqw; border-radius: 4cqw; background: var(--aide-fond); text-shadow: none; }
+/* ---- transitions : le même plan fond son image sous le texte et la barre ; le banc d'essai, sur quatre colonnes */
+.tr.tr-plan { z-index: 4; pointer-events: none; }
+.jeu .banc-boutons { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.banc-boutons button { font-size: 2.9cqw; }
 /* ------------------------------------------------------------ scènes et transitions (fin) */
 
 /* ------------------------------------------------------------ mécaniques (équipe des mécaniques : src/js/mecaniques.js)

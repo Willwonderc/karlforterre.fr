@@ -1760,8 +1760,9 @@ var Scenes = (function () {
       julie.style.transform = grand ? 'translateY(' + (18 * e).toFixed(2) + '%)' : 'translateX(' + (30 * e).toFixed(2) + '%)';
     }
     function partage() { droite.style.webkitClipPath = ''; droite.style.clipPath = ''; julie.style.transform = ''; }  // la feuille de style
-    if (calme) racine.style.opacity = '0';
-    else { partager(0); aretes.forEach(function (a) { opacite(a, 0); }); }
+    // mouvement réduit : l'écran est partagé dès l'ouverture ; sur le web, le même plan y fond la photo de 6.1
+    // (transitions.js, plan), d'un seul fondu
+    if (!calme) { partager(0); aretes.forEach(function (a) { opacite(a, 0); }); }
 
     // les temps des deux listes : leur fin paraît sous la liste cochée, avec les mots du livre ; le
     // panneau garde le récit qui les précède
@@ -1824,7 +1825,7 @@ var Scenes = (function () {
     };
     derouler(scene, cfg, { attente: 600, surTemps: surTemps });
     quandEntree(scene).then(function () {
-      if (calme) return animerPage(scene, 600, 600, function (x) { racine.style.opacity = x.toFixed(3); });
+      if (calme) return null;
       return Fx.animer(scene, 1300, partager).then(function () {
         partage();
         return Fx.animer(scene, 500, function (x) { aretes.forEach(function (a) { opacite(a, x); }); });
@@ -1940,6 +1941,56 @@ var Scenes = (function () {
       opacite(halo, 0.5 * lisse(borne((t - 0.55) / 0.4)) * (1 - v));
     }).then(function () { ouverture(null); opacite(halo, 0); return attendreVraiment(300); });
   }
+
+  // ---------------------------------------------------------------- le banc d'essai des transitions
+  /* web/transitions.html, jamais dans le livre : chaque bouton joue un balayage ou un effet d'objet tel qu'il sert
+     dans le livre (data-type, et ses réglages : data-titre, data-de, data-vers, data-palette, data-grain) ; le
+     décor change sous le balayage, parmi ceux du monde du bouton (data-monde). Repris du prototype. */
+  speciales.banc = function (scene) {
+    var decor = $('.decor img', scene), legende = $('.banc-legende', scene), credit = $('.banc-credit', scene);
+    var mondes = {}, rang = {};
+    $$('.banc-decors [data-monde]', scene).forEach(function (d) {
+      var m = d.getAttribute('data-monde');
+      (mondes[m] = mondes[m] || []).push({ src: d.getAttribute('data-src'), credit: d.textContent });
+      var i = new Image(); i.src = d.getAttribute('data-src');       // prêts avant le premier balayage
+    });
+    function changerDecor(m) {
+      var l = mondes[m];
+      if (!l || !decor) return;
+      rang[m] = ((rang[m] === undefined ? -1 : rang[m]) + 1) % l.length;
+      if (decor.getAttribute('src') === l[rang[m]].src && l.length > 1) rang[m] = (rang[m] + 1) % l.length;
+      decor.setAttribute('src', l[rang[m]].src);
+      if (credit) credit.textContent = l[rang[m]].credit;
+    }
+    $$('.banc-boutons button', scene).forEach(function (b) {
+      b.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        if (bloque()) return;
+        Son.init();
+        var type = b.getAttribute('data-type'), monde = b.getAttribute('data-monde') || 'darshan';
+        if (legende) legende.textContent = b.getAttribute('title') || '';
+        if (type === 'frisson') { Transitions.frisson(scene, 600, 760, 260); return; }
+        if (type === 'eclat') {
+          var m = Objets.donnee('cle').metamorphose;
+          Transitions.eclat(scene, { objet: 'cle', nom: Objets.nom('cle'), fragment: m && m.texte });
+          return;
+        }
+        if (type === 'envol') { Objets.ajouter('lunettes', null, true); return; }
+        if (type === 'fiche') { Objets.ouvrir('cle'); return; }
+        var o = { type: type, titre: b.getAttribute('data-titre') || '' };
+        ['de', 'vers'].forEach(function (k) { var v = b.getAttribute('data-' + k); if (v) o[k] = v.split(' ').map(Number); });
+        ['palette', 'grain', 'couleur'].forEach(function (k) { var v = b.getAttribute('data-' + k); if (v) o[k] = v; });
+        if (type === 'plan') {
+          // le même plan : le décor change sous la page et l'ancien s'y fond (dans le livre, deux pages)
+          o.image = decor ? { src: decor.getAttribute('src') } : null;
+          changerDecor(monde);
+          Transitions.passer(scene, scene, function () {}, o);
+          return;
+        }
+        Transitions.passer(scene, scene, function () { changerDecor(monde); }, o);
+      });
+    });
+  };
 
   return { jouer: jouer, config: config, sortir: sortir, speciales: speciales, Lanterne: Lanterne };
 })();
