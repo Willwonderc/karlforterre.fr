@@ -623,6 +623,235 @@ var Fx = (function () {
 // ================================================================ effets nouveaux, chapitres 0 à 3 (début)
 /* Les effets qui manquaient, dont la première page est aux chapitres 0 à 3, s'ajoutent ici, chacun
    juste au-dessus de la ligne « (fin) » ci-dessous (deux équipes écrivent en même temps). */
+/* Outils communs des effets de cette zone, rangés sous un seul nom : les fragments partagent une seule
+   portée, et la zone des chapitres 4 à 8 a les siens. Un effet déjà là qui reçoit ici de nouveaux réglages
+   (poussiere, flou, decor…) est enveloppé : l'effet d'origine garde tout ce qu'il savait faire, et ce qui ne
+   le concerne pas lui est passé tel quel. */
+var FxA = (function () {
+  var numero = 0;
+  // des identifiants uniques (l'édition web garde les 85 pages dans un seul document)
+  function id(prefixe) { numero += 1; return prefixe + '-a' + numero; }
+  // un dégradé dans un SVG ; arrets : [[position, couleur, opacité], …] ; rend « url(#…) »
+  function degrade(svg, genre, attrs, arrets) {
+    var defs = $('defs', svg) || svgEl('defs', {}, svg), i = id('d');
+    attrs.id = i;
+    var g = svgEl(genre, attrs, defs);
+    arrets.forEach(function (a) { svgEl('stop', { offset: a[0], 'stop-color': a[1], 'stop-opacity': a.length > 2 ? a[2] : 1 }, g); });
+    return 'url(#' + i + ')';
+  }
+  // Les grains d'une page (poussière d'or, étincelles, gouttes) : une seule toile, en définition 0,5
+  // (ce qui est flou n'a pas besoin de plus), pour toutes les apparitions de la page ; chacune ajoute ses
+  // grains, et l'animation s'arrête quand il n'en reste plus. Rend { jeter(liste), fixes(liste, ms) }.
+  // Un grain : { x, y, vx, vy, gy (la pesanteur), r, a (opacité), entree, sortie, vie, couleur, sens (le
+  // balancement de côté) } ; ses temps sont en secondes, ses vitesses en unités par seconde.
+  function grains(scene) {
+    var fx = Fx.etat(scene);
+    if (fx.grainsA) return fx.grainsA;
+    var T = Fx.toile(scene, 'grains', 6, 0.5), ctx = T.x, liste = [], tache = null;
+    function opacite(g) {
+      var e = g.entree ? Math.min(1, g.age / g.entree) : 1, s = g.sortie ? Math.min(1, (g.vie - g.age) / g.sortie) : 1;
+      return g.a * lisse(e) * lisse(s);
+    }
+    function dessiner(g, a) {
+      ctx.globalAlpha = a * 0.24; ctx.fillStyle = g.couleur;
+      ctx.beginPath(); ctx.arc(g.x, g.y, g.r * 3, 0, 6.2832); ctx.fill();
+      ctx.globalAlpha = a; ctx.fillStyle = g.couleur;
+      ctx.beginPath(); ctx.arc(g.x, g.y, g.r, 0, 6.2832); ctx.fill();
+    }
+    function image(t, dt) {
+      ctx.clearRect(0, 0, W, H);
+      for (var i = liste.length - 1; i >= 0; i--) {
+        var g = liste[i];
+        g.age += dt;
+        if (g.age >= g.vie) { liste.splice(i, 1); continue; }
+        g.vy += (g.gy || 0) * dt;
+        g.x += (g.vx + (g.balance ? Math.sin(g.age * 1.7 + g.p) * g.balance : 0)) * dt;
+        g.y += g.vy * dt;
+        dessiner(g, opacite(g));
+      }
+      if (!liste.length) { tache = null; return false; }
+    }
+    var soi = fx.grainsA = {
+      jeter: function (nouveaux) {
+        nouveaux.forEach(function (g) { g.age = -(g.retard || 0); g.p = g.p || 0; liste.push(g); });
+        if (!tache) tache = Fx.tache(scene, image);
+      },
+      // mouvement réduit : des points fixes qui s'éteignent, rien qui bouge
+      fixes: function (points, ms) {
+        return Fx.animer(scene, ms, function (x) {
+          ctx.clearRect(0, 0, W, H);
+          var v = lisse(Math.min(1, x / 0.2)) * (1 - lisse(Math.max(0, (x - 0.45) / 0.55)));
+          points.forEach(function (g) { g.age = 0; dessiner(g, g.a * v); });
+        });
+      }
+    };
+    return soi;
+  }
+  return { id: id, degrade: degrade, grains: grains };
+})();
+
+// ================================================================ chapitre 0 : le poème d'ouverture (0.2)
+(function () {
+  // La ligne des arbres de arbres-poeme.webp (le haut du feuillage, une valeur de y tous les 20 unités, de
+  // x = 0 à 1200), relevée sur le canal alpha du calque : le fil d'or court au ras d'elle (0.2), et le fil
+  // d'encre de 8.1 en reprend le dessin, au bas de la page.
+  var ARBRES = [1500, 1488, 1469, 1458, 1461, 1473, 1485, 1488, 1487, 1488, 1477, 1461, 1462, 1485, 1508, 1508, 1487,
+    1471, 1468, 1468, 1467, 1461, 1454, 1447, 1436, 1427, 1444, 1477, 1498, 1498, 1497, 1505, 1534, 1576, 1584, 1553,
+    1529, 1524, 1532, 1552, 1565, 1548, 1517, 1504, 1513, 1536, 1560, 1568, 1556, 1530, 1510, 1498, 1497, 1526, 1578,
+    1608, 1622, 1646, 1661, 1663, 1663];
+  var FIL = '#ffd98a', CHAUD = '#fff0c0';
+
+  // Le chemin du fil : la ligne des arbres montée de `monte` unités ; ou, avec `y`, la même forme (à
+  // l'échelle `k`) autour de la hauteur `y`.
+  function ligneDesArbres(o) {
+    var moy = ARBRES.reduce(function (s, v) { return s + v; }, 0) / ARBRES.length;
+    var pts = ARBRES.map(function (v, i) {
+      return [i * 20, o.y !== undefined ? o.y + (v - moy) * (o.k === undefined ? 1 : o.k) : v - (o.monte || 0)];
+    });
+    return Gestes.courbe(pts, false);
+  }
+
+  // Un fil d'or : un halo de sept couches de plus en plus fines (sans filtre : un flou se paie à chaque image),
+  // le fil, son cœur blanc, et, si on la donne, une lueur ovale (`lueur` : { cx, cy, rx, ry, arrets }) ; `fabrique`
+  // dessine la forme (un « path » ou un « circle », dont `attrs` donne les attributs). Rend poser(a, b) : a,
+  // la présence (0 à 1), et b, l'embrasement (0 à 1) ; au repos, b = 0 : un fil mince, tenu, qui reste.
+  var HALOS = [[72, 0.02], [58, 0.026], [46, 0.034], [36, 0.044], [27, 0.058], [19, 0.075], [12, 0.1]];
+  function filDOr(svg, fabrique, attrs, degrade, lueur) {
+    var base = { fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, flamme = null;
+    if (lueur) {
+      var rond = FxA.degrade(svg, 'radialGradient', { cx: 0.5, cy: 0.5, r: 0.5 },
+        lueur.arrets || [[0, '#fff0c0', 0.8], [0.35, '#ffd98a', 0.34], [1, '#ffc060', 0]]);
+      flamme = svgEl('ellipse', { cx: lueur.cx, cy: lueur.cy, rx: lueur.rx, ry: lueur.ry, fill: rond, opacity: 0 }, svg);
+    }
+    function un(largeur) { return fabrique(Fx.copie(Fx.copie(base, attrs), { stroke: degrade || FIL, 'stroke-width': largeur, opacity: 0 }), svg); }
+    var halos = HALOS.map(function (h) { return un(h[0]); }), fil = un(3), coeur = un(1.4);
+    coeur.setAttribute('stroke', CHAUD);
+    return function poser(a, b) {
+      var k = 0.4 + 1.8 * b;
+      halos.forEach(function (h, i) {
+        h.setAttribute('opacity', (a * HALOS[i][1] * k).toFixed(4)); h.setAttribute('stroke-width', (HALOS[i][0] * (1 + 0.45 * b)).toFixed(1));
+      });
+      fil.setAttribute('opacity', (a * (0.6 + 0.4 * b)).toFixed(3)); fil.setAttribute('stroke-width', (2 + 3.2 * b).toFixed(2));
+      coeur.setAttribute('opacity', (a * (0.25 + 0.75 * b)).toFixed(3)); coeur.setAttribute('stroke-width', (1 + 1.8 * b).toFixed(2));
+      if (flamme) flamme.setAttribute('opacity', (a * b * 0.9).toFixed(3));
+    };
+  }
+  function chemin(attrs, parent) { return svgEl('path', attrs, parent); }
+  function cercle(attrs, parent) { return svgEl('circle', attrs, parent); }
+
+  // L'embrasement : le fil jaillit à pleine intensité, la tient `embrase` ms, puis se pose et reste. Mouvement
+  // réduit : il paraît en fondu, sans embrasement. Le temps suivant attend l'embrasement, l'effet suivant non
+  // (la course des astres part avec lui).
+  function embraser(scene, poser, embrase) {
+    poser(0, 0);
+    if (calme) return Fx.animer(scene, 450, function (x) { poser(lisse(x), 0); });
+    var fin = Fx.animer(scene, 140, function (x) { poser(1, vif(x)); })
+      .then(function () { poser(1, 1); return Fx.pause(scene, embrase); })
+      .then(function () { return Fx.animer(scene, 1500, function (x) { poser(1, 1 - lisse(x)); }); });
+    return { suite: Promise.resolve(), fin: fin };
+  }
+
+  // 0.2, « La noirceur figée finit toujours par embrasser son éblouissante frontière » (traitement : « son
+  // bord, un fil d'or au ras des arbres, s'embrase une demi-seconde à pleine intensité, puis se pose et
+  // reste ») ; 7.11 `cercle` : l'anneau de l'éclipse s'embrase de même ; 8.1 `encre` : le même fil, à
+  // l'encre, tracé de gauche à droite au bas de la page, sans embrasement.
+  Effets.frontiere = function (scene, e) {
+    if (e.encre) return filEncre(scene, e);
+    var embrase = e.embrase === undefined ? 500 : e.embrase;
+    if (e.cercle) {
+      var svgC = Fx.calque(scene, 'frontiere', 5, true);
+      var rond = { cx: e.x || 680, cy: e.y || 875, r: e.r || 180 };      // l'éclipse de 7.11, mesurée sur l'image
+      return embraser(scene, filDOr(svgC, cercle, rond, null, { cx: rond.cx, cy: rond.cy, rx: rond.r * 2.3, ry: rond.r * 2.3,
+        // la lueur ne part que de l'anneau : le disque noir de l'éclipse reste noir
+        arrets: [[0, '#fff0c0', 0], [0.3, '#fff0c0', 0], [0.435, '#fff4d0', 0.8], [0.6, '#ffd98a', 0.3], [1, '#ffc060', 0]] }), embrase);
+    }
+    // 0.2 : le fil passe derrière les arbres et devant le ciel, au ras du feuillage
+    var svg = Fx.calque(scene, 'frontiere', 5, true), arbres = $('.decor > img', scene);
+    if (arbres && arbres.parentNode === Fx.decor(scene)) { Fx.decor(scene).insertBefore(svg, arbres); svg.style.zIndex = ''; }
+    var degrade = FxA.degrade(svg, 'linearGradient', { x1: 0, y1: 0, x2: W, y2: 0, gradientUnits: 'userSpaceOnUse' },
+      [[0, FIL, 0], [0.12, FIL, 0.5], [0.45, CHAUD, 1], [0.72, FIL, 0.8], [0.92, FIL, 0.3], [1, FIL, 0]]);
+    return embraser(scene, filDOr(svg, chemin, { d: ligneDesArbres({ monte: 6 }) }, degrade, { cx: 600, cy: 1500, rx: 640, ry: 230 }), embrase);
+  };
+  function filEncre(scene, e) {
+    var svg = Fx.calque(scene, 'frontiere-encre', 4, true), d = ligneDesArbres({ y: e.y || 1650, k: 0.5 });
+    var lavis = chemin({ d: d, fill: 'none', stroke: '#2a1c10', 'stroke-width': 10, 'stroke-linecap': 'round', opacity: 0 }, svg);
+    var trait = chemin({ d: d, fill: 'none', stroke: '#2a1c10', 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+      pathLength: 1, 'stroke-dasharray': '1 1', 'stroke-dashoffset': 1, opacity: 0 }, svg);
+    if (calme) {
+      return Fx.animer(scene, 450, function (x) { trait.setAttribute('stroke-dashoffset', 0); trait.setAttribute('opacity', (0.85 * lisse(x)).toFixed(3)); lavis.setAttribute('opacity', (0.1 * lisse(x)).toFixed(3)); });
+    }
+    return Fx.animer(scene, e.trace || 1500, function (x) {
+      var t = lisse(x);
+      trait.setAttribute('opacity', 0.85); trait.setAttribute('stroke-dashoffset', (1 - t).toFixed(4));
+      lavis.setAttribute('opacity', (0.1 * Math.min(1, t * 3)).toFixed(3));
+    });
+  }
+
+  // 0.2, « il se met à tourner, très lentement, autour d'un point au-dessus du cadre, derrière la ligne
+  // d'arbres qui, elle, ne bouge pas » : le ciel (et ses étoiles) tourne à la vitesse de 1.1 (0,0016° par
+  // image à 60 Hz, soit 0,096° par seconde), autour du même pôle ; départ en douceur de 3 s, puis continu.
+  // Mouvement réduit : rien, un ciel immobile. Le calque d'arbres, fixe devant, ne bouge pas.
+  var OMEGA = 0.096, DEPART = 3;
+  Effets.course = function (scene) {
+    var ciel = $('.ciel-tournant', scene), etoiles = scene.etoiles && scene.etoiles.toile;
+    if (!ciel || calme) return;
+    var angle = 0, cibles = [ciel, etoiles].filter(Boolean);
+    cibles.forEach(function (c) { c.style.transformOrigin = '38% 8%'; });
+    // le ciel qui sort du cadre en tournant laisse voir le fond de la scène : de la couleur de la nuit
+    var decor = Fx.decor(scene);
+    if (decor && !decor.style.backgroundColor) decor.style.backgroundColor = '#050b26';
+    function remettre() { cibles.forEach(function (c) { c.style.transform = ''; c.style.transformOrigin = ''; }); }
+    var t = Fx.tache(scene, function (temps, dt) {
+      var rampe = lisse(temps / DEPART);
+      angle += OMEGA * rampe * dt;
+      cibles.forEach(function (c) { c.style.transform = 'rotate(' + angle.toFixed(4) + 'deg)'; });
+    });
+    var arreter = t.arreter;
+    t.arreter = function () { arreter(); remettre(); };
+    Fx.surDepart(scene, remettre);
+  };
+
+  // 0.2, « La poussière est à la fois la trace du passé… » : des grains d'or descendent lentement, en
+  // diagonale, comme du sable dans la lumière d'une lanterne (6 s) ; « Elle s'élance, composée des plus
+  // hautes montagnes… » : ils remontent et s'éteignent parmi les étoiles (6 s) ; 1.2 `petite` : une
+  // poignée de grains (1,5 s). Sans réglage : la bouffée du prototype. Mouvement réduit : quelques points
+  // d'or fixes qui s'éteignent (0.2) ; rien pour la poignée.
+  var poussiereDuPrototype = Effets.poussiere;
+  var ORS = { or: 'rgb(255, 226, 150)', gris: 'rgb(214, 214, 220)' };
+  Effets.poussiere = function (scene, e) {
+    if (e.sens !== 'tombe' && e.sens !== 'monte' && !e.petite) return poussiereDuPrototype(scene, e);
+    var couleur = ORS[e.couleur] || ORS.or, G = FxA.grains(scene), hasard = Fx.alea(e.sens === 'monte' ? 23 : e.sens === 'tombe' ? 11 : 5);
+    var liste = [], k, g, n;
+    if (e.petite) {
+      if (calme) return;
+      var x0 = e.x || 600, y0 = e.y || 1180;
+      for (k = 0; k < 26; k++) {
+        liste.push({ x: x0 + Fx.entre(hasard, -150, 150), y: y0 + Fx.entre(hasard, -60, 60), vx: Fx.entre(hasard, -70, 70), vy: Fx.entre(hasard, -130, -20),
+          gy: 60, r: Fx.entre(hasard, 1.8, 4.4), a: Fx.entre(hasard, 0.6, 1), entree: 0.2, sortie: 0.7, vie: Fx.entre(hasard, 1.0, 1.5), couleur: couleur, p: hasard() * 6 });
+      }
+      G.jeter(liste);
+      return;
+    }
+    n = 70;
+    for (k = 0; k < n; k++) {
+      var tombe = e.sens === 'tombe', retard = k / n * 2.4;
+      g = tombe
+        ? { x: Fx.entre(hasard, -80, 820), y: Fx.entre(hasard, -60, 420), vx: Fx.entre(hasard, 26, 62), vy: Fx.entre(hasard, 120, 210) }
+        : { x: Fx.entre(hasard, 80, 1120), y: Fx.entre(hasard, 1000, 1480), vx: Fx.entre(hasard, -20, 20), vy: -Fx.entre(hasard, 100, 190) };
+      g.r = Fx.entre(hasard, 1.8, 4.6); g.a = Fx.entre(hasard, 0.6, 1); g.entree = 0.7; g.sortie = 1.2;
+      g.vie = Fx.entre(hasard, 2.6, 3.5); g.retard = retard; g.couleur = couleur; g.balance = Fx.entre(hasard, 8, 22); g.p = hasard() * 6;
+      liste.push(g);
+    }
+    if (calme) {
+      // quelques points d'or fixes, aux places où les grains passent, qui s'éteignent
+      G.fixes(liste.slice(0, 22).map(function (p) { p.x += p.vx * 1.4; p.y += p.vy * 1.4; return p; }), 2600);
+    } else {
+      G.jeter(liste);
+    }
+    return { suite: Promise.resolve(), fin: Fx.pause(scene, 600) };
+  };
+})();
+
 // ================================================================ effets nouveaux, chapitres 0 à 3 (fin)
 
 // ================================================================ effets nouveaux, chapitres 4 à 8 (début)

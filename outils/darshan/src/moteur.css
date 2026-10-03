@@ -595,6 +595,16 @@ html:not(.jeu) .decor .plan.sans-script { opacity: 1; }
 
 /* ============================================================ effets nouveaux, chapitres 0 à 3 (début)
    Les règles des effets de ces chapitres s'ajoutent juste au-dessus de la ligne « (fin) » ci-dessous. */
+/* Les calques de tous les effets (Fx.calque, Fx.dessous, Fx.dessus, Fx.toile, effets.js) : ils couvrent
+   la scène sans jamais recevoir un toucher. Ceux de l'image (rangs 1 à 6) restent dans .decor, qui forme
+   un empilement à part : le texte, au-dessus, ne passe jamais dessous. Ceux de `dessous` se glissent
+   entre l'image et le texte ; ceux de `dessus`, entre le texte et la barre. */
+.decor { isolation: isolate; }
+.fx { pointer-events: none; }
+.fx-calque, .fx-dessous, .fx-couche, .fx-dessus { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.fx-dessous { z-index: 0; overflow: hidden; }
+.fx-toile { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+
 /* ============================================================ effets nouveaux, chapitres 0 à 3 (fin) */
 
 /* ============================================================ effets nouveaux, chapitres 4 à 8 (début)
