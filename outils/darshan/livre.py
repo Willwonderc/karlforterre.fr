@@ -320,7 +320,8 @@ SCENES = {
              moments=[E("filantes"), [E("voix", lettres=True), E("son", effet="appel")],
                       E("voix", fin=True)]),
     "1.2": S("tuiles", special="tuiles", coupes={21: ["Il enjambe", "Ses lunettes fumées"]},
-             gestes=[G("rythme", n=5, notes="montantes")],
+             gestes=[G("rythme", n=5, notes="montantes", consigne_immediate=True)],     # le tutoriel du livre :
+                                                                                     # « avec sa consigne immédiate »
              moments=[E("poussiere", petite=True), E("objet+", id="lunettes")]),
     "1.3": S("porte-pigeonnier", texte="haut", special="pigeonnier",
              coupes={22: ["Face à l’assemblage", "Les tenant par la branche", "D’un geste vif", "Elle est adaptée",
@@ -361,8 +362,10 @@ SCENES = {
              gestes=[G("toucher", n=4, effet="tissu", apres=True, y_consigne=1590,
                        effets=[E("lin", boutons=4, suit_geste=True)])],
              moments=[[E("decor", i=1, fondu=8000), E("silence", garder="fleuve")]]),
-    "1.9": S(["montre", "local-or", "filet-soir"], texte="haut clair",
-             gestes=[G("toucher", cible=[600, 1560, 200],
+    # « Entrée : fondu au blanc, qui continue le lin de la chemise » (traitement de 1.9) : le blanc du lin boutonné
+    # de 1.8 (data-entree-couleur, que transitions.js lira)
+    "1.9": S(["montre", "local-or", "filet-soir"], texte="haut clair", entree=dict(couleur="#f8efdc"),
+             gestes=[G("toucher", cible=[600, 1560, 200], objet="lunettes",                  # l'objet ôté, et sa fiche
                        effets=[E("eclat-court", de="lunettes", vers="cle", x=600, y=1560),      # les lunettes au bas de la vue (1.9)
                                E("jour", fente=PORTE_LOCAL, son="autre-cote", lieu="paris-midi"),
                                E("eblouir", sens="monte", depuis=[600, 1050]), E("son", effet="tictac", arret=True),
@@ -471,7 +474,8 @@ SCENES = {
              moments=[E("son", effet="herbe")]),
     "3.10": S(["periyar-soir", "noir-lueur", "porte-pere"], special="vision",
               debut=[E("sceau", x=600, y=1150, deja=True), E("interface", voile=True)],
-              gestes=[G("respirer", n=3, mini=1200, effets=[E("braises")])],
+              gestes=[G("respirer", n=3, mini=1200, effets=[E("braises")])],     # sans suit_geste : la vision suit le
+                                                                                 # souffle (g.progres) ; braises : l'envol final
               moments=[E("sceau", defaire=True),
                        E("absence"), E("palpite"), E("bascule"),
                        [E("decor", i=1), E("couleur")],
@@ -696,7 +700,8 @@ SCENES = {
     "6.13": S(["fenetre", "main-julie", "main-vide", "placard", "verdure"], texte="bas clair",
               debut=[E("refroidir", instant=True), E("decor", i=1, delai=1200, fond="sombre")],   # la fenêtre, une seconde
               gestes=[G("main", apres=True, effets=[E("decor", i=2, delai=500)]),     # immobile, puis elle se retire
-                      G("tourner", apres=True, centre=[932, 680], rayon=260, angle=-90)],
+                      G("tourner", apres=True, centre=[932, 680], rayon=260, angle=-90,
+                        dessin="cle-placard")],                                     # « la clé de laiton dans sa serrure »
               moments=[E("decor", i=3),
                        [E("embrasure", cadre="placard", image="verdure"), E("ambiance", id="parc")]]),
     "6.14": S(["verdure", "placard", "maison-lierre"], texte="bas",
@@ -759,8 +764,9 @@ SCENES = {
              moments=[E("objet+", id="paquet-darshan", sac="darshan", discret=True)],
              extra={"Trottinant, elle accélère": E("decor", i=1),
                     "C’en est trop": E("coeur", qui="julie", vif=True)}),
+    # les paupières du baiser : « le soleil couchant les teinte d'orangé, comme la morsure » (traitement de 7.10)
     "7.10": S("rue-soleil", texte="haut clair", debut=[E("ruban", attache=[1150, 1480])],
-              gestes=[G("maintenir", duree=3500, paupieres=True, battement="unisson", tempo=[80, 60],
+              gestes=[G("maintenir", duree=3500, paupieres=True, teinte="couchant", battement="unisson", tempo=[80, 60],
                         effets=[E("melodie", mode="entiere"), E("interface", voile=True)])],
               moments=[E("ralenti"), E("ruban", affole=True)],
               extra={"Il porte à hauteur d’épaule un petit paquet": [E("ruban", attache=[1150, 1300]),
