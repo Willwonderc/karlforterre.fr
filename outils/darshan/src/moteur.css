@@ -566,6 +566,24 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 .jeu .scene.sans-magie .suite.pret { animation: coin-page 2.6s ease-in-out infinite; }
 .calme .scene.sans-magie .suite.pret { animation: none; }
 @keyframes coin-page { 50% { opacity: 0.55; } }
+/* clôture (8.1) : le blanc du livre imprimé entre le quatrième et le cinquième vers ; le poème qui s'efface
+   devant la page « Fin » */
+.scene[data-special="cloture"] .poeme p.vers:nth-of-type(5) { margin-top: 5cqw; }
+.jeu .scene[data-special="cloture"] .texte, .jeu .scene[data-special="cloture"] .cloture-svg { transition: opacity 1.2s ease; }
+.jeu .scene[data-special="cloture"] .cloture-sort { opacity: 0; }
+/* la page « Fin » : sur le papier, « Fin », le générique, la planche des photographies, « Nouvelle lecture » */
+.jeu .fin-livre.fin-page { top: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 7cqw 7cqw 8cqw; }
+.fin-page p { margin: 0; color: #2a1c10; }
+.fin-page .fin-titre { margin: 0 0 3cqw; font-size: 6.4cqw; }
+.fin-page .fin-generique { font-size: 3.4cqw; margin-bottom: 1.2cqw; }
+.fin-page .fin-couverture { font-size: 2.8cqw; font-style: italic; color: #5d4a35; margin-bottom: 4.5cqw; }
+.fin-page figure { margin: 0 0 4.5cqw; }
+.fin-page figcaption { font-size: 2.6cqw; font-style: italic; color: #6b5a45; margin-bottom: 1.4cqw; }
+.fin-page figure img { display: block; width: 84cqw; max-width: 100%; height: auto; }
+.grand .fin-page figure img { width: 66cqw; }
+/* « Nouvelle lecture » : le livre se ferme comme une porte */
+.cloture-porte { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 30; }
 /* ------------------------------------------------------------ scènes et transitions (fin) */
 
 /* ------------------------------------------------------------ mécaniques (équipe des mécaniques : src/js/mecaniques.js)

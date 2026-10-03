@@ -62,14 +62,36 @@ var Scenes = (function () {
     if (estEpub) { consigne(scene, ui('tournez'), 1730); return; }
     Navigation.suivante(scene, o);
   }
-  // « Fin », et de quoi relire le livre depuis le début.
+  // La page « Fin » (docs/darshan-mise-en-scene/chapitre-7.md, « La page « Fin » » ; décision de Karl 26) : « une
+  // page, trois choses, un bouton ». Sur le papier, « Fin » ; le générique (« Texte et photographies : Karl
+  // Forterre », le crédit de la couverture) ; la planche des photographies vues dans le livre, sans encre
+  // (fin-photos : une seule image de decors.py, et son texte pour les lecteurs d'écran) ; « Nouvelle lecture », qui
+  // ferme le livre (fermerLeLivre, avec la clôture) puis ramène à la page de titre. « Pas de ✦, pas d'or : c'est une
+  // page de mortel. » La lecture y est notée comme achevée : « Reprendre » n'est plus proposé, « Ouvrir » attend
+  // (qui quitte en 8.1 retrouve « Reprendre »).
   function finDuLivre(scene) {
-    var f = el('div', { 'class': 'fin-livre ui' }, scene);
+    if ($('.fin-livre', scene)) return;
+    ecrire('darshan.page', null);
+    $$('.texte, .cloture-svg', scene).forEach(function (n) { n.classList.add('cloture-sort'); });
+    var f = el('div', { 'class': 'fin-livre fin-page ui' }, scene);
     el('p', { 'class': 'fin-titre' }, f).textContent = ui('fin');
+    el('p', { 'class': 'fin-generique' }, f).textContent = ui('generique_auteur');
+    el('p', { 'class': 'fin-couverture' }, f).textContent = ui('generique_couverture');
+    var planche = Fx.fichierDecor('fin-photos');
+    if (planche) {
+      var fig = el('figure', {}, f);
+      el('figcaption', { 'aria-hidden': 'true' }, fig).textContent = ui('generique_planche');
+      el('img', { src: planche, alt: ui('generique_planche'), width: '1500', height: '1321' }, fig);
+    }
     var b = el('button', { type: 'button' }, f);
     b.textContent = ui('nouvelle_lecture');
-    b.addEventListener('click', function (ev) { ev.stopPropagation(); Navigation.recommencer(); });
-    requestAnimationFrame(function () { requestAnimationFrame(function () { f.classList.add('vu'); }); });
+    b.addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      if (b.disabled) return;
+      b.disabled = true;
+      fermerLeLivre(scene).then(function () { Navigation.recommencer(); }, function () { Navigation.recommencer(); });
+    });
+    Fx.minuterie(scene, function () { f.classList.add('vu'); }, calme ? 300 : 900, true);
     annoncer(ui('fin'));
   }
   function jouer(scene) {
@@ -1847,6 +1869,76 @@ var Scenes = (function () {
       d -= sg[0];
     }
     return [x0, y0, 1, 1];
+  }
+
+  // ---------------------------------------------------------------- clôture (8.1 et « Fin »)
+  /* « Le miroir du poème d'ouverture » (docs/darshan-mise-en-scene/chapitre-7.md, 8.1 et « La page « Fin » » ;
+     synthèse, partie 3.4 ; décisions de Karl 4 et 26). Les vers paraissent un à un sur le papier et restent,
+     atténués ; « un temps de plus entre le quatrième et le cinquième vers (le blanc du livre) » ; au dernier, un
+     fil d'encre se trace au bas de la page, de gauche à droite, et reste. Puis la page « Fin » (finDuLivre), et
+     « Nouvelle lecture », qui ferme le livre comme une porte. Silence : le livre ne fait plus de son depuis le choc
+     de 7.15. Mouvement réduit : des fondus. */
+  speciales.cloture = function (scene, cfg) {
+    $$('.cloture-svg, .fin-livre, .cloture-porte', scene).forEach(retirer);
+    $$('.cloture-sort', scene).forEach(function (n) { n.classList.remove('cloture-sort'); });
+    var s = calqueScene(scene, 'cloture-svg', '');
+    scene.effetsLocaux = {
+      // « Les sentiments noircissent » : « le fil d'encre, fin, au bas de la page (y 1 650), tracé en 1,5 s ; la page
+      // reste blanche » : le fil d'or du poème d'ouverture, devenu fil d'encre, « comme la première ligne d'une page
+      // à venir ». Mouvement réduit : « le fil paraît en fondu »
+      frontiere: function (sc, e) {
+        var y = e.y || 1650, rnd = hasard(11), d = 'M150,' + f1(y), n = 24;
+        for (var i = 1; i <= n; i++) d += 'L' + f1(150 + 900 * i / n) + ',' + f1(y + Math.sin(i * 0.8) * 1.8 + (rnd() - 0.5) * 1.6);
+        var o = { d: d, stroke: '#2a1c10', pathLength: 1, 'stroke-dasharray': '1 1', 'stroke-dashoffset': 1 };
+        var g = svgEl('g', { fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, s);
+        var traits = [svgEl('path', Fx.copie(o, { 'stroke-width': 7, opacity: 0.08 }), g), svgEl('path', Fx.copie(o, { 'stroke-width': 2.4, opacity: 0.88 }), g)];
+        if (calme) {
+          traits.forEach(function (p) { p.setAttribute('stroke-dashoffset', '0'); });
+          opacite(g, 0);
+          return animerPage(scene, 900, 900, function (x) { opacite(g, x); });
+        }
+        return Fx.animer(scene, e.trace || 1500, function (x) {
+          var v = ((1 - x) * (1 - x)).toFixed(4);   // la plume part franchement, se pose en finissant
+          traits.forEach(function (p) { p.setAttribute('stroke-dashoffset', v); });
+        });
+      }
+    };
+    derouler(scene, cfg, {
+      garder: true, attente: 500,
+      // le blanc du livre imprimé entre le quatrième et le cinquième vers : un temps de plus (et sa place, moteur.css)
+      surTemps: function (j) { if (j === 3) return Fx.pause(scene, 1800); },
+      // « Sortie : fondu vers la page « Fin ». »
+      fin: function () { finDuLivre(scene); }
+    });
+  };
+
+  // « Nouvelle lecture » : « Il ferme le livre : la page se referme comme une porte (la transition `porte` de
+  // « Ouvrir », jouée à l'envers : la lumière se réduit à un trait, puis s'éteint : « cette distance qui se crée en
+  // fermant votre porte »). » La lumière de la page se resserre jusqu'à l'embrasure de la porte d'« Ouvrir », le
+  // battant se ferme, le trait qui reste s'éteint. Mouvement réduit : un fondu au noir.
+  function fermerLeLivre(scene) {
+    var s = svgEl('svg', { 'class': 'cloture-porte', viewBox: '0 0 ' + W + ' ' + H, preserveAspectRatio: 'none', 'aria-hidden': 'true', focusable: 'false' }, scene);
+    var id = prefixe(scene, 'fp'), flou = svgEl('filter', { id: id, x: '-50%', y: '-50%', width: '200%', height: '200%' }, svgEl('defs', {}, s));
+    svgEl('feGaussianBlur', { stdDeviation: 16 }, flou);
+    var nuit = svgEl('path', { fill: '#050608', 'fill-rule': 'evenodd' }, s);
+    var halo = svgEl('rect', { fill: '#ffe9bd', opacity: 0, filter: 'url(#' + id + ')' }, s);
+    var BORD = 'M-80,-80H' + (W + 80) + 'V' + (H + 80) + 'H-80Z', EMBRASURE = [470, 560, 260, 560];
+    function ouverture(r) {
+      nuit.setAttribute('d', BORD + (r && r[2] > 0.2 ? 'M' + f1(r[0]) + ',' + f1(r[1]) + 'h' + f1(r[2]) + 'v' + f1(r[3]) + 'h' + f1(-r[2]) + 'Z' : ''));
+    }
+    if (calme) {
+      ouverture(null); opacite(nuit, 0);
+      return animerPage(scene, 700, 700, function (x) { opacite(nuit, x); }).then(function () { return attendreVraiment(250); });
+    }
+    ouverture(PLEIN);
+    return Fx.animer(scene, 1900, function (x) {
+      var t = x * 1.9, r = melange(PLEIN, EMBRASURE, lisse(borne(t / 0.7)));
+      var l = r[2] * (1 - 0.985 * lent(borne((t - 0.75) / 0.6)));   // le battant se ferme sur ses gonds, à gauche
+      var v = lisse(borne((t - 1.4) / 0.4));                         // le trait s'éteint
+      ouverture(v >= 1 ? null : [r[0], r[1], l * (1 - v), r[3]]);
+      rect(halo, [r[0] - 18, r[1] - 18, l + 36, r[3] + 36]);
+      opacite(halo, 0.5 * lisse(borne((t - 0.55) / 0.4)) * (1 - v));
+    }).then(function () { ouverture(null); opacite(halo, 0); return attendreVraiment(300); });
   }
 
   return { jouer: jouer, config: config, sortir: sortir, speciales: speciales, Lanterne: Lanterne };
