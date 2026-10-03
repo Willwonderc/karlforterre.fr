@@ -3366,4 +3366,371 @@ var Fx6 = (function () {
   };
 })();
 
+// ---------------------------------------------------------------- chapitre 6 (suite) : le froid, l'éclat brisé, les portes vides, la fonte, l'effacement (6.10 à 6.12)
+(function () {
+  // Le grain du papier du livre : une petite tuile de bruit chaud, translucide, fabriquée une fois (des points bruns et
+  // crème de 22 à 48 % d'opacité) ; '' si le navigateur refuse de la dessiner : le papier reste alors uni.
+  var grainDuPapier = null;
+  Fx6.grain = function () {
+    if (grainDuPapier !== null) return grainDuPapier;
+    grainDuPapier = '';
+    try {
+      var c = doc.createElement('canvas'), a = hasard(5);
+      c.width = c.height = 128;
+      var x = c.getContext('2d'), d = x.createImageData(128, 128), i, v;
+      for (i = 0; i < d.data.length; i += 4) {
+        v = 150 + a() * 90;
+        d.data[i] = v; d.data[i + 1] = v * 0.95; d.data[i + 2] = v * 0.84; d.data[i + 3] = 20 + a() * 28;
+      }
+      x.putImageData(d, 0, 0);
+      grainDuPapier = c.toDataURL('image/png');
+    } catch (err) { grainDuPapier = ''; }
+    return grainDuPapier;
+  };
+  // Le panneau de texte prend le ton du papier (`fond="clair"`), comme avec `decor`.
+  function ton(scene, fond) {
+    var t = $('.texte', scene);
+    if (!t) return;
+    if (fond === 'clair') t.classList.add('clair'); else if (fond === 'sombre') t.classList.remove('clair');
+  }
+  // Un cadre de porte à l'encre, comme celui du geste `portes` (mecaniques.js) : trois montants aux bords irréguliers.
+  function montant(parent, rnd, x1, y1, x2, y2, ep) {
+    var L = Math.hypot(x2 - x1, y2 - y1), ux = (x2 - x1) / L, uy = (y2 - y1) / L, vx = -uy, vy = ux, c1 = [], c2 = [], m = 10;
+    for (var i = 0; i <= m; i++) {
+      var t = i / m, e = ep * (0.75 + 0.5 * rnd()) / 2, x = x1 + ux * L * t, y = y1 + uy * L * t;
+      c1.push([x + vx * e, y + vy * e]); c2.unshift([x - vx * e, y - vy * e]);
+    }
+    return svgEl('path', { d: Gestes.courbe(c1.concat(c2), true), fill: Fx6.ENCRE }, parent);
+  }
+
+  // ---- refroidir (6.10 à 6.15) : le froid qui s'installe, page après page
+  // Traitement, 6.10 : « Sur « qui commence à rafraîchir la pièce » : `decor` (la main), `net`, et `refroidir` (nouveau) : en 6 s,
+  // la lumière de la photo tourne au froid (−600 K, −10 % de lumière, −15 % de couleur) ; les pages 6.11 à 6.15 s'ouvrent dans
+  // ce froid » ; 6.15 : « `refroidir` (`crepuscule=True` : en 6 s, encore −35 % de lumière et le bleu du soir) » ; « Le graffiti
+  // (6.11), le ruban et les dessins à l'encre n'y sont pas soumis ; le ciel de 6.11 l'est, qui s'assombrit d'un ton ».
+  // Trois degrés : 0 (rien), 1 (le froid), 2 (le crépuscule). Le froid est un filtre posé sur les plans de photo de la page
+  // (`data-genre` « photo », moins le graffiti : Fx.estPhoto), qui suit donc leurs mouvements ; la teinte est celle d'un
+  // « invert · sepia · invert » (le sépia, un chaud, devient un froid), puis la lumière et la couleur. Chaque page s'ouvrant dans
+  // son degré (`instant`), une page lue seule montre le bon. L'image que l'embrasure ouvre dans le placard est aussi froide
+  // (Fx6.refroidi). Le temps suivant n'attend pas les six secondes : ce n'est qu'une couleur qui change. Mouvement réduit :
+  // pareil, une couleur (rien ne bouge).
+  var FROID = [{ s: 0, l: 1, c: 1 }, { s: 0.2, l: 0.9, c: 0.85 }, { s: 0.45, l: 0.585, c: 0.8 }];
+  function filtreFroid(v) {
+    if (v.s < 0.004 && Math.abs(v.l - 1) < 0.004 && Math.abs(v.c - 1) < 0.004) return '';
+    return 'invert(1) sepia(' + v.s.toFixed(3) + ') invert(1) brightness(' + v.l.toFixed(3) + ') saturate(' + v.c.toFixed(3) + ')';
+  }
+  function poserFroid(el, v) { var f = filtreFroid(v); el.style.webkitFilter = f; el.style.filter = f; }
+  // une image que l'effet n'a pas parmi les plans (le dedans du placard) prend le froid du moment
+  Fx6.refroidi = function (scene, el) { var fx = Fx.etat(scene); poserFroid(el, fx.froidV || FROID[fx.froid || 0]); };
+  Effets.refroidir = function (scene, e) {
+    var fx = Fx.etat(scene), vers = e.crepuscule ? 2 : 1, but = FROID[vers], de = fx.froidV || FROID[fx.froid || 0];
+    var cibles = Fx.plans(scene).filter(function (p, i) { return Fx.estPhoto(scene, i); });
+    fx.froid = vers;
+    function appliquer(v) { fx.froidV = v; cibles.forEach(function (p) { poserFroid(p, v); }); }
+    if (e.instant) { appliquer(but); return; }
+    var dernier = -1e9;
+    Fx.animer(scene, 6000, function (p) {
+      var t = lisse(p), maintenant = Date.now();
+      if (p < 1 && maintenant - dernier < 70) return;               // une douzaine de pas par seconde suffisent à un si lent changement
+      dernier = maintenant;
+      appliquer({ s: de.s + (but.s - de.s) * t, l: de.l + (but.l - de.l) * t, c: de.c + (but.c - de.c) * t });
+    });
+    return { suite: Promise.resolve(), fin: Fx.pause(scene, 1500) };
+  };
+
+  // ---- eclat-brise (6.11) : l'éclat de 1.3, fêlé, puis brisé
+  // Traitement, 6.11 : « L'éclat de 1.3 commence (bandes d'encre, de vermillon et d'or, trame, la clé qui arrive en tournoyant, le
+  // fragment en grand) ; à 0,7 s, de fines fêlures blanches courent sur les bandes, la rotation de la clé hoquette, les lettres du
+  // fragment glissent sans se poser ; à 1 s, les bandes se brisent en six éclats qui tombent hors de la page ; la clé va au sac
+  // sans ouvrir de fiche. Environ 1,5 s. Mouvement réduit : une image des bandes fêlées, 1 s. » (`objet`, `fragment` : « les change
+  // en clés ».) L'éclat est celui de Transitions.eclat (mêmes éléments, même feuille de style : les bandes arrivent, la clé tournoie,
+  // la page tremble à 0,9 s), refait ici pour que rien n'y soit joué qu'on ne veuille (le son est celui de `eclat-brise`, qui
+  // comprend l'éclat) ; au bris, les bandes sont remplacées par six éclats découpés dans leur image, qui tombent de plus en plus
+  // vite ; la clé, seule, vole jusqu'au bouton « Objets ». Le sac change à la suite (l'effet `remplacer` du geste).
+  var ECLATS = [[[0, 0], [46, 0], [38, 34], [0, 42]], [[46, 0], [100, 0], [100, 30], [62, 36], [38, 34]], [[0, 42], [38, 34], [50, 64], [22, 100], [0, 100]],
+    [[38, 34], [62, 36], [70, 70], [50, 64]], [[62, 36], [100, 30], [100, 100], [60, 100], [70, 70]], [[50, 64], [70, 70], [60, 100], [22, 100]]];
+  function fetures(boite) {
+    var svg = svgEl('svg', { 'class': 'eclat-fetures', viewBox: '0 0 ' + W + ' ' + H, 'aria-hidden': 'true', focusable: 'false' }, boite), a = hasard(31), traits = [];
+    svg.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;';
+    [[430, 560, 200], [760, 700, 330], [600, 840, 80], [330, 920, 160], [900, 480, 20], [640, 330, 270], [520, 1090, 120], [820, 1170, 300]].forEach(function (o) {
+      var x = o[0], y = o[1], ang = o[2] * Math.PI / 180, pts = [[x, y]], n = 7 + Math.floor(a() * 5);
+      for (var k = 0; k < n; k++) { ang += (a() - 0.5) * 1.1; var l = 45 + a() * 70; x += Math.cos(ang) * l; y += Math.sin(ang) * l; pts.push([x, y]); }
+      traits.push(svgEl('path', { d: 'M' + pts.map(function (p) { return p[0].toFixed(0) + ',' + p[1].toFixed(0); }).join('L'), fill: 'none', stroke: '#fff',
+        'stroke-width': 3.2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 1, 'stroke-dasharray': '1 1', 'stroke-dashoffset': 1, opacity: 0.95 }, svg));
+    });
+    return traits;
+  }
+  Effets['eclat-brise'] = function (scene, e) {
+    var objet = e.objet || 'cle', boite = el('div', { 'class': 'eclat eclat-brise' + (calme ? ' calme' : ''), 'aria-hidden': 'true' }, scene), eclats = null;
+    var bandes = ['b4', 'b1', 'b2', 'b3', 'b5'].map(function (c) { return el('div', { 'class': 'eclat-bande ' + c }, boite); });
+    el('div', { 'class': 'eclat-trame' }, boite);
+    var ciel = svgEl('svg', { 'class': 'eclat-etoiles', viewBox: '0 0 ' + W + ' ' + H }, boite);
+    [[170, 420, 46], [1010, 330, 60], [1080, 1180, 38], [240, 1210, 30], [640, 250, 26], [900, 1420, 22], [120, 820, 20]].forEach(function (p, i) {
+      var st = svgEl('path', { d: etoile(p[2]), fill: i % 3 ? CREME : OR }, svgEl('g', { transform: 'translate(' + p[0] + ' ' + p[1] + ')' }, ciel));
+      st.style.animationDelay = (420 + i * 70) + 'ms';
+    });
+    var cle = el('div', { 'class': 'eclat-objet' }, boite), d = dessin(objet);
+    if (d) cle.appendChild(d);
+    el('p', { 'class': 'eclat-nom' }, boite).textContent = Objets.nom(objet);
+    var fragment = null;
+    if (e.fragment) {
+      // le fragment du livre, lettre à lettre : ses lettres glisseront sans se poser
+      fragment = el('p', { 'class': 'eclat-fragment' }, boite);
+      ('« ' + e.fragment + ' »').split('').forEach(function (c, i) {
+        var s = el('span', { 'class': 'lettre l' + (i % 3) }, fragment);
+        s.textContent = c;
+        if (c === ' ') s.style.whiteSpace = 'pre';
+      });
+    }
+    var traits = fetures(boite);
+    Fx.sonner('eclat-brise');
+    Fx.ensuite(function () { boite.classList.add('joue'); });
+    if (calme) {
+      // une image des bandes fêlées, une seconde
+      traits.forEach(function (t) { t.setAttribute('stroke-dashoffset', 0); });
+      return Fx.pause(scene, 1000).then(function () { boite.style.transition = 'opacity 300ms'; boite.style.opacity = 0; return Fx.pause(scene, 320); })
+        .then(function () { retirer(boite); });
+    }
+    function briser() {
+      // six éclats, découpés dans l'image des bandes, qui prennent leur place puis tombent de plus en plus vite
+      eclats = el('div', { 'class': 'eclat eclat-eclats', 'aria-hidden': 'true' }, scene);
+      var a = hasard(77), pieces = ECLATS.map(function (poly) {
+        var piece = el('div', { 'class': 'eclat-piece' }, eclats), cx = 0, cy = 0;
+        poly.forEach(function (p) { cx += p[0] / poly.length; cy += p[1] / poly.length; });
+        var clip = 'polygon(' + poly.map(function (p) { return p[0] + '% ' + p[1] + '%'; }).join(',') + ')';
+        piece.style.webkitClipPath = clip; piece.style.clipPath = clip;
+        piece.style.transformOrigin = cx.toFixed(1) + '% ' + cy.toFixed(1) + '%';
+        bandes.forEach(function (b) {
+          var c = b.cloneNode(true);
+          c.style.animation = 'none'; c.style.transform = 'skewY(-12deg)';
+          piece.appendChild(c);
+        });
+        return { el: piece, vx: (a() - 0.5) * 0.5, vy: a() * 0.25, w: (a() - 0.5) * 220, retard: a() * 0.07 };
+      });
+      boite.classList.add('casse');
+      traits.forEach(function (t) { t.setAttribute('opacity', 0); });
+      return Fx.animer(scene, 800, function (p) {
+        var t = p * 0.8;
+        pieces.forEach(function (q) {
+          var u = Math.max(0, t - q.retard), y = q.vy * u + 0.5 * 5 * u * u;
+          q.el.style.transform = 'translate(' + (q.vx * u * 100).toFixed(2) + '%,' + (y * 100).toFixed(2) + '%) rotate(' + (q.w * u).toFixed(1) + 'deg)';
+        });
+      });
+    }
+    function envoler() {
+      // la clé, seule, rapetisse puis vole jusqu'au bouton « Objets » (sans fiche : le sac change à la suite, discrètement)
+      var b = Fx.bouton(scene, 'objets'), r = scene.getBoundingClientRect(), k = cle.getBoundingClientRect();
+      if (!b || !r.width || !k.width) { cle.classList.add('parti'); return Fx.pause(scene, 260); }
+      var proxy = el('div', { 'aria-hidden': 'true' }, scene), l = k.width * 0.42, h = k.height * 0.42;
+      proxy.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;width:' + (l / r.width * 100).toFixed(2) + '%;height:' + (h / r.height * 100).toFixed(2) +
+        '%;left:' + ((k.left + k.width / 2 - l / 2 - r.left) / r.width * 100).toFixed(2) + '%;top:' + ((k.top + k.height / 2 - h / 2 - r.top) / r.height * 100).toFixed(2) + '%;';
+      cle.classList.add('parti');
+      return Fx.pause(scene, 240).then(function () { cle.style.visibility = 'hidden'; return Transitions.envol(scene, proxy, b, objet); }).then(function () { retirer(proxy); });
+    }
+    var fin = Fx.pause(scene, 700).then(function () {
+      // 0,7 s : les fêlures courent, la clé hoquette, les lettres du fragment glissent sans se poser
+      cle.classList.add('hoquet');
+      if (fragment) fragment.classList.add('glisse');
+      return Fx.animer(scene, 260, function (p) {
+        traits.forEach(function (t, i) { t.setAttribute('stroke-dashoffset', (1 - lisse(borne(p * 1.35 - i * 0.05))).toFixed(3)); });
+      });
+    }).then(function () { return Fx.pause(scene, 40); })
+      .then(function () { var chute = briser(); return Promise.all([chute, envoler()]); })
+      .then(function () { retirer(boite); retirer(eclats); });
+    return { suite: fin, fin: fin };
+  };
+
+  // ---- portes-vides (6.11, 6.12) : trois portes qui ne mènent nulle part
+  // Traitement, 6.11 : « Trois cadres de porte à l'encre saignent sur la photo, à 0,5 s d'intervalle, et s'ouvrent sur le papier nu
+  // (la couleur du papier du livre, son grain, rien d'autre) ; l'ambiance baisse à chaque ouverture ; une étincelle part vers le carnet
+  // et meurt. Les cadres restent : les premières cicatrices. Environ 2,5 s. `instant=True` (6.12) : les cadres sont déjà là, ouverts
+  // sur le papier, à l'ouverture de la page. » Les cadres sont ceux du geste `portes` de 6.12 (même taille, 360 × 600, mêmes montants
+  // d'encre, mêmes battants qui s'ouvrent, même classe « cicatrice-porte » que l'effet `effacement` fonce), mais ils s'ouvrent sur du
+  // papier. Mouvement réduit : les cadres paraissent ouverts, un par un, en fondu.
+  var PORTES_VIDES = [[250, 410], [610, 480], [965, 380]];
+  Effets['portes-vides'] = function (scene, e) {
+    var n = Math.min(e.n || 3, 3), L = 360, Hh = 600, i;
+    var svg = Gestes.coucheSous(scene, 'portes-vides-calque', true), defs = svgEl('defs', {}, svg);
+    var grain = Fx6.grain(), idp = FxA.id('papier');
+    if (grain) Gestes.image(svgEl('pattern', { id: idp, width: 128, height: 128, patternUnits: 'userSpaceOnUse' }, defs), grain, { x: 0, y: 0, width: 128, height: 128 });
+    var rnd = hasard(53), portes = [];
+    for (i = 0; i < n; i++) {
+      var cx = PORTES_VIDES[i][0], cy = PORTES_VIDES[i][1], x0 = cx - L / 2, y0 = cy - Hh / 2, id = FxA.id('pv');
+      var encre = Fx6.filtreEncre(svg, { x: x0 - 70, y: y0 - 70, width: L + 140, height: Hh + 140, freq: 0.035, octaves: 2, echelle: 10, graine: 9 });
+      var g = svgEl('g', { 'class': 'porte-encre cicatrice-porte porte-vide' }, svg);
+      var clip = svgEl('clipPath', { id: id + 'c' }, defs);
+      svgEl('rect', { x: x0, y: y0, width: L, height: Hh }, clip);
+      var papier = svgEl('g', { 'clip-path': 'url(#' + id + 'c)' }, g);
+      svgEl('rect', { x: x0, y: y0, width: L, height: Hh, fill: Fx6.PAPIER }, papier);
+      if (grain) svgEl('rect', { x: x0, y: y0, width: L, height: Hh, fill: 'url(#' + idp + ')' }, papier);
+      var gauche = svgEl('rect', { x: x0, y: y0, width: L / 2, height: Hh, fill: '#141629' }, g);
+      var droite = svgEl('rect', { x: cx, y: y0, width: L / 2, height: Hh, fill: '#101223' }, g);
+      var cadre = svgEl('g', { filter: 'url(#' + encre + ')', 'class': 'cadre-encre' }, g);
+      montant(cadre, rnd, x0 - 8, y0 + Hh + 10, x0 - 6, y0 - 8, 30);
+      montant(cadre, rnd, x0 + L + 8, y0 + Hh + 10, x0 + L + 6, y0 - 8, 30);
+      montant(cadre, rnd, x0 - 30, y0 - 12, x0 + L + 30, y0 - 16, 36);
+      // le cadre saigne depuis le centre de la porte
+      var mq = svgEl('mask', { id: id + 'm', maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: W, height: H }, defs);
+      var tache = svgEl('circle', { cx: cx, cy: cy, r: 0, fill: '#fff', filter: 'url(#' + encre + ')' }, mq);
+      g.setAttribute('mask', 'url(#' + id + 'm)');
+      portes.push({ g: g, gauche: gauche, droite: droite, tache: tache, x0: x0, cx: cx, cy: cy, L: L, Hh: Hh });
+    }
+    var rMax = Math.hypot(L, Hh) + 60;
+    function ouvertes(p, t) {                       // t : 0 (fermés) à 1 (ouverts)
+      var w = p.L / 2 * (1 - 0.92 * t);
+      p.gauche.setAttribute('width', w.toFixed(1)); p.droite.setAttribute('width', w.toFixed(1)); p.droite.setAttribute('x', (p.x0 + p.L - w).toFixed(1));
+      p.gauche.setAttribute('opacity', (1 - 0.35 * t).toFixed(3)); p.droite.setAttribute('opacity', (1 - 0.35 * t).toFixed(3));
+    }
+    if (e.instant) {
+      portes.forEach(function (p) { p.tache.setAttribute('r', rMax); ouvertes(p, 1); });
+      // l'ambiance est déjà tombée (la page a mis la sienne à l'ouverture, un instant plus tard : on la baisse alors)
+      Fx.minuterie(scene, function () { Fx.niveauAmbiance(0.34, 600); }, 700);
+      return;
+    }
+    var vers = (function () { var b = $('.barre .carnet-bouton', scene); return b && !b.hidden ? Gestes.centreDe(b, scene) : null; })() || [1100, 60];
+    var suite = Promise.resolve();
+    portes.forEach(function (p, k) {
+      suite = suite.then(function () {
+        if (calme) {
+          p.tache.setAttribute('r', rMax); ouvertes(p, 1);
+          p.g.style.opacity = 0; p.g.style.transition = 'opacity 400ms';
+          Fx.ensuite(function () { p.g.style.opacity = 1; });
+          Fx.sonner('portes-vides'); Fx.niveauAmbiance(1 - 0.22 * (k + 1), 400);
+          return Fx.pause(scene, 450);
+        }
+        Gestes.etincelle(svg, [p.cx, p.cy - p.Hh / 2], vers, { jusqua: 0.5, duree: 900 });
+        // 0,5 s d'une porte à l'autre : le cadre saigne (0,3 s), les battants s'ouvrent sur le papier (0,3 s)
+        Fx.animer(scene, 300, function (q) { p.tache.setAttribute('r', (rMax * vif(q)).toFixed(1)); })
+          .then(function () {
+            Fx.sonner('portes-vides'); Fx.niveauAmbiance(1 - 0.22 * (k + 1), 500);
+            return Fx.animer(scene, 300, function (q) { ouvertes(p, vif(q)); });
+          });
+        return Fx.pause(scene, 500);
+      });
+    });
+    return suite.then(function () { return Fx.pause(scene, 600); });
+  };
+
+  // ---- fonte (6.12, `vue="dehors"`) : les binocles fondent en encre
+  // Traitement, 6.12 : « La fonte : au milieu de l'image, les binocles dessinés (ceux de leur fiche) fondent en une encre noire et
+  // visqueuse qui s'étire, goutte sur la photo et y laisse des taches, se rétracte, s'affine en clé » ; synthèse : « `vue="dehors"` :
+  // les binocles fondent en encre noire et visqueuse, trois ou quatre gouttes tachent la photo, la masse s'affine en clé et s'efface
+  // (6.12) ; 2 s ; mouvement réduit : l'objet, puis la clé, et les taches. » (La fonte vue du dedans, celle de 3.4, est dans la
+  // scène `plier`.) L'encre est une grappe de boules que le filtre « goutte » (un flou, puis un seuil sur la transparence) fait fusionner
+  // en une matière qui colle : elle suit le dessin des binocles, s'affaisse (les boules du bas plus que celles du haut), lâche quatre
+  // gouttes qui tombent et tachent la photo (les taches restent, sous les cicatrices), puis se rétracte en une clé noire, qui s'efface.
+  Effets.fonte = function (scene, e) {
+    if (e.vue !== 'dehors') return;
+    var C = [600, 700], k = 1.4, objet = e.objet || 'binocles';
+    var svg = Fx.dessous(scene, 'fonte', 3, true), defs = $('defs', svg) || svgEl('defs', {}, svg), idg = FxA.id('goutte'), idn = FxA.id('noir');
+    var f = svgEl('filter', { id: idg, filterUnits: 'userSpaceOnUse', x: 200, y: 460, width: 800, height: 700, 'color-interpolation-filters': 'sRGB' }, defs);
+    svgEl('feGaussianBlur', { 'in': 'SourceGraphic', stdDeviation: 8, result: 'flou' }, f);
+    svgEl('feColorMatrix', { 'in': 'flou', mode: 'matrix', values: '1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -9' }, f);
+    // la clé en silhouette noire : tout ce que le dessin a de couleur devient de l'encre
+    var fn = svgEl('filter', { id: idn, 'color-interpolation-filters': 'sRGB' }, defs);
+    svgEl('feColorMatrix', { mode: 'matrix', values: '0 0 0 0 0.04  0 0 0 0 0.04  0 0 0 0 0.07  0 0 0 1 0' }, fn);
+    var taches = svgEl('g', { filter: 'url(#' + idg + ')', fill: '#0b0b12' }, svg);
+    var masse = svgEl('g', { filter: 'url(#' + idg + ')', fill: '#0b0b12' }, svg);
+    var figure = svgEl('g', {}, svg), lunettes = Gestes.figurine(figure, objet, C[0], C[1] - 4, 600 * k);
+    var cleNoire = svgEl('g', { filter: 'url(#' + idn + ')', opacity: 0 }, svg), cle = Gestes.figurine(cleNoire, 'cle', C[0], C[1] + 60, 380);
+    if (cle) cle.setAttribute('transform', 'rotate(-14 ' + C[0] + ' ' + (C[1] + 60) + ')');
+    // la grappe : les deux verres (seize boules chacun), le pont, les deux branches jusqu'aux oreilles
+    var balles = [], a = hasard(41);
+    function balle(x, y, r) { balles.push({ c: svgEl('circle', { cx: x, cy: y, r: r }, masse), x0: x, y0: y, r0: r, a: 0.85 + 0.3 * a(), b: a(), tombe: false, vy: 0 }); }
+    [-1, 1].forEach(function (s) {
+      for (var i = 0; i < 16; i++) { var an = i / 16 * 2 * Math.PI; balle(C[0] + s * 88 * k + 60 * k * Math.cos(an), C[1] + 60 * k * Math.sin(an), 11); }
+      [[146, -10], [154, -27], [165, -48], [177, -72], [190, -95], [197, -106]].forEach(function (p) { balle(C[0] + s * p[0] * k, C[1] + p[1] * k, 6.5); });
+    });
+    [[-30, -6], [-15, -22], [0, -26], [15, -22], [30, -6]].forEach(function (p) { balle(C[0] + p[0] * k, C[1] + p[1] * k, 8); });
+    var yMin = 1e9, yMax = -1e9;
+    balles.forEach(function (b) { yMin = Math.min(yMin, b.y0); yMax = Math.max(yMax, b.y0); });
+    balles.forEach(function (b) { b.lourd = (b.y0 - yMin) / (yMax - yMin); b.x = b.x0; b.y = b.y0; b.r = b.r0; });
+    masse.setAttribute('opacity', 0);
+    // les taches : une grappe aplatie par goutte, qui reste
+    var posees = [[455, 975], [615, 1030], [765, 950], [540, 1070]];
+    function tacher(i) {
+      var p = posees[i], g = svgEl('g', {}, taches);
+      svgEl('ellipse', { cx: p[0], cy: p[1], rx: 38 + 6 * (i % 3), ry: 12 + 2 * (i % 3) }, g);
+      svgEl('ellipse', { cx: p[0] - 36, cy: p[1] + 5, rx: 15, ry: 7 }, g);
+      svgEl('ellipse', { cx: p[0] + 40, cy: p[1] - 4, rx: 11, ry: 5 }, g);
+      svgEl('circle', { cx: p[0] + 6, cy: p[1] - 18, r: 5 }, g);
+    }
+    Fx.sonner('fonte-visqueuse');
+    if (calme) {
+      // l'objet, puis la clé, et les taches : des fondus
+      figure.setAttribute('opacity', 0);
+      var lancer = Fx.animer(scene, 300, function (p) { figure.setAttribute('opacity', lisse(p).toFixed(3)); });
+      return lancer.then(function () { return Fx.pause(scene, 500); })
+        .then(function () { return Fx.animer(scene, 400, function (p) { figure.setAttribute('opacity', (1 - lisse(p)).toFixed(3)); cleNoire.setAttribute('opacity', lisse(p).toFixed(3)); }); })
+        .then(function () { for (var i = 0; i < 4; i++) tacher(i); taches.setAttribute('opacity', 0); return Fx.animer(scene, 400, function (p) { taches.setAttribute('opacity', lisse(p).toFixed(3)); }); })
+        .then(function () { return Fx.pause(scene, 400); })
+        .then(function () { return Fx.animer(scene, 300, function (p) { cleNoire.setAttribute('opacity', (1 - lisse(p)).toFixed(3)); }); });
+    }
+    // les gouttes : quatre boules du bas, lâchées à 0,95 s, 1,1 s, 1,25 s et 1,4 s
+    var bas = balles.filter(function (b) { return b.lourd > 0.45 && b.r0 > 9; }).sort(function (u, v) { return u.x0 - v.x0; });
+    var lachees = [bas[1], bas[Math.floor(bas.length / 2)], bas[Math.floor(bas.length * 0.62)], bas[bas.length - 2]].filter(Boolean);
+    var departs = [0.95, 1.1, 1.25, 1.4];
+    var tri = balles.slice().sort(function (u, v) { return u.x0 - v.x0; });
+    tri.forEach(function (b, i) { b.rang = i / (tri.length - 1); });
+    var fini = null, fin = new Promise(function (ok) { fini = ok; });
+    Fx.minuterie(scene, fini, 3400, true);
+    Fx.tache(scene, function (t, dt) {
+      // les binocles paraissent, frissonnent, puis passent à l'encre (fondu croisé avec la grappe)
+      figure.setAttribute('opacity', (t < 0.45 ? lisse(t / 0.45) : 1 - lisse(borne((t - 0.35) / 0.5))).toFixed(3));
+      if (t < 0.45) figure.setAttribute('transform', 'translate(' + (1.6 * Math.sin(t * 90)).toFixed(2) + ' ' + (1.2 * Math.sin(t * 70)).toFixed(2) + ')');
+      else figure.removeAttribute('transform');
+      masse.setAttribute('opacity', (lisse(borne((t - 0.35) / 0.5)) * (1 - lisse(borne((t - 1.65) / 0.35)))).toFixed(3));
+      var q = borne((t - 0.5) / 0.95), r = lisse(borne((t - 1.25) / 0.6));
+      balles.forEach(function (b) {
+        if (b.tombe) {
+          // la goutte tombe de plus en plus vite et tache la photo là où elle arrive
+          b.vy += 2400 * dt; b.y += b.vy * dt;
+          b.c.setAttribute('cy', b.y.toFixed(1));
+          if (b.y >= b.sol && !b.posee) { b.posee = true; retirer(b.c); tacher(b.num); }
+          return;
+        }
+        var x = b.x0 + (C[0] - b.x0) * 0.22 * q * q, y = b.y0 + q * q * (50 + 230 * b.lourd) * b.a, rr = b.r0 * (1 + 0.65 * q);
+        // la masse se rétracte vers une ligne, qui s'affine en clé
+        x += (C[0] + (b.rang - 0.5) * 300 - x) * r; y += (C[1] + 60 + (b.b - 0.5) * 14 - y) * r; rr *= 1 - 0.45 * r;
+        b.x = x; b.y = y; b.r = rr;
+        b.c.setAttribute('cx', x.toFixed(1)); b.c.setAttribute('cy', y.toFixed(1)); b.c.setAttribute('r', rr.toFixed(1));
+      });
+      lachees.forEach(function (b, i) {
+        if (t >= departs[i] && !b.tombe) { b.tombe = true; b.num = i; b.sol = posees[i][1]; b.vy = 40; }
+      });
+      cleNoire.setAttribute('opacity', (lisse(borne((t - 1.65) / 0.35)) * (1 - lisse(borne((t - 2.0) / 0.4)))).toFixed(3));
+      if (t > 2.45) {
+        lachees.forEach(function (b) { if (!b.posee) { b.posee = true; retirer(b.c); tacher(b.num); } });
+        retirer(masse); retirer(figure); retirer(cleNoire);
+        fini();
+        return false;
+      }
+    });
+    return { suite: fin, fin: fin };
+  };
+
+  // ---- effacement (6.12) : la photo pâlit jusqu'au papier, il ne reste que l'encre
+  // Traitement, 6.12 : « L'effacement : la photo pâlit jusqu'au papier ; restent sur la page blanche les neuf cadres d'encre, plus
+  // noirs que jamais » ; synthèse : « La photo pâlit jusqu'à la couleur du papier ; les cicatrices d'encre restent et foncent de 10 % ;
+  // le panneau passe au clair ; 3 s ; mouvement réduit : 1 s ». Une feuille de la couleur et du grain du papier du livre, posée sur
+  // la photo (rang 3 de l'image : sous l'encre et les dessins), gagne en 3 s ; les cadres d'encre (« cicatrice-porte », ceux des
+  // portes vides et ceux du geste `portes`) sont au-dessus : leurs battants foncent de 10 % ; le panneau passe au clair (`fond`)
+  // quand la feuille a gagné plus de la moitié. Les taches de la fonte restent, elles aussi.
+  Effets.effacement = function (scene, e) {
+    var calque = Fx.calque(scene, 'papier', 3, false), feuille = el('div', { 'class': 'effacement-papier' }, calque), grain = Fx6.grain();
+    feuille.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;background-color:' + Fx6.PAPIER +
+      (grain ? ';background-image:url(' + grain + ');background-size:128px 128px' : '') + ';';
+    var battants = [], fait = false;
+    $$('.cicatrice-porte', scene).forEach(function (g) {
+      $$('rect[fill="#141629"], rect[fill="#101223"]', g).forEach(function (r) { battants.push({ r: r, o: parseFloat(r.getAttribute('opacity')) }); });
+    });
+    return Fx.animer(scene, calme ? 1000 : 3000, function (p) {
+      var t = lisse(p);
+      feuille.style.opacity = t.toFixed(3);
+      battants.forEach(function (b) { b.r.setAttribute('opacity', Math.min(1, (isNaN(b.o) ? 1 : b.o) + 0.1 * t).toFixed(3)); });
+      if (!fait && p > 0.55) { fait = true; if (e.fond) ton(scene, e.fond); }
+    });
+  };
+})();
+
 // ================================================================ effets nouveaux, chapitres 6 et 7 (fin)
