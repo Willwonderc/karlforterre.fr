@@ -1977,6 +1977,84 @@ var FxA = (function () {
 /* Les effets qu'appellent les réponses de Karl (2.7 : Darshan commande le dessert ; 1.5 : Jivan,
    « la vie »), écrits avec les scènes ; chacun juste au-dessus de la ligne « (fin) » ci-dessous. */
 (function () {
+  // ---------------------------------------------------------------- vie (1.5)
+  // Réponse 16 de Karl (30 septembre) : « Jivan n'est nommé nulle part avant le texte ; le sens de son nom, « la
+  // vie », est voulu : un effet en lien avec lui, qui reste élégant (1.5) ».
+  // « Un vieil homme au short et au marcel de lin le rejoint. » : avec lui entre le temps des vivants. L'encre
+  // d'Aluva était immobile ; à son arrivée, le soleil du matin passe entre les palmes : des taches de lumière
+  // chaude gagnent le jardin, du fond du chemin d'où il vient jusqu'à nous, et bougent doucement, comme les
+  // feuilles sous un vent léger. Elles restent sur son filet pendant qu'il s'installe et travaille, et s'apaisent
+  // quand il parle (`jusqua` : le temps où elles s'éteignent, 3 : « l'homme entame la conversation » ; la page
+  // suivante reste sur le même plan, sans elles). La même lumière vieillit en 1.8 (« As-tu déjà pensé à
+  // vieillir ? ») et retombe en 1.9, au crépuscule, quand le texte le nomme enfin : le jour d'une vie. Ni nom, ni
+  // silhouette, ni or (l'or est la magie de Darshan) : le soleil d'un matin, sur le bas de l'image, que le panneau
+  // clair laisse voir. Mouvement réduit : les taches paraissent en fondu, immobiles.
+  var GRAPPES_VIE = [[230, 1690, 5], [580, 1500, 4], [210, 1290, 3], [990, 1350, 4], [700, 1230, 3],
+    [930, 1700, 4], [1040, 1090, 2], [330, 1110, 2]];          // [x, y, taches] : le chemin, l'herbe, le sous-bois
+  Effets.vie = function (scene, e) {
+    var svg = Fx.calque(scene, 'vie', 5, true), h = Fx.alea(16), jusqua = e.jusqua === undefined ? 3 : e.jusqua;
+    var soleil = FxA.degrade(svg, 'radialGradient', { cx: 0.5, cy: 0.5, r: 0.5 },
+      [[0, '#fff0b8', 0.46], [0.45, '#ffeeb2', 0.4], [1, '#ffe8a4', 0]]);
+    // l'ombre des feuilles, à peine : elle donne aux taches leur éclat
+    var ombre = svgEl('rect', { x: -40, y: -40, width: W + 80, height: H + 80, fill: '#141e16', opacity: 0 }, svg);
+    var grappes = GRAPPES_VIE.map(function (g) {
+      var gr = { x: g[0], y: g[1], ax: Fx.entre(h, 10, 22), ay: Fx.entre(h, 4, 9), p: Fx.entre(h, 6, 11), ph: Fx.entre(h, 0, 6.28),
+        retard: Math.max(0, (g[1] - 1080) / 700 * 1.6), el: svgEl('g', {}, svg), taches: [] };
+      for (var k = 0; k < g[2]; k++) {
+        var rx = Fx.entre(h, 40, 95);
+        var t = { dx: Fx.entre(h, -90, 90), dy: Fx.entre(h, -30, 30), rot: Fx.entre(h, -12, 12), a: Fx.entre(h, 0.55, 1),
+          jx: Fx.entre(h, 4, 8), q: Fx.entre(h, 3, 6), qh: Fx.entre(h, 0, 6.28) };
+        t.el = svgEl('ellipse', { cx: 0, cy: 0, rx: rx.toFixed(1), ry: (rx * Fx.entre(h, 0.42, 0.62)).toFixed(1), fill: soleil, opacity: 0 }, gr.el);
+        gr.taches.push(t);
+      }
+      return gr;
+    });
+    function poser(temps) {
+      grappes.forEach(function (g) {
+        var x = g.x + (calme ? 0 : g.ax * Math.sin(temps / g.p * 6.2832 + g.ph)), y = g.y + (calme ? 0 : g.ay * Math.sin(temps / g.p * 4.4 + g.ph));
+        g.taches.forEach(function (t) {
+          var j = calme ? 0 : t.jx * Math.sin(temps / t.q * 6.2832 + t.qh);
+          t.el.setAttribute('transform', 'translate(' + (x + t.dx + j).toFixed(1) + ' ' + (y + t.dy + j * 0.4).toFixed(1) + ') rotate(' + t.rot.toFixed(1) + ')');
+        });
+      });
+    }
+    function eclairer(entree, force, temps) {
+      ombre.setAttribute('opacity', (0.09 * entree.ombre * force).toFixed(3));
+      grappes.forEach(function (g) {
+        var v = entree.grappe(g);
+        g.taches.forEach(function (t) {
+          var vie = calme ? 1 : 0.78 + 0.22 * Math.sin(temps / t.q * 6.2832 + t.qh * 2);
+          t.el.setAttribute('opacity', (t.a * v * vie * force).toFixed(3));
+        });
+      });
+    }
+    var force = 1, eteinte = false;
+    function eteindre() {
+      if (eteinte) return;
+      eteinte = true;
+      Fx.animer(scene, calme ? 900 : 2600, function (x) {
+        force = 1 - lisse(x);
+        if (calme) eclairer({ ombre: 1, grappe: function () { return 1; } }, force, 0);
+      }).then(function () { retirer(svg); });
+    }
+    poser(0);
+    if (calme) {
+      Fx.animer(scene, 1200, function (x) { if (!eteinte) eclairer({ ombre: lisse(x), grappe: function () { return lisse(x); } }, 1, 0); });
+    } else {
+      // le soleil gagne le jardin du fond vers nous (1,6 s), puis la lumière vit
+      Fx.tache(scene, function (temps) {
+        if (eteinte && force <= 0) return false;
+        poser(temps);
+        eclairer({ ombre: lisse(temps / 2), grappe: function (g) { return lisse((temps - g.retard) / 1.3); } }, force, temps);
+      });
+    }
+    Fx.surTemps(scene, function (t, i) {
+      if (i < jusqua) return true;
+      eteindre();
+      return false;
+    }, true);
+  };
+
   // ---------------------------------------------------------------- commande (2.7)
   // Réponse 13 de Karl (30 septembre) : « c'est Darshan qui commande le dessert et pense « Si j'avais su » (2.7) :
   // le lecteur passe la commande sur une carte, un geste de plus ».

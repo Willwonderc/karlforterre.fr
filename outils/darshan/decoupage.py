@@ -203,7 +203,8 @@ PRODUCTION = [
       "poème : calque d'arbres fixe, poussière d'or, fil d'or (frontiere) et course des astres (course)",
       "toit : la voix lettre à lettre (voix) ; l'appel, la quinte à vide (son appel)",
       "pigeonnier : tourner (260 unités), la clé portée vers le haut, le jour et l'autre côté (jour, autre-cote)",
-      "chaleur d'Aluva ; moustache de mousse (tracer) ; naissance du carnet", "clin d'œil d'encre (clin)",
+      "chaleur d'Aluva ; moustache de mousse (tracer) ; naissance du carnet",
+      "la lumière du matin qui se met à vivre à l'arrivée du vieil homme (vie)", "clin d'œil d'encre (clin)",
       "reflets de Paris dans le fleuve (remuer, reflet) et fragment de la ballade sous l'eau (melodie)",
       "lumière qui vieillit, silence du tanpura, chemise boutonnée (toucher, lin)",
       "cabane à kayaks dessinée, en or, et son jour ; salut de la vue (camera)",
@@ -518,14 +519,18 @@ TABLEAUX = [
     T("1.5", "Le vieil homme", (25, None), "Aluva, au bord du fleuve", "Darshan", "fondu",
       "Le chemin sous les palmes, d'où vient le vieil homme ; puis son filet, en gros plan.",
       photos=[(34342144, "encre"), (34956319, "encre")],
-      moments=[("L’individu dépose à côté de lui un filet", "on passe au filet, en gros plan"),
+      moments=[("Un vieil homme au short", "la lumière du matin se met à vivre entre les palmes : des taches de soleil "
+                                           "gagnent le chemin d'où il vient, et bougent doucement jusqu'à ce qu'il parle"),
+               ("L’individu dépose à côté de lui un filet", "on passe au filet, en gros plan"),
                ("Il tire jusqu’à lui un tabouret rafistolé",
                 "le raclement du tabouret sur les planches ; puis les maquereaux plongent dans le tonneau"),
                ("l’homme entame la conversation",
                 "premier dialogue du livre : les répliques paraissent une à une, le vieil homme en clair, Darshan en or")],
       son="kerala ; tabouret, poissons",
       note="Le vieil homme n'a pas encore de nom : le livre ne le donne qu'à la dernière phrase du chapitre. "
-           "Le titre de cette page, « Jivan », devient « Le vieil homme ».",
+           "Le titre de cette page, « Jivan », devient « Le vieil homme ». Le sens de son nom, « la vie », est voulu "
+           "(réponse 16 de Karl) : le temps des vivants entre avec lui ; la même lumière vieillit en 1.8 et retombe en "
+           "1.9, quand le texte le nomme.",
       reperages=[("S9", "Un tabouret de bois rafistolé sur un ponton, un filet où brillent trois maquereaux ; "
                         "lumière du matin, cadre en hauteur")]),
     T("1.6", "L'esprit local", (30, None), "Aluva", "Darshan", "—",

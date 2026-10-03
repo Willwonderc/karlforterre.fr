@@ -339,8 +339,11 @@ SCENES = {
                        trait="mousse", flou=True, effets=[E("son", effet="coutelas", n=3)])],
              moments=[E("poussiere"), E("chaleur", zone=[200, 880, 1000, 1500]),
                       E("eclabousse", x=938, y=1470), E("son", effet="bombe")]),
+    # Réponse 16 de Karl : le sens du nom de Jivan, « la vie », est voulu ; il n'est nommé qu'en 1.9. À son arrivée,
+    # la lumière du matin se met à vivre (effet vie) ; elle vieillit en 1.8 et retombe en 1.9, quand le texte le nomme.
     "1.5": S(["palmes", "filet"], texte="haut clair",
-             moments=[E("decor", i=1, fondu=1000),                                      # « on passe au filet (fondu, 1 s) »
+             moments=[E("vie", jusqua=3),                                               # jusqu'à « l'homme entame la conversation »
+                      E("decor", i=1, fondu=1000),                                      # « on passe au filet (fondu, 1 s) »
                       [E("son", effet="tabouret"), E("eclabousse", x=600, y=1720, delai=1600)],
                       None]),
     "1.6": S(["filet", "periyar"], texte="haut clair",
