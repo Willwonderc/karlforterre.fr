@@ -382,8 +382,8 @@ SCENES = {
     "2.3": S(["rencontre", "rencontre-encre"], texte="bas clair",
              debut=[E("coeur", continu=True, tempo=96, force=0.5)],
              coupes={44: ["Toute la grâce", "Son nez fin", "Son nom suffit", "Je ne dors pas"]},
-             moments=[[E("decor", i=1, fondu=2800), E("voix", lettres=True, couleur="encre", eclat=False),
-                       E("interface", voile=True)]]),
+             moments=[[E("voix", lettres=True, couleur="encre", eclat=False), E("interface", voile=True),    # la voix s'écrit pendant que
+                       E("decor", i=1, fondu=2800)]]),                                                       # la photo passe à l'encre
     # le réveil n'est pas un geste : le toucher qui fait paraître « — Quoi ?! » le déclenche
     "2.4": S(["rencontre-encre", "resto-table"], texte="bas clair",
              debut=[E("interface", voile=True), E("coeur", continu=True, tempo=96, force=0.4)],
@@ -391,7 +391,7 @@ SCENES = {
                       [E("decor", i=1, par="obturateur", fond="sombre"), E("net"), E("coeur", arret=True)]]),
     "2.5": S(["resto-table", "resto-telephone"],
              coupes={51: ["Tu n’as pas de téléphone"], 52: ["Qu’y a-t-il de plus romantique", "De toute façon"]},
-             moments=[E("decor", i=1), E("decor", i=0)]),
+             moments=[E("decor", i=1, fondu=0), E("decor", i=0, fondu=0)]),     # deux coupes franches (traitement de 2.5)
     "2.6": S(["resto-table", "resto-tartare"],
              gestes=[G("glisser", sens="bas",
                        effets=[E("decor", i=1, camera="baisse"), E("son", effet="fourchette", delai=900)])]),

@@ -722,6 +722,13 @@ def carte_du_ciel():
     }
 
 
+def svgs_des_decors():
+    """Les dessins SVG que decors.py range avec les décors et que le moteur trace trait par trait (l'esquisse de
+    2.10) : leur texte même, pour que la page n'ait pas à les lire par le réseau (une liseuse, ou file://, peut refuser)."""
+    dossier = SRC / "img" / "decors"
+    return {f.stem: f.read_text(encoding="utf-8") for f in sorted(dossier.glob("*.svg"))} if dossier.exists() else {}
+
+
 def donnees_communes(pages):
     chapitres = []
     for c, (titre, _) in decoupage.CHAPITRES.items():
@@ -729,7 +736,7 @@ def donnees_communes(pages):
         rang = next(pg["rang"] for pg in pages if pg["t"]["n"] == n)
         chapitres.append({"titre": titre, "tableau": n, "rang": rang})
     return {"ui": UI, "objets": OBJETS, "familles": FAMILLES, "carte": carte_du_ciel(), "chapitres": chapitres,
-            "images": images_des_decors(), "pages": len(pages), "derniere": pages[-1]["t"]["n"]}
+            "images": images_des_decors(), "svgs": svgs_des_decors(), "pages": len(pages), "derniere": pages[-1]["t"]["n"]}
 
 
 def fichier_donnees(pages):

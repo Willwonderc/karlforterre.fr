@@ -626,6 +626,20 @@ html:not(.jeu) .decor .plan.sans-script { opacity: 1; }
 .eclat.court:not(.calme).joue .eclat-nom { animation: eclat-nom 320ms cubic-bezier(.2, 1.5, .4, 1) both; }
 .eclat.court:not(.calme).sort .eclat-nom { animation: eclat-nom-sort 300ms ease-in both; }
 
+/* ---- chapitre 2 : les lueurs de la balance (2.2), les mots du compte (2.9…), le temps assourdi (2.4) */
+.lueur-balance { border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, rgba(255, 244, 222, 0.95) 0%, rgba(255, 236, 200, 0.55) 36%, rgba(255, 230, 190, 0) 70%); }
+/* « les mots s'éclairent dans la phrase » : or sur le sombre, brun doré sur le clair, blanc chez Julie */
+.mot-compte { transition: color 700ms ease, text-shadow 700ms ease; }
+.mot-compte.allume { color: #fff0c0; text-shadow: 0 0 1.4cqw rgba(255, 200, 110, 0.9), var(--ombre-texte); }
+.texte.clair .mot-compte.allume { color: #7a4a10; text-shadow: 0 0 1.2cqw rgba(244, 197, 106, 0.95); }
+.monde-julie .mot-compte.allume { color: #ffffff; text-shadow: 0 0 1.2cqw rgba(255, 255, 255, 0.85), var(--ombre-texte); }
+.monde-julie .texte.clair .mot-compte.allume { color: #1b1b1b; text-shadow: 0 0 1cqw rgba(255, 255, 255, 0.9); }
+.calme .mot-compte { transition: none; }
+/* 2.4 : « le temps s'affiche atténué (opacité 0,55, flou de 0,6 px), lisible, jusqu'à net » */
+.jeu .texte-assourdi .texte .temps.vu { opacity: 0.55; filter: blur(0.6px); }
+.calme.jeu .texte-assourdi .texte .temps.vu { filter: none; }
+
 /* ============================================================ effets nouveaux, chapitres 0 à 3 (fin) */
 
 /* ============================================================ effets nouveaux, chapitres 4 à 8 (début)

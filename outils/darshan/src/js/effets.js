@@ -1437,6 +1437,430 @@ var FxA = (function () {
   };
 })();
 
+// ================================================================ chapitre 2 : le restaurant, Montsouris (2.1 à 2.10)
+(function () {
+  // ---------------------------------------------------------------- balance (2.2)
+  // « Son cœur balançait tandis que celui de Darshan devenait fébrile » : sur les vitrines, deux lueurs crème alternent
+  // lentement (période 1,9 s : le choix de Julie, guêtres ou robe), avec un balancier feutré, un tic à gauche, un tic à
+  // droite ; `fievre` : la chamade de Darshan monte à 132 en 4 s. Jusqu'à la fin de la page. Mouvement réduit : les
+  // lueurs alternent aussi (ce n'est qu'une opacité).
+  Effets.balance = function (scene, e) {
+    var points = e.points || [[990, 480], [1110, 800]], fx = Fx.etat(scene), calque = Fx.calque(scene, 'balance', 5, false);
+    var lueurs = points.map(function (p) {
+      var d = el('div', { 'class': 'lueur-balance' }, calque);
+      Fx.poser(d, p[0] - 190, p[1] - 190, 380, 380);
+      return d;
+    });
+    var PERIODE = 1.9;
+    Fx.tache(scene, function (t) {
+      var a = 0.5 + 0.5 * Math.cos(2 * Math.PI * t / PERIODE);        // l'une au plus fort quand l'autre s'éteint
+      lueurs.forEach(function (d, i) { d.style.opacity = (0.1 + 0.72 * (i % 2 ? 1 - a : a)).toFixed(3); });
+    });
+    // le balancier : un tic à gauche, un tic à droite, tous les demi-périodes (une minuterie qui s'arrête avec la page)
+    var cote = 0, id = 0;
+    function tic() {
+      if (!Fx.vivante(scene, fx)) return;
+      Fx.sonner('balancier', { cote: cote ? 'droite' : 'gauche' });
+      cote = 1 - cote;
+      id = setTimeout(tic, PERIODE * 500);
+    }
+    fx.taches.push({ arreter: function () { clearTimeout(id); } });
+    tic();
+    if (e.fievre) Gestes.coeur(scene).regler({ tempo: 132, duree: 4000 });
+  };
+
+  // ---------------------------------------------------------------- coeur (2.3, 2.4, 2.9, 4.6, 5.9, 6.1, 6.11, 7.9)
+  // Le cœur hors d'un geste (couche `battements` de son.js, anneaux vermillon ou crème : ceux de Gestes.coeur, qui bat
+  // avec le son) : `qui` (darshan, julie, deux, un), `tempo` ; `continu` : la page s'ouvre au milieu du battement (2.3,
+  // 2.4, 6.11) ; `n` : n battements, puis il se tait (4.6) ; `arythmie` : le cœur de Julie autour de 64 (5.9, 6.11) ;
+  // `vif` : il s'emballe (7.9) ; `arret` : il se tait. `deux` : les deux cœurs, calés (6.11 : « à 80, ensemble »).
+  // Mouvement réduit : le son seul, les anneaux s'allument sans grandir (Gestes.coeur).
+  Effets.coeur = function (scene, e) {
+    var C = Gestes.coeur(scene);
+    if (e.arret) { C.arreter({ duree: e.duree || 900 }); return; }
+    var qui = e.qui || 'darshan', o = {};
+    if (e.x !== undefined && e.y !== undefined) { o.x = e.x; o.y = e.y; }
+    if (e.force !== undefined) o.force = e.force;
+    if (qui === 'julie') { o.qui = 'julie'; o.julie = false; o.tempo = e.tempo || 64; }
+    else if (qui === 'deux') { o.qui = 'darshan'; o.tempo = e.tempo || 80; o.julie = e.tempo || 80; o.cale = true; }
+    else if (qui === 'un') { o.qui = 'darshan'; o.julie = false; o.unisson = true; o.tempo = e.tempo || 60; }
+    else { o.qui = 'darshan'; o.julie = false; o.tempo = e.tempo || 72; }
+    if (e.arythmie !== undefined) o.arythmie = !!e.arythmie;
+    if (e.vif) { o.tempo = e.tempo || 150; o.duree = e.duree || 2500; if (qui === 'deux') o.julie = o.tempo; }
+    C.regler(o);
+    if (e.n) {
+      // n battements, puis le cœur se tait : n périodes, et le second coup du dernier
+      var periode = 60 / (o.tempo || 64);
+      Fx.minuterie(scene, function () { C.arreter({ duree: 500 }); }, (e.n * periode + 0.5) * 1000);
+    }
+  };
+
+  // ---------------------------------------------------------------- valse (2.9)
+  // « Les mots et les regards valsent » : les deux cœurs se calent, trois contre deux : dans une mesure de 1,875 s,
+  // Darshan bat trois temps (96), Julie deux (64), et ils ne tombent ensemble que sur le premier, à peine accentué (le
+  // 6/8 de la ballade) ; quatre mesures marquées (7,5 s), puis ils restent calés. Ce sont les cœurs de Gestes.coeur (le
+  // geste `deux` les a lancés, à 96 et 64) : leur calage est le leur, l'œil et l'oreille restent d'accord.
+  // Mouvement réduit : les anneaux s'allument en mesure, sans grandir.
+  Effets.valse = function (scene) {
+    Gestes.coeur(scene).regler({ tempo: 96, julie: 64, cale: true, duree: 250 });
+  };
+
+  // ---------------------------------------------------------------- passe (2.8)
+  // « Darshan et Julie eux passent à côté » : le plan glisse lentement de côté (6 % de sa largeur, en 4 s), comme
+  // quand on dépasse quelqu'un, et le merle s'éloigne vers la gauche. Le plan s'agrandit en même temps (jusqu'à
+  // 1,12) pour que son bord ne paraisse pas. Mouvement réduit : le son seul.
+  Effets.passe = function (scene) {
+    var plan = Fx.plans(scene)[Fx.planVisible(scene)];
+    // le merle de la page s'éloigne : son.js joue une phrase, puis, plus loin et plus sombre, la suivante, à gauche
+    function merle() { Fx.sonner('merle'); }
+    merle();
+    if (calme || !plan) return;
+    plan.style.transition = 'none';
+    Fx.animer(scene, 4000, function (p) {
+      var t = lisse(p);
+      plan.style.transform = 'translateX(' + (-6 * t).toFixed(3) + '%) scale(' + (1 + 0.12 * t).toFixed(4) + ')';
+    });
+    return { suite: Promise.resolve(), fin: Fx.pause(scene, 1200) };
+  };
+
+  // ---------------------------------------------------------------- esquisse (2.10)
+  // « Sur son nuage il saute de rêves en projets » : un dessin à l'encre bleu nuit de Darshan posé sur le ciel, tracé
+  // trait par trait, en deux étapes (traitement : le nuage, 1,8 s ; la pièce aux rideaux de 6.5, 3,2 s ; un seul point
+  // vermillon, le chouchou de la petite silhouette de Julie). Le dessin est l'esquisse-theatre.svg de decors.py
+  // (groupes data-etape, traits en pathLength 1). Mouvement réduit : le dessin paraît entier, en fondu.
+  var ETAPES = { 1: 1800, 2: 3200 };
+  function lireLEsquisse(scene) {
+    var fx = Fx.etat(scene);
+    if (fx.esquisse) return fx.esquisse.pret;
+    var nom = 'esquisse-theatre', inline = (DONNEES.svgs || {})[nom], src = Fx.fichierDecor(nom);
+    var e = fx.esquisse = { svg: null, groupes: {}, traits: {}, lavis: {}, autres: {}, image: null, tous: [] };
+    var lecture;
+    if (inline) { try { lecture = Promise.resolve(new DOMParser().parseFromString(inline, 'image/svg+xml').documentElement); } catch (x) { lecture = Promise.resolve(null); } }
+    else lecture = src ? Fx.chargerSvg(src) : Promise.resolve(null);
+    e.pret = lecture.then(function (racine) {
+      e.svg = Fx.calque(scene, 'esquisse', 4, true);
+      if (!racine || racine.nodeName !== 'svg') {
+        // la liseuse ne lit pas le dessin : l'image entière, d'un coup (elle ne se trace pas)
+        if (src) { e.image = svgEl('image', { x: 0, y: 0, width: W, height: H, opacity: 0 }, e.svg); e.image.setAttribute('href', src); }
+        return e;
+      }
+      [].slice.call(racine.querySelectorAll('g[data-etape]')).forEach(function (g) {
+        var k = g.getAttribute('data-etape'), copie = doc.importNode(g, true);
+        e.svg.appendChild(copie); e.groupes[k] = copie; e.traits[k] = []; e.lavis[k] = []; e.autres[k] = [];
+        [].slice.call(copie.children).forEach(function (n) {
+          if (n.getAttribute('pathLength')) { n.setAttribute('stroke-dasharray', '1 1'); n.setAttribute('stroke-dashoffset', '1'); e.traits[k].push(n); }
+          else if (n.getAttribute('class') === 'lavis') { n.setAttribute('data-opacite', n.getAttribute('opacity') || '1'); n.setAttribute('opacity', '0'); e.lavis[k].push(n); }
+          else { n.setAttribute('data-opacite', n.getAttribute('opacity') || '1'); n.setAttribute('opacity', '0'); e.autres[k].push(n); }
+          e.tous.push(n);
+        });
+      });
+      return e;
+    });
+    return e.pret;
+  }
+  Effets.esquisse = function (scene, e) {
+    var etape = e.etape || 1, duree = ETAPES[etape] || 2000;
+    return { suite: Promise.resolve(), fin: lireLEsquisse(scene).then(function (d) {
+      if (d.image) {
+        if (etape < 2) return;
+        return Fx.animer(scene, 600, function (p) { d.image.setAttribute('opacity', lisse(p).toFixed(3)); });
+      }
+      var traits = d.traits[etape] || [], lavis = d.lavis[etape] || [], autres = d.autres[etape] || [];
+      if (!d.groupes[etape]) return;
+      function poser(x) {
+        // les traits se tracent l'un après l'autre, le lavis se pose dessous, le point vermillon vient en dernier
+        traits.forEach(function (t, k) {
+          var debut = k / traits.length * 0.62, p = borne((x - debut) / 0.38);
+          t.setAttribute('stroke-dashoffset', (1 - lisse(p)).toFixed(4));
+        });
+        lavis.forEach(function (l) { l.setAttribute('opacity', (parseFloat(l.getAttribute('data-opacite')) * lisse(borne((x - 0.2) / 0.7))).toFixed(3)); });
+        autres.forEach(function (a) { a.setAttribute('opacity', (parseFloat(a.getAttribute('data-opacite')) * lisse(borne((x - 0.78) / 0.22))).toFixed(3)); });
+      }
+      poser(0);
+      return Fx.animer(scene, calme ? 500 : duree, function (x) {
+        if (calme) { traits.forEach(function (t) { t.setAttribute('stroke-dashoffset', '0'); }); lavis.concat(autres).forEach(function (n) { n.setAttribute('opacity', (parseFloat(n.getAttribute('data-opacite')) * lisse(x)).toFixed(3)); }); return; }
+        poser(x);
+      });
+    }) };
+  };
+
+  // ---------------------------------------------------------------- nuage (2.10, 5.4)
+  // « Mais un nuage vient porter ombrage à cette vision idyllique » : l'ombre d'un vrai nuage (une grande ellipse sombre,
+  // aux bords très flous) traverse la page de droite à gauche en 4 s, 35 % plus sombre, avec un souffle plus frais ; là où
+  // elle passe, le dessin de l'esquisse (`efface="esquisse"`, `palit`) pâlit : l'encre se boit elle-même, sans une
+  // coulure (couler est le signe de la magie chez Julie, réservé au chapitre 6) ; `reste` : le ciel reste plus sombre
+  // après elle, de 20 % par défaut (2.10), ou pas du tout (`reste=0`, 5.4, le marché d'Aluva). Mouvement réduit : l'ombre
+  // et l'effacement en fondu, sans traversée.
+  Effets.nuage = function (scene, e) {
+    var reste = e.reste === undefined ? 0.2 : e.reste, fx = Fx.etat(scene), esquisse = fx.esquisse;
+    var svg = Fx.calque(scene, 'nuage', 5, true), R = 780, duree = 4000;
+    var dg = FxA.degrade(svg, 'radialGradient', { cx: 0.5, cy: 0.5, r: 0.5 }, [[0, '#03040c', 0.38], [0.5, '#03040c', 0.34], [1, '#03040c', 0]]);
+    var ombre = svgEl('ellipse', { cx: W + R, cy: 860, rx: R, ry: 1500, fill: dg }, svg);
+    var voile = svgEl('rect', { x: -40, y: -40, width: W + 80, height: H + 80, fill: '#03040c', opacity: 0 }, svg);
+    Fx.sonner('nuage');
+    // 5.4 (traitement) : « le marché baisse d'un ton, puis revient » ; l'ombre qui efface un dessin (2.10) n'y touche pas :
+    // son vent reste le même. Le niveau revient de lui-même à chaque page (son.js).
+    if (!e.efface) {
+      Fx.niveauAmbiance(0.55, 900);
+      Fx.minuterie(scene, function () { Fx.niveauAmbiance(1, 1200); }, calme ? 900 : duree);
+    }
+    var elements = [];
+    if (e.efface === 'esquisse' && esquisse) {
+      if (esquisse.image) elements.push({ el: esquisse.image, x: W / 2, base: 1 });
+      else esquisse.tous.forEach(function (n) {
+        var b = null;
+        try { b = n.getBBox(); } catch (x) { b = null; }
+        elements.push({ el: n, x: b ? b.x + b.width / 2 : W / 2, base: parseFloat(n.getAttribute('opacity')) || 0, trait: !!n.getAttribute('pathLength') });
+      });
+    }
+    // v : ce qui reste visible du dessin (de 1 à 0) ; l'encre ne coule pas, elle pâlit
+    function visible(d, v) {
+      if (d.trait) d.el.setAttribute('stroke-opacity', v.toFixed(3));
+      else d.el.setAttribute('opacity', (d.base * v).toFixed(3));
+    }
+    if (calme) {
+      // l'ombre passe en fondu (elle couvre la page puis s'en va), le dessin pâlit, le ciel reste plus sombre
+      ombre.setAttribute('cx', W / 2); ombre.setAttribute('rx', W);
+      return Fx.animer(scene, 900, function (p) {
+        ombre.setAttribute('opacity', (p < 0.45 ? lisse(p / 0.45) : 1 - lisse((p - 0.45) / 0.55)).toFixed(3));
+        voile.setAttribute('opacity', (reste * lisse(p)).toFixed(3));
+        elements.forEach(function (d) { visible(d, 1 - lisse(p)); });
+      });
+    }
+    return Fx.animer(scene, duree, function (p) {
+      var xc = W + R - (W + 2 * R) * p;
+      ombre.setAttribute('cx', xc.toFixed(1));
+      ombre.setAttribute('opacity', (p > 0.92 ? (1 - p) / 0.08 : 1).toFixed(3));
+      // là où l'ombre est passée, le dessin a pâli
+      elements.forEach(function (d) { visible(d, 1 - lisse(borne((d.x - (xc - R)) / (R * 1.1)))); });
+      voile.setAttribute('opacity', (reste * lisse(borne((p - 0.4) / 0.6))).toFixed(3));
+    });
+  };
+})();
+
+// ================================================================ chapitre 2 (suite) : la mise au point, l'obturateur, le regard
+(function () {
+  // ---------------------------------------------------------------- flou (2.1, 2.7, 2.9 ; 4.6, 4.7, 5.10, 5.11, 6.8, 6.10, 7.3)
+  // La mise au point suit l'attention de Darshan : tout flou (`force`, en unités de page : 8 par défaut, moins contrasté),
+  // ou `garde` [x, y, rayon] : une zone qui reste nette, au bord adouci ; `chaud` : l'image se réchauffe ; `suit_geste` :
+  // l'intensité suit le geste et l'ambiance baisse jusqu'au tiers (2.1 : « le flou se resserre autour de la main » ; 2.9 :
+  // on est trop près pour voir). Hors d'un geste (2.7), le flou passe d'un état à l'autre en 900 ms. `net` le lève.
+  // Le flou est une copie floue du plan, posée sur le plan net (opacité : l'intensité), percée de la zone nette ; elle suit le
+  // changement de plan (decor). Mouvement réduit : 0,2 s.
+  // une longueur en unités de page, en pixels CSS : la largeur de mise en page de la scène (offsetWidth), que ne change aucune
+  // mise à l'échelle de la liseuse (getBoundingClientRect, lui, la subit)
+  function pxCss(scene, u) { return u * (scene.offsetWidth || W) / W; }
+  function planImg(scene) {
+    var p = Fx.plans(scene)[Fx.planVisible(scene)];
+    return p && p.tagName && p.tagName.toLowerCase() === 'img' ? p : null;
+  }
+  function retirerLeFlou(scene, f, ms) {
+    if (!f) return;
+    f.calque.style.transition = 'opacity ' + ms + 'ms ease';
+    f.calque.style.opacity = 0;
+    Fx.minuterie(scene, function () { retirer(f.calque); }, ms + 100, true);
+  }
+  Effets.flou = function (scene, e) {
+    var fx = Fx.etat(scene), img = planImg(scene), ms = calme ? 200 : 900;
+    if (!img) return;
+    var force = e.force === undefined ? 8 : e.force, N = Math.max(1, pxCss(scene, force)), garde = e.garde || null;
+    fx.nFlous = (fx.nFlous || 0) + 1;
+    var calque = Fx.calque(scene, 'flou-' + fx.nFlous, 1, false), clone = el('img', { alt: '' }, calque);
+    var filtre = 'blur(' + N.toFixed(1) + 'px) contrast(0.92)' + (e.chaud ? ' sepia(0.28) saturate(1.18)' : '');
+    function poser() {
+      var im = planImg(scene);
+      if (im) clone.setAttribute('src', im.getAttribute('src'));
+    }
+    poser();
+    clone.style.cssText = 'position:absolute;left:' + (-2 * N).toFixed(1) + 'px;top:' + (-2 * N).toFixed(1) + 'px;width:calc(100% + ' + (4 * N).toFixed(1) +
+      'px);height:calc(100% + ' + (4 * N).toFixed(1) + 'px);object-fit:cover;max-width:none;filter:' + filtre + ';-webkit-filter:' + filtre + ';';
+    if (garde) {
+      var R = pxCss(scene, garde[2]), cx = pxCss(scene, garde[0]) + 2 * N, cy = pxCss(scene, garde[1]) + 2 * N;
+      var masque = 'radial-gradient(circle ' + R.toFixed(1) + 'px at ' + cx.toFixed(1) + 'px ' + cy.toFixed(1) + 'px, rgba(0,0,0,0) 0, rgba(0,0,0,0) ' + (R * 0.55).toFixed(1) +
+        'px, rgba(0,0,0,1) ' + R.toFixed(1) + 'px)';
+      clone.style.webkitMaskImage = masque; clone.style.maskImage = masque;
+    }
+    calque.style.opacity = 0;
+    var ancien = fx.flou;
+    fx.flou = { calque: calque, suivre: poser };
+    retirerLeFlou(scene, ancien, ms);                    // l'ancien état s'efface pendant que le nouveau paraît
+    if (e.suit_geste && e.geste) {
+      calque.style.transition = 'opacity ' + (calme ? 200 : 180) + 'ms linear';
+      return new Promise(function (ok) {
+        e.geste.suivre(function (x, fini) {
+          calque.style.opacity = x.toFixed(3);
+          Fx.niveauAmbiance(1 - (2 / 3) * x, 200);
+          if (fini) ok();
+        });
+      });
+    }
+    calque.style.transition = 'opacity ' + ms + 'ms ease';
+    Fx.ensuite(function () { calque.style.opacity = 1; });
+    return Fx.pause(scene, ms);
+  };
+
+  // net : tout revient, l'image nette, le son ouvert, le texte net, la barre de commandes pleine (lève le voile, pas l'état de
+  // la barre) en 0,9 à 1,2 s ; mouvement réduit : 0,2 s.
+  var netDuPrototype = Effets.net;
+  Effets.net = function (scene, e) {
+    var fx = Fx.etat(scene), ms = calme ? 200 : (e.duree || 900);
+    netDuPrototype(scene, e);
+    scene.classList.remove('texte-assourdi');
+    Fx.niveauAmbiance(1, ms);
+    var f = fx.flou;
+    if (f) { fx.flou = null; retirerLeFlou(scene, f, ms); }
+    return { suite: Promise.resolve(), fin: Fx.pause(scene, ms) };
+  };
+
+  // assourdi : le monde passe au filtre `assourdi` ; `texte` : le temps s'affiche atténué (opacité 0,55, flou de 0,6 px), lisible,
+  // jusqu'à `net` (2.4 : la salle arrive derrière un filtre, comme à travers l'eau).
+  var assourdiDuPrototype = Effets.assourdi;
+  Effets.assourdi = function (scene, e) {
+    assourdiDuPrototype(scene, e);
+    if (e.texte) scene.classList.add('texte-assourdi');
+  };
+
+  // ---------------------------------------------------------------- compte (2.9, 3.14, 4.7, 5.1, 5.11, 6.1, 6.3, 6.11)
+  // Les mots s'éclairent dans la phrase et leur double se pose en haut de la page, là où le téléphone affiche l'heure (le
+  // double, c'est Compte.afficher : en or chez Darshan, blanc sur un bandeau graphite chez Julie). `de` : les mots précédents se
+  // défont ; `valeur=""` : le compte ne laisse rien. Les mots éclairés sont ceux de la valeur, retrouvés dans le temps en cours.
+  var compteDuNoyau = Effets.compte;
+  function eclairerLesMots(scene, valeur) {
+    var t = Fx.tempsCourant(scene), cherche = valeur.toLowerCase(), trouve = null;
+    if (!t) return;
+    (function parcourir(n) {
+      [].slice.call(n.childNodes).forEach(function (c) {
+        if (trouve) return;
+        if (c.nodeType === 3) {
+          var k = c.nodeValue.toLowerCase().indexOf(cherche);
+          if (k < 0) return;
+          c.splitText(k + valeur.length);
+          var mots = c.splitText(k), s = doc.createElement('span');
+          s.className = 'mot-compte'; n.replaceChild(s, mots); s.appendChild(mots);
+          trouve = s;
+        } else if (c.nodeType === 1) parcourir(c);
+      });
+    })(t);
+    if (trouve) Fx.ensuite(function () { trouve.classList.add('allume'); });
+  }
+  Effets.compte = function (scene, e) {
+    // les mots précédents se défont
+    if (e.de || e.valeur !== undefined) $$('.mot-compte.allume', scene).forEach(function (m) { m.classList.remove('allume'); });
+    compteDuNoyau(scene, e);
+    if (e.valeur) eclairerLesMots(scene, e.valeur);
+  };
+
+  // ---------------------------------------------------------------- camera (1.9, 2.8, 3.3, 3.6, 5.8, 5.9, 6.9, 7.13 à 7.15)
+  // La vue bouge dans une même photo. `avance` : travelling avant jusqu'à `zoom` (de 1 à 1,08 en 6 s avec `lent`, 1,12 en
+  // 2,6 s sinon ; `duree`) ; `recule` : un demi-pas en arrière, jusqu'à `zoom` ; `suit_geste` : sous le doigt (2.8 : l'allée
+  // avance, de 1 à 1,08, tant que le geste lent dure) ; `deja` : la page reprend le cadre où la précédente s'arrête, sans
+  // mouvement ; `vers` [x, y] : le point visé. (`incline` est plus haut.) Mouvement réduit : plan fixe, ou fondu vers le plan
+  // d'arrivée ; l'allée de 2.8 ne grandit pas.
+  var cameraAvant = Effets.camera;
+  Effets.camera = function (scene, e) {
+    var d = Fx.decor(scene);
+    var cible = e.zoom || (e.lent ? 1.08 : 1.12), vers = e.vers && e.vers.length === 2 ? e.vers : [W / 2, H / 2];
+    if (e.suit_geste && e.geste) {
+      if (calme || !d) return new Promise(function (ok) { e.geste.suivre(function (x, fini) { if (fini) ok(); }); });
+      d.style.transformOrigin = pourcent(vers[0], W) + ' ' + pourcent(vers[1], H);
+      d.style.transition = 'transform 180ms linear';
+      return new Promise(function (ok) {
+        e.geste.suivre(function (x, fini) {
+          d.style.transform = 'scale(' + (1 + (cible - 1) * x).toFixed(4) + ')';
+          if (fini) ok();
+        });
+      });
+    }
+    if (e.deja && d) {
+      d.style.transition = 'none';
+      d.style.transformOrigin = pourcent(vers[0], W) + ' ' + pourcent(vers[1], H);
+      d.style.transform = 'scale(' + cible + ')';
+      return;
+    }
+    if (e.avance === true || e.recule) {
+      return Visuels.camera(scene, { avance: cible, vers: vers, duree: e.duree || (e.lent ? 6000 : (e.recule ? 1500 : 2600)) });
+    }
+    return cameraAvant(scene, e);
+  };
+
+  // ---------------------------------------------------------------- decor (1.5 à 2.9)
+  // Le plan suivant, ou le plan `i` : le fondu (1,2 s par défaut, `fondu` ms ; `fondu=0` : la coupe franche de 2.5) ; `par="obturateur"` (2.4) : les lames se
+  // ferment et se rouvrent sur le plan, le double déclic, 420 + 520 ms ; `camera="baisse"` (2.6) : le regard descend, le plan
+  // sort par le haut et le suivant entre par le bas (1,2 s) ; `camera="leve"` (2.9, l'ancien envol-vue) : le contraire, dans un
+  // souffle d'air montant (1,4 s) ; `fond` (« clair » ou « sombre ») : le panneau de texte prend le ton de la nouvelle image sans
+  // changer de place ; `duree` : retour au plan précédent après ce temps, en fondu (`retour="fondu"`, 0,5 s). Mouvement réduit :
+  // des fondus courts.
+  var decorAvant = Effets.decor;
+  function tonDuPanneau(scene, fond) {
+    var t = $('.texte', scene);
+    if (!t) return;
+    if (fond === 'sombre') t.classList.remove('clair');
+    else if (fond === 'clair') t.classList.add('clair');
+  }
+  function changerDePlan(scene, a, b) {
+    a.classList.remove('vu'); b.classList.add('vu'); FxA.quitterLePlan(scene);
+    [a, b].forEach(function (p) { p.style.transition = ''; p.style.transform = ''; p.style.opacity = ''; });
+  }
+  Effets.decor = function (scene, e) {
+    var fx = Fx.etat(scene), liste = Fx.plans(scene), i = e.i || 0, a = liste[Fx.planVisible(scene)], b = liste[i], r;
+    if (e.fondu === 0) e = Fx.copie(e, { fondu: 1 });      // `fondu=0` : une coupe franche (le fondu d'origine prend 0 pour « pas de réglage »)
+    if (!calme && a && b && a !== b && (e.par === 'obturateur' || e.camera === 'baisse' || e.camera === 'leve')) {
+      if (e.par === 'obturateur') r = decorObturateur(scene, e, a, b);
+      else r = decorCamera(scene, e, a, b);
+    } else {
+      if (e.fond) tonDuPanneau(scene, e.fond);
+      r = decorAvant(scene, e);
+    }
+    if (fx.flou) fx.flou.suivre();
+    return r;
+  };
+  function decorCamera(scene, e, a, b) {
+    var baisse = e.camera === 'baisse', duree = baisse ? 1200 : 1400, sens = baisse ? 1 : -1;
+    if (e.fond) tonDuPanneau(scene, e.fond);
+    if (!baisse) Fx.sonner('souffle');
+    a.style.transition = 'none'; b.style.transition = 'none'; a.style.opacity = '1'; b.style.opacity = '1';
+    b.style.transform = 'translateY(' + (sens * 100) + '%)';
+    var fin = Fx.animer(scene, duree, function (p) {
+      var t = lisse(p);
+      a.style.transform = 'translateY(' + (-sens * 100 * t).toFixed(2) + '%)';
+      b.style.transform = 'translateY(' + (sens * 100 * (1 - t)).toFixed(2) + '%)';
+    }).then(function () { changerDePlan(scene, a, b); });
+    if (e.duree) {
+      // retour au plan précédent après `duree` : un fondu court, le regard ne se relève pas (6.11)
+      return fin.then(function () { return Fx.pause(scene, e.duree); }).then(function () {
+        return decorAvant(scene, { i: liste.indexOf(a), fondu: 500 });
+      });
+    }
+    return fin;
+  }
+  // les lames d'un obturateur : elles se ferment sur l'image (le plan change dessous, quand tout est fermé), puis se rouvrent
+  function decorObturateur(scene, e, a, b) {
+    var boite = Fx.dessous(scene, 'obturateur', 4, true), n = 7, C = [W / 2, H / 2], lames = [], k;
+    var R = Math.hypot(W / 2, H / 2) + 40;
+    for (k = 0; k < n; k++) {
+      lames.push(svgEl('polygon', { fill: k % 2 ? '#1c1f25' : '#15171c', stroke: '#4a505c', 'stroke-width': 4, 'stroke-linejoin': 'round' }, boite));
+    }
+    function ouverture(r) {
+      var torsion = 0.9 * (1 - r / R), L = 3000;
+      lames.forEach(function (l, i) {
+        var an = i * 2 * Math.PI / n + torsion, ux = Math.cos(an), uy = Math.sin(an), vx = -uy, vy = ux;
+        function p(u, v) { return (C[0] + ux * u + vx * v).toFixed(1) + ',' + (C[1] + uy * u + vy * v).toFixed(1); }
+        l.setAttribute('points', [p(r, -L), p(r, L), p(r + L, L), p(r + L, -L)].join(' '));
+      });
+    }
+    ouverture(R);
+    Fx.sonner('declic');
+    return Fx.animer(scene, 420, function (p) { ouverture(R * (1 - lisse(p))); })
+      .then(function () {
+        changerDePlan(scene, a, b);                // tout est fermé : le plan change, le panneau prend le ton de la table
+        if (e.fond) tonDuPanneau(scene, e.fond);
+        return Fx.pause(scene, 90);
+      })
+      .then(function () { return Fx.animer(scene, 520, function (p) { ouverture(R * lisse(p)); }); })
+      .then(function () { retirer(boite); });
+  }
+})();
+
 // ================================================================ effets nouveaux, chapitres 0 à 3 (fin)
 
 // ================================================================ effets nouveaux, chapitres 4 à 8 (début)
