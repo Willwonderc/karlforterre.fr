@@ -639,6 +639,51 @@ html:not(.jeu) .decor .plan.sans-script { opacity: 1; }
 
 /* ============================================================ effets nouveaux, chapitres 0 à 3 (début)
    Les règles des effets de ces chapitres s'ajoutent juste au-dessus de la ligne « (fin) » ci-dessous. */
+/* Les calques de tous les effets (Fx.calque, Fx.dessous, Fx.dessus, Fx.toile, effets.js) : ils couvrent
+   la scène sans jamais recevoir un toucher. Ceux de l'image (rangs 1 à 6) restent dans .decor, qui forme
+   un empilement à part : le texte, au-dessus, ne passe jamais dessous. Ceux de `dessous` se glissent
+   entre l'image et le texte ; ceux de `dessus`, entre le texte et la barre. */
+.decor { isolation: isolate; }
+.fx { pointer-events: none; }
+.fx-calque, .fx-dessous, .fx-couche, .fx-dessus { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.fx-dessous { z-index: 0; overflow: hidden; }
+.fx-toile { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+
+/* ---- chapitre 1 : la voix écrite lettre à lettre (1.1, 2.3, 3.11), le nom seul de l'éclat court (1.9) */
+/* chaque lettre d'un temps de voix paraît à son tour ; le temps, lui, est entier dans la page (VoiceOver le lit d'un bloc) */
+.jeu .texte .lettre-voix { opacity: 0; }
+.jeu .texte .lettre-voix.ecrite { opacity: 1; transition: opacity 140ms; }
+/* l'éclat d'étoile de chaque lettre (1.1 : « or pâle, un éclat d'étoile par lettre ») */
+.lettre-voix.eclat { position: relative; animation: lettre-eclat 560ms ease-out; }
+.lettre-voix.eclat::after { content: "✦"; position: absolute; left: 50%; top: -0.55em; width: 1em; margin-left: -0.5em; text-align: center;
+  font-size: 0.7em; line-height: 1; font-style: normal; color: #fff4d6; text-shadow: 0 0 0.8cqw rgba(255, 215, 140, 0.95);
+  opacity: 0; animation: lettre-etoile 560ms ease-out; pointer-events: none; }
+@keyframes lettre-eclat { 0% { text-shadow: 0 0 0 rgba(255, 231, 176, 0); } 25% { text-shadow: 0 0 1.2cqw #ffe7b0, 0 0 2.8cqw rgba(255, 200, 110, 0.85); }
+  100% { text-shadow: var(--ombre-texte); } }
+@keyframes lettre-etoile { 0% { opacity: 0; transform: scale(0.2) rotate(-60deg); } 30% { opacity: 1; transform: scale(1.25) rotate(0); }
+  100% { opacity: 0; transform: scale(0.6) rotate(40deg); } }
+.calme .lettre-voix.eclat, .calme .lettre-voix.eclat::after { animation: none; }
+/* l'éclat court : le nom de l'objet, seul, sans les bandes ni le fragment (1.9, 7.8) */
+.eclat.court { pointer-events: none; }
+.eclat.court.joue { animation: none; }
+.eclat.court .eclat-nom { top: 38%; }
+.eclat.court:not(.calme).joue .eclat-nom { animation: eclat-nom 320ms cubic-bezier(.2, 1.5, .4, 1) both; }
+.eclat.court:not(.calme).sort .eclat-nom { animation: eclat-nom-sort 300ms ease-in both; }
+
+/* ---- chapitre 2 : les lueurs de la balance (2.2), les mots du compte (2.9…), le temps assourdi (2.4) */
+.lueur-balance { border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, rgba(255, 244, 222, 0.95) 0%, rgba(255, 236, 200, 0.55) 36%, rgba(255, 230, 190, 0) 70%); }
+/* « les mots s'éclairent dans la phrase » : or sur le sombre, brun doré sur le clair, blanc chez Julie */
+.mot-compte { transition: color 700ms ease, text-shadow 700ms ease; }
+.mot-compte.allume { color: #fff0c0; text-shadow: 0 0 1.4cqw rgba(255, 200, 110, 0.9), var(--ombre-texte); }
+.texte.clair .mot-compte.allume { color: #7a4a10; text-shadow: 0 0 1.2cqw rgba(244, 197, 106, 0.95); }
+.monde-julie .mot-compte.allume { color: #ffffff; text-shadow: 0 0 1.2cqw rgba(255, 255, 255, 0.85), var(--ombre-texte); }
+.monde-julie .texte.clair .mot-compte.allume { color: #1b1b1b; text-shadow: 0 0 1cqw rgba(255, 255, 255, 0.9); }
+.calme .mot-compte { transition: none; }
+/* 2.4 : « le temps s'affiche atténué (opacité 0,55, flou de 0,6 px), lisible, jusqu'à net » */
+.jeu .texte-assourdi .texte .temps.vu { opacity: 0.55; filter: blur(0.6px); }
+.calme.jeu .texte-assourdi .texte .temps.vu { filter: none; }
+
 /* ============================================================ effets nouveaux, chapitres 0 à 3 (fin) */
 
 /* ============================================================ effets nouveaux, chapitres 4 à 8 (début)
