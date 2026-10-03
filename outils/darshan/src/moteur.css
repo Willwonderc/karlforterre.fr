@@ -485,6 +485,10 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 .jeu .regard { display: block; }
 .regard.vu { opacity: 1; }
 
+/* ------------------------------------------------------------ scènes écrites à la main (scenes.js) et transitions
+   Les règles nouvelles des scènes et des transitions s'ajoutent ici, au-dessus de la ligne « (fin) ». */
+/* ------------------------------------------------------------ scènes et transitions (fin) */
+
 /* ------------------------------------------------------------ mécaniques (équipe des mécaniques : src/js/mecaniques.js)
    Les calques des gestes (sous le texte : « couche-geste » ; les aides par-dessus : « geste-calque »),
    la couleur des aides selon le monde de la page (or chez Darshan, blanc et graphite chez Julie,
@@ -588,3 +592,11 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 /* sans script, une page montre son premier plan, ou ses plans « sans-script », qui passent par-dessus
    (build.py, PLANS_SANS_SCRIPT : 7.3, 7.11 à 7.15) */
 html:not(.jeu) .decor .plan.sans-script { opacity: 1; }
+
+/* ============================================================ effets nouveaux, chapitres 0 à 3 (début)
+   Les règles des effets de ces chapitres s'ajoutent juste au-dessus de la ligne « (fin) » ci-dessous. */
+/* ============================================================ effets nouveaux, chapitres 0 à 3 (fin) */
+
+/* ============================================================ effets nouveaux, chapitres 4 à 8 (début)
+   Les règles des effets de ces chapitres s'ajoutent juste au-dessus de la ligne « (fin) » ci-dessous. */
+/* ============================================================ effets nouveaux, chapitres 4 à 8 (fin) */

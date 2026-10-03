@@ -620,3 +620,13 @@ var Fx = (function () {
     Son.couche('melodie', e.oui !== false, o);
   };
 })();
+
+// ================================================================ effets nouveaux, chapitres 0 à 3 (début)
+/* Les effets qui manquaient, dont la première page est aux chapitres 0 à 3, s'ajoutent ici, chacun
+   juste au-dessus de la ligne « (fin) » ci-dessous (deux équipes écrivent en même temps). */
+// ================================================================ effets nouveaux, chapitres 0 à 3 (fin)
+
+// ================================================================ effets nouveaux, chapitres 4 à 8 (début)
+/* Les effets qui manquaient, dont la première page est aux chapitres 4 à 8, s'ajoutent ici, chacun
+   juste au-dessus de la ligne « (fin) » ci-dessous. */
+// ================================================================ effets nouveaux, chapitres 4 à 8 (fin)
