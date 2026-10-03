@@ -205,7 +205,7 @@ PRODUCTION = [
       "pigeonnier : tourner (260 unités), la clé portée vers le haut, le jour et l'autre côté (jour, autre-cote)",
       "chaleur d'Aluva ; moustache de mousse (tracer) ; naissance du carnet", "clin d'œil d'encre (clin)",
       "reflets de Paris dans le fleuve (remuer, reflet) et fragment de la ballade sous l'eau (melodie)",
-      "lumière qui vieillit, silence du tanpura, lin de la chemise (lin)",
+      "lumière qui vieillit, silence du tanpura, chemise boutonnée (toucher, lin)",
       "cabane à kayaks dessinée, en or, et son jour ; salut de la vue (camera)",
       "bandes qui s'ouvrent par l'obturateur (bandes-photo)", "caresse lente, flou qui suit le geste (caresser, flou)",
       "le cœur sous le doigt : chamade, puis deux cœurs à trois contre deux (maintenir, balance, valse)",
@@ -554,13 +554,15 @@ TABLEAUX = [
       reperages=[("S8", "Bateaux-mouches sur la Seine, de nuit (« l’éclat des navires parcourant la Seine »)")]),
     T("1.8", "Vieillir", (35, None), "Aluva, le ponton", "Darshan", "—",
       "Le ponton du vieil homme, vide : sa place sans lui ; à « As-tu déjà pensé à vieillir ? », la lumière "
-      "vire lentement à l'or ; après la pirouette, le lin blanc de la chemise passe devant la vue.",
+      "vire lentement à l'or ; après la pirouette, Darshan boutonne sa chemise : le lin blanc couvre la vue, le col "
+      "ouvert.",
       photos=[(10310851, "encre")],
-      gestes=[("en enfilant sa chemise", "après la phrase, enfiler la chemise : glisser vers le bas, le lin "
-                                         "blanc passe devant la vue", "toucher")],
+      gestes=[("en enfilant sa chemise", "après la phrase, boutonner la chemise : les pans de lin entrent par les "
+                                         "côtés, un toucher par bouton, de haut en bas ; le col reste ouvert",
+               "toucher ou Entrée, un bouton chaque fois")],
       moments=[("As-tu déjà pensé à vieillir", "la lumière vire lentement à l'or ; le tanpura se tait, seul le "
                                                "fleuve continue, jusqu'à la réponse de Darshan")],
-      son="kerala ; silence du tanpura, lin",
+      son="kerala ; silence du tanpura, lin, tissu",
       note="Le ponton reste vide (aucune silhouette) : on voit la place du vieil homme sans lui, avant « je te "
            "quitterai avant lui ». Le jour vieillit pendant la question ; Darshan l'esquive en s'habillant.",
       reperages=[("S9", "Le même tabouret rafistolé, vide, sur le ponton, dans la lumière d'or de fin "

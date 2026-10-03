@@ -354,7 +354,9 @@ SCENES = {
              coupes={35: ["Même s’il est certainement", "As-tu déjà pensé à vieillir"],
                      36: ["Avant que la sotte question", "Je ne souhaite que m’éprendre"]},
              extra={"Quelle idée, à quoi cela m’avancerait-il": E("silence", fin=True)},
-             gestes=[G("glisser", sens="bas", apres=True, effets=[E("lin")])],
+             # réponse 40 de Karl : la chemise est boutonnée ; quatre boutons, de haut en bas, le col ouvert
+             gestes=[G("toucher", n=4, effet="tissu", apres=True, y_consigne=1590,
+                       effets=[E("lin", boutons=4, suit_geste=True)])],
              moments=[[E("decor", i=1, fondu=8000), E("silence", garder="fleuve")]]),
     "1.9": S(["montre", "local-or", "filet-soir"], texte="haut clair",
              gestes=[G("toucher", cible=[600, 1560, 200],

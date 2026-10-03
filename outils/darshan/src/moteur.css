@@ -618,6 +618,9 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 .fx-commande-ligne.vu { opacity: 1; }
 /* pendant que la carte attend, le halo prend le graphite des aides de Julie : le blanc ne se verrait pas sur le papier */
 .fx-commande-attente .geste-calque .halo-interet { stroke: #3b3128; }
+/* ---- 1.8, la chemise boutonnée (réponse 40) : la consigne, sur le lin blanc, prend une pastille */
+.scene.fx-lin-sur .consigne { left: 50%; right: auto; transform: translateX(-50%); width: max-content; max-width: 84cqw;
+  padding: 0.8cqw 3cqw; border-radius: 4cqw; background: var(--aide-fond); text-shadow: none; }
 /* ------------------------------------------------------------ scènes et transitions (fin) */
 
 /* ------------------------------------------------------------ mécaniques (équipe des mécaniques : src/js/mecaniques.js)
