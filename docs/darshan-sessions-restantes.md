@@ -1,5 +1,12 @@
 # Darshan jouable : les trois sessions qui restent
 
+> **Mise à jour du 3 octobre au soir.** Les sessions 1 et 2 sont presque entièrement faites, et la
+> première partie de la session 3 aussi (le son, le plan du Kerala, le second tour de questions),
+> par équipes parallèles dans une seule session. Il reste six effets du chapitre 7, quelques sons
+> encore muets, ce qui attend Karl et les essais d'ensemble : la liste exacte, avec les notes de
+> reprise, est dans `outils/darshan/README.md`, au point « État à l'arrêt du 3 octobre ». Les
+> consignes ci-dessous restent valables pour ce qui reste.
+
 Consignes à coller, chacune dans une session Claude Code distincte, sur le dépôt
 Willwonderc/karlforterre.fr (état au 30 septembre 2026). Les sessions 1 et 2 peuvent tourner en
 même temps : leurs fichiers ne se recouvrent pas. La session 3 commence en même temps pour sa

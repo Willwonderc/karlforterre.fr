@@ -14,7 +14,7 @@ Le livre entier est découpé en 85 tableaux dans
 
 Rien ici n'est encore relié au site : aucune page ne pointe vers ce dossier.
 
-## Chantier en cours : le livre entier (reprise du 3 octobre 2026)
+## Chantier en cours : le livre entier (arrêt propre du 3 octobre 2026, au soir)
 
 La pré-production est terminée (`docs/darshan-mise-en-scene/`, avec sa synthèse, qui fait foi)
 et reportée dans la fabrication. Le 30 septembre vers 11 h (UTC), le chantier est mis en pause à
@@ -25,9 +25,11 @@ deux transitions, la seconde partie des sons, les essais et ce qui attend Karl.
 
 Reprise le 3 octobre, par équipes parallèles (une copie de travail chacune, fusionnées et vérifiées
 une à une : `build.py`, EPUBCheck, `essai-livre.js` jusqu'à « Fin », `essai-touchers.js`) : les cinq
-scènes écrites à la main sont faites, les effets des chapitres 0 à 2 aussi, le son suit la page et
-a tous les sons du découpage ; le second tour de questions (45 à 51 : Kerala, sons à écouter) attend
-Karl sur la page « Décisions pour Darshan ». État détaillé au point « État au 3 octobre », plus bas.
+scènes écrites à la main sont faites, les transitions aussi, et tous les effets sauf six (fin du
+chapitre 7) ; le son suit la page et a tous les sons du découpage ; les réponses de Karl (2.7, 1.8,
+1.5) sont dans le livre ; le second tour de questions (45 à 51 : Kerala, sons à écouter) attend
+Karl sur la page « Décisions pour Darshan ». Arrêt propre le 3 octobre au soir, à la demande de
+Karl : état détaillé et notes de reprise au point « État à l'arrêt du 3 octobre », plus bas.
 
 | Fichier | État |
 |---|---|
@@ -38,8 +40,8 @@ Karl sur la page « Décisions pour Darshan ». État détaillé au point « Ét
 | `interface.ini` | Fait, à valider par Karl. Tous les textes d'interface : consignes des 58 gestes, 13 actions, boutons, menu, carnet des portes, générique ; les textes nouveaux sont marqués « à valider par Karl ». |
 | `build.py` | Fait pour les 85 pages : 446 temps, 58 gestes, sacs, portes et les sept états de page (père, barre de Julie, voile, regard, compte à rebours, boussole, répliques) calculés page après page, vérifications. Il signale les effets et les scènes que le moteur ne connaît pas encore (erreur avec `--strict`). Deux ajouts demandés par les équipes (plus bas, point 1). |
 | `src/js/mecaniques.js` | Fait. Les 27 mécaniques : les 8 du prototype revues (toucher, maintenir, glisser, rythme, tourner, porter, tracer, attendre) et les 19 nouvelles (caresser, contact, curseur, deux-pouces, écrire, effacer, essuyer, étals, galerie, liste, main, messages, paume, portes, remuer, respirer, semer, tendre, verser). Chacune a son toucher simple, son clavier et le bouton « Faire le geste » ; les aides changent de couleur chez Julie ; outils communs `Gestes` (halo, onde, cœur calé sur le rythme du son, paupières, main d'or, rose des vents, téléphone, galerie). |
-| `src/js/effets.js` | En partie. Le noyau (un effet ne retient jamais la lecture plus de 15 s ; toute erreur est rattrapée ; animations et minuteries arrêtées avec la page), les effets d'état (objets, portes et carnet, désenchantement sans son animation, interface, regard, compte, pause), le son (effets ponctuels, silence, ambiances, couches, mélodie) et les effets du prototype. Le 3 octobre : les effets des chapitres 0 à 2 et leurs compléments (le fil d'or du poème, Aluva, le restaurant et les toits ; `data-genre` sur chaque plan). **42 effets restent à écrire** (`build.py` les liste), écrits dans des zones réservées par chapitre ; d'ici là, un effet inconnu est ignoré sans rien bloquer. |
-| `src/js/scenes.js`, `transitions.js` | Scènes faites. Les scènes du prototype (seuil, poème, toit, tuiles, pigeonnier) et, le 3 octobre, plier (3.4), vision (3.10, 3.11), listes (6.2), rue-de-rungis (7.12 à 7.15 : la porte du père commune à la vision, `PorteDuPere`, `Lanterne`, l'accord ; le désenchantement de 7.14 ; le choc de 7.15) et clôture (8.1, page « Fin », « Nouvelle lecture »). Chaque page ouverte seule dans l'EPUB s'ouvre comme la précédente s'arrête. Restent les transitions `bandes-photo` et `bandes-julie`, l'entrée « même plan » (3.9 → 3.10 → 3.11, 6.1 → 6.2) et les retouches du pigeonnier. |
+| `src/js/effets.js` | En partie. Le noyau (un effet ne retient jamais la lecture plus de 15 s ; toute erreur est rattrapée ; animations et minuteries arrêtées avec la page), les effets d'état (objets, portes et carnet, désenchantement sans son animation, interface, regard, compte, pause), le son (effets ponctuels, silence, ambiances, couches, mélodie) et les effets du prototype. Le 3 octobre : les effets des chapitres 0 à 6 et du début du chapitre 7 (7.1 à 7.3), avec leurs compléments, écrits dans des zones réservées par chapitre (outils communs `FxA`, `FxB`, `Fx6`, `FxD`) ; `data-genre` sur chaque plan ; les effets des réponses de Karl (`commande`, `lin` boutonné, `vie`). **6 effets restent à écrire** (`build.py` les liste : partage, vacille, enjambees, ralenti, chiasme, etoiles-jour) ; d'ici là, un effet inconnu est ignoré sans rien bloquer. |
+| `src/js/scenes.js`, `transitions.js` | Scènes faites. Les scènes du prototype (seuil, poème, toit, tuiles, pigeonnier) et, le 3 octobre, plier (3.4), vision (3.10, 3.11), listes (6.2), rue-de-rungis (7.12 à 7.15 : la porte du père commune à la vision, `PorteDuPere`, `Lanterne`, l'accord ; le désenchantement de 7.14 ; le choc de 7.15) et clôture (8.1, page « Fin », « Nouvelle lecture »). Chaque page ouverte seule dans l'EPUB s'ouvre comme la précédente s'arrête. Transitions faites : `bandes-photo` (2.1, 6.1) et `bandes-julie` (4.1 ; 5.1 en lilas, grain de confettis), le banc `transitions.html` rebranché ; l'entrée « même plan » (`data-entree="plan"` : sur le web, ni balayage ni noir ; un fondu enchaîné de 0,9 s quand l'image change, à regarder par Karl) ; `data-entree-couleur` (le fondu au blanc de 1.9) ; le pigeonnier retouché (tuiles sans do dièse, le jour d'Aluva au lieu de l'accord du père, la clé tournée par `tourner`). |
 | autres fragments de `src/js/` | Faits : `base`, `dessins` (les 17 objets), `visuels`, `interface` (sacs, carnet, regard, compte, barre, menu), `recit`, `depart` (navigation, reprise, édition web qui rend la mémoire des pages quittées). |
 | `src/js/son.js` | Fait pour les lieux : les 18 ambiances, les couches (cœurs, pluie, feu, télévision sans parole, vibreur, la ballade composée pour le livre), l'appel et l'accord du père ; équilibrage (ambiances autour de -30 dB, crêtes sous -1,4 dBFS) ; son coupé, rien n'est fabriqué ; chaque ambiance arrête toutes ses sources. Le 3 octobre : le son suit la page (couches de la page quittée éteintes), `Son.niveau`, `Son.ralenti`, `Son.partage` (deux ambiances à la fois, 6.2 et 7.4), `Son.note('montantes')`, l'horloge qui presse, plus de 80 effets ponctuels ; la rumeur du restaurant et la télévision refaites d'après un vrai restaurant (un murmure sans hauteur ni mot), le grésil métallique de la ballade retiré, en attendant l'écoute de Karl (question 51). Banc d'essai : `essai-son.js`, qui joue aussi le livre à un rythme de lecteur (`--livre`, `--rythme`). |
 | `decors.py`, `art.py` | Faits. Les 115 décors de la synthèse, leurs calques et les extras (clichés et vignettes de la galerie, bande de la lune, esquisse du théâtre, planche des photographies pour la page « Fin ») : 133 fichiers, 28,3 Mo, en 1600 × 2400 (WebP). Les 24 décors du prototype devenus inutiles sont retirés. Dix décors dépassent 450 Ko même en qualité 82 (patinoire, rocaille, pavé, village, graffiti, fantômes-rue, foule-téléphone, gorge, verdure, mur-terre). Les décors qui attendent un repérage de Karl sont des images d'attente floues. |
@@ -59,15 +61,50 @@ L'extrait jouable du 28 septembre se refabrique avec la version précédente du 
 Le travail qui reste est découpé en trois sessions distinctes, avec leurs consignes prêtes à
 coller : [docs/darshan-sessions-restantes.md](../../docs/darshan-sessions-restantes.md).
 
-**État au 3 octobre.** Faits : les cinq scènes (point 3), les effets des chapitres 0 à 2, le son
-(point 4 : tout sauf l'écoute de Karl), le plan des photos du Kerala et le second tour de
-questions (points 4 bis et 7, en attente des réponses de Karl). En cours : les effets des
-chapitres 3, 4 et 5, et les réponses de Karl (2.7, 1.8, 1.5 et les petits réglages du point 5).
-Restent : les effets des chapitres 6 et 7 ; les transitions `bandes-photo` et `bandes-julie` et
-l'entrée « même plan » ; les retouches du pigeonnier (1.2, 1.3 : `autre-cote` au lieu de l'accord
-du père pour le jour d'Aluva) ; les sons appelés et encore muets (grondement, pierre, choc,
-battement, aspiration, coche-pinceau, coche-stylo, nuage) ; le plan du Kerala, une fois Karl
-d'accord ; les essais d'ensemble et la fiche d'essai pour Apple Books.
+**État à l'arrêt du 3 octobre (soir).** Le livre se fabrique, passe EPUBCheck sans erreur ni
+avertissement et se joue de la page de titre à « Fin » (`essai-livre.js`, `essai-touchers.js`).
+Faits ce jour : les cinq scènes (point 3) ; les transitions et l'entrée « même plan » ; les
+effets des chapitres 0 à 6 et de 7.1 à 7.3 (point 2) ; le son (point 4, sauf l'écoute de Karl) ;
+les réponses de Karl 13, 16 et 40 et les petits réglages (point 5) ; le plan des photos du
+Kerala et le second tour de questions (points 4 bis et 7 : questions 45 à 51, en attente).
+
+Reste, dans l'ordre :
+1. **Six effets du chapitre 7** (zone « chapitre 7 » d'`effets.js`, outil commun `FxD`), notes de
+   l'équipe qui s'est arrêtée là :
+   - `partage` (7.4, et 6.11 par la mécanique `attendre`) : état dans `scene.partage` (nettoyé par
+     `Fx.nettoyer`), calque `Fx.dessous` au-dessus de `.decor` ; deux moitiés (images en 100cqw ×
+     150cqw, ancrées à gauche et à droite), un fil de nuit de `ecart` unités (`--ecart`), la moitié
+     non active assombrie, ouverture depuis le centre (`clip-path`), fondu en mouvement réduit,
+     moitiés empilées en grand texte ; `fin=True, duree` : fondu ; `Son.partage(actif)` seulement
+     avec `son=True` (sinon l'ambiance de 6.11 repart). Dans `livre.py`, 7.4 : les
+     `E("ambiance", partage=…)` reçoivent `actif=…`, et « Le temps passe » et le dernier temps
+     `son=True`. L'arête de pierre de 6.2 (`areteDePierre`, `scenes.js`) peut être reprise.
+   - `vacille` (7.7) ; `enjambees` (7.8 : trois bonds, `Son.note('montantes', k)` et un saut, la
+     porte qui grandit autour de la serrure (932, 1010)) ; `ralenti` (7.10 :
+     `Fx.etat(scene).vitesse = 0.5`, que `Fx.tache` applique déjà, et `Son.ralenti(true)` ;
+     `deja=True` en début de 7.11 ; l'agitation du ruban, `affole`, reste vive) ; `chiasme`
+     (7.11 : les sept mots avant la virgule tirés de la page, « aime » centré sur l'éclipse
+     (680, 875), les noms de part et d'autre, « et » dans l'anneau, en vermillon bordé de crème,
+     lettre à lettre ; la phrase reste lue par les lecteurs d'écran) ; `etoiles-jour` (7.11 : une
+     étoile fixe en (980, 545), fondu de 2 s).
+   - Compléments : la pluie de 7.4 (`peint`, `accalmie` : pas de seconde averse si l'ambiance est
+     déjà la pluie), `transfert` avec `jaillir` (7.8), la boussole avec `bouton` et `etat="nord"`
+     (7.10 : l'aiguille de 62° à −38° en 1,5 s, puis `Carnet.boussole('nord')`).
+2. **Sons appelés et encore muets** (`son.js`) : grondement, pierre et choc (7.12 à 7.15),
+   battement, aspiration, coche-pinceau et coche-stylo (3.10, 6.2), nuage (2.10), bouton de nacre
+   (1.8), mistral, satin, encre, fumée, rideau, éclat brisé, portes vides, fonte visqueuse
+   (chapitre 6) ; `tinte` doit lire `o.note` (0 à 6 : ré, mi, sol, la, si, ré, mi ; 3.1) ; un
+   souffle bref (3.3).
+3. **Ce qui attend Karl** : ses réponses aux questions 45 à 51 (le Kerala : rien n'est appliqué
+   avant son accord ; les sons refaits : la rumeur du restaurant, la télévision, la ballade) ; ses
+   avis sur le pli de 3.4, la lanterne, l'eau de 3.9 (ajoutée par l'équipe des effets : deux
+   `E("eau")` à retirer s'il n'en veut pas), le fondu enchaîné des pages « même plan », les
+   textes d'interface nouveaux (« à valider par Karl »).
+4. **Les essais d'ensemble** : `essai-livre.js` calme et normal, `essai-touchers.js`,
+   `essai-transitions.js` (ajouter les boutons nouveaux à `instants`), les pages de l'EPUB au
+   clavier, en grand texte et sans script ; puis la fiche d'essai pour Karl sur iPhone (Apple
+   Books : touchers, son, gestes, poids des toiles et des filtres du froid) avec l'EPUB à jour.
+
 
 Méthode suivie jusqu'ici : une équipe par fichier (un seul propriétaire par fichier, chacun sa
 section de `src/moteur.css`) ; avant chaque enregistrement, `build.py`, EPUBCheck avec
