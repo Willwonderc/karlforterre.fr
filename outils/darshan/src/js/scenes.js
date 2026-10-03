@@ -821,7 +821,7 @@ var Scenes = (function () {
           attente -= dt;
           while (attente <= 0) {
             attente += 0.032;
-            b.liste.push({ x: 90 + rnd() * 1020, y: 1280 + rnd() * 420, vx: (rnd() - 0.5) * 24, vy: -(70 + rnd() * 90), r: 11 + rnd() * 18,
+            if (b.liste.length < 170) b.liste.push({ x: 90 + rnd() * 1020, y: 1280 + rnd() * 420, vx: (rnd() - 0.5) * 24, vy: -(70 + rnd() * 90), r: 11 + rnd() * 18,
               vie: 1, ph: rnd() * 6.3, envol: false });
           }
         }
@@ -834,7 +834,7 @@ var Scenes = (function () {
         for (var i = b.liste.length - 1; i >= 0; i--) {
           var e = b.liste[i];
           if (b.phase !== 'inspire' || b.fin) e.envol = true;
-          if (e.envol) { e.vy = Math.max(-520, e.vy * (1 + 2.6 * dt) - 60 * dt); e.vie -= dt * 0.95; }
+          if (e.envol) { e.vy = Math.max(-520, e.vy * (1 + 2.6 * dt) - 60 * dt); e.vie -= dt * 0.95; } else e.vie -= dt * 0.16;
           e.x += (e.vx + Math.sin(tt * 2 + e.ph) * 14) * dt; e.y += e.vy * dt;
           if (e.vie <= 0 || e.y < -40) { b.liste.splice(i, 1); continue; }
           var clin = 0.65 + 0.35 * Math.sin(tt * 9 + e.ph * 3);
