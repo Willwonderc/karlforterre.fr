@@ -432,9 +432,45 @@ var Fx = (function () {
    (appliquer). Les images de ces effets (envols, lueurs de la barre, désenchantement en quatre
    mouvements) sont encore celles du prototype : voir « Ce qui reste » dans le rapport. */
 (function () {
+  // Chez Julie, un objet arrive comme une notification (4.3 : le téléphone ; 5.11 : le ticket). Traitement, 4.3 :
+  // « une notification brève, en bas, au-dessus du bouton du sac » ; synthèse : « bandeau gris arrondi au-dessus
+  // du bouton du sac, avec le vibreur ; `ploie` : le bouton ploie ». Le bandeau paraît (1,2 s), puis l'icône
+  // glisse dans le sac, qui s'allume et, avec `ploie`, ploie comme celui de Darshan en 5.2. L'objet entre dans le
+  // sac à la fin du vol, ou tout de suite si la page est quittée. Mouvement réduit : le bandeau en fondu, sans vol.
+  function notifier(scene, e) {
+    var fait = false, bandeau = el('div', { 'class': 'fx notification-objet', 'aria-hidden': 'true' }, scene);
+    var icone = el('span', { 'class': 'icone' }, bandeau), d = dessin(e.id), txt = el('span', {}, bandeau);
+    if (d) icone.appendChild(d);
+    el('small', {}, txt).textContent = ui('nouvel_objet');
+    el('span', { 'class': 'nom' }, txt).textContent = Objets.nom(e.id);
+    function entrer() {
+      if (fait) return;
+      fait = true;
+      Objets.ajouter(e.id, e.sac || null, false);
+      if (e.ploie) Fx.marquer(scene, 'objets', 'ploie', 700);
+    }
+    Fx.sonner('vibreur');
+    Fx.ensuite(function () { bandeau.classList.add('vu'); });
+    Fx.minuterie(scene, function () {
+      var b = Fx.bouton(scene, 'objets');
+      if (!Fx.active(scene) || !b) { entrer(); retirer(bandeau); return; }
+      bandeau.classList.remove('vu');
+      // le sac se montre d'avance s'il n'était pas là, pour que l'objet y rentre
+      if (b.hidden) { b.hidden = false; b.classList.add('arrivee'); }
+      Transitions.envol(scene, icone, b, e.id).then(function () {
+        b.classList.remove('arrivee');
+        entrer();
+        Fx.minuterie(scene, function () { retirer(bandeau); }, 400, true);
+      });
+      icone.classList.add('parti');
+    }, 1200, true);
+  }
   Effets['objet+'] = function (scene, e) {
-    Objets.ajouter(e.id, e.sac || null, !e.discret && e.style !== 'notification');
+    if (e.style === 'notification' && !e.discret) { notifier(scene, e); return; }
+    Objets.ajouter(e.id, e.sac || null, !e.discret);
     if (e.discret) Fx.sansPulsation();
+    // le bouton du sac ploie quand l'objet y est entré (bandeau, puis vol : environ deux secondes)
+    else if (e.ploie) Fx.minuterie(scene, function () { Fx.marquer(scene, 'objets', 'ploie', 700); }, calme ? 300 : 2100);
   };
   Effets['objet-'] = function (scene, e) { Objets.retirer(e.id, !e.discret); };
   // Un objet en devient un autre ; sans `discret`, le bandeau « Nouvel objet » (6.4 : les binocles).
@@ -505,14 +541,51 @@ var Fx = (function () {
 
   // L'interface : `voile` (la barre à 35 %), `sans="darshan"` (4.1 : les pages où Julie dit
   // « je »), `avec="darshan"` (5.2 : les boutons de Darshan reviennent).
+  // La barre change de main : traitement, 4.1 : « Trois secondes après, la photo posée, effet « interface » : les
+  // boutons « Objets » et « Carnet » s'effacent en 1,2 s. Ils se retirent, ils ne meurent pas » ; 5.2 : « les
+  // boutons « Objets » et « Carnet » reviennent (1,2 s, un reflet d'or) ». L'état de la page suivante est celui
+  // que build.py calcule (data-barre, les sacs de la page) : l'effet y revient à la fin, sans rien perdre.
+  function motsDe(scene, attribut) { return (scene.getAttribute(attribut) || '').split(/\s+/).filter(Boolean); }
+  function poserLaBarre(scene, qui) {
+    html.classList.toggle('barre-julie', qui === 'julie');
+    Objets.initialiser(motsDe(scene, 'data-sac'), motsDe(scene, 'data-sac-julie'),
+      { barre: qui, regard: scene.getAttribute('data-regard') === 'oui' });
+    Carnet.initialiser(Carnet.portes(), !scene.classList.contains('sans-magie'),
+      { pere: scene.getAttribute('data-pere') || null, boussole: scene.getAttribute('data-boussole') || null });
+  }
+  function boutonsDeDarshan(scene) { return $$('.barre .objets, .barre .carnet-bouton', scene).filter(function (b) { return !b.hidden; }); }
   Effets.interface = function (scene, e) {
-    function faire() {
-      if (e.voile) html.classList.add('voile-page');
-      if (e.sans === 'darshan') html.classList.add('barre-julie');
-      if (e.avec === 'darshan') html.classList.remove('barre-julie');
-      Objets.majBoutons(false);
+    var ms = calme ? 300 : (e.duree || 1200);
+    if (e.voile) html.classList.add('voile-page');
+    if (e.sans === 'darshan') {
+      // ils s'effacent, puis la barre est celle de Julie
+      var partants = boutonsDeDarshan(scene);
+      partants.forEach(function (b) { b.style.transition = 'opacity ' + ms + 'ms ease'; });
+      Fx.ensuite(function () { partants.forEach(function (b) { b.style.opacity = 0; }); });
+      Fx.minuterie(scene, function () {
+        partants.forEach(function (b) { b.style.transition = ''; b.style.opacity = ''; });
+        poserLaBarre(scene, 'julie');
+      }, ms + 60, true);
+      return;
     }
-    faire();
+    if (e.avec === 'darshan') {
+      // ils reviennent, avec un reflet d'or
+      poserLaBarre(scene, 'darshan');
+      var venus = boutonsDeDarshan(scene);
+      venus.forEach(function (b) { b.style.transition = 'none'; b.style.opacity = 0; });
+      Fx.ensuite(function () {
+        venus.forEach(function (b) {
+          b.style.transition = 'opacity ' + ms + 'ms ease';
+          b.style.opacity = 1;
+          if (e.reflet === 'or' && !calme) b.classList.add('reflet-or');
+        });
+      });
+      Fx.minuterie(scene, function () {
+        venus.forEach(function (b) { b.style.transition = ''; b.style.opacity = ''; b.classList.remove('reflet-or'); });
+      }, ms + 400, true);
+      return;
+    }
+    Objets.majBoutons(false);
   };
   // Le compte à rebours : les mots s'éclairent, leur double se pose en haut de la page.
   Effets.compte = function (scene, e) { Compte.afficher(scene, e.valeur || '', { son: e.son }); };
@@ -580,8 +653,18 @@ var Fx = (function () {
     }
     if (e.retenir) return Fx.pause(scene, e.retenir);
   };
+  // `cible="sac"` (4.7) : le bouton du sac tremble `n` fois (120 ms chaque fois) sur le vibreur d'un téléphone posé ;
+  // `haptique` : le motif du vrai téléphone (jamais en mouvement réduit, ni sons coupés : Fx.vibrer). En mouvement
+  // réduit, rien ne bouge.
   Effets.vibre = function (scene, e) {
-    Fx.sonner('vibre');
+    if (e.cible === 'sac') {
+      var b = Fx.bouton(scene, 'sac'), n = e.n || 3;
+      Fx.sonner('vibreur');
+      if (b && !calme) {
+        b.style.animation = 'tremble-sac 120ms linear ' + n;
+        Fx.minuterie(scene, function () { b.style.animation = ''; }, n * 120 + 80, true);
+      }
+    } else Fx.sonner('vibre');
     if (e.haptique) Fx.vibrer(e.haptique);
   };
   Effets.assourdi = function () { Son.filtre('assourdi'); };
@@ -629,6 +712,155 @@ var Fx = (function () {
 // ================================================================ effets nouveaux, chapitres 4 à 8 (début)
 /* Les effets qui manquaient, dont la première page est aux chapitres 4 à 8, s'ajoutent ici, chacun
    juste au-dessus de la ligne « (fin) » ci-dessous. */
+
+// Les outils communs des effets de cette zone (ceux de la zone « 0 à 3 » : FxA).
+var FxB = {
+  // Une unité de page, en pixels CSS : la largeur de mise en page de la scène (offsetWidth), que ne change aucune mise à
+  // l'échelle de la liseuse (getBoundingClientRect, lui, la subit).
+  k: function (scene) { return (scene.offsetWidth || W) / W; },
+  // Un dégradé de lueur d'or (dans les définitions du SVG qui porte `g`) : son identifiant.
+  lueur: function (g) {
+    var svg = g.ownerSVGElement || g, defs = $('defs', svg) || svgEl('defs', {}, svg), id = Gestes.suivant('lueur'), d = svgEl('radialGradient', { id: id }, defs);
+    [[0, '#fff4d6', 0.9], [0.4, '#ffd98a', 0.4], [1, '#ffc060', 0]].forEach(function (s) {
+      svgEl('stop', { offset: s[0], 'stop-color': s[1], 'stop-opacity': s[2] }, d);
+    });
+    return id;
+  }
+};
+
+// ---------------------------------------------------------------- chapitre 4 : Amélie et Julie (4.1 à 4.7)
+// Le seul chapitre à la première personne : le monde de Julie, ses photos, son téléphone ; aucune magie.
+(function () {
+  // ---- vers (4.2) : la litanie des questions de l'hôpital, qui devient poème
+  // Traitement, 4.2 : « « vers », au T5, seul moment typographique du chapitre. Sur le mur clair du couloir, les
+  // trois questions déjà lues reviennent, coupées en vers à leurs pauses, sans un mot changé […] Elles paraissent
+  // ligne à ligne, une par battement (700 ms), à l'encre grise, dans la police du livre ; puis reprennent, plus
+  // pâles et décalées, trois fois, en montant lentement : « des milliers de fois ». Au T6, il n'en reste qu'un
+  // filigrane. Masquées aux lecteurs d'écran (elles viennent d'être lues). Mouvement réduit : le poème paraît une
+  // fois, immobile et pâle. » Son : « Au T5, les bips se calent sur une mesure régulière, celle des vers ; au T6, ils
+  // se désordonnent. »
+  // Les vers viennent du texte de la page, jamais d'ailleurs : `questions` (3) citations « … » lues dans les temps,
+  // coupées aux débuts de phrase de `coupes` (une liste par question, écrite dans livre.py) ; `boucles` (3)
+  // reprises. Le tout est décoratif : calque masqué aux lecteurs d'écran, jamais de toucher.
+  var SEP = '[\\s\\u00a0\\u202f]*';
+  function questionsDuTexte(scene, n) {
+    var texte = $$('.texte .temps', scene).map(function (t) { return t.textContent; }).join(' '), r = [], m;
+    var re = new RegExp('«' + SEP + '([^»]*?)' + SEP + '»', 'g');
+    while (r.length < n && (m = re.exec(texte))) r.push(m[1].replace(/\s+/g, ' '));
+    return r;
+  }
+  // Une question coupée en lignes, aux débuts de phrase donnés (ceux qui ne s'y trouvent pas sont ignorés) ; la
+  // première ligne reprend le guillemet ouvrant du livre, la dernière le fermant.
+  function enVers(question, coupes) {
+    var pos = [0];
+    (coupes || []).forEach(function (c) { var i = question.indexOf(c); if (i > 0) pos.push(i); });
+    pos.sort(function (a, b) { return a - b; });
+    var lignes = pos.map(function (p, k) {
+      return question.slice(p, k + 1 < pos.length ? pos[k + 1] : question.length).replace(/^\s+|\s+$/g, '');
+    });
+    lignes[0] = '« ' + lignes[0];
+    lignes[lignes.length - 1] += ' »';
+    return lignes;
+  }
+  // la passe 0 : l'encre grise, nette ; les reprises (x, y, opacité) : plus pâles, décalées, de plus en plus haut
+  var REPRISES = [[0, 0, 0.9], [34, -46, 0.42], [-44, -96, 0.28], [22, -150, 0.18]];
+  var DERIVE = [2.5, 6.5, 8, 9.5];       // en unités de page par seconde : les vers montent lentement
+  var BATTEMENT = 0.7, VITE = 0.14;      // une ligne par battement ; les reprises, plus vite
+  Effets.vers = function (scene, e) {
+    var fx = Fx.etat(scene), liste = questionsDuTexte(scene, e.questions || 3), base = Fx.ambianceDeLaPage(scene);
+    // les bips de l'hôpital se calent sur la mesure des vers, puis se désordonnent au temps suivant
+    if (base) Son.ambiance(base, { mesure: true });
+    if (!liste.length) { if (base) Fx.surTemps(scene, function () { Son.ambiance(base); }); return; }
+    var strophes = liste.map(function (q, i) { return enVers(q, (e.coupes || [])[i]); });
+    var passes = calme ? 1 : 1 + (e.boucles === undefined ? 3 : e.boucles);
+    var calque = Fx.calque(scene, 'vers', 4, false), blocs = [], lignes = [];
+    for (var p = 0; p < passes; p++) {
+      var bloc = el('div', { 'class': 'vers-bloc' }, calque), mes = [];
+      Fx.poser(bloc, 96 + REPRISES[p][0], 640 + REPRISES[p][1], 760);
+      strophes.forEach(function (s) {
+        var st = el('p', { 'class': 'vers-strophe' }, bloc);
+        s.forEach(function (l) { var d = el('span', { 'class': 'vers-ligne' }, st); d.textContent = l; mes.push(d); });
+      });
+      blocs.push(bloc); lignes.push(mes);
+    }
+    // au temps suivant (T6) : il n'en reste qu'un filigrane
+    function filigrane() {
+      if (base) Son.ambiance(base);
+      fx.versFiligrane = true;
+      blocs.forEach(function (b) { b.style.opacity = calme ? 0.2 : 0.16; });
+    }
+    Fx.surTemps(scene, filigrane);
+    if (calme) {
+      // le poème paraît une fois, immobile et pâle
+      blocs[0].style.transition = 'opacity 300ms';
+      lignes[0].forEach(function (d) { d.style.opacity = 1; });
+      blocs[0].style.opacity = 0;
+      Fx.ensuite(function () { if (!fx.versFiligrane) blocs[0].style.opacity = 0.55; });
+      return;
+    }
+    // une ligne par battement (700 ms) ; puis les reprises, en cascade rapide, de plus en plus pâles
+    var fin0 = lignes[0].length * BATTEMENT, k = FxB.k(scene), arret = null;
+    function debut(passe, i) { return passe === 0 ? i * BATTEMENT : fin0 + 0.3 + (passe - 1) * 1.0 + i * VITE; }
+    blocs.forEach(function (b) { b.style.transition = 'opacity 1600ms ease'; });
+    Fx.tache(scene, function (t) {
+      if (fx.versFiligrane && arret === null) arret = t;
+      // au temps suivant, ce qui reste à paraître paraît vite
+      var tt = arret === null ? t : arret + (t - arret) * 8;
+      for (var passe = 0; passe < passes; passe++) {
+        blocs[passe].style.transform = 'translateY(' + (-Math.min(tt, 16) * DERIVE[passe] * k).toFixed(2) + 'px)';
+        lignes[passe].forEach(function (d, i) {
+          d.style.opacity = (borne((tt - debut(passe, i)) / 0.5) * REPRISES[passe][2]).toFixed(3);
+        });
+      }
+      if (tt > 16) return false;
+    });
+  };
+
+  // ---- tremble (4.3) : la tôle du RER vibre sous le pouce qui écrit
+  // Traitement, 4.3 : « « vibration » légère de la photo du RER, jamais du texte : la tôle vibre sous le pouce
+  // qui écrit » ; synthèse : « la couche du décor tremble d'un pixel, irrégulièrement, comme un train, jusqu'au
+  // plan `jusqua` ; jamais le texte ; rien en mouvement réduit ». Le décor bouge d'une fraction de la page (un
+  // pixel sur un écran de téléphone), un peu plus grande aux joints des rails ; le grossissement de 0,7 %
+  // garde les bords couverts. S'arrête au plan `jusqua` (le plan suivant), ou avec la page.
+  Effets.tremble = function (scene, e) {
+    var d = Fx.decor(scene);
+    if (calme || !d) return;
+    var jusqua = e.jusqua === undefined ? 1 : e.jusqua, alea = Fx.alea(23), ax = e.legere ? 0.2 : 0.34, ay = e.legere ? 0.14 : 0.24;
+    var joint = 0.5 + alea() * 0.4, secousse = 0;     // le prochain joint de rail, et sa secousse du moment
+    d.style.transformOrigin = '50% 50%';
+    Fx.surDepart(scene, function () { d.style.transform = ''; });      // la page quittée garde son décor immobile
+    Fx.tache(scene, function (t, dt) {
+      if (Fx.planVisible(scene) >= jusqua) { d.style.transform = ''; return false; }
+      // le fond de l'ébranlement : trois fréquences sans rapport, d'intensité changeante
+      var env = 0.65 + 0.35 * Math.sin(t * 2.3) * Math.sin(t * 1.45 + 1);
+      var x = ax * env * (0.55 * Math.sin(t * 58 + 0.7) + 0.35 * Math.sin(t * 86 + 2.1) + 0.2 * Math.sin(t * 32));
+      var y = ay * env * (0.5 * Math.sin(t * 70 + 1.3) + 0.4 * Math.sin(t * 48 + 0.2));
+      if (t >= joint) { secousse = 1; joint = t + 0.55 + alea() * 0.6; }
+      secousse *= Math.pow(0.00003, dt);        // la secousse retombe en un dixième de seconde
+      y += ay * 2.2 * secousse * Math.sin(t * 90);
+      d.style.transform = 'translate3d(' + x.toFixed(3) + '%,' + y.toFixed(3) + '%,0) scale(1.007)';
+    });
+  };
+
+  // ---- musicien (4.5) : de la guitare de rue, au passage, sans accord
+  // Traitement, 4.5 : « « musicien » au T4 (son seul) » ; Son : « quelques mesures de guitare de rue passent de
+  // droite à gauche pendant la lecture, comme si l'on défilait devant ; la dernière mesure attend son accord, qui
+  // ne vient pas : « l'accord tacite » ». Le son lui-même (composé pour le livre, huit secondes, de droite à
+  // gauche) est celui de son.js ; `accord_final=False` : l'accord n'arrive jamais. Son seul : les sous-titres
+  // des sons le nomment (chantier I4).
+  Effets.musicien = function (scene, e) { Fx.sonner('musicien', e); };
+
+  // ---- compte (4.7, 5.1, 5.11) : le tic du téléphone de Julie
+  // Chez Julie, le tic est celui de son téléphone (son.js : `monde: 'julie'`) ; Compte.afficher joue celui de
+  // Darshan. Le monde vient de la fiche (`monde="julie"`) ou de la page elle-même.
+  var compteAvant = Effets.compte;
+  Effets.compte = function (scene, e) {
+    if (!e.son || !(e.monde === 'julie' || Fx.mondeJulie(scene))) return compteAvant(scene, e);
+    var r = compteAvant(scene, Fx.copie(e, { son: null }));
+    Fx.sonner(e.son, { monde: 'julie' });
+    return r;
+  };
+})();
 // ================================================================ effets nouveaux, chapitres 4 à 8 (fin)
 
 // ================================================================ effets des réponses de Karl (début)

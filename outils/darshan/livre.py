@@ -505,7 +505,8 @@ SCENES = {
              coupes={100: ["«\u00a0Êtes-vous sûr", "«\u00a0Pouvez-vous évaluer", "Ces phrases sont longues",
                            "C’est en les répétant", "Généralement les gens"]},
              gestes=[G("curseur", mini=0, maxi=10, depart=0, sens="vertical", objet="reglette", apres=True)],
-             moments=[E("vers", questions=3, boucles=3)]),
+             moments=[E("vers", questions=3, boucles=3,
+                        coupes=[["ainsi que", "qui vous"], ["de vos"], ["sur une échelle", "dix étant", "que vous ayez", "et zéro"]])]),
     "4.3": S(["rer", "kawa", "lit-telephone"], texte="haut",
              debut=[E("tremble", legere=True, jusqua=1)],
              extra={"On s’est vues trente minutes": [E("decor", i=1), E("son", effet="tasse")],
@@ -513,7 +514,7 @@ SCENES = {
              gestes=[G("messages", a="Amélie", bulles=2, touchers=5,
                        effets=[E("objet+", id="telephone", sac="julie", style="notification")])]),
     "4.4": S("carrefour", texte="haut clair",
-             gestes=[G("rythme", n=4, effet="pas", semelles="plateforme", avance=True)]),
+             gestes=[G("rythme", n=4, effet="pas", sol="plateforme", avance=True)]),
     "4.5": S(["foule-telephone", "sortie", "village"], texte="haut",
              coupes={103: ["Je pourrais très bien partir", "Ces pensées me traversent", "Parfois ils sont pianistes"]},
              extra={"Je veux prendre l’air": [E("decor", i=1), E("assourdi")]},
@@ -532,7 +533,7 @@ SCENES = {
                                                                E("ambiance", id="chambre")]},
              gestes=[G("contact", nom="Darshan", nom_ecrit_au_retour=True, numero=None, tendre=True, apres=True)],
              moments=[E("vibre", cible="sac", n=3, haptique=[60, 90, 60, 90, 60]),
-                      E("compte", valeur="quatre jours", son="tic")]),
+                      E("compte", valeur="quatre jours", son="tic", monde="julie")]),
 
     # ============================================================ 5. Douceurs et confettis
     # 5.1 est encore une page de Julie à la première personne : sans les boutons de Darshan (barre du
