@@ -821,4 +821,7 @@ html:not(.jeu) .decor .plan.sans-script { opacity: 1; }
 
 /* ============================================================ effets nouveaux, chapitres 6 et 7 (début)
    Les règles des effets de ces chapitres s'ajoutent juste au-dessus de la ligne « (fin) » ci-dessous. */
+/* ---- chapitre 6 : des attentes de part et d'autre */
+/* 6.7 les deux moitiés du voilage : l'effet les découpe dans l'image, chacune ne montre que sa part */
+.rideau-moitie { overflow: hidden; }
 /* ============================================================ effets nouveaux, chapitres 6 et 7 (fin) */
