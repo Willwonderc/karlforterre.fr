@@ -485,6 +485,154 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 .jeu .regard { display: block; }
 .regard.vu { opacity: 1; }
 
+/* ------------------------------------------------------------ scènes écrites à la main (scenes.js) et transitions
+   Les règles nouvelles des scènes et des transitions s'ajoutent ici, au-dessus de la ligne « (fin) ». */
+/* les calques SVG des scènes (plier, vision, listes) : sous le texte, sans toucher */
+.scene-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+/* 3.4, 3.10, 3.11 : seuls les temps déjà lus prennent place ; le texte reste en bas et laisse le haut
+   de l'image aux étoiles, à la lanterne et à la porte (« tout reste au-dessus du texte ») ; 7.12 à 7.15 : le
+   texte en haut, la porte et sa lanterne dessous */
+.jeu .scene[data-special="plier"] .texte .temps:not(.vu),
+.jeu .scene[data-special="vision"] .texte .temps:not(.vu),
+.jeu .scene[data-special="rue-de-rungis"] .texte .temps:not(.vu) { display: none; }
+.jeu .scene[data-special="plier"] .texte .temps.vu,
+.jeu .scene[data-special="vision"] .texte .temps.vu,
+.jeu .scene[data-special="rue-de-rungis"] .texte .temps.vu { animation: temps-parait 900ms ease backwards; }
+@keyframes temps-parait { from { opacity: 0; filter: blur(0.5cqw); } to { opacity: 1; filter: none; } }
+.calme .scene[data-special="plier"] .texte .temps.vu,
+.calme .scene[data-special="vision"] .texte .temps.vu,
+.calme .scene[data-special="rue-de-rungis"] .texte .temps.vu { animation: temps-parait-calme 200ms ease backwards; }
+@keyframes temps-parait-calme { from { opacity: 0; } to { opacity: 1; } }
+/* plier (3.4) : les noms des deux étoiles du carnet, en petites capitales d'or pâle */
+.plier-nom { font-family: "Unna", Georgia, serif; font-size: 40px; font-variant: small-caps; letter-spacing: 0.14em;
+  fill: var(--or-pale); stroke: rgba(5, 8, 22, 0.75); stroke-width: 6px; paint-order: stroke; }
+/* vision (3.10, 3.11) : le noir de la nuit de Karl sous les plans ; les braises du souffle, par-dessus
+   les calques du geste ; leur lueur chaude au bas de l'image (seule, en mouvement réduit) */
+.decor .vision-fond { background: #040205; }
+.vision-braises { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.vision-braises-toile { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.vision-braises-lueur { position: absolute; left: 0; right: 0; bottom: 0; height: 45%; opacity: 0;
+  background: radial-gradient(ellipse 80% 70% at 50% 100%, rgba(255, 138, 48, 0.55), rgba(255, 100, 20, 0.16) 55%, rgba(255, 90, 10, 0) 75%); }
+/* listes (6.2) : l'écran partagé ; Julie dans la moitié droite (en bas en grand texte : l'arête à y 670) ;
+   l'arête de pierre, verticale ou horizontale ; la photo de la façade pour le coin de rue */
+.listes-partage { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.listes-droite { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden;
+  -webkit-clip-path: inset(0 0 0 50%); clip-path: inset(0 0 0 50%); }
+.listes-droite img, .listes-photo { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.listes-droite img { transform: translateX(30%); }
+.grand .listes-droite { -webkit-clip-path: inset(37.22% 0 0 0); clip-path: inset(37.22% 0 0 0); }
+.grand .listes-droite img { transform: translateY(18%); }
+.listes-photo { opacity: 0; }
+.listes-arete.horizontale, .grand .listes-arete.verticale { display: none; }
+.grand .listes-arete.horizontale { display: block; }
+/* les deux listes sont des voix intérieures, en italique dans le livre ; la fin de la phrase, sans case */
+.listes-cote { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+.listes-cote .liste-articles { font-style: italic; }
+.listes-cote.darshan .liste-articles { left: 2.5cqw; }
+.listes-cote.julie .liste-articles { right: 2.5cqw; }
+.grand .listes-cote .liste-articles { left: 7cqw; right: 7cqw; }
+.liste-fin { margin: 1.7cqw 0 0; line-height: 1.32; }
+/* la phrase entière reste au panneau pour les lecteurs d'écran ; à l'écran, elle se lit dans sa moitié */
+.jeu .scene[data-special="listes"] .texte .temps.listes-ailleurs { position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; padding: 0; }
+/* rue-de-rungis (7.12 à 7.15) : seul le temps en cours reste à l'écran, pour que la porte et sa lanterne restent
+   dégagées, sauf la prière de 7.14, qui se garde entière ; le panneau, moins haut */
+.jeu .scene[data-special="rue-de-rungis"]:not(.rue-priere) .texte .temps.passe { display: none; }
+.jeu .scene[data-special="rue-de-rungis"] .texte.en-haut { padding-bottom: 8cqw; }
+/* 7.14 : l'or qui quitte les mots ; les deux premiers temps de la prière, presque effacés, puis revenus */
+.jeu .scene[data-special="rue-de-rungis"] .texte p { transition: color 1.5s ease; }
+.jeu .scene[data-special="rue-de-rungis"] .texte .temps.vu.rue-efface { opacity: 0.1; transition: opacity 1.2s ease; }
+/* le contre-jour : le soleil qui déborde autour de la pierre (entre la photo de la rue et la porte) */
+.decor .rue-contre-jour { opacity: 0; pointer-events: none;
+  background: radial-gradient(ellipse 50% 28% at 50% 65%, rgba(255, 249, 228, 0.9), rgba(255, 222, 150, 0.45) 45%, rgba(255, 200, 110, 0) 100%); }
+/* 7.13, mouvement réduit : le cadre se ferme un peu quand Darshan recule, au lieu du recul ; il se rouvre au geste */
+.rue-cadre { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 1.5s ease;
+  background: radial-gradient(ellipse 72% 58% at 50% 52%, rgba(6, 6, 10, 0) 55%, rgba(6, 6, 10, 0.62) 100%); }
+.rue-cadre.vu { opacity: 1; }
+/* 7.14 : la clé et sa poussière, au-dessus du texte, sous la barre ; la lueur d'or de sa naissance */
+.rue-dessus { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 4; }
+.rue-dessus canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.rue-cle { position: absolute; }
+.rue-cle::before { content: ""; position: absolute; left: -12%; right: -12%; top: -30%; bottom: -30%;
+  background: radial-gradient(closest-side, rgba(255, 214, 140, 0.55), rgba(255, 200, 110, 0)); }
+.rue-cle svg { position: relative; display: block; width: 100%; height: 100%; overflow: visible; }
+/* le coin de page (à partir du désenchantement, 7.14) : ✦ devient un coin de papier corné, en bas à droite ; il
+   garde ses noms pour les lecteurs d'écran ; il ne bouge pas : il pâlit et revient */
+.jeu .scene .suite::before { content: ""; position: absolute; right: -5cqw; bottom: -4cqw; width: 10.5cqw; height: 10.5cqw;
+  opacity: 0; transition: opacity 1s ease; pointer-events: none;
+  background: linear-gradient(315deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 48%, rgba(42, 28, 16, 0.45) 49.4%, #efe3c8 51%, #dccba6 100%); }
+.jeu .scene.sans-magie .suite { color: rgba(184, 154, 106, 0); transition: color 1s ease, opacity 500ms; }
+.jeu .scene.sans-magie .suite::before { opacity: 1; }
+.jeu .scene.sans-magie .suite.pret { animation: coin-page 2.6s ease-in-out infinite; }
+.calme .scene.sans-magie .suite.pret { animation: none; }
+@keyframes coin-page { 50% { opacity: 0.55; } }
+/* clôture (8.1) : le blanc du livre imprimé entre le quatrième et le cinquième vers ; le poème qui s'efface
+   devant la page « Fin » */
+.scene[data-special="cloture"] .poeme p.vers:nth-of-type(5) { margin-top: 5cqw; }
+.jeu .scene[data-special="cloture"] .texte, .jeu .scene[data-special="cloture"] .cloture-svg { transition: opacity 1.2s ease; }
+.jeu .scene[data-special="cloture"] .cloture-sort { opacity: 0; }
+/* la page « Fin » : sur le papier, « Fin », le générique, la planche des photographies, « Nouvelle lecture » */
+.jeu .fin-livre.fin-page { top: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 7cqw 7cqw 8cqw; }
+.fin-page p { margin: 0; color: #2a1c10; }
+.fin-page .fin-titre { margin: 0 0 3cqw; font-size: 6.4cqw; }
+.fin-page .fin-generique { font-size: 3.4cqw; margin-bottom: 1.2cqw; }
+.fin-page .fin-couverture { font-size: 2.8cqw; font-style: italic; color: #5d4a35; margin-bottom: 4.5cqw; }
+.fin-page figure { margin: 0 0 4.5cqw; }
+.fin-page figcaption { font-size: 2.6cqw; font-style: italic; color: #6b5a45; margin-bottom: 1.4cqw; }
+.fin-page figure img { display: block; width: 84cqw; max-width: 100%; height: auto; }
+.grand .fin-page figure img { width: 66cqw; }
+/* « Nouvelle lecture » : le livre se ferme comme une porte */
+.cloture-porte { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 30; }
+/* ---- réponses de Karl (30 septembre) : 2.7, Darshan commande le dessert et pense « Si j’avais su » (réponse 13) */
+/* la pensée de Darshan, comme ses autres pensées (les paragraphes en italique du livre) : livre.REPLIQUES la marque
+   « pensee-darshan », et build.py lui donne les classes « de-darshan » (sa couleur) et « voix » (l'italique) */
+/* la carte des desserts (effet commande) : papier crème, double filet, seule nette sur la table floue */
+.fx-carte { position: absolute; box-sizing: border-box; border-radius: 0.8cqw;
+  background: linear-gradient(172deg, #fbf6ea 0%, #f5edda 62%, #ede2c9 100%);
+  box-shadow: 0 1.6cqw 4cqw rgba(0, 0, 0, 0.5), 0 0.3cqw 0.8cqw rgba(0, 0, 0, 0.32); }
+.fx-carte-cadre { position: absolute; left: 1.6cqw; right: 1.6cqw; top: 1.6cqw; bottom: 1.6cqw;
+  border: 0.18cqw solid #6b563c; border-radius: 0.3cqw; }
+.fx-carte-cadre::after { content: ""; position: absolute; left: 0.6cqw; right: 0.6cqw; top: 0.6cqw; bottom: 0.6cqw;
+  border: 0.08cqw solid #8a7354; }
+.fx-carte-titre { position: absolute; left: 0; right: 0; top: 8.5%; text-align: center; font-family: "Unna", Georgia, serif;
+  font-variant: small-caps; letter-spacing: 0.22em; font-size: 3cqw; line-height: 1.2; color: #4f3e2a; }
+.fx-carte-filet { position: absolute; left: 43%; right: 43%; top: 24%; height: 0; border-top: 0.15cqw solid #8a7354; }
+.fx-carte-filet::after { content: ""; position: absolute; left: 50%; top: -0.6cqw; width: 0.9cqw; height: 0.9cqw;
+  margin-left: -0.6cqw; background: #f5edda; border: 0.15cqw solid #8a7354; transform: rotate(45deg); }
+/* les autres desserts, hors de la mise au point : des lignes sans un mot */
+.fx-carte-flou { position: absolute; height: 2.6cqw; margin-top: -1.3cqw; border-radius: 1.3cqw;
+  background: radial-gradient(ellipse at center, rgba(79, 62, 42, 0.4) 0%, rgba(79, 62, 42, 0.18) 46%, rgba(79, 62, 42, 0) 72%); }
+.fx-carte-plat { position: absolute; left: 0; right: 0; top: 57%; text-align: center; font-family: "Unna", Georgia, serif;
+  font-style: italic; font-size: 4.3cqw; line-height: 1.3; color: #2b2016; }
+.fx-carte-plat > span { position: relative; display: inline-block; padding: 0 0.5em; }
+/* le trait d'or de Darshan sous son dessert */
+.fx-carte-plat .fx-carte-trait { position: absolute; left: 0.35em; right: 0.35em; bottom: 0.02em; height: 0.3cqw; border-radius: 0.2cqw;
+  background: #b07d26; transform-origin: 0 50%; transform: scaleX(0); }
+/* sa commande, le titre du chapitre, dans la police et l'or des titres (h1.chapitre) */
+.fx-commande-ligne { position: absolute; left: 5cqw; right: 5cqw; text-align: center; font-family: "Unna", Georgia, serif;
+  font-variant: small-caps; letter-spacing: 0.08em; font-size: 5.2cqw; line-height: 1.25; color: var(--or-pale);
+  text-shadow: 0 0 2cqw rgba(255, 210, 120, 0.45), var(--ombre-texte); opacity: 0; transition: opacity 700ms ease; }
+.fx-commande-ligne.vu { opacity: 1; }
+/* pendant que la carte attend, le halo prend le graphite des aides de Julie : le blanc ne se verrait pas sur le papier */
+.fx-commande-attente .geste-calque .halo-interet { stroke: #3b3128; }
+/* ---- 1.8, la chemise boutonnée (réponse 40) : la consigne, sur le lin blanc, prend une pastille */
+.scene.fx-lin-sur .consigne { left: 50%; right: auto; transform: translateX(-50%); width: max-content; max-width: 84cqw;
+  padding: 0.8cqw 3cqw; border-radius: 4cqw; background: var(--aide-fond); text-shadow: none; }
+/* ---- 8.1 : le générique de la page « Fin », en clair après le poème pour qui lit sans script ; en jeu, la scène
+   « cloture » montre le sien */
+.jeu .generique-clair { display: none; }
+.generique-clair { margin-top: 5cqw; text-align: center; }
+.generique-clair p { margin: 0 0 1.2cqw; }
+.generique-clair .fin-titre { font-family: "Unna", Georgia, serif; font-variant: small-caps; letter-spacing: 0.2em; font-size: 5cqw; margin-bottom: 2.4cqw; }
+.generique-clair .fin-generique { font-size: 3.2cqw; }
+.generique-clair .fin-couverture { font-size: 2.8cqw; font-style: italic; }
+/* ---- transitions : le même plan fond son image sous le texte et la barre ; le banc d'essai, sur quatre colonnes */
+.tr.tr-plan { z-index: 4; pointer-events: none; }
+.jeu .banc-boutons { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.banc-boutons button { font-size: 2.9cqw; }
+/* ------------------------------------------------------------ scènes et transitions (fin) */
+
 /* ------------------------------------------------------------ mécaniques (équipe des mécaniques : src/js/mecaniques.js)
    Les calques des gestes (sous le texte : « couche-geste » ; les aides par-dessus : « geste-calque »),
    la couleur des aides selon le monde de la page (or chez Darshan, blanc et graphite chez Julie,
@@ -588,3 +736,208 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 /* sans script, une page montre son premier plan, ou ses plans « sans-script », qui passent par-dessus
    (build.py, PLANS_SANS_SCRIPT : 7.3, 7.11 à 7.15) */
 html:not(.jeu) .decor .plan.sans-script { opacity: 1; }
+
+/* ============================================================ effets nouveaux, chapitres 0 à 3 (début)
+   Les règles des effets de ces chapitres s'ajoutent juste au-dessus de la ligne « (fin) » ci-dessous. */
+/* Les calques de tous les effets (Fx.calque, Fx.dessous, Fx.dessus, Fx.toile, effets.js) : ils couvrent
+   la scène sans jamais recevoir un toucher. Ceux de l'image (rangs 1 à 6) restent dans .decor, qui forme
+   un empilement à part : le texte, au-dessus, ne passe jamais dessous. Ceux de `dessous` se glissent
+   entre l'image et le texte ; ceux de `dessus`, entre le texte et la barre. */
+.decor { isolation: isolate; }
+.fx { pointer-events: none; }
+.fx-calque, .fx-dessous, .fx-couche, .fx-dessus { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.fx-dessous { z-index: 0; overflow: hidden; }
+.fx-toile { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+
+/* ---- chapitre 1 : la voix écrite lettre à lettre (1.1, 2.3, 3.11), le nom seul de l'éclat court (1.9) */
+/* chaque lettre d'un temps de voix paraît à son tour ; le temps, lui, est entier dans la page (VoiceOver le lit d'un bloc) */
+.jeu .texte .lettre-voix { opacity: 0; }
+.jeu .texte .lettre-voix.ecrite { opacity: 1; transition: opacity 140ms; }
+/* l'éclat d'étoile de chaque lettre (1.1 : « or pâle, un éclat d'étoile par lettre ») */
+.lettre-voix.eclat { position: relative; animation: lettre-eclat 560ms ease-out; }
+.lettre-voix.eclat::after { content: "✦"; position: absolute; left: 50%; top: -0.55em; width: 1em; margin-left: -0.5em; text-align: center;
+  font-size: 0.7em; line-height: 1; font-style: normal; color: #fff4d6; text-shadow: 0 0 0.8cqw rgba(255, 215, 140, 0.95);
+  opacity: 0; animation: lettre-etoile 560ms ease-out; pointer-events: none; }
+@keyframes lettre-eclat { 0% { text-shadow: 0 0 0 rgba(255, 231, 176, 0); } 25% { text-shadow: 0 0 1.2cqw #ffe7b0, 0 0 2.8cqw rgba(255, 200, 110, 0.85); }
+  100% { text-shadow: var(--ombre-texte); } }
+@keyframes lettre-etoile { 0% { opacity: 0; transform: scale(0.2) rotate(-60deg); } 30% { opacity: 1; transform: scale(1.25) rotate(0); }
+  100% { opacity: 0; transform: scale(0.6) rotate(40deg); } }
+.calme .lettre-voix.eclat, .calme .lettre-voix.eclat::after { animation: none; }
+/* l'éclat court : le nom de l'objet, seul, sans les bandes ni le fragment (1.9, 7.8) */
+.eclat.court { pointer-events: none; }
+.eclat.court.joue { animation: none; }
+.eclat.court .eclat-nom { top: 38%; }
+.eclat.court:not(.calme).joue .eclat-nom { animation: eclat-nom 320ms cubic-bezier(.2, 1.5, .4, 1) both; }
+.eclat.court:not(.calme).sort .eclat-nom { animation: eclat-nom-sort 300ms ease-in both; }
+
+/* ---- chapitre 2 : les lueurs de la balance (2.2), les mots du compte (2.9…), le temps assourdi (2.4) */
+.lueur-balance { border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, rgba(255, 244, 222, 0.95) 0%, rgba(255, 236, 200, 0.55) 36%, rgba(255, 230, 190, 0) 70%); }
+/* « les mots s'éclairent dans la phrase » : or sur le sombre, brun doré sur le clair, blanc chez Julie */
+.mot-compte { transition: color 700ms ease, text-shadow 700ms ease; }
+.mot-compte.allume { color: #fff0c0; text-shadow: 0 0 1.4cqw rgba(255, 200, 110, 0.9), var(--ombre-texte); }
+.texte.clair .mot-compte.allume { color: #7a4a10; text-shadow: 0 0 1.2cqw rgba(244, 197, 106, 0.95); }
+.monde-julie .mot-compte.allume { color: #ffffff; text-shadow: 0 0 1.2cqw rgba(255, 255, 255, 0.85), var(--ombre-texte); }
+.monde-julie .texte.clair .mot-compte.allume { color: #1b1b1b; text-shadow: 0 0 1cqw rgba(255, 255, 255, 0.9); }
+.calme .mot-compte { transition: none; }
+/* 2.4 : « le temps s'affiche atténué (opacité 0,55, flou de 0,6 px), lisible, jusqu'à net » */
+.jeu .texte-assourdi .texte .temps.vu { opacity: 0.55; filter: blur(0.6px); }
+.calme.jeu .texte-assourdi .texte .temps.vu { filter: none; }
+
+/* ---- chapitre 3 : la légende de Pékin (3.1, 3.2) */
+/* les étoiles de la porte d'étoiles (3.1, 3.2) scintillent doucement, chacune à son rythme */
+.fx-scintille { animation: fx-scintille 3.8s ease-in-out infinite; }
+@keyframes fx-scintille { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+.calme .fx-scintille { animation: none; }
+
+/* ---- chapitre 3 : la bibliothèque de Pékin (3.7, 3.8) */
+/* 3.7 : les deux vers du recueil s'écrivent au pinceau sur la page de droite, en Amiri italique (la police du livre) ; chaque
+   lettre paraît mouillée, puis l'encre sèche. Le vers quitte le panneau ; le panneau vidé s'efface. */
+.fx-calligraphie { position: absolute; margin: 0; }
+.fx-calli-vers { margin: 0 0 3cqw; font-family: "Amiri", Georgia, serif; font-style: italic; font-size: 3.7cqw; line-height: 1.3;
+  color: #1c130a; opacity: 0.93; text-align: left; }
+.fx-calli-mot { white-space: nowrap; }
+.fx-calli-lettre { opacity: 0; text-shadow: 0 0 0.6cqw rgba(28, 19, 10, 0.75); transition: opacity 140ms ease-out, text-shadow 1400ms ease-out; }
+.fx-calli-lettre.ecrite { opacity: 1; text-shadow: 0 0 0.12cqw rgba(28, 19, 10, 0.35); }
+.calme .fx-calli-lettre { opacity: 1; text-shadow: 0 0 0.12cqw rgba(28, 19, 10, 0.35); transition: none; }
+.fx-calli-parti { display: none; }
+.texte.fx-calli-vide { opacity: 0; transition: opacity 500ms ease; }
+.calme .texte.fx-calli-vide { transition-duration: 200ms; }
+/* 3.8 : la porte battante (le vantail est un morceau de l'image, tourné autour de sa charnière) et ce que laisse voir l'entrebâillement */
+.fx-battant-vantail { position: absolute; overflow: hidden; transform-origin: 0 50%; will-change: transform; }
+.fx-battant-fond { position: absolute; opacity: 0; background: linear-gradient(to right, #c58a2c 0%, #ffcf6e 40%, #ffe29a 78%, #fff1c4 100%); }
+.fx-battant-halo { position: absolute; opacity: 0; background: linear-gradient(to right, rgba(255, 226, 150, 0), rgba(255, 238, 184, 0.9), rgba(255, 226, 150, 0)); }
+
+/* ---- chapitre 3 : le soir d'Aluva (3.9 à 3.12), les compléments des effets (3.3, 3.5, 3.6) */
+/* le sceau du mudrā (3.9, 3.10) reste en filigrane et respire */
+.fx-sceau-respire { animation: fx-sceau-respire 7s ease-in-out infinite; }
+@keyframes fx-sceau-respire { 0%, 100% { opacity: 0.72; } 50% { opacity: 1; } }
+.calme .fx-sceau-respire { animation: none; }
+/* la poussière grise des livres (3.6) : elle éteint les couleurs (saturation) et pose sa poudre et sa brume ; le papier chaud
+   qui revient quand elle s'envole ; le voile bas qui remplace les grains de 3.3 en mouvement réduit */
+.fx-poussiere-sat { background: rgba(142, 142, 148, 0.8); mix-blend-mode: saturation; }
+.fx-poussiere-voile { background-color: rgba(186, 186, 192, 0.34); }
+.fx-papier-chaud { background: #ffe3a0; mix-blend-mode: multiply; }
+.fx-poussiere-leger { background: radial-gradient(ellipse 85% 30% at 50% 60%, rgba(212, 212, 220, 0.85), rgba(212, 212, 220, 0) 75%); }
+
+/* 3.13 : le bouton « Carnet » luit une fois, doucement, quand la fiche de la porte du père reçoit la règle */
+.barre .carnet-bouton.fx-luit { animation: pulse-objets 600ms ease-out 1; }
+
+/* ============================================================ effets nouveaux, chapitres 0 à 3 (fin) */
+
+/* ============================================================ effets nouveaux, chapitres 4 à 8 (début)
+   Les règles des effets de ces chapitres s'ajoutent juste au-dessus de la ligne « (fin) » ci-dessous. */
+/* Les calques des effets (Fx.calque, Fx.dessous, Fx.dessus, Fx.toile de effets.js) : ils couvrent la scène sans
+   jamais recevoir un toucher. Ceux de l'image (rangs 1 à 6) restent dans .decor, qui forme un empilement à part :
+   le texte, au-dessus, ne passe jamais dessous. (Mêmes règles que celles de la zone « 0 à 3 » : un doublon sans danger.) */
+.decor { isolation: isolate; }
+.fx { pointer-events: none; }
+.fx-calque, .fx-dessous, .fx-couche, .fx-dessus { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.fx-dessous { z-index: 0; overflow: hidden; }
+.fx-toile { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+
+/* ---- chapitre 4 : Amélie et Julie */
+/* 4.2 « vers » : les questions de l'hôpital, en vers, à l'encre grise sur le mur clair du couloir ; masquées aux
+   lecteurs d'écran (le calque l'est), jamais de toucher */
+.vers-bloc { position: absolute; font-family: "Amiri", Georgia, serif; font-style: normal; font-size: 3cqw; line-height: 1.32;
+  color: #2b2f35; will-change: transform, opacity; }
+.vers-strophe { margin: 0 0 2.2cqw; }
+.vers-ligne { display: block; opacity: 0; }
+/* 4.3, 5.11 : l'objet de Julie arrive comme une notification, un bandeau gris arrondi au bas de la page */
+.notification-objet { position: absolute; left: 50%; bottom: 9cqw; z-index: 30; display: flex; align-items: center; gap: 3cqw;
+  width: 64cqw; margin-left: -32cqw; box-sizing: border-box; padding: 2cqw 4.4cqw; border-radius: 4.4cqw;
+  background: rgba(44, 46, 52, 0.94); color: #ffffff; font-family: "Amiri", serif; line-height: 1.2;
+  box-shadow: 0 0.6cqw 2.6cqw rgba(0, 0, 0, 0.38); opacity: 0; transform: translateY(5cqw);
+  transition: opacity 320ms ease, transform 460ms cubic-bezier(.2, 1.3, .4, 1); }
+.notification-objet.vu { opacity: 1; transform: none; }
+.notification-objet .icone { flex: none; width: 10cqw; height: 6cqw; }
+.notification-objet .icone svg { width: 100%; height: 100%; }
+.notification-objet .icone.parti { visibility: hidden; }
+.notification-objet small { display: block; font-size: 2.6cqw; letter-spacing: 0.05em; color: #c4c7cf; }
+.notification-objet .nom { display: block; font-size: 3.5cqw; }
+.calme .notification-objet { transition: opacity 200ms ease; transform: none; }
+/* la barre qui change de main (4.1, 5.2) : le reflet d'or du retour de Darshan ; le sac qui tremble (4.7) */
+.barre .reflet-or { animation: reflet-or 1200ms ease-out; }
+@keyframes reflet-or { 0%, 100% { box-shadow: 0 0 0 0 rgba(244, 197, 106, 0); }
+  40% { box-shadow: 0 0 0 1.1cqw rgba(244, 197, 106, 0.45), 0 0 3.4cqw 0.5cqw rgba(255, 214, 120, 0.75); border-color: var(--or-pale); } }
+@keyframes tremble-sac { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-0.7cqw); } 75% { transform: translateX(0.7cqw); } }
+.calme .barre .reflet-or { animation: none; }
+
+/* ---- chapitre 5 : Douceurs et confettis */
+/* 5.2 la mangue qui roule : sa figurine et son ombre sur l'herbe */
+.roule-fruit { position: absolute; max-width: none; object-fit: contain; transform-origin: 50% 55%; will-change: transform; }
+.roule-ombre { position: absolute; background: radial-gradient(ellipse at 50% 50%, rgba(30, 20, 6, 0.42), rgba(30, 20, 6, 0) 70%); will-change: transform; }
+/* 5.3 la réplique de Jivan, qui paraît par morceaux, comme des souffles */
+.souffle { transition: opacity 380ms ease; }
+.souffle.attend { opacity: 0; }
+/* 5.3 la boussole dans l'image : l'étoile du matin, au bout de l'aiguille, brille doucement */
+.boussole-etoile { animation: etoile-du-matin 2.6s ease-in-out infinite; }
+@keyframes etoile-du-matin { 0%, 100% { opacity: 0.78; } 50% { opacity: 1; } }
+.calme .boussole-etoile { animation: none; }
+/* 5.5 le paquet de confettis sur l'étal ; les confettis (rose, menthe, citron : leur couleur vient de l'effet) */
+.paquet-calque { position: absolute; left: 0; top: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.confetti { position: absolute; border-radius: 6%; box-shadow: 0 0 0 1px rgba(60, 40, 20, 0.08), 0 0.3cqw 0.8cqw rgba(60, 40, 20, 0.18); will-change: transform; }
+/* 5.5 la façade en vignette : une toile aux bords déchirés (rien à régler : tout est dessiné) */
+.vignette-toile { position: absolute; display: block; max-width: none; will-change: transform; }
+/* 5.6, 5.7 la galerie du téléphone de Julie : les vignettes que l'on attend, le cliché ouvert, la vidéo */
+.galerie-grille { transition: transform 0.05s linear; }
+.galerie-grille .vignette { transition: opacity 600ms ease, box-shadow 400ms ease, outline-color 400ms ease; outline: 0.6cqw solid transparent; outline-offset: -0.3cqw; }
+.galerie-grille.sous-cliche .vignette { opacity: 0.28; }
+.galerie-grille.sous-cliche .vignette.lumiere, .galerie-grille .vignette.lumiere { opacity: 1; outline-color: rgba(255, 244, 214, 0.95); box-shadow: 0 0 2.6cqw rgba(255, 236, 190, 0.85); }
+.calme .galerie-grille .vignette { transition: opacity 200ms; }
+.cliche { position: absolute; overflow: hidden; border-radius: 1.4cqw; background: #101114; box-shadow: 0 1cqw 4cqw rgba(0, 0, 0, 0.6); }
+.cliche img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; display: block; max-width: none; transform: scale(1.1); }
+.video-vignette { position: absolute; overflow: hidden; border-radius: 1.4cqw; background: #101114; }
+.video-vignette img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; display: block; max-width: none; }
+.video-triangle { position: absolute; left: 50%; top: 50%; width: 52%; height: 52%; transform: translate(-50%, -50%); }
+.video-cadre { position: absolute; overflow: hidden; background: #000; will-change: transform; }
+.video-cadre img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; display: block; max-width: none; will-change: transform; }
+.video-barre { position: absolute; border-radius: 3px; background: rgba(255, 255, 255, 0.22); }
+.video-barre-plein { position: absolute; left: 0; top: 0; height: 100%; width: 0; border-radius: 3px; background: #ffffff; }
+.video-barre-bille { position: absolute; top: 50%; left: 0; width: 1.5cqw; height: 1.5cqw; margin: -0.75cqw 0 0 -0.75cqw; border-radius: 50%; background: #ffffff; }
+.video-note { position: absolute; overflow: visible; transform-origin: 50% 80%; }
+/* 5.8, 5.9 : la bande verticale du panoramique (la même photo que le plan visible, plus haute que la page) */
+.panoramique-bande { position: absolute; max-width: none; display: block; }
+/* 5.9 l'éclair doux : une nappe chaude, jamais plus de 70 % de lumière (l'effet en règle l'opacité) */
+.eclair-nappe { position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  background: radial-gradient(ellipse 95% 75% at 80% 22%, rgba(255, 244, 208, 0.98) 0%, rgba(255, 216, 142, 0.84) 38%, rgba(255, 178, 98, 0.55) 100%); }
+/* 5.11 la buée : un voile de condensation plus haut que la page, que sa lisière fait monter */
+.buee-voile { position: absolute; left: 0; top: 0; width: 100%; display: block; max-width: none; will-change: transform; }
+/* ============================================================ effets nouveaux, chapitres 4 à 8 (fin) */
+
+/* ============================================================ effets nouveaux, chapitres 6 et 7 (début)
+   Les règles des effets de ces chapitres s'ajoutent juste au-dessus de la ligne « (fin) » ci-dessous. */
+/* ---- chapitre 6 : des attentes de part et d'autre */
+/* 6.7 les deux moitiés du voilage : l'effet les découpe dans l'image, chacune ne montre que sa part */
+.rideau-moitie { overflow: hidden; }
+/* 6.11 l'éclat brisé : celui de 1.3 (feuille de style des transitions), puis six éclats qui tombent hors de la page */
+.eclat-eclats { z-index: 44; pointer-events: none; }
+.eclat-piece { position: absolute; left: 0; top: 0; width: 100%; height: 100%; will-change: transform; }
+.eclat-brise.casse .eclat-bande, .eclat-brise.casse .eclat-trame, .eclat-brise.casse .eclat-etoiles,
+.eclat-brise.casse .eclat-nom, .eclat-brise.casse .eclat-fragment { animation: none !important; visibility: hidden; }
+/* la clé hoquette (à 0,7 s), les lettres du fragment glissent sans se poser, la clé rapetisse avant de voler au sac */
+.eclat-brise .eclat-objet.hoquet { animation: eclat-hoquet 380ms linear both; }
+@keyframes eclat-hoquet {
+  0%, 100% { opacity: 1; transform: rotate(-9deg) scale(1); }
+  14% { opacity: 1; transform: rotate(-2deg) translate(1.6cqw, -1.1cqw) scale(1.04); }
+  30% { opacity: 1; transform: rotate(-13deg) translate(-1.2cqw, 0.9cqw) scale(0.97); }
+  50% { opacity: 1; transform: rotate(-5deg) translate(0.9cqw, -0.6cqw) scale(1.02); }
+  70% { opacity: 1; transform: rotate(-11deg) translate(-0.6cqw, 0.4cqw) scale(1); } }
+.eclat-brise .eclat-objet.parti { animation: eclat-objet-parti 220ms ease-in both; }
+@keyframes eclat-objet-parti { from { opacity: 1; transform: rotate(-9deg) scale(1); } to { opacity: 1; transform: rotate(-9deg) scale(0.42); } }
+.eclat-brise .eclat-fragment .lettre { display: inline-block; }
+.eclat-brise .eclat-fragment.glisse .l0 { animation: eclat-glisse-a 640ms ease-in-out infinite alternate; }
+.eclat-brise .eclat-fragment.glisse .l1 { animation: eclat-glisse-b 520ms ease-in-out infinite alternate; }
+.eclat-brise .eclat-fragment.glisse .l2 { animation: eclat-glisse-a 760ms ease-in-out infinite alternate-reverse; }
+@keyframes eclat-glisse-a { from { transform: translate(0, -0.5cqw); } to { transform: translate(0.7cqw, 0.9cqw); } }
+@keyframes eclat-glisse-b { from { transform: translate(0.5cqw, 0.8cqw); } to { transform: translate(-0.6cqw, -1cqw); } }
+.calme .eclat-brise .eclat-fragment .lettre, .calme .eclat-brise .eclat-objet.hoquet { animation: none; }
+/* ============================================================ effets nouveaux, chapitres 6 et 7 (fin) */
+
+/* ============================================================ effets nouveaux, chapitre 7 (début)
+   Les règles des effets de ce chapitre s'ajoutent juste au-dessus de la ligne « (fin) » ci-dessous. */
+/* ---- 7.2 : la lumière bleue de la télévision bat sur la couette (un voile bleu en « multiply », dont l'intensité change comme un plan) */
+.fx-calque.fx-tele { background: radial-gradient(ellipse 96% 66% at 50% 62%, rgba(86, 138, 255, 0.98), rgba(62, 106, 242, 0.64) 50%, rgba(40, 72, 200, 0.18) 88%);
+  mix-blend-mode: multiply; }
+
+/* ============================================================ effets nouveaux, chapitre 7 (fin) */

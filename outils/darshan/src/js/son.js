@@ -6,15 +6,20 @@
      Toute erreur est rattrapée : le son ne casse jamais la lecture.
 
      Le chemin du son :
-       ambiances ; couches pluie, feu, tele ─► monde (deux passe-bas) ─► bus ambiance ─┐
-       effets ; accord du père ; couches battements, vibration, melodie ─► bus effets ─┴─►
-         compresseur ─► maître ─► plafond (saturation douce : jamais au-dessus de −1,4 dBFS)
+       ambiances ; couches pluie, feu, tele, aube, couteau, vent ─► monde (deux passe-bas) ─►
+         niveau (Son.niveau) ─► bus ambiance ─┐
+       effets ; sons qui durent ; accord du père ; couches battements, vibration, melodie,
+         bourdon ─► bus effets ─┴─► compresseur ─► maître ─► plafond (saturation douce : jamais
+         au-dessus de −1,4 dBFS)
      `filtre('assourdi')` referme le monde (la salle s'efface, 2.3) sans toucher aux effets, au
      cœur ni à la ballade. Les deux volumes du lecteur règlent les deux bus.
 
-     État (30 septembre 2026) : les 17 ambiances du découpage, les 6 couches, les deux motifs du
-     père (appel, pere), l'arrêt commun, l'équilibrage (table NIVEAUX, mesurée par le banc
-     d'essai) ; les dix-sept effets du prototype sont repris tels quels, seul leur niveau a changé.
+     État (3 octobre 2026) : les 17 ambiances du découpage, les 10 couches, les deux motifs du
+     père (appel, pere), plus de quatre-vingts effets ponctuels, trois sons qui durent (tictac,
+     pied, autre-cote), l'arrêt commun, l'équilibrage (table NIVEAUX, mesurée par le banc d'essai :
+     ambiances vers −30, effets vers −20 au plus fort, en pondération K) ; chaque page est complète
+     par elle-même (voir suivrePage). Les voix imitées (le restaurant, la télévision) sont des
+     murmures filtrés d'après un vrai restaurant : jamais un mot, jamais une hauteur fixe.
 
      Son coupé (reglages.son === false, ou après basculer()), rien ne se fabrique, pas même le
      contexte audio : l'ambiance et les couches voulues sont seulement retenues, et démarrent quand
@@ -23,6 +28,14 @@
      chaque couche a sa « vie » (sources, minuteries, réverbérations), arrêtée tout entière après son
      fondu : les réverbérations y rendent aussitôt leurs tampons.
 
+     Une page, un son : le moteur n'a pas à dire que la page change, le son voit la page active
+     (.scene.active) au premier appel qu'il reçoit de la nouvelle. Les couches de la page quittée
+     s'éteignent (1,5 s de grâce : le cœur de 2.2 à 2.4 continue sans reprise s'il est redemandé),
+     la ballade s'efface, les sons qui durent s'arrêtent, le niveau du monde revient à 1. Les
+     variantes de la page (data-son-variantes, écrites par build.py : soir, nuit, vaste, rame,
+     dense, ete, fenetre, feuilles, vent, jour, horloge) deviennent les réglages de l'ambiance quand
+     personne n'en passe.
+
      Son.ambiance(nom, reglages) : fondu enchaîné (2,5 s pour l'ancienne, 3 s pour la nouvelle).
      Chaque ambiance rend ses sources et ses minuteries (sa « vie ») : tout s'arrête après le fondu,
      aucune minuterie ne lui survit. Un nom pas encore fabriqué vaut silence ; 'silence' (ou null)
@@ -30,13 +43,17 @@
      quand elle le peut, sinon par un fondu enchaîné.
        cosmos        la voûte : sinus lents, souffle (prototype)
        nuit          les toits la nuit : vent, air, rumeur de la ville (prototype)
-       kerala        Aluva : le fleuve, ses remous, les oiseaux, le tanpura (prototype) ;
-                     { soir: true } : moins d'oiseaux, des grillons (3.9 à 3.14, 7.6 à 7.8)
+       kerala        Aluva : le fleuve, ses remous, les oiseaux, le tanpura ; { soir: true } : moins
+                     d'oiseaux, des grillons (3.9 à 3.14, 7.6 à 7.8) ; { garder: 'fleuve' } (1.8) : le
+                     fleuve seul ; { tanpura: false } : le tanpura se tait
        vent          deux souffles graves qui errent, un sifflement, de l'air ; { feuilles: true } (7.2)
-       restaurant    la rumeur de la salle (aucune voix), couverts, verres, assiettes, le serveur
+       restaurant    la rumeur de la salle : un murmure de voix filtrées (ni mot, ni hauteur fixe),
+                     des rires, couverts, verres, assiettes, le serveur
        rue           Paris : circulation au loin, voitures qui passent, pas, pigeons, un scooter ;
                      { densite: 0 à 1 } (0,5 ; 1 : les « vapeurs automobiles » de 4.5),
-                     { nuit: true } (peu de voitures, plus de pigeons), { ete: true } (martinets)
+                     { nuit: true } (peu de voitures, plus de pigeons), { ete: true } (martinets),
+                     { soir: true } (6.10, 6.15), { foule: true } (5.8 : un murmure au loin),
+                     { ralenti: true } (7.10, 7.11 : tout ralentit de moitié, la rue se creuse)
        parc          le feuillage, le merle, des moineaux, des pas sur le gravier
        bibliotheque  un silence habité : ventilation, pages, pas feutrés, un livre posé ;
                      { vaste: true } : la même sous la voûte de Pékin (réverbération de 5 s)
@@ -44,22 +61,32 @@
                      des braises, un grave sans air
        metro         la station carrelée, la rumeur des tunnels, une rame qui arrive, freine et
                      repart ; { rame: true } : dans la rame (4.3) : la tôle qui vibre, les joints
-       hopital       le couloir, les néons, des bips lointains et désaccordés, un chariot, une porte
+       hopital       le couloir, les néons, des bips lointains et désaccordés, un chariot, une porte ;
+                     { mesure: true } (4.2) : les bips en mesure de la ballade ; { nuit: true } (7.8)
        chambre       une pièce calme, la rue étouffée ; { fenetre: true } (5.1), { nuit: true }
        marche        Aluva : le tanpura, la foule sans voix, le laiton, les étoffes, une sonnette,
-                     les corneilles, un klaxon de rickshaw, la chaleur
+                     les corneilles, un klaxon de rickshaw, la chaleur ; { tanpura: false }
        patisserie    le ronron de la vitrine réfrigérée, papier, caisse, clochette de la porte
        appartement   les tentures, la rue d'en bas, une horloge, l'encens qui crépite ;
-                     { horloge: 0 à 1 } (0,3 ; 1 : l'attente de 6.9, au premier plan)
+                     { horloge: 0 à 1 } (0,3 ; 1 : l'attente de 6.9, au premier plan),
+                     { presser: ms } (6.11 : les secondes qui restent s'égrènent plus vite)
        desert        un vent large et bas, le sable qui file, la nuit immense ; { vent: 0 à 1 }
                      (« le vent tombe », 7.1), { jour: true } (7.3 : la chaleur)
        pluie         une averse qui s'apaise en une vingtaine de secondes, puis des gouttes ;
                      { densite: 0 à 1 } : une pluie qui ne change plus
+     Deux ambiances à la fois, une par oreille (6.2 : une rue par oreille ; 7.4 : l'hôpital et le
+     fleuve) : { partage: { gauche: 'rue', droite: 'rue' }, actif: 'gauche' | 'droite' | 'les deux' |
+     'aucun', gauche: {…}, droite: {…} } ; Son.partage(actif) change la moitié qui parle sans rien
+     recommencer. Jamais tout à fait d'un seul côté : une seule oreillette les entend toutes deux.
+     Son.ralenti(true) : la rue ralentie, sans recommencer.
+
+     Son.niveau(v, ms) : le niveau du monde (l'ambiance et ses couches), de 0 à 1, atteint en ms,
+     sans toucher aux réglages du lecteur ni aux effets (1.1 : le vent tombe sous la voix).
 
      Son.couche(nom, oui, options) : par-dessus l'ambiance, jusqu'à couche(nom, false, { duree })
-     (fondu, en ms) ou ambiance('silence'). Demandée avant init(), elle joue au premier geste.
-     Rappelée allumée, elle suit ses nouvelles options sans recommencer (sauf la ballade).
-     Options communes : force (0 à 1).
+     (fondu, en ms), ambiance('silence') ou la fin de la page. Demandée avant init(), elle joue au
+     premier geste. Rappelée allumée, elle suit ses nouvelles options sans recommencer (sauf la
+     ballade). Options communes : force (0 à 1).
        battements  le cœur : un double coup grave et chaud. tempo (72), qui ('julie' : son timbre,
                    plus clair), julie (tempo d'un second cœur, celui de Julie ; false l'ôte),
                    duree (ms pour atteindre les nouveaux tempos : il s'emballe ou ralentit),
@@ -67,12 +94,21 @@
                    premier temps de la mesure de la ballade), arythmie (le cœur de Julie bat
                    irrégulièrement, 5.9). Ex. 2.2 : { tempo: 72 }, puis { tempo: 110, duree: 2600 } ;
                    2.9 : { tempo: 96, julie: 64 }, puis { cale: true } ; 5.9 : { tempo: 80,
-                   julie: 80, duree: 4200, cale: true } ; 7.10 : { julie: false, tempo: 48, duree: 8000 }.
+                   julie: 80, duree: 4200, cale: true } ; 7.10 : { julie: false, tempo: 60,
+                   duree: 3500 } (de 80 à 60, comme la fiche ; le moteur calcule les tempos).
        pluie       une pluie sur le lieu ; densite (0,5)
        feu         le feu du soir : les flammes, des crépitements, les sardines qui grésillent
-       tele        une télévision derrière une porte, sans une parole : une rumeur, une musique de
-                   série inventée pour le livre, des rires étouffés
+       tele        une télévision derrière une porte, sans une parole : un murmure, une musique de
+                   série inventée pour le livre (les voix baissent pendant le générique), des rires
+                   de salle étouffés
        vibration   le vibreur d'un téléphone posé ; fois (nombre de salves, puis il se tait seul)
+       aube        le chœur de l'aube (3.5) : des oiseaux de plus en plus nombreux pendant vingt-cinq s
+       couteau     le couteau de Jivan sur sa planche (3.12 à 3.14) : un coup toutes les 0,7 s, un peu
+                   plus net toutes les quatre ; { lent: true } : toutes les 1,1 s
+       vent        la brise qui se lève quand les graines partent aux quatre vents (3.14)
+       bourdon     un si bémol grave et sourd, « dans un coin de la tête » (5.9) : il enfle et retombe
+       horloge     (pas une couche à part : c'est le réglage `horloge` de l'appartement, voir
+                   plus haut ; Son.couche('horloge', true, { proche, presser }) y mène)
        melodie     la ballade, composée pour le livre (voir BALLADE) : fa majeur, à 6/8, huit
                    mesures ; une mandoline (trémolo sur les notes longues) et une guitare, cordes
                    pincées fabriquées par Karplus-Strong. mode : 'fragment' (par défaut : les
@@ -87,6 +123,8 @@
      Son.note('melodie', i) : une seule note de la première mesure, claire (les pas de Julie qui
      court, 7.9) : i de 0 à 5 ; sans i, la suivante (le compte revient à 0 après la sixième et à
      chaque couche('melodie')). Rend l'indice joué, ou −1.
+     Son.note('montantes', i) : une des cinq notes qui montent (la, si, ré, mi, fa dièse ; 1.2 et
+     7.8 : les tuiles) : i de 0 à 4 ; sans i, la suivante.
 
      Les deux motifs du père, en effets :
        appel  la quinte à vide, la, mi, la, très bas : elle monte en 2 s, tient, s'éteint en 6 s
@@ -102,23 +140,32 @@
               d'un demi-pas) ; { duree: ms } : il s'éteint de lui-même après ce temps. Sans
               extinction, il se tait au bout de dix minutes.
 
+     Les effets ponctuels (Son.effet(nom, { force, pan, … })) : la liste est la table NIVEAUX.effets ;
+     le nom d'un effet inconnu ne fait rien. Quelques-uns lisent des options : `pas` (sol : pave,
+     talons, bois, feutre, lino, poussiere, plateforme, trottoir, sable, gravier ; sinon celui du
+     lieu), `achat-<objet>` (5.2 : thés, curcuma, encens, jarres, tapisseries),
+     `paysage-<image>` (6.11, 6.12 : village, gorge, ossau, banquise, rochers, champs), `tic`
+     (monde: 'julie'), `autre-cote` (lieu : aluva, paris-midi, periyar, hopital-nuit).
+     Trois effets durent : `tictac` (l'horloge de 6.9), `pied` (le pied qui bat la mesure, 5.8) et
+     `autre-cote` (le jour de l'autre côté d'une porte). effet(nom, { boucle: true }) les lance ;
+     { arret: true } (ou { eteindre: ms }) les arrête ; { ralentir: true } les ralentit puis les
+     éteint ; sans `boucle`, chacun se tait seul au bout de son temps ; tous s'arrêtent avec la page.
+
      Banc d'essai : outils/darshan/essai-son.js rend hors ligne chaque ambiance, couche et effet,
-     et mesure niveaux, crêtes, silence et spectre ; son épreuve d'endurance enchaîne cent
-     changements d'ambiance (avec couches, effets, son coupé puis remis) et vérifie qu'à la fin plus
-     une source, une réverbération ni une minuterie ne survit. Son._essai(contexte) sert à lui seul.
+     et mesure niveaux (pondération K), crêtes après le compresseur, silence et spectre ; son
+     épreuve d'endurance enchaîne cent changements d'ambiance (avec couches, effets, son coupé puis
+     remis, deux ambiances à la fois, changements de page) et vérifie qu'à la fin plus une source,
+     une réverbération ni une minuterie ne survit ; --livre rejoue les appels de Son que les fiches
+     du livre demandent, page après page, et signale un son inconnu ou un niveau hors norme ;
+     --ecoute rend des fichiers WAV à écouter. Son._essai(contexte) sert à lui seul.
 
      Reste à faire :
-     - les effets ponctuels du découpage (pas, toc, page, battement, clochette, vibreur, message,
-       bip, the, confettis, tonnerre, eclair, goutte, etincelles, plume, ruban, porte, brise, chute,
-       desenchantement, lanterne, eteindre, eclabousse, mousse, inspire, expire, graine, cran,
-       avance, nuage, aube, lueur, boussole, velours, paume, perce, pli, entree, fonte-courte),
-       après la synthèse des équipes créatives ; les couches qu'elles demandent en plus (aube,
-       couteau, bourdon, horloge : l'appartement a déjà la sienne, par son réglage) ;
-     - `jour` (prototype) sonne l'accord de la majeur, celui du père : l'arbitrage 1 le réserve à
-       sa porte ; le jour du pigeonnier (1.3) doit prendre `autre-cote` (chapitre 1) ;
-     - deux ambiances à la fois, une par oreille (6.2, 7.4) ; les réglages `foule` (5.8) et
-       `tanpura` que cite la synthèse (un réglage inconnu est ignoré, sans erreur) ;
-     - l'écoute de la direction : niveaux (sous la lecture), timbres, la ballade. */
+     - brancher les appels que les équipes des effets et des scènes doivent faire (Son.partage,
+       Son.ralenti, Son.ambiance avec partage ; la couche `horloge` avec `presser`) ;
+     - `jour` (prototype) est devenu `autre-cote` : l'ancien nom reste accepté ;
+     - l'écoute par Karl : le restaurant, la télévision et la ballade (fichiers rendus par le banc) ;
+       si une vraie prise de son (CC0 ou domaine public) devait remplacer le murmure, elle se
+       chargerait par fetch, listée dans le manifeste de build.py, avec le murmure en secours. */
   var Son = (function () {
     var MAITRE = 0.85, OUVERT = 20000, ASSOURDI = 450;
     var ctx = null, maitre = null, busAmb = null, busEff = null, monde = null, filtres = [];
@@ -126,7 +173,10 @@
     var actif = reglages.son !== false;
     var ambiance = null, voulue = null, voulueR = null;       // l'ambiance qui joue ; celle qu'on attend
     var couches = {}, couchesVoulues = {}, filtreVoulu = null;
-    var pere = null, pasMelodie = 0, chaineNotes = null;
+    var pere = null, pasMelodie = 0, pasMontantes = 0, chaineNotes = null, chaineMontantes = null;
+    var niveauNode = null, niveauVoulu = 1;   // le niveau du monde (Son.niveau), qui revient à 1 avec chaque page
+    var boucles = {};                       // les sons qui durent jusqu'à ce qu'on les arrête : tictac, pied, autre-cote
+    var pageEnCours = null;                 // la page jouée : l'édition web garde les 85 pages dans un seul document
     var tampons = {};                       // bruits, cordes, réverbérations, ondes : un jeu par contexte
     var banc = null;                        // le banc d'essai (jamais pour le lecteur)
     // Toutes les minuteries passent par `horloge` : setTimeout pour le lecteur, une file virtuelle
@@ -195,12 +245,14 @@
       busEff = ampli(courbe(volume(reglages.effets)), comp);
       // le monde : deux passe-bas en série, grands ouverts ; filtre('assourdi') les referme
       filtres = [0, 1].map(function () { return biquad('lowpass', OUVERT, 0); });
-      monde = ampli(1); monde.connect(filtres[0]); filtres[0].connect(filtres[1]); filtres[1].connect(busAmb);
+      niveauNode = ampli(niveauVoulu, busAmb);   // Son.niveau : l'ambiance baisse (1.1 : le vent tombe sous la voix)
+      monde = ampli(1); monde.connect(filtres[0]); filtres[0].connect(filtres[1]); filtres[1].connect(niveauNode);
       return plafond;
     }
     // Son coupé, rien ne se fabrique, pas même le contexte : l'ambiance et les couches voulues sont
     // seulement retenues, et démarrent quand le son revient (basculer).
     function init() {
+      suivrePage();
       if (!actif) return;
       if (ctx) { reprendre(); return; }
       var AC = window.AudioContext || window.webkitAudioContext;
@@ -224,12 +276,78 @@
     function toutArreter() {
       if (ambiance) { ambiance.vie.arreter(); ambiance = null; }
       Object.keys(couches).forEach(function (n) { couches[n].vie.arreter(); delete couches[n]; });
+      Object.keys(boucles).forEach(function (n) { boucles[n].v.arreter(); delete boucles[n]; });
       delete couchesVoulues.melodie;
       if (pere) eteindrePere(0.1);
     }
     // Le contexte joue-t-il ? Suspendu (pas encore de geste, un appel sur iOS), il fige son horloge :
     // rien ne s'y planifie, sinon les sons s'entasseraient sans jamais finir.
     function enMarche() { return !!ctx && (banc !== null || !ctx.state || ctx.state === 'running'); }
+
+    // ---- la page jouée
+    // L'édition web garde les 85 pages dans un seul document, et chaque page est complète par elle-même
+    // (dans l'EPUB, Apple Books isole chaque page : rien ne passe de l'une à l'autre) : à chaque
+    // changement de page, ce qui durait pour l'ancienne s'arrête. Le moteur n'a pas à le dire : le son
+    // voit la page active (.scene.active) au premier appel qu'il reçoit de la nouvelle.
+    function suivrePage() {
+      var id = null;
+      try {
+        var sc = (typeof doc !== 'undefined' && doc.querySelector) ? doc.querySelector('.scene.active') : null;
+        id = sc ? (sc.id || sc.getAttribute('data-scene') || 'page') : null;
+      } catch (e) { id = null; }
+      if (id === pageEnCours) return;
+      var avant = pageEnCours; pageEnCours = id;
+      if (avant !== null && id !== null) nouvellePage();
+    }
+    function nouvellePage() {
+      // les couches de la page quittée restent 1,5 s : si la nouvelle les redemande (le cœur de 2.2 à
+      // 2.4), elles continuent sans reprise ; sinon elles s'éteignent (5.9 à 5.10 : les battements)
+      if (couches.melodie) eteindreCouche('melodie', { duree: 1500 });   // la ballade s'efface en 1,5 s (7.10 : « qui finit avec la page »)
+      var anciennes = Object.keys(couches);
+      anciennes.forEach(function (n) { couches[n].ancienne = true; });
+      couchesVoulues = {};
+      horloge.poser(function () {
+        anciennes.forEach(function (n) { var c = couches[n]; if (c && c.ancienne) eteindreCouche(n, { duree: 600 }); });
+      }, 1500);
+      Object.keys(boucles).forEach(function (n) { arreterBoucle(n, 0.5); });
+      niveauVoulu = 1;
+      try { if (ctx && niveauNode) lisser(niveauNode.gain, 1, ctx.currentTime, 0.8); } catch (e) { rate(e); }
+    }
+    // Les variantes d'une page (data-son-variantes, écrites par build.py d'après le découpage :
+    // « soir », « vaste », « rame », « dense »…) deviennent les réglages de son ambiance, quand
+    // personne ne les passe (le moteur appelle Son.ambiance(nom) sans réglages).
+    var VARIANTES = { soir: { soir: true }, nuit: { nuit: true }, vaste: { vaste: true }, rame: { rame: true }, dense: { densite: 1 },
+      ete: { ete: true }, fenetre: { fenetre: true }, feuilles: { feuilles: true }, vent: { vent: 1 }, jour: { jour: true }, horloge: { horloge: 1 } };
+    function reglagesDeLaPage() {
+      try {
+        var sc = (typeof doc !== 'undefined' && doc.querySelector) ? doc.querySelector('.scene.active') : null;
+        var mots = sc ? (sc.getAttribute('data-son-variantes') || '').split(/\s+/) : [], r = {}, n = 0;
+        mots.forEach(function (m) {
+          var x = VARIANTES[cle(m)];
+          if (x) for (var k in x) if (x.hasOwnProperty(k)) { r[k] = x[k]; n++; }
+        });
+        return n ? r : null;
+      } catch (e) { return null; }
+    }
+    // ---- les sons qui durent (tictac, pied, autre-cote) : une vie à part, éteinte à l'arrêt demandé,
+    // à la fin du temps donné, au changement de page et avec le son
+    function lancerBoucle(nom, force, faire, monte) {
+      arreterBoucle(nom, 0.15);
+      var t = ctx.currentTime, g = ampli(0, busEff), v = vie(g), b = { v: v, g: g, regler: null };
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(force * niveau('effets', nom), t + (monte || 0.05));
+      boucles[nom] = b;
+      var r = faire(v, g);
+      if (r && r.regler) b.regler = r.regler;
+      return b;
+    }
+    function arreterBoucle(nom, d) {
+      var b = boucles[nom];
+      if (!b) return;
+      delete boucles[nom];
+      d = Math.max(0.05, d);
+      try { lisser(b.g.gain, 0, ctx.currentTime, d); } catch (e) { rate(e); }
+      horloge.poser(function () { b.v.arreter(); }, (d + 0.3) * 1000);
+    }
 
     // ---- les nœuds
     function ampli(v, sortie) { var g = ctx.createGain(); g.gain.value = v; if (sortie) g.connect(sortie); return g; }
@@ -304,7 +422,7 @@
     // ---- la vie d'un son (une ambiance, une couche, l'accord du père) : ses sources et ses
     // minuteries, tout ce qu'il faut arrêter ensemble ; v.sortie : son gain de sortie.
     function vie(sortie) {
-      var v = { sortie: sortie, vivant: true, sources: [], minuteries: [], salles: [] };
+      var v = { sortie: sortie, vivant: true, sources: [], minuteries: [], salles: [], enfants: [] };
       v.garder = function (n) {
         if (!v.vivant) { try { n.stop(); } catch (e) { /* rien */ } return n; }
         v.sources.push(n);
@@ -324,6 +442,7 @@
         if (!v.vivant) return;
         v.vivant = false;
         v.minuteries.forEach(function (id) { horloge.oter(id); }); v.minuteries = [];
+        v.enfants.forEach(function (e) { e.arreter(); }); v.enfants = [];
         v.sources.forEach(function (s) { try { s.onended = null; s.stop(); } catch (e) { /* déjà arrêtée */ } }); v.sources = [];
         // une réverbération garde ses tampons et ses fils de calcul : on les rend tout de suite
         v.salles.forEach(function (c) { try { c.disconnect(); c.buffer = null; } catch (e) { /* rien */ } }); v.salles = [];
@@ -336,9 +455,10 @@
       var c = ctx.createConvolver(); c.buffer = reponse(duree, clarte); v.salles.push(c); return c;
     }
     // Appelle quand(t) de loin en loin, toutes les min à max secondes : les événements épars.
-    function souvent(v, quand, min, max, premier) {
+    // `lent` (facultatif) : une fonction qui rend le facteur des attentes (2 : la rue ralentie, 7.10).
+    function souvent(v, quand, min, max, premier, lent) {
       (function attendre(d) {
-        v.plusTard(function () { if (enMarche()) quand(ctx.currentTime + 0.03); attendre(hasard(min, max)); }, d * 1000);
+        v.plusTard(function () { if (enMarche()) quand(ctx.currentTime + 0.03); attendre(hasard(min, max) * (lent ? lent() : 1)); }, d * 1000);
       })(nombre(premier, hasard(min * 0.2, max * 0.6)));
     }
     // Fait errer un paramètre au hasard entre min et max : une nouvelle cible toutes les tmin à
@@ -418,7 +538,8 @@
     // [fréquence du talon, sa largeur, sa durée, le grave (Hz), la part du talon, la part du grave].
     var SOLS = {
       pave: [1800, 1.2, 0.05, 110, 0.5, 0.3], talons: [3200, 2.5, 0.035, 160, 0.6, 0.2], bois: [900, 1, 0.07, 90, 0.5, 0.4],
-      feutre: [520, 0.8, 0.08, 80, 0.6, 0.12], lino: [1300, 1, 0.05, 100, 0.45, 0.2], poussiere: [700, 0.7, 0.1, 60, 0.4, 0.15]
+      feutre: [520, 0.8, 0.08, 80, 0.6, 0.12], lino: [1300, 1, 0.05, 100, 0.45, 0.2], poussiere: [700, 0.7, 0.1, 60, 0.4, 0.15],
+      plateforme: [800, 0.9, 0.075, 85, 0.5, 0.45], trottoir: [1500, 1.1, 0.05, 105, 0.5, 0.3], sable: [1100, 0.7, 0.12, 70, 0.35, 0.1]
     };
     function pas(sortie, t, sol, niv) {
       if (sol === 'gravier') {
@@ -638,6 +759,69 @@
       });
     }
 
+    // ---- le murmure : des gens qui parlent, sans qu'on comprenne un mot
+    // Mesuré sur un vrai restaurant parisien (enregistrement du domaine public, un midi) : l'énergie
+    // est entre 250 et 2 000 Hz (le maximum vers 500 Hz, 12 dB de moins à 126 Hz, 15 dB de moins à
+    // 3 kHz), et l'enveloppe fluctue à tous les rythmes, de 0,8 à 32 Hz, avec la même énergie par
+    // octave : phrases, syllabes, consonnes. Chaque « personne » est ici un chuchotement : un bruit
+    // qui passe par trois résonances (les formants d'une voyelle, qui change à chaque syllabe), des
+    // syllabes de 110 à 260 ms, des phrases de quelques syllabes, des pauses, parfois une consonne
+    // qui siffle. Aucune hauteur, aucun mot, jamais une voix qu'on dirait fabriquée ; plusieurs
+    // personnes ensemble font la rumeur. o : voix (7), clair (1 : tout le spectre ; moins : ce qui
+    // reste de l'aigu), vitesse (1), pauses (1 ; plus : moins de monde parle), large (0,7 : la
+    // largeur stéréo), niv. Rend le gain du groupe.
+    var VOYELLES = [[700, 1200, 2500], [400, 2200, 2900], [550, 1900, 2600], [290, 2300, 3000], [450, 800, 2500],
+      [310, 800, 2300], [420, 1500, 2400], [520, 1000, 2400], [640, 1450, 2500], [360, 1600, 2300]];
+    function murmure(v, sortie, o) {
+      var n = o.voix || 7, clair = nombre(o.clair, 1), vitesse = nombre(o.vitesse, 1), pauses = nombre(o.pauses, 1), large = nombre(o.large, 0.7);
+      var somme = ampli(nombre(o.niv, 1)), gens = [], i;
+      var haut = biquad('highpass', 170, 0.7, sortie), bas = biquad('lowpass', 900 + 2200 * clair, 0.6, haut);
+      somme.connect(bas);
+      for (i = 0; i < n; i++) (function () {
+        var p = pan(n > 1 ? -large + 2 * large * (i + hasard(-0.3, 0.3)) / (n - 1) : 0, somme), g = ampli(0.0001, p);
+        var sx = hasard(0.86, 1.18), s = source('rose', v), res = [];   // sx : la longueur du conduit, propre à chacun
+        [[3, 1], [6, 0.4 * (0.3 + 0.7 * clair)], [8, 0.1 * clair]].forEach(function (k) {
+          var b = biquad('bandpass', VOYELLES[0][res.length] * sx * (res.length ? 1 : 1.12), k[0]); s.connect(b); b.connect(ampli(k[1], g)); res.push(b);
+        });
+        gens.push({ g: g, p: p, res: res, sx: sx, t: 0, reste: 0, pause: true, niv: hasard(0.5, 1) });
+      })();
+      cadence(v, function (debut, fin) {
+        gens.forEach(function (x) {
+          if (x.t < debut) x.t = debut + hasard(0, 0.3);
+          while (x.t < fin) {
+            var t = x.t;
+            if (x.reste <= 0) {
+              if (!x.pause) { x.g.gain.linearRampToValueAtTime(0.0001, t + 0.12); x.pause = true; x.t = t + hasard(0.4, 3) * pauses; continue; }
+              x.pause = false; x.reste = 3 + Math.floor(Math.random() * 10);
+              x.g.gain.setValueAtTime(0.0001, t);   // la phrase part du silence
+            }
+            var d = (hasard(0.09, 0.22) + (Math.random() < 0.25 ? hasard(0.08, 0.25) : 0)) / vitesse, vy = choix(VOYELLES), a = x.niv * hasard(0.35, 1) * (x.reste === 1 ? 0.6 : 1);
+            x.res.forEach(function (b, k) { b.frequency.setTargetAtTime(vy[k] * x.sx * (k ? 1 : 1.12) * hasard(0.94, 1.06), t, 0.03); });
+            x.g.gain.linearRampToValueAtTime(a, t + d * 0.35); x.g.gain.linearRampToValueAtTime(a * 0.4, t + d);
+            if (clair > 0.2 && Math.random() < 0.35) grain(x.p, t, 'blanc', 'bandpass', hasard(3500, 6000), 1.2, 0.1 * a * clair, 0.012, hasard(0.04, 0.09));
+            x.reste--; x.t = t + d;
+          }
+        });
+      });
+      return somme;
+    }
+    // Un rire de salle (la télévision) : six personnes, chacune quelques « ha » qui s'espacent et
+    // retombent, chuchotés (une voyelle ouverte), à peu près ensemble.
+    function rire(sortie, t, duree, niv) {
+      for (var i = 0; i < 6; i++) {
+        var t0 = t + hasard(0, 0.3), sx = hasard(0.9, 1.15), s = ctx.createBufferSource(), g = ctx.createGain(), p = pan(hasard(-0.6, 0.6), sortie);
+        s.buffer = bruit('rose'); s.loop = true; s.start(t0, Math.random() * 4);
+        [[780, 4, 1], [1300, 5, 0.5]].forEach(function (f) { var b = biquad('bandpass', f[0] * sx, f[1]); s.connect(b); b.connect(ampli(f[2], g)); });
+        g.gain.setValueAtTime(0.0001, t0); g.connect(p);
+        var tt = t0, pas = hasard(0.15, 0.2), a = niv * hasard(0.6, 1);
+        while (tt < t + duree) {
+          g.gain.linearRampToValueAtTime(a, tt + 0.03); g.gain.linearRampToValueAtTime(a * 0.15, tt + pas * 0.85);
+          tt += pas; pas *= 1.07; a *= 0.86 + 0.06 * Math.random();
+        }
+        g.gain.linearRampToValueAtTime(0.0001, tt + 0.1); s.stop(tt + 0.2);
+      }
+    }
+
     // ---- les ambiances (une par lieu) : ambiances[nom](v, reglages) ; v.sortie est le gain de
     // l'ambiance ; rend, si elle le peut, { regler(reglages) } pour changer sans recommencer
     // (regler rend false quand il faut recommencer).
@@ -661,16 +845,23 @@
       },
       // Aluva : le fleuve, ses remous, les oiseaux, un tanpura (prototype) ; { soir: true } : le
       // Periyar du soir, moins d'oiseaux, des grillons
+      // { garder: 'fleuve' } (1.8) : tout se tait sauf le fleuve ; { tanpura: false } : seul le tanpura se tait.
       kerala: function (v, r) {
-        var soir = !!r.soir;
+        var soir = !!r.soir, ta = ampli(1, v.sortie), faune = ampli(1, v.sortie);
         var eau = source('rose', v), l = biquad('lowpass', 1100); eau.connect(l); l.connect(ampli(0.16, v.sortie));
         var remous = source('blanc', v), b = biquad('bandpass', 900, 2.5);
         lfo(3.1, 260, b.frequency, v); lfo(5.3, 180, b.frequency, v);
         remous.connect(b); b.connect(ampli(0.035, v.sortie));
-        tanpura(v, v.sortie, 1);
-        souvent(v, function (t) { oiseauKerala(v.sortie, t); }, soir ? 5 : 1.6, soir ? 14 : 5.8, 0);
-        if (soir) grillons(v, v.sortie, 0.01);
-        return { regler: function (r2) { return !!r2.soir === soir; } };
+        tanpura(v, ta, 1);
+        souvent(v, function (t) { oiseauKerala(faune, t); }, soir ? 5 : 1.6, soir ? 14 : 5.8, 0);
+        if (soir) grillons(v, faune, 0.01);
+        function regler(r2) {
+          var t = ctx.currentTime, seul = r2.garder === 'fleuve';
+          lisser(ta.gain, (seul || r2.tanpura === false) ? 0 : 1, t, 1.5); lisser(faune.gain, seul ? 0 : 1, t, 1.5);
+          return !!r2.soir === soir;
+        }
+        regler(r);
+        return { regler: regler };
       },
       // Le vent seul (le ciel de Paris au soir, 2.10 ; 3.14 ; l'automne, 7.2) : deux souffles graves
       // qui errent chacun de son côté, un sifflement, de l'air ; { feuilles: true } : il passe
@@ -693,15 +884,12 @@
       // couverts, deux verres, une assiette posée, les pas du serveur, une chaise ; une petite salle.
       restaurant: function (v) {
         var s = salle(v, 0.9, 0.55, 0.28);
-        nappe(v, 'rose', 'lowpass', 1600, 0.5, 0.05, v.sortie);
-        [[280, -0.5], [520, 0.4], [850, -0.1]].forEach(function (x) {
-          var n = nappe(v, 'rose', 'bandpass', x[0], 1.3, 0.12, pan(x[1], s));
-          derive(v, n.g.gain, 0.04, 0.2, 0.25, 1.1);
-        });
-        souvent(v, function (t) {
-          var k = 1 + Math.floor(Math.random() * 3), p = pan(hasard(-0.8, 0.8), s);
-          for (var i = 0; i < k; i++) tinter(p, t + i * hasard(0.08, 0.2), hasard(2300, 4200), [1, 2.76, 5.4], hasard(0.02, 0.06), hasard(0.08, 0.2));
-        }, 1.2, 4.5);
+        derive(v, murmure(v, s, { voix: 14, niv: 0.5 }).gain, 0.43, 0.56, 6, 14);   // la salle se remplit et se vide un peu
+        souvent(v, function (t) {   // des couverts : le plus souvent des chocs secs, parfois un verre qui tinte
+          var k = 1 + Math.floor(Math.random() * 3), p = pan(hasard(-0.8, 0.8), s), i;
+          if (Math.random() < 0.6) for (i = 0; i < k + 1; i++) grain(p, t + i * hasard(0.05, 0.22), 'blanc', 'bandpass', hasard(2200, 4800), hasard(1.5, 4), hasard(0.03, 0.09), 0.001, hasard(0.012, 0.04));
+          else for (i = 0; i < k; i++) tinter(p, t + i * hasard(0.08, 0.2), hasard(2300, 4200), [1, 2.76, 5.4], hasard(0.012, 0.035), hasard(0.08, 0.2));
+        }, 2, 6.5);
         souvent(v, function (t) {
           var p = pan(hasard(-0.7, 0.7), s), f = hasard(1700, 2400);
           tinter(p, t, f, [1, 2.32, 4.25], 0.05, 0.9); tinter(p, t + 0.012, f * 1.07, [1, 2.32, 4.25], 0.035, 0.7);
@@ -719,31 +907,41 @@
         }, 25, 60);
       },
       // Paris, la rue : la circulation au loin, des voitures qui passent, des pas, des pigeons, un
-      // scooter ; { densite }, { nuit }, { ete } (voir l'en-tête), sans recommencer.
+      // scooter ; { densite }, { nuit }, { ete } (voir l'en-tête), sans recommencer. { soir: true } (6.10,
+      // 6.15) : la rue du soir, moins de voitures, quelques martinets ; { foule: true } (5.8) : la rue de
+      // nuit pleine de monde, un murmure au loin ; { ralenti: true } (7.10, 7.11) : tout ralentit à la
+      // moitié de sa vitesse et la rue se creuse (un passe-bas).
       rue: function (v, r) {
-        var reg = {}, s = salle(v, 0.7, 0.6, 0.12);
-        var loin = nappe(v, 'brun', 'lowpass', 320, 0.5, 0.4, v.sortie); derive(v, loin.f.frequency, 220, 420, 3, 8);
-        var ville = nappe(v, 'rose', 'bandpass', 180, 0.8, 0.05, v.sortie);
+        var reg = {}, creux = biquad('lowpass', 20000, 0.5, v.sortie), w = Object.create(v), foule = null;
+        w.sortie = creux;   // tout ce que fait la rue passe par `creux`, que le ralenti referme
+        var s = salle(w, 0.7, 0.6, 0.12);
+        var loin = nappe(v, 'brun', 'lowpass', 320, 0.5, 0.4, creux); derive(v, loin.f.frequency, 220, 420, 3, 8);
+        var ville = nappe(v, 'rose', 'bandpass', 180, 0.8, 0.05, creux);
+        function lent() { return reg.ralenti ? 2 : 1; }
         function regler(r2) {
-          reg.densite = borne(nombre(r2.densite, 0.5)); reg.nuit = !!r2.nuit; reg.ete = !!r2.ete;
-          var k = reg.nuit ? 0.8 : 0.6 + 0.8 * reg.densite, t = ctx.currentTime;
+          reg.densite = borne(nombre(r2.densite, 0.5)); reg.nuit = !!r2.nuit; reg.ete = !!r2.ete; reg.soir = !!r2.soir;
+          reg.ralenti = !!r2.ralenti; reg.foule = !!r2.foule;
+          var k = reg.nuit ? 0.8 : reg.soir ? 0.9 : 0.6 + 0.8 * reg.densite, t = ctx.currentTime;
           lisser(loin.g.gain, 0.2 * k, t, 2); lisser(ville.g.gain, 0.04 * k, t, 2);
+          tenir(creux.frequency, t); creux.frequency.exponentialRampToValueAtTime(reg.ralenti ? 650 : 20000, t + (reg.ralenti ? 3 : 2));
+          if (reg.foule && !foule) { foule = ampli(0, s); murmure(v, foule, { voix: 9, clair: 0.7, niv: 0.45, large: 0.8 }); }
+          if (foule) lisser(foule.gain, reg.foule ? 1 : 0, t, 3);
           return true;
         }
         regler(r);
         souvent(v, function (t) {
-          if (Math.random() > (reg.nuit ? 0.25 : 0.35 + 0.65 * reg.densite)) return;
+          if (Math.random() > (reg.nuit ? 0.25 : reg.soir ? 0.3 : 0.35 + 0.65 * reg.densite)) return;
           var g = Math.random() < 0.5;
-          passage(s, t, hasard(2.8, 5), hasard(0.1, 0.3), g ? -0.9 : 0.9, g ? 0.9 : -0.9, reg.densite > 0.8 && Math.random() < 0.3 ? 'bus' : 'voiture');
-        }, 1.5, 4.5, 1);
-        souvent(v, function (t) { if (Math.random() < 0.6) { var g = Math.random() < 0.5; passage(s, t, hasard(5, 8), hasard(0.02, 0.04), g ? -1 : 1, g ? 0.4 : -0.4, 'scooter'); } }, 18, 45);
+          passage(s, t, hasard(2.8, 5) * lent(), hasard(0.1, 0.3), g ? -0.9 : 0.9, g ? 0.9 : -0.9, reg.densite > 0.8 && Math.random() < 0.3 ? 'bus' : 'voiture');
+        }, 1.5, 4.5, 1, lent);
+        souvent(v, function (t) { if (Math.random() < 0.6) { var g = Math.random() < 0.5; passage(s, t, hasard(5, 8) * lent(), hasard(0.02, 0.04), g ? -1 : 1, g ? 0.4 : -0.4, 'scooter'); } }, 18, 45, undefined, lent);
         souvent(v, function (t) {
-          var g = Math.random() < 0.5; marcheur(s, t, Math.random() < 0.3 ? 'talons' : 'pave', 6 + Math.floor(Math.random() * 6), hasard(0.48, 0.56), hasard(0.3, 0.55), g ? -0.8 : 0.8, g ? 0.7 : -0.7);
-        }, 5, 14, 2);
-        souvent(v, function (t) { if (!reg.nuit) pigeon(pan(hasard(-0.7, 0.7), s), t, hasard(0.07, 0.13)); }, 7, 18, 3);
-        souvent(v, function (t) { if (!reg.nuit) envol(pan(hasard(-0.6, 0.6), s), t, 0.12); }, 30, 70);
-        souvent(v, function (t) { if (reg.ete) martinets(s, t, hasard(0.025, 0.05)); }, 3, 9, 1);
-        souvent(v, function (t) { if (!reg.nuit && reg.densite > 0.3) klaxon(pan(hasard(-0.8, 0.8), s), t, 0.012); }, 35, 90);
+          var g = Math.random() < 0.5; marcheur(s, t, Math.random() < 0.3 ? 'talons' : 'pave', 6 + Math.floor(Math.random() * 6), hasard(0.48, 0.56) * lent(), hasard(0.3, 0.55), g ? -0.8 : 0.8, g ? 0.7 : -0.7);
+        }, 5, 14, 2, lent);
+        souvent(v, function (t) { if (!reg.nuit && !reg.soir) pigeon(pan(hasard(-0.7, 0.7), s), t, hasard(0.07, 0.13)); }, 7, 18, 3, lent);
+        souvent(v, function (t) { if (!reg.nuit && !reg.soir) envol(pan(hasard(-0.6, 0.6), s), t, 0.12); }, 30, 70, undefined, lent);
+        souvent(v, function (t) { if (reg.ete || (reg.soir && Math.random() < 0.4)) martinets(s, t, hasard(0.025, 0.05)); }, 3, 9, 1, lent);
+        souvent(v, function (t) { if (!reg.nuit && !reg.soir && reg.densite > 0.3) klaxon(pan(hasard(-0.8, 0.8), s), t, 0.012); }, 35, 90, undefined, lent);
         return { regler: regler };
       },
       // Le parc Montsouris (2.8, 6.14 ; le village rêvé, 4.5) : le feuillage qui respire, le
@@ -820,30 +1018,46 @@
         }
         return { regler: function (r2) { return !!r2.rame === dedans; } };
       },
-      // L'hôpital (4.2, 7.5) : le couloir, la ventilation, les néons ; des bips lointains et
+      // L'hôpital (4.2, 7.5, 7.8) : le couloir, la ventilation, les néons ; des bips lointains et
       // désaccordés (chaque moniteur sa hauteur et son rythme, qui se taisent et reprennent) ; un
-      // chariot, des pas qui couinent, une porte au loin.
-      hopital: function (v) {
-        var s = salle(v, 1.3, 0.55, 0.35);
-        nappe(v, 'brun', 'lowpass', 200, 0.5, 0.05, v.sortie);
+      // chariot, des pas qui couinent, une porte au loin. { mesure: true } (4.2) : les bips se mettent
+      // en mesure (la pulsation de 6/8 de la ballade, 0,94 s, chaque moniteur à son tiers) ; { nuit:
+      // true } (7.8) : presque plus rien que la ventilation, un seul moniteur, de loin en loin un chariot.
+      hopital: function (v, r) {
+        var s = salle(v, 1.3, 0.55, 0.35), reg = {}, MESURE = 0.9375;
+        var vent = nappe(v, 'brun', 'lowpass', 200, 0.5, 0.05, v.sortie);
         nappe(v, 'rose', 'bandpass', 2200, 0.4, 0.014, v.sortie);
         [100, 200, 300, 400].forEach(function (f, i) { osc('sine', f, v).connect(ampli(0.005 / (i + 1), v.sortie)); });
-        [[943, -0.6], [1187, 0.5], [1411, 0.1]].forEach(function (m, i) {
-          var p = pan(m[1], s), periode = hasard(0.8, 1.35), marche = i < 2, prochain = ctx.currentTime + hasard(0.2, 1);
+        var moniteurs = [[943, -0.6], [1187, 0.5], [1411, 0.1]].map(function (m, i) {
+          var st = { p: pan(m[1], s), periode: hasard(0.8, 1.35), marche: i < 2, prochain: ctx.currentTime + hasard(0.2, 1) };
           cadence(v, function (debut, fin) {
-            while (prochain < fin) { if (marche && prochain >= debut) bip(p, prochain, m[0], 0.035); prochain += periode; }
+            while (st.prochain < fin) {
+              if (st.marche && st.prochain >= debut && !(reg.nuit && i)) bip(st.p, st.prochain, m[0], 0.035);
+              st.prochain += reg.mesure ? MESURE : st.periode;
+            }
           });
-          (function alterner() { v.plusTard(function () { marche = !marche; alterner(); }, hasard(marche ? 15 : 5, marche ? 45 : 18) * 1000); })();
+          (function alterner() { v.plusTard(function () { st.marche = !st.marche; alterner(); }, hasard(st.marche ? 15 : 5, st.marche ? 45 : 18) * 1000); })();
+          return st;
         });
-        souvent(v, function (t) { chariot(v, s, t); }, 16, 38, 6);
+        function nuit() { return reg.nuit ? 3 : 1; }
+        souvent(v, function (t) { chariot(v, s, t); }, 16, 38, 6, nuit);
         souvent(v, function (t) {
           var g = Math.random() < 0.5, p = pan(g ? -0.7 : 0.7, s); glisserPan(p, g ? -0.7 : 0.7, g ? 0.5 : -0.5, t, 3);
           for (var i = 0; i < 6; i++) {
             pas(p, t + i * 0.52, 'lino', 0.22);
             if (Math.random() < 0.3) sifflet(p, t + i * 0.52 + 0.03, 0.05, 1900, 2300, 0.004, 0);   // la semelle qui couine
           }
-        }, 7, 18, 3);
-        souvent(v, function (t) { porteLoin(pan(hasard(-0.8, 0.8), s), t, 0.15); }, 22, 55);
+        }, 7, 18, 3, nuit);
+        souvent(v, function (t) { porteLoin(pan(hasard(-0.8, 0.8), s), t, 0.15); }, 22, 55, undefined, nuit);
+        function regler(r2) {
+          var t = ctx.currentTime, mesure = !!r2.mesure;
+          if (mesure && !reg.mesure) moniteurs.forEach(function (st, i) { st.prochain = t + 0.3 + i * MESURE / 3; st.marche = true; });
+          reg.mesure = mesure; reg.nuit = !!r2.nuit;
+          lisser(vent.g.gain, reg.nuit ? 0.035 : 0.05, t, 2);
+          return true;
+        }
+        regler(r);
+        return { regler: regler };
       },
       // La chambre de Julie (4.7, 5.1, 5.6 à 5.9) : une pièce calme, la rue étouffée derrière la
       // fenêtre ; { fenetre: true } : elle s'entrouvre (la rue plus claire, des martinets, 5.1) ;
@@ -871,9 +1085,9 @@
       // Le marché d'Aluva (5.2 à 5.5) : le tanpura (la continuité avec kerala), la foule sans une
       // voix (des pas, des frottements), du laiton qui tinte, des étoffes, une sonnette de vélo,
       // des corneilles, un klaxon de rickshaw, la chaleur (les insectes).
-      marche: function (v) {
-        var s = salle(v, 0.8, 0.6, 0.1);
-        tanpura(v, v.sortie, 0.55);
+      marche: function (v, r) {
+        var s = salle(v, 0.8, 0.6, 0.1), ta = ampli(1, v.sortie);
+        tanpura(v, ta, 0.55);
         [-0.5, 0.5].forEach(function (p) { var n = nappe(v, 'rose', 'bandpass', 420, 0.7, 0.07, pan(p, v.sortie)); derive(v, n.g.gain, 0.03, 0.1, 0.5, 2); });
         nappe(v, 'brun', 'lowpass', 300, 0.5, 0.12, v.sortie);
         var ins = nappe(v, 'blanc', 'bandpass', 5200, 4, 0.01, v.sortie); derive(v, ins.g.gain, 0.002, 0.014, 2, 6);
@@ -883,6 +1097,9 @@
         souvent(v, function (t) { sonnette(pan(hasard(-0.8, 0.8), s), t, 0.03); }, 14, 32, 5);
         souvent(v, function (t) { corneille(pan(hasard(-0.8, 0.8), s), t, 0.05); }, 5, 14, 2);
         souvent(v, function (t) { klaxon(pan(hasard(-0.9, 0.9), s), t, 0.01, true); }, 20, 50);
+        function regler(r2) { lisser(ta.gain, r2.tanpura === false ? 0 : 1, ctx.currentTime, 2); return true; }   // { tanpura: false } le tait
+        regler(r);
+        return { regler: regler };
       },
       // La pâtisserie (5.10, 5.11) : le ronron de la vitrine réfrigérée, qui s'arrête et repart ;
       // la rue derrière la vitre, du papier, la caisse, et de loin en loin la clochette de la porte.
@@ -908,11 +1125,31 @@
         var rue = nappe(v, 'brun', 'lowpass', 240, 0.5, 0.1, v.sortie); derive(v, rue.g.gain, 0.06, 0.14, 3, 9);
         var basse = biquad('lowpass', 500, 0.7, v.sortie);
         souvent(v, function (t) { var g = Math.random() < 0.5; passage(basse, t, hasard(4, 6), hasard(0.03, 0.07), g ? -0.6 : 0.6, g ? 0.6 : -0.6, 'voiture'); }, 9, 24, 4);
-        var h = ampli(0.3, v.sortie), prochain = ctx.currentTime + 0.4, k = 0;
-        cadence(v, function (debut, fin) { while (prochain < fin) { if (prochain >= debut) tic(h, prochain, k % 2, 0.3); k++; prochain += 1; } });
+        var h = ampli(0.3, v.sortie), prochain = ctx.currentTime + 0.4, k = 0, presse = null;
+        // { presser: ms } (6.11) : « Continuer » presse les secondes qui restent, sans couper l'attente :
+        // l'horloge passe d'un coup toutes les demi-secondes à un coup toutes les dixièmes, et finit par un coup plus net
+        cadence(v, function (debut, fin) {
+          while (prochain < fin) {
+            var iv = 1;
+            if (presse) {
+              var u = (prochain - presse.t0) / presse.d;
+              if (u >= 1) { if (prochain >= debut) tic(h, prochain, 1, 0.6); presse = null; }
+              else if (u >= 0) iv = 0.5 - 0.4 * u;
+            }
+            if (prochain >= debut) tic(h, prochain, k % 2, presse ? 0.4 : 0.3);
+            k++; prochain += iv;
+          }
+        });
         souvent(v, function (t) { braise(v.sortie, t, hasard(0.004, 0.012)); }, 0.6, 2.8);
         souvent(v, function (t) { etoffe(pan(hasard(-0.6, 0.6), v.sortie), t, 0.02); }, 18, 40);
-        function regler(r2) { lisser(h.gain, borne(nombre(r2.horloge, 0.3)), ctx.currentTime, 1.5); return true; }
+        function regler(r2) {
+          lisser(h.gain, borne(nombre(r2.horloge, 0.3)), ctx.currentTime, 1.5);
+          if (nombre(r2.presser, 0) > 0 && !presse) {
+            presse = { t0: ctx.currentTime, d: r2.presser / 1000 };
+            if (prochain > presse.t0 + 0.35) prochain = presse.t0 + 0.35;   // le prochain coup vient tout de suite
+          }
+          return true;
+        }
         regler(r);
         return { regler: regler };
       },
@@ -1017,9 +1254,54 @@
         ambiance = null;
       }
       if (!nom || !ambiances.hasOwnProperty(nom)) return;
-      var g = ampli(0, monde); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(niveau('ambiances', nom), t + 3);
+      var partage = !!(r && r.partage && typeof r.partage === 'object');   // chaque moitié a son niveau, la somme garde le sien
+      var g = ampli(0, monde); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(partage ? 1 : niveau('ambiances', nom), t + 3);
       ambiance = { nom: nom, r: r, gain: g, vie: vie(g), regler: null };
-      try { var res = ambiances[nom](ambiance.vie, r || {}); if (res && res.regler) ambiance.regler = res.regler; } catch (e) { rate(e); }
+      try {
+        var res = partage ? ambiancePartagee(ambiance.vie, r) : ambiances[nom](ambiance.vie, r || {});
+        if (res && res.regler) ambiance.regler = res.regler;
+      } catch (e) { rate(e); }
+    }
+    // Deux ambiances à la fois, une par oreille (6.2 : une rue par oreille ; 7.4 : l'hôpital à gauche, le
+    // fleuve à droite). r.partage : { gauche, droite } (les noms d'ambiance) ; r.actif : 'gauche',
+    // 'droite', 'les deux' (par défaut) ou 'aucun' ; r.gauche, r.droite : les réglages de chaque moitié.
+    // La moitié qui parle est à plein niveau, l'autre 9 dB plus bas, les deux s'effacent quand rien ne
+    // parle ; jamais tout à fait d'un seul côté (±0,6) : une seule oreillette ou un haut-parleur les
+    // entend toutes deux. Changer l'actif ne recommence rien (Son.partage).
+    function ambiancePartagee(v, r) {
+      var cotes = [];
+      ['gauche', 'droite'].forEach(function (c, i) {
+        var nom = cle(r.partage[c]);
+        if (!nom || !ambiances.hasOwnProperty(nom)) return;
+        var g = ampli(0, pan(i ? 0.6 : -0.6, v.sortie)), sv = vie(g), sr = (r[c] && typeof r[c] === 'object') ? r[c] : {};
+        v.enfants.push(sv);
+        var res = ambiances[nom](sv, sr);
+        cotes.push({ c: c, g: g, k: niveau('ambiances', nom), regler: res && res.regler });
+      });
+      function regler(r2) {
+        if (JSON.stringify(r2.partage) !== JSON.stringify(r.partage)) return false;   // d'autres lieux : on recommence
+        var a = r2.actif || 'les deux', t = ctx.currentTime;
+        // 0,71 : le panoramique d'un signal stéréo reporte une oreille sur l'autre, d'où 3 dB de plus
+        cotes.forEach(function (x) { lisser(x.g.gain, 0.71 * x.k * (a === 'aucun' ? 0.2 : a === 'les deux' ? 0.85 : a === x.c ? 1 : 0.35), t, 2); });
+        return true;
+      }
+      regler(r);
+      return { regler: regler };
+    }
+    // La couche `horloge` des fiches (6.9 à 6.11) est le réglage `horloge` de l'ambiance de l'appartement ;
+    // `presser` (ms) : les secondes qui restent s'égrènent plus vite (6.11).
+    function horlogeCouche(allumer, o) {
+      if (voulue !== 'appartement') return;
+      var patch = { horloge: allumer ? (o.proche ? 1 : 0.3) : 0 };
+      if (o.presser) patch.presser = o.presser;
+      modifierAmbiance(patch);
+    }
+    // Change quelques réglages de l'ambiance voulue, sans la recommencer quand elle le peut.
+    function modifierAmbiance(patch) {
+      var r2 = {}, k, base = voulueR || {};
+      for (k in base) if (base.hasOwnProperty(k)) r2[k] = base[k];
+      for (k in patch) if (patch.hasOwnProperty(k)) r2[k] = patch[k];
+      demanderAmbiance(voulue, r2);
     }
     function appliquerFiltre(nom, duree) {
       var t = ctx.currentTime, f = nom === 'assourdi' ? ASSOURDI : OUVERT;
@@ -1113,31 +1395,32 @@
       });
       return { regler: function () { return true; } };
     }
-    // La télévision derrière une porte (7.2), sans une parole : une rumeur (des phrases de bruit,
-    // jamais des mots), la musique d'une série inventée pour le livre, des rires étouffés ; tout
-    // passe par la porte (un passe-bas) et la pièce d'à côté.
+    // La télévision derrière une porte (7.2), sans une parole : le générique d'une série inventée pour
+    // le livre, puis des voix chuchotées qu'on ne comprend pas (trois personnes, dont il ne reste que
+    // le grave : voir le murmure), des rires de salle ; tout passe par la porte (un passe-bas) et la
+    // pièce d'à côté. Les voix se taisent pendant le générique.
     var GENERIQUE = [   // sol majeur, 112 à la noire ; [hauteur MIDI, durée en croches]
       [[76, 2], [79, 1], [76, 1], [74, 2], [72, 2]], [[72, 2], [76, 2], [74, 4]],
       [[77, 2], [76, 1], [74, 1], [72, 2], [69, 2]], [[71, 2], [74, 2], [79, 4]]
     ];
     var BASSE_GENERIQUE = [[43, 43, 50, 50], [40, 40, 47, 47], [36, 36, 43, 43], [38, 38, 45, 42]];
+    // Des cuivres de synthétiseur : deux dents de scie à peine désaccordées, un filtre qui s'ouvre sur la note.
+    function cuivre(sortie, a, d, midi, niv) {
+      var f = biquad('lowpass', 700, 0.8), g = ctx.createGain();
+      f.frequency.setValueAtTime(700, a); f.frequency.linearRampToValueAtTime(2000, a + 0.1);
+      g.gain.setValueAtTime(0, a); g.gain.linearRampToValueAtTime(niv, a + 0.025); g.gain.setValueAtTime(niv, Math.max(a + 0.03, a + d - 0.05)); g.gain.linearRampToValueAtTime(0, a + d);
+      f.connect(g); g.connect(sortie);
+      [-7, 7].forEach(function (c) { var o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = hz(midi); o.detune.value = c; o.connect(f); o.start(a); o.stop(a + d + 0.02); });
+    }
     function generique(v, sortie, t, court) {
       var c = 60 / 112 / 2, debut = court ? 2 : 0;
       for (var m = debut; m < 4; m++) {
         var t0 = t + (m - debut) * 8 * c, x = 0;
-        GENERIQUE[m].forEach(function (n) {   // la mélodie : une onde carrée, des cuivres de télévision
-          var o = ctx.createOscillator(); o.type = 'square'; o.frequency.value = hz(n[0]);
-          var g = ctx.createGain(), a = t0 + x * c; g.gain.setValueAtTime(0, a); g.gain.linearRampToValueAtTime(0.05, a + 0.02);
-          g.gain.setValueAtTime(0.05, a + n[1] * c - 0.04); g.gain.linearRampToValueAtTime(0, a + n[1] * c);
-          o.connect(g); g.connect(sortie); o.start(a); o.stop(a + n[1] * c + 0.02); x += n[1];
-        });
+        GENERIQUE[m].forEach(function (n) { cuivre(sortie, t0 + x * c, n[1] * c, n[0], 0.03); x += n[1]; });   // la mélodie
         BASSE_GENERIQUE[m].forEach(function (b, i) {   // la basse, les noires ; un accord sur les contretemps ; la batterie
           var a = t0 + i * 2 * c, o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = hz(b);
           var g = ctx.createGain(); enveloppe(g, a, 0.01, 0.25, 0.3); o.connect(g); g.connect(sortie); o.start(a); o.stop(a + 0.4);
-          [b + 24, b + 28, b + 31].forEach(function (h) {
-            var k = ctx.createOscillator(); k.type = 'square'; k.frequency.value = hz(h);
-            var gk = ctx.createGain(); enveloppe(gk, a + c, 0.005, 0.012, 0.12); k.connect(gk); gk.connect(sortie); k.start(a + c); k.stop(a + c + 0.2);
-          });
+          [b + 24, b + 28, b + 31].forEach(function (h) { cuivre(sortie, a + c, 0.14, h, 0.006); });
           if (i % 2 === 0) { var kick = ctx.createOscillator(); kick.frequency.setValueAtTime(120, a); kick.frequency.exponentialRampToValueAtTime(45, a + 0.1); var gkk = ctx.createGain(); enveloppe(gkk, a, 0.002, 0.4, 0.15); kick.connect(gkk); gkk.connect(sortie); kick.start(a); kick.stop(a + 0.2); }
           else grain(sortie, a, 'blanc', 'bandpass', 1800, 0.8, 0.12, 0.002, 0.1);
         });
@@ -1147,25 +1430,15 @@
     function tele(v) {
       var porte = biquad('lowpass', 850, 0.8, v.sortie), piece = ampli(1, porte), conv = convolueur(v, 0.6, 0.6);
       piece.connect(conv); conv.connect(ampli(0.35, porte));
-      var rumeur = nappe(v, 'rose', 'bandpass', 480, 1.4, 0, piece);
-      var musique = ctx.currentTime + 0.2 + (enMarche() ? generique(v, piece, ctx.currentTime + 0.2, false) : 0);   // le générique, d'abord
-      (function phrase() {   // la rumeur se tait tant que la musique joue
-        var t = ctx.currentTime + 0.05, fin = t + hasard(1.5, 4), g = rumeur.g.gain;
-        if (t > musique && enMarche()) {
-          while (t < fin) { var d = hasard(0.1, 0.28); g.setValueAtTime(0.0001, t); g.linearRampToValueAtTime(hasard(0.15, 0.35), t + d * 0.4); g.linearRampToValueAtTime(0.0001, t + d); t += d + hasard(0.02, 0.12); }
-        }
-        v.plusTard(phrase, (fin - ctx.currentTime + hasard(0.4, 1.8)) * 1000);
-      })();
-      souvent(v, function (t) { var court = Math.random() < 0.5; musique = t + generique(v, piece, t, court); }, 28, 60, 30);
-      souvent(v, function (t) {   // des rires étouffés : trois nappes qui palpitent chacune à son rythme
-        var d = hasard(1.5, 3);
-        [700, 1100, 1500].forEach(function (f) {
-          var s = ctx.createBufferSource(); s.buffer = bruit('rose'); s.loop = true;
-          var g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.2, t + 0.3); g.gain.setValueAtTime(0.2, t + d - 0.8); g.gain.linearRampToValueAtTime(0, t + d);
-          var am = ampli(0.5); lfo(hasard(4.5, 6.5), 0.5, am.gain).stop(t + d + 0.1);
-          s.connect(biquad('bandpass', f, 2, am)); am.connect(g); g.connect(piece); s.start(t, Math.random() * 4); s.stop(t + d + 0.1);
-        });
-      }, 10, 26, 6);
+      var voix = ampli(1, piece);   // les voix se taisent pendant le générique
+      murmure(v, voix, { voix: 3, clair: 0.12, vitesse: 0.9, pauses: 1.3, large: 0.3, niv: 1.2 });
+      function musiquer(t, court) {
+        var d = generique(v, piece, t, court);
+        voix.gain.setTargetAtTime(0.05, Math.max(0, t - 0.1), 0.15); voix.gain.setTargetAtTime(1, t + d, 0.5);
+      }
+      if (enMarche()) musiquer(ctx.currentTime + 0.2, false);   // le générique, d'abord
+      souvent(v, function (t) { musiquer(t, Math.random() < 0.5); }, 28, 60, 30);
+      souvent(v, function (t) { rire(piece, t, hasard(1.6, 3), 0.3); }, 10, 26, 6);   // des rires de salle
       return { regler: function () { return true; } };
     }
 
@@ -1217,6 +1490,7 @@
     // deux cordes par note, accordées à un souffle près.
     function pincer(sortie, t, midi, sorte, force, fin, vibrato) {
       var mando = sorte === 'mandoline', g = ctx.createGain();
+      if (mando) grain(sortie, t, 'blanc', 'bandpass', 3400, 1.2, force * 0.05, 0.0004, 0.006);   // le coup de médiator
       g.gain.setValueAtTime(force * (mando ? 0.6 : 1), t);
       if (fin) { g.gain.setValueAtTime(force * (mando ? 0.6 : 1), fin); g.gain.linearRampToValueAtTime(0, fin + 0.06); }
       g.connect(sortie);
@@ -1273,7 +1547,7 @@
       if (filtre === 'telephone') {   // le petit haut-parleur : ni grave ni aigu, un peu saturé, avec le vent et la rue de la vidéo
         var hp = biquad('highpass', 650, 0.7), pk = biquad('peaking', 1700, 1), lpt = biquad('lowpass', 3400, 0.9), sat = ctx.createWaveShaper();
         pk.gain.value = 6; sat.curve = courbeDouce(2.2);
-        melange.connect(hp); hp.connect(pk); pk.connect(lpt); lpt.connect(sat); sat.connect(ampli(0.25, v.sortie));
+        melange.connect(hp); hp.connect(pk); pk.connect(lpt); lpt.connect(sat); sat.connect(biquad('lowpass', 3600, 0.7, ampli(0.25, v.sortie)));   // la saturation fabrique des aigus qu'un petit haut-parleur ne rend pas
         var fond = nappe(v, 'rose', 'bandpass', 900, 0.6, 0.05, hp); derive(v, fond.g.gain, 0.02, 0.07, 0.4, 1.5);
       } else if (filtre === 'assourdi' || filtre === 'eau') {
         melange.connect(biquad('lowpass', filtre === 'eau' ? 560 : 450, filtre === 'eau' ? 1.4 : 0.7, v.sortie));
@@ -1309,6 +1583,77 @@
       }
       pincer(chaineNotes, ctx.currentTime + 0.01, BALLADE[0][k][0], 'mandoline', 1.1 * borne(nombre(o.force, 1)), null, null);
     }
+    // Les notes qui montent sous les pas (1.2 ; les trois premières en 7.8) : la, si, ré, mi, fa dièse, une
+    // pentatonique sans tierce (aucun do dièse avant 3.10, la tierce que le père garde pour sa porte).
+    // Une cloche douce : le son, son octave et un harmonique aigu qui meurt vite, un peu d'espace.
+    var MONTANTES = [69, 71, 74, 76, 78];
+    function noteMontante(k, o) {
+      if (!chaineMontantes) {
+        var g = ampli(niveau('effets', 'montantes'), busEff), conv = ctx.createConvolver(), e = ampli(1, g);
+        conv.buffer = reponse(1.8, 0.5); e.connect(conv); conv.connect(ampli(0.3, g));
+        chaineMontantes = e;
+      }
+      var force = borne(nombre(o.force, 1));
+      tinter(chaineMontantes, ctx.currentTime + 0.01, hz(MONTANTES[k]), [1, 2, 4.02], 0.5 * force, 1.7);
+    }
+    // ---- les couches de la seconde partie
+    // Le chœur de l'aube (3.5) : des oiseaux lointains qui s'éveillent, un par un puis de plus en plus
+    // nombreux, sans mélodie (des sifflets glissés, des trilles, des pépiements, jamais deux fois la même
+    // hauteur ni une gamme) ; il monte avec la lumière, en vingt-cinq secondes.
+    function oiseauAube(sortie, t, niv) {
+      var f = hasard(2100, 5400), type = Math.floor(Math.random() * 4), i;
+      if (type === 0) sifflet(sortie, t, hasard(0.3, 0.7), f, f * hasard(0.8, 1.3), niv, hasard(14, 30), 0.04);        // un trille
+      else if (type === 1) { sifflet(sortie, t, 0.18, f * 1.15, f, niv, 0, 0); sifflet(sortie, t + 0.24, 0.22, f * 0.92, f * 0.7, niv * 0.9, 0, 0); }   // deux notes qui tombent
+      else if (type === 2) for (i = 0; i < 3 + Math.floor(Math.random() * 4); i++) sifflet(sortie, t + i * hasard(0.07, 0.12), 0.035, f, f * hasard(1.15, 1.5), niv * 0.8, 0, 0);   // des pépiements
+      else { sifflet(sortie, t, hasard(0.5, 0.9), f * 0.6, f * hasard(0.9, 1.4), niv, hasard(5, 9), 0.05); }          // un long sifflet qui monte
+    }
+    function aube(v) {
+      var s = salle(v, 1.6, 0.4, 0.5), t0 = ctx.currentTime;
+      nappe(v, 'rose', 'bandpass', 1500, 0.4, 0.004, v.sortie);   // un fond d'air
+      function densite() { return 0.1 + 0.9 * Math.min(1, (ctx.currentTime - t0) / 25); }
+      souvent(v, function (t) {
+        var d = densite();
+        if (Math.random() > d) return;
+        oiseauAube(pan(hasard(-0.9, 0.9), s), t, hasard(0.012, 0.03) * (0.5 + 0.5 * d));
+      }, 0.2, 1, 0.6);
+    }
+    // Le couteau de Jivan sur sa planche (3.12 à 3.14) : un coup toutes les 0,7 s, un peu plus net au bout
+    // de chaque mesure de quatre ; { lent: true } : un coup toutes les 1,1 s. Il s'arrête à la gerbe d'étincelles.
+    function couteau(v, o) {
+      var p = pan(-0.25, v.sortie), lent = !!o.lent, prochain = ctx.currentTime + 0.1, k = 0;
+      cadence(v, function (debut, fin) {
+        while (prochain < fin) {
+          if (prochain >= debut) {
+            var t = prochain + hasard(-0.012, 0.012), a = k % 4 === 3 ? 1 : hasard(0.65, 0.9);
+            coupSourd(p, t, 330, 200, 0.045, 0.5 * a);                              // la planche qui sonne creux
+            grain(p, t, 'brun', 'lowpass', 900, 0.8, 0.45 * a, 0.002, 0.04);
+            grain(p, t, 'blanc', 'bandpass', 3000, 2, 0.12 * a, 0.0005, 0.008);     // la lame
+            tinter(p, t, 520, [1, 2.4], 0.03 * a, 0.1);
+          }
+          k++; prochain += lent ? 1.1 : 0.7;
+        }
+      });
+      return { regler: function (o2) { lent = !!o2.lent; } };
+    }
+    // La brise qui se lève quand les graines partent aux quatre vents (3.14) : deux souffles qui errent
+    // de chaque côté, un sifflement léger ; elle monte pendant la première seconde, comme un air qui prend.
+    function brise(v) {
+      [-0.5, 0.5].forEach(function (p) {
+        var n = nappe(v, 'brun', 'bandpass', 380, 0.6, 0.5, pan(p, v.sortie));
+        derive(v, n.f.frequency, 250, 800, 1.5, 4); derive(v, n.g.gain, 0.1, 0.6, 1.2, 3.5);
+      });
+      var sf = nappe(v, 'rose', 'bandpass', 1100, 7, 0.03, v.sortie); derive(v, sf.f.frequency, 700, 1800, 2, 5); derive(v, sf.g.gain, 0, 0.05, 1.5, 4);
+    }
+    // Le bourdon (5.9) : un si bémol grave et sourd, deux cordes à peine désaccordées qui battent lentement,
+    // « dans un coin de la tête » (un peu à droite, sans le monde ni la rue) ; il enfle et retombe ; éteint au clairon.
+    function bourdon(v) {
+      var p = pan(0.45, v.sortie), am = ampli(0.7, p);
+      lfo(0.11, 0.3, am.gain, v);
+      [[58.27, 1], [58.62, 0.8], [116.54, 0.4], [117.1, 0.25], [174.81, 0.15], [233.08, 0.06]].forEach(function (x) {
+        var o1 = osc('sine', x[0], v); o1.connect(ampli(0.2 * x[1], am));
+      });
+    }
+
     // Les couches : `monde` : elle passe par le monde (et l'assourdi), sinon par le bus des effets ;
     // entree, sortie : ses fondus par défaut (s).
     var COUCHES = {
@@ -1317,7 +1662,11 @@
       feu: { monde: true, entree: 2, sortie: 2.5, faire: feu },
       tele: { monde: true, entree: 1.5, sortie: 1.5, faire: tele },
       vibration: { monde: false, entree: 0.02, sortie: 0.15, faire: vibreur },
-      melodie: { monde: false, entree: 0.02, sortie: 1.5, faire: ballade }
+      melodie: { monde: false, entree: 0.02, sortie: 1.5, faire: ballade },
+      aube: { monde: true, entree: 4, sortie: 3, faire: aube },
+      couteau: { monde: true, entree: 0.1, sortie: 0.4, faire: couteau },
+      vent: { monde: true, entree: 1, sortie: 3, faire: brise },
+      bourdon: { monde: false, entree: 3, sortie: 2, faire: bourdon }
     };
     function allumerCouche(nom, o) {
       var d = COUCHES[nom];
@@ -1325,6 +1674,7 @@
       o = o || {};
       var c = couches[nom];
       if (c) {
+        c.ancienne = false;
         if (c.regler) { c.regler(o); return; }
         if (c.mode === modeBallade(o)) return;   // la ballade joue déjà ce mode
         eteindreCouche(nom, { duree: 250 });
@@ -1440,14 +1790,6 @@
         var g = ctx.createGain(); env(g, t, 0.004, 0.5, 0.3); o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.4);
         effets.cle(t + 0.03);
       },
-      jour: function (t) {
-        [220, 277.18, 329.63, 440, 554.37].forEach(function (f0, i) {
-          var o = ctx.createOscillator(); o.type = i % 2 ? 'sine' : 'triangle'; o.frequency.value = f0 * (1 + (Math.random() - 0.5) * 0.004);
-          var g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.035, t + 2.2);
-          g.gain.linearRampToValueAtTime(0.02, t + 6); g.gain.linearRampToValueAtTime(0, t + 9);
-          o.connect(g); g.connect(bus); o.start(t); o.stop(t + 9.2);
-        });
-      },
       souffle: function (t) {
         var s = ctx.createBufferSource(); s.buffer = bruit('rose');
         var f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.setValueAtTime(250, t); f.frequency.exponentialRampToValueAtTime(7000, t + 1.4);
@@ -1540,46 +1882,650 @@
       }
     };
 
+    var BOUCLES = {};   // les sons qui durent (tictac, pied, autre-cote) : voir boucleEffet
+    // ================================================================ les effets ponctuels de la seconde partie
+    // Synthèse, partie 5.4 : effets.nom = function (t, force, o) ; `bus` est sa sortie, déjà à son niveau
+    // (table NIVEAUX). Aucun ne dure plus de douze secondes ; ceux qui durent sont dans BOUCLES.
+    // Quelques briques :
+    // Un souffle de bruit dont la bande glisse de f0 à f1 en d secondes (a : l'attaque, type : le bruit).
+    function glisse(sortie, t, d, f0, f1, q, niv, a, type) {
+      var s = ctx.createBufferSource(), b = biquad('bandpass', f0, q), g = ctx.createGain(), at = a || 0.01;
+      s.buffer = bruit(type || 'rose');
+      b.frequency.setValueAtTime(f0, t); b.frequency.exponentialRampToValueAtTime(f1, t + at + d);
+      enveloppe(g, t, at, niv, d);
+      s.connect(b); b.connect(g); g.connect(sortie); s.start(t, Math.random() * 4); s.stop(t + at + d + 0.05);
+      return b;
+    }
+    // Un coup sourd : une sinusoïde qui descend de f0 à f1.
+    function coupSourd(sortie, t, f0, f1, d, niv) {
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + d * 0.8);
+      enveloppe(g, t, 0.003, niv, d); o.connect(g); g.connect(sortie); o.start(t); o.stop(t + d + 0.05);
+    }
+    // La réverbération brève d'une pièce ou d'une rue, pour un effet seul : rend son entrée.
+    function chambreEcho(sortie, duree, clarte, humide) {
+      var e = ampli(1, sortie), c = ctx.createConvolver(), h = ampli(humide, sortie);
+      c.buffer = reponse(duree, clarte); e.connect(c); c.connect(h);
+      horloge.poser(function () { try { e.disconnect(); c.disconnect(); c.buffer = null; h.disconnect(); } catch (err) { /* rien */ } }, (duree + 9) * 1000);
+      return e;
+    }
+    // Sur quel sol marche-t-on ? Celui que dit la fiche (sol), sinon celui du lieu.
+    function solPour(o) {
+      var s = cle(o.sol);
+      if (s && s.slice(-1) === 's') s = s.slice(0, -1);   // « plateformes », « pavés »
+      if (s && (s === 'gravier' || SOLS.hasOwnProperty(s))) return s;
+      var a = ambiance ? ambiance.nom : voulue;
+      return ({ parc: 'gravier', rue: 'pave', marche: 'poussiere', hopital: 'lino', chambre: 'bois', appartement: 'bois', desert: 'sable', metro: 'pave' })[a] || 'pave';
+    }
+    var theEtat = { t: -99, k: 0 }, balancierK = 0;
+    // Joue fn avec la sortie `bus` multipliée par k : équilibre les variantes d'un même effet.
+    function avecGain(k, fn) { var a = bus; bus = ampli(k, a); try { fn(); } finally { bus = a; } }
+
+    // ---- les portes, le bois, les objets du pigeonnier
+    // le déclic sec d'une serrure, au quart de tour : le heurt, puis le pêne qui prend sa place (1.3, 6.13, 7.8)
+    effets.cran = function (t) {
+      grain(bus, t, 'blanc', 'bandpass', 2600, 4, 0.45, 0.0008, 0.012);
+      tinter(bus, t, 3150, [1, 2.4], 0.05, 0.12);
+      coupSourd(bus, t + 0.002, 220, 120, 0.05, 0.4);
+      grain(bus, t + 0.05, 'blanc', 'bandpass', 1900, 5, 0.22, 0.0008, 0.01);
+      coupSourd(bus, t + 0.052, 160, 100, 0.04, 0.2);
+    };
+    // du bois lourd et un loquet (2.9, 6.15)
+    effets['porte-epaisse'] = function (t) {
+      glisse(bus, t, 0.5, 700, 260, 1.2, 0.07, 0.02);   // l'air chassé
+      coupSourd(bus, t + 0.04, 110, 48, 0.32, 0.8);     // le battant qui se pose
+      grain(bus, t + 0.04, 'brun', 'lowpass', 260, 0.7, 0.9, 0.006, 0.22);
+      grain(bus, t + 0.2, 'blanc', 'bandpass', 1700, 5, 0.3, 0.0008, 0.018);   // le loquet
+      tinter(bus, t + 0.2, 2150, [1, 2.3], 0.04, 0.15);
+    };
+    // une porte lourde qui s'ouvre (6.4), ou qui se ferme (6.15, l'embrasure : { ferme: true })
+    effets.porte = function (t, force, o) {
+      if (o.ferme) {
+        glisse(bus, t, 0.55, 500, 200, 1, 0.12, 0.05);
+        coupSourd(bus, t + 0.5, 95, 45, 0.3, 0.7); grain(bus, t + 0.5, 'brun', 'lowpass', 300, 0.7, 0.6, 0.004, 0.2);
+        grain(bus, t + 0.65, 'blanc', 'bandpass', 1700, 5, 0.25, 0.0008, 0.02);
+        return;
+      }
+      grain(bus, t, 'blanc', 'bandpass', 1800, 5, 0.5, 0.0008, 0.02);   // le loquet qui cède
+      var i, g = ctx.createGain(), os = ctx.createOscillator(), f = biquad('bandpass', 800, 5, g);   // le gond : un long grincement grave
+      os.type = 'sawtooth'; os.frequency.setValueAtTime(75, t + 0.1);
+      for (i = 1; i < 18; i++) os.frequency.setValueAtTime(65 + Math.random() * 40, t + 0.1 + i * 0.06);
+      enveloppe(g, t + 0.1, 0.12, 0.2, 1); g.connect(bus); os.connect(f); os.start(t + 0.1); os.stop(t + 1.3);
+      glisse(bus, t + 0.1, 1, 300, 600, 0.9, 0.3, 0.15);   // l'air qui entre
+      coupSourd(bus, t + 1.15, 90, 55, 0.2, 0.7);           // le battant bute
+    };
+    // la porte battante qui bat deux fois (3.8)
+    effets.battant = function (t) {
+      [[0, 1], [0.55, 0.55]].forEach(function (b) {
+        glisse(bus, t + b[0], 0.3, 400, 160, 0.9, 0.12 * b[1], 0.04);   // l'air brassé
+        coupSourd(bus, t + b[0] + 0.12, 120, 60, 0.15, 0.5 * b[1]);     // le battant contre le chambranle
+        grain(bus, t + b[0] + 0.12, 'brun', 'lowpass', 380, 0.8, 0.4 * b[1], 0.003, 0.1);
+        grain(bus, t + b[0] + 0.125, 'blanc', 'bandpass', 2300, 3, 0.1 * b[1], 0.0008, 0.015);   // la plaque de poussée
+      });
+    };
+    // une porte qui claque (6.12 : de plus en plus vite)
+    effets.claque = function (t) {
+      coupSourd(bus, t, 140, 55, 0.2, 0.7);
+      grain(bus, t, 'blanc', 'lowpass', 1500, 0.7, 0.55, 0.0008, 0.05);
+      grain(bus, t, 'brun', 'lowpass', 300, 0.7, 0.5, 0.002, 0.12);
+      grain(bus, t + 0.004, 'blanc', 'bandpass', 3000, 2, 0.15, 0.0005, 0.012);
+    };
+    // le grincement mat des portes vides (6.11, 6.12) : le bois sans rien derrière
+    effets['portes-vides'] = function (t) {
+      var i, g = ctx.createGain(), os = ctx.createOscillator(), f = biquad('lowpass', 420, 1.5, g);
+      os.type = 'sawtooth'; os.frequency.setValueAtTime(58, t);
+      for (i = 1; i < 10; i++) os.frequency.setValueAtTime(48 + Math.random() * 28, t + i * 0.07);
+      enveloppe(g, t, 0.1, 0.08, 0.7); g.connect(bus); os.connect(f); os.start(t); os.stop(t + 0.95);
+    };
+    // deux coups doux à la porte : un seul par appel (7.5)
+    effets.toc = function (t) {
+      coupSourd(bus, t, 190, 120, 0.07, 0.55);
+      grain(bus, t, 'brun', 'lowpass', 500, 0.7, 0.5, 0.002, 0.04);
+      tinter(bus, t, 430, [1, 2.5], 0.05, 0.12);
+    };
+    // du bois qui racle des planches : un tabouret qu'on tire (1.5)
+    effets.tabouret = function (t) {
+      glisse(bus, t, 0.65, 700, 500, 1.4, 0.1, 0.05);
+      for (var i = 0; i < 8; i++) {
+        var t1 = t + 0.02 + i * 0.075 + hasard(0, 0.025);
+        grain(bus, t1, 'rose', 'bandpass', hasard(400, 800), 3, hasard(0.12, 0.3), 0.001, 0.04);
+        coupSourd(bus, t1, hasard(110, 150), 70, 0.03, 0.12);
+      }
+    };
+    // les pas : un seul par appel, sur le sol de la fiche ou du lieu (gravier, pavé, trottoir, plateforme…)
+    // { rythme: 'traine' } (5.2) : on traîne les pieds
+    effets.pas = function (t, force, o) {
+      pas(bus, t, solPour(o), 0.6);
+      if (o.rythme === 'traine') grain(bus, t + 0.13, 'rose', 'bandpass', 900, 0.8, 0.12, 0.05, 0.16);
+    };
+    // des pas dans l'herbe, au bord de l'eau (3.9) : quatre pas lents
+    effets.herbe = function (t) {
+      for (var i = 0; i < 4; i++) {
+        var t1 = t + i * hasard(0.55, 0.65);
+        glisse(bus, t1, 0.18, 1400, 2600, 0.8, 0.14, 0.03);   // l'herbe qui se couche
+        coupSourd(bus, t1 + 0.02, 90, 55, 0.08, 0.25);
+        grain(bus, t1 + 0.05, 'blanc', 'highpass', 3500, 0.7, 0.04, 0.01, 0.1);
+      }
+    };
+    // la clochette de la porte de la pâtisserie (5.10)
+    effets.clochette = function (t) { clochette(bus, t, 0.22); };
+    // le merle : une phrase, puis, plus loin et plus sombre, la suivante (2.8)
+    effets.merle = function (t) {
+      var p1 = pan(0.5, bus); glisserPan(p1, 0.5, -0.5, t, 2.2);
+      merle(p1, t, 0.22);
+      merle(pan(-0.7, biquad('lowpass', 2600, 0.7, ampli(0.4, bus))), t + 1.9, 0.18);
+    };
+
+    // ---- la table, la cuisine, les objets de l'étal
+    // la fourchette qu'on pose sur l'assiette (2.6)
+    effets.fourchette = function (t) {
+      grain(bus, t, 'blanc', 'bandpass', 3200, 3, 0.25, 0.0005, 0.02);
+      tinter(bus, t, 2650, [1, 2.76, 5.4], 0.07, 0.25);
+      grain(bus, t + 0.06, 'blanc', 'bandpass', 2400, 4, 0.1, 0.0005, 0.015);   // elle se pose
+      tinter(bus, t + 0.065, 2200, [1, 2.76], 0.03, 0.15);
+    };
+    // la porcelaine posée sur la table (2.7)
+    effets.porcelaine = function (t) {
+      coupSourd(bus, t, 300, 180, 0.04, 0.3);
+      grain(bus, t, 'blanc', 'bandpass', 2600, 1.5, 0.2, 0.0005, 0.02);
+      tinter(bus, t + 0.002, 1250, [1, 2.32, 4.25], 0.09, 0.45);
+      tinter(bus, t + 0.002, 1330, [1, 2.32], 0.05, 0.3);
+    };
+    // des assiettes qu'on débarrasse (2.7) : quatre pièces de porcelaine, l'une glissée sur l'autre
+    effets.assiettes = function (t) {
+      [[0, 1180, 1], [0.34, 1420, 0.8], [0.71, 1050, 0.9], [1.25, 1340, 0.7]].forEach(function (a) {
+        tinter(bus, t + a[0], a[1], [1, 2.32, 4.25], 0.08 * a[2], 0.35);
+        grain(bus, t + a[0], 'blanc', 'bandpass', 2400, 2, 0.15 * a[2], 0.0005, 0.02);
+      });
+      glisse(bus, t + 0.8, 0.35, 2800, 1800, 2.5, 0.05, 0.02);
+    };
+    // un trait de crayon (2.7) : le graphite sur le papier
+    effets.crayon = function (t) {
+      glisse(bus, t, 0.4, 3000, 5200, 2.5, 0.1, 0.04, 'blanc');
+      for (var i = 0; i < 9; i++) grain(bus, t + i * 0.045 + hasard(0, 0.02), 'blanc', 'bandpass', hasard(3500, 6500), 3, 0.04, 0.001, 0.01);
+    };
+    // des tasses de café qu'on pose sur leur soucoupe (4.3)
+    effets.tasse = function (t) {
+      for (var i = 0; i < 2; i++) {
+        var t1 = t + i * hasard(0.45, 0.8);
+        coupSourd(bus, t1, 260, 160, 0.05, 0.25);
+        grain(bus, t1, 'blanc', 'bandpass', 2400, 2, 0.12, 0.0005, 0.02);
+        tinter(bus, t1 + 0.002, hasard(2200, 3000), [1, 2.8, 5.2], 0.06, 0.28);
+      }
+    };
+    // le thé versé de haut (6.8) : à chaque appel un filet de plus, de plus en plus aigu (la tasse se remplit) ;
+    // force : la hauteur de la théière
+    effets.the = function (t, force) {
+      theEtat.k = (t - theEtat.t < 1.6) ? Math.min(theEtat.k + 1, 9) : 0; theEtat.t = t;
+      var f = 650 * Math.pow(1.13, theEtat.k);
+      glisse(bus, t, 0.75, f, f * 1.08, 2.2, 0.16 * (0.5 + force), 0.05);
+      for (var i = 0; i < 6; i++) goutte(bus, t + hasard(0, 0.7), 0.03 * force, false);
+    };
+    // ce qu'on achète à l'étal (5.2, `achat-<objet>`) : un bruit par objet
+    var GAIN_ACHAT = { thes: 5, curcuma: 2.7, encens: 5, jarres: 1, tapisseries: 6.5 };
+    effets.achat = function (t, force, o) { avecGain(GAIN_ACHAT[o.objet] || 1, function () { achat(t, o.objet); }); };
+    function achat(t, ob) {
+      var i;
+      if (ob === 'thes') {   // le thé qu'on verse, le couvercle de fer-blanc
+        glisse(bus, t, 0.7, 900, 1500, 2, 0.12, 0.04); for (i = 0; i < 4; i++) goutte(bus, t + hasard(0.1, 0.7), 0.025, false);
+        tinter(bus, t + 0.78, 1700, [1, 2.9], 0.05, 0.3);
+      } else if (ob === 'curcuma') {   // la poudre qui coule, la cuillère
+        glisse(bus, t, 0.5, 5200, 3200, 0.7, 0.14, 0.02, 'blanc'); tinter(bus, t + 0.55, 2000, [1, 2.5], 0.04, 0.2);
+      } else if (ob === 'encens') {   // l'allumette qu'on gratte, la flamme, quelques crépitements
+        glisse(bus, t, 0.12, 2200, 4200, 2, 0.25, 0.01, 'blanc'); glisse(bus, t + 0.12, 0.35, 900, 600, 0.5, 0.18, 0.02);
+        for (i = 0; i < 6; i++) crepiter(bus, t + 0.2 + hasard(0, 0.5), hasard(0.05, 0.15));
+      } else if (ob === 'jarres') {   // la terre cuite : deux coups creux
+        [[0, 330], [0.22, 410]].forEach(function (k) { coupSourd(bus, t + k[0], k[1] * 0.8, k[1] * 0.55, 0.08, 0.4); tinter(bus, t + k[0], k[1], [1, 2.2, 3.6], 0.1, 0.4); });
+      } else if (ob === 'tapisseries') {   // l'étoffe qu'on déplie
+        etoffe(bus, t, 0.25); etoffe(bus, t + 0.2, 0.2); glisse(bus, t, 0.35, 700, 400, 0.8, 0.07, 0.05);
+      } else tinter(bus, t, 1800, [1, 2.6], 0.08, 0.3);
+    }
+    // le crissement du doigt sur la vitre embuée (5.11) : un petit cri de verre mouillé
+    effets.buee = function (t) {
+      var o1 = ctx.createOscillator(), g = ctx.createGain(), i;
+      o1.type = 'triangle';
+      for (i = 0; i < 16; i++) o1.frequency.setValueAtTime(hasard(1000, 2000), t + i * 0.018);
+      enveloppe(g, t, 0.01, 0.08, 0.28); o1.connect(biquad('bandpass', 1800, 3, g)); g.connect(bus); o1.start(t); o1.stop(t + 0.35);
+      glisse(bus, t, 0.28, 3000, 4500, 2, 0.05, 0.02);
+    };
+    // la mousse sous le doigt (1.4) : un léger crissement sec
+    effets.mousse = function (t) {
+      glisse(bus, t, 0.18, 1200, 2400, 0.9, 0.12, 0.04);
+      for (var i = 0; i < 4; i++) grain(bus, t + hasard(0, 0.15), 'blanc', 'bandpass', hasard(2000, 4000), 2, 0.03, 0.001, 0.01);
+    };
+    // la bombe de peinture : la bille qui sonne, puis trois pschitt qui s'essoufflent (1.4)
+    effets.bombe = function (t) {
+      var i;
+      for (i = 0; i < 6; i++) grain(bus, t + i * 0.04, 'blanc', 'bandpass', hasard(2800, 3600), 3, 0.1, 0.0005, 0.012);
+      [[0.3, 0.3, 1], [0.8, 0.24, 0.75], [1.25, 0.18, 0.5]].forEach(function (b) { glisse(bus, t + b[0], b[1], 7000, 5000, 0.6, 0.2 * b[2], 0.01, 'blanc'); });
+    };
+    // un coup de coutelas : le sifflement de la lame, le bois qui reçoit (1.4)
+    effets.coutelas = function (t) {
+      glisse(bus, t, 0.09, 4200, 1500, 1.5, 0.25, 0.01, 'blanc');
+      coupSourd(bus, t + 0.09, 150, 70, 0.1, 0.6);
+      grain(bus, t + 0.09, 'blanc', 'bandpass', 900, 1.2, 0.3, 0.001, 0.03);
+      tinter(bus, t + 0.095, 520, [1, 2.5], 0.04, 0.12);
+    };
+    // les poissons qui frétillent et plongent (1.4, 1.5)
+    effets.poissons = function (t) {
+      for (var i = 0; i < 10; i++) {
+        var t1 = t + hasard(0, 1.3);
+        glisse(bus, t1, hasard(0.05, 0.12), hasard(700, 1500), hasard(1500, 2500), 1.5, 0.1, 0.005);
+        if (Math.random() < 0.5) goutte(bus, t1 + 0.04, 0.04, true);
+      }
+      coupSourd(bus, t + 1.4, 320, 160, 0.14, 0.2); glisse(bus, t + 1.4, 0.4, 900, 400, 0.9, 0.12, 0.01);   // le plongeon
+    };
+    // un froissement de toile (1.8)
+    effets.lin = function (t) {
+      for (var i = 0; i < 6; i++) grain(bus, t + i * hasard(0.07, 0.14), 'rose', 'bandpass', hasard(700, 1500), 0.9, 0.12, 0.02, hasard(0.08, 0.18));
+    };
+    // la main qui se retire, un froissement (6.13)
+    effets.tissu = function (t) { etoffe(bus, t, 0.2); glisse(bus, t, 0.25, 1500, 700, 0.8, 0.06, 0.02); };
+    // un balancier feutré : un tic à gauche, un tic à droite (2.2)
+    effets.balancier = function (t, force, o) {
+      var c = o.cote === 'droite' ? 1 : o.cote === 'gauche' ? 0 : (balancierK++ % 2), p = pan(c ? 0.45 : -0.45, bus);
+      coupSourd(p, t, c ? 190 : 230, c ? 130 : 160, 0.05, 0.3);
+      grain(p, t, 'brun', 'lowpass', 600, 0.8, 0.3, 0.002, 0.03);
+      grain(p, t, 'blanc', 'bandpass', c ? 1300 : 1700, 6, 0.1, 0.001, 0.02);
+    };
+    // le velours sous le doigt (6.5)
+    effets.velours = function (t) { glisse(bus, t, 0.45, 500, 900, 0.6, 0.1, 0.12); glisse(bus, t, 0.45, 300, 450, 0.5, 0.08, 0.15, 'brun'); };
+    // la plume sur le papier (7.7) ; le papier frotté (7.7)
+    effets.plume = function (t) {
+      glisse(bus, t, 0.3, 4500, 3000, 3, 0.06, 0.05, 'blanc');
+      for (var i = 0; i < 8; i++) grain(bus, t + i * 0.035 + hasard(0, 0.02), 'blanc', 'bandpass', hasard(3500, 6000), 4, 0.05, 0.001, 0.012);
+    };
+    effets.frottement = function (t) {
+      var s = ctx.createBufferSource(), g = ctx.createGain(), b = biquad('bandpass', 1800, 0.5), i;
+      s.buffer = bruit('rose'); s.connect(b); b.connect(g); g.connect(bus);
+      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.1, t + 0.04);
+      for (i = 1; i < 14; i++) g.gain.linearRampToValueAtTime(hasard(0.03, 0.14), t + 0.04 + i * 0.025);
+      g.gain.linearRampToValueAtTime(0, t + 0.45); s.start(t, Math.random() * 4); s.stop(t + 0.5);
+    };
+    // un pinceau sur le papier (3.7, 5.5, 6.6) ; la coche au pinceau de Darshan, au stylo de Julie (6.2)
+    effets.pinceau = function (t) {
+      glisse(bus, t, 0.5, 900, 2600, 0.8, 0.14, 0.12);
+      for (var i = 0; i < 6; i++) grain(bus, t + 0.05 + i * 0.07, 'rose', 'bandpass', hasard(1500, 3500), 1.5, 0.02, 0.01, 0.03);
+    };
+    effets['coche-pinceau'] = function (t) { glisse(bus, t, 0.12, 1300, 2400, 1, 0.2, 0.02); coupSourd(bus, t + 0.1, 240, 180, 0.04, 0.12); };
+    effets['coche-stylo'] = function (t) { glisse(bus, t, 0.06, 4000, 6000, 3, 0.12, 0.005, 'blanc'); tinter(bus, t + 0.06, 2800, [1], 0.05, 0.03); };
+    // les touches du téléphone de Julie (4.3) ; l'envoi d'un message (4.3)
+    effets.clavier = function (t) {
+      tinter(bus, t, hasard(1250, 1500), [1, 2], 0.08, 0.025);
+      grain(bus, t, 'blanc', 'highpass', 3000, 0.7, 0.1, 0.0003, 0.006);
+    };
+    effets.envoi = function (t) {
+      var o1 = ctx.createOscillator(), g = ctx.createGain();
+      o1.frequency.setValueAtTime(700, t); o1.frequency.exponentialRampToValueAtTime(1500, t + 0.12);
+      enveloppe(g, t, 0.01, 0.1, 0.14); o1.connect(g); g.connect(bus); o1.start(t); o1.stop(t + 0.3);
+      glisse(bus, t, 0.14, 1500, 4000, 1.2, 0.08, 0.02, 'blanc');
+      tinter(bus, t + 0.12, 1900, [1, 2], 0.05, 0.1);
+    };
+    // un clic par cran de la réglette (4.2)
+    effets.reglette = function (t) {
+      grain(bus, t, 'blanc', 'bandpass', 2000, 4, 0.2, 0.0005, 0.008);
+      coupSourd(bus, t, 420, 250, 0.02, 0.15);
+    };
+    // une graine lancée vers un bord (3.14)
+    effets.graine = function (t) {
+      glisse(bus, t, 0.14, 3800, 1800, 1.2, 0.12, 0.01, 'blanc');
+      for (var i = 0; i < 3; i++) grain(bus, t + 0.16 + i * hasard(0.04, 0.08), 'blanc', 'bandpass', hasard(2500, 4000), 3, 0.05, 0.0005, 0.008);
+    };
+    // de l'eau brassée qui suit le doigt (1.7)
+    effets.remous = function (t) {
+      glisse(bus, t, 0.5, 450, 1100, 1.2, 0.12, 0.05);
+      for (var i = 0; i < 3; i++) goutte(bus, t + hasard(0, 0.4), 0.05, true);
+    };
+    // quelques gouttes lourdes (6.12) : l'eau d'une fonte qui n'en finit pas
+    effets['fonte-visqueuse'] = function (t) {
+      for (var i = 0; i < 5; i++) {
+        var t1 = t + i * hasard(0.35, 0.6), o1 = ctx.createOscillator(), g = ctx.createGain();
+        o1.frequency.setValueAtTime(hasard(160, 220), t1); o1.frequency.exponentialRampToValueAtTime(hasard(300, 380), t1 + 0.22);
+        enveloppe(g, t1, 0.03, 0.4, 0.25); o1.connect(biquad('lowpass', 900, 0.7, g)); g.connect(bus); o1.start(t1); o1.stop(t1 + 0.35);
+      }
+    };
+    // l'éclat de 1.3, fêlé, puis du verre qui se brise (6.11)
+    effets['eclat-brise'] = function (t) {
+      effets.eclat(t);
+      var t1 = t + 1.2;
+      grain(bus, t1, 'blanc', 'highpass', 2500, 0.7, 0.6, 0.0004, 0.05);
+      for (var i = 0; i < 18; i++) tinter(bus, t1 + 0.02 + i * hasard(0.015, 0.06), hasard(2500, 7000), [1, 2.76], hasard(0.02, 0.06), hasard(0.05, 0.25));
+      coupSourd(bus, t1, 400, 120, 0.1, 0.15);
+    };
+
+    // ---- le compte, le téléphone, l'hôpital, le métro
+    // le tic du compte (2.9, 3.14, 4.7, 5.1, 5.11, 6.1, 6.11) : bref et sec, dans la matière du monde de la page ;
+    // chez Julie ({ monde: 'julie' }), celui de son téléphone
+    effets.tic = function (t, force, o) {
+      if (o.monde === 'julie' || o.julie) {
+        var o1 = ctx.createOscillator(), g = ctx.createGain(); o1.frequency.value = 1900;
+        enveloppe(g, t, 0.001, 0.038, 0.03); o1.connect(g); g.connect(bus); o1.start(t); o1.stop(t + 0.06);
+        grain(bus, t, 'blanc', 'highpass', 3500, 0.7, 0.038, 0.0005, 0.006);
+      } else tic(bus, t, 0, 0.5);
+    };
+    // le vibreur d'un téléphone posé : deux salves, comme la couche `vibration` mais d'un coup (4.3, 4.7)
+    effets.vibreur = function (t) {
+      var porte = ctx.createGain();
+      porte.connect(biquad('bandpass', 330, 2.2, bus)); porte.connect(biquad('bandpass', 1250, 5, ampli(0.6, bus)));
+      porte.gain.setValueAtTime(0, t);
+      [0, 0.6].forEach(function (d) {
+        porte.gain.setValueAtTime(0, t + d); porte.gain.linearRampToValueAtTime(1, t + d + 0.02);
+        porte.gain.setValueAtTime(1, t + d + 0.37); porte.gain.linearRampToValueAtTime(0, t + d + 0.4);
+      });
+      [171, 175.5].forEach(function (f) { var o1 = ctx.createOscillator(); o1.type = 'square'; o1.frequency.value = f; o1.connect(ampli(0.4, porte)); o1.start(t); o1.stop(t + 1.1); });
+    };
+    // un bip de moniteur (4.2) ; { f } : sa hauteur
+    effets.bip = function (t, force, o) { bip(bus, t, nombre(o.f, 1000), 0.2); };
+    // le signal de fermeture et le claquement des portes du métro (4.1)
+    effets['portes-metro'] = function (t) {
+      for (var i = 0; i < 5; i++) {
+        var o1 = ctx.createOscillator(), g = ctx.createGain(), t1 = t + i * 0.19;
+        o1.frequency.value = 1250; g.gain.setValueAtTime(0, t1); g.gain.linearRampToValueAtTime(0.1, t1 + 0.01); g.gain.setValueAtTime(0.1, t1 + 0.1); g.gain.linearRampToValueAtTime(0, t1 + 0.12);
+        o1.connect(g); g.connect(bus); o1.start(t1); o1.stop(t1 + 0.14);
+      }
+      glisse(bus, t + 1.1, 0.5, 6000, 4500, 0.6, 0.2, 0.02, 'blanc');       // l'air des vérins
+      coupSourd(bus, t + 1.5, 110, 50, 0.2, 0.5); grain(bus, t + 1.5, 'blanc', 'bandpass', 1500, 1.5, 0.3, 0.001, 0.05);   // les portes qui se joignent
+    };
+    // une montre de gousset (1.9) : quatre battements par seconde, très doux
+    function battementMontre(sortie, t, tac) {
+      grain(sortie, t, 'blanc', 'bandpass', tac ? 3600 : 4200, 6, 0.5, 0.0008, 0.012);
+      grain(sortie, t, 'blanc', 'bandpass', tac ? 1500 : 1750, 12, 0.35, 0.001, 0.03);
+    }
+    BOUCLES.tictac = function (v, g, o) {
+      var prochain = ctx.currentTime + 0.05, t0 = prochain, k = 0, duree = o.boucle ? Infinity : nombre(o.duree, 2400) / 1000;
+      cadence(v, function (debut, fin) {
+        while (prochain < fin) {
+          if (prochain - t0 > duree) { arreterBoucle('tictac', 0.2); return; }
+          if (prochain >= debut) battementMontre(g, prochain, k % 2);
+          k++; prochain += 0.25;
+        }
+      });
+    };
+    // un pied qui bat les deux temps forts d'une mesure à 6/8, sans note (5.8) ; il ralentit et s'efface
+    // ({ ralentir: true }) ; sans `boucle`, deux mesures, puis il ralentit de lui-même
+    BOUCLES.pied = function (v, g, o) {
+      var prochain = ctx.currentTime + 0.05, iv = 0.9375, niv = 1, k = 0, ralentit = false, n = o.boucle ? Infinity : 4;
+      cadence(v, function (debut, fin) {
+        while (prochain < fin) {
+          if (prochain >= debut) { var a = niv * (k % 2 ? 0.7 : 1); coupSourd(g, prochain, 110, 62, 0.09, 0.5 * a); grain(g, prochain, 'brun', 'lowpass', 450, 0.7, 0.35 * a, 0.003, 0.05); }
+          k++; prochain += iv;
+          if (ralentit) { iv *= 1.22; niv *= 0.72; if (niv < 0.1) { arreterBoucle('pied', 0.3); return; } }
+          else if (k >= n) ralentit = true;
+        }
+      });
+      return { regler: function (o2) { if (o2.ralentir || o2.arret) ralentit = true; } };
+    };
+
+    // ---- les grands moments
+    // une seule note claire, tenue 3 s, dans l'aigu (5.9, 6.3) : le ré aigu, un peu d'air autour
+    effets.clairon = function (t) {
+      var e = chambreEcho(bus, 1.4, 0.5, 0.25), g = ctx.createGain(), vib = ctx.createOscillator(), gv = ampli(5);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.16, t + 0.12); g.gain.setValueAtTime(0.16, t + 2.2); g.gain.linearRampToValueAtTime(0, t + 3.1);
+      g.connect(e);
+      [[1, 1], [2, 0.22], [3, 0.08]].forEach(function (h) {
+        var o1 = ctx.createOscillator(); o1.frequency.value = 1174.66 * h[0]; gv.connect(o1.frequency);
+        o1.connect(ampli(h[1], g)); o1.start(t); o1.stop(t + 3.2);
+      });
+      vib.frequency.value = 5.2; vib.connect(gv); vib.start(t); vib.stop(t + 3.2);
+    };
+    // une nappe chaude (5.9) : fa, do, fa, la, qui monte et s'attarde
+    effets.eclair = function (t) {
+      var e = chambreEcho(bus, 1.8, 0.35, 0.3), g = ctx.createGain(), f = biquad('lowpass', 900, 0.7, g);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.14, t + 1.4); g.gain.setValueAtTime(0.14, t + 2.4); g.gain.linearRampToValueAtTime(0, t + 5.5);
+      g.connect(e);
+      [87.31, 130.81, 174.61, 220].forEach(function (f0) {
+        [-6, 6].forEach(function (c) { var o1 = ctx.createOscillator(); o1.type = 'sawtooth'; o1.frequency.value = f0; o1.detune.value = c; o1.connect(ampli(0.25, f)); o1.start(t); o1.stop(t + 5.6); });
+      });
+    };
+    // le ronflement de l'aiguille affolée qui ralentit, puis un déclic quand elle se fixe (5.3) ;
+    // { etat: 'etoile' } : une note claire à l'étoile du matin
+    effets.aiguille = function (t, force, o) {
+      if (o.etat === 'etoile' || o.etat === 'matin') { tinter(bus, t, 1760, [1, 2, 3.01], 0.1, 1.8); return; }
+      var os = ctx.createOscillator(), am = ctx.createGain(), m = ctx.createOscillator(), gm = ampli(0.45, am.gain), g = ctx.createGain();
+      os.type = 'sawtooth'; os.frequency.value = 78; am.gain.value = 0.5;
+      m.frequency.setValueAtTime(26, t); m.frequency.exponentialRampToValueAtTime(4, t + 2.2); m.connect(gm);
+      enveloppe(g, t, 0.15, 0.12, 2.2); os.connect(biquad('bandpass', 420, 2, am)); am.connect(g); g.connect(bus);
+      os.start(t); m.start(t); os.stop(t + 2.6); m.stop(t + 2.6);
+      effets.cran(t + 2.45);
+    };
+    // le paquet de confettis secoué, un froissement (5.5)
+    effets.confettis = function (t) {
+      for (var i = 0; i < 3; i++) { froissement(bus, t + i * 0.22, 0.2); coupSourd(bus, t + i * 0.22, 170, 110, 0.05, 0.12); }
+      for (i = 0; i < 6; i++) grain(bus, t + hasard(0, 0.8), 'blanc', 'bandpass', hasard(3000, 6000), 3, 0.04, 0.0005, 0.01);
+    };
+    // un fruit qui roule et s'arrête (5.2)
+    effets.roule = function (t) {
+      var s = ctx.createBufferSource(), b = biquad('lowpass', 500, 0.7), g = ctx.createGain(), am = ctx.createGain(), m = ctx.createOscillator();
+      s.buffer = bruit('brun'); am.gain.value = 0.5; m.frequency.setValueAtTime(7, t); m.frequency.exponentialRampToValueAtTime(1.5, t + 1.2); m.connect(ampli(0.45, am.gain));
+      enveloppe(g, t, 0.08, 0.5, 1.1); s.connect(b); b.connect(am); am.connect(g); g.connect(bus); s.start(t, Math.random() * 4); s.stop(t + 1.4); m.start(t); m.stop(t + 1.4);
+      coupSourd(bus, t + 1.25, 220, 150, 0.04, 0.1);
+    };
+    // le vent en rafales (6.1) ; le satin du ruban qui claque (6.1, 7.10)
+    effets.mistral = function (t) {
+      [0, 1.4].forEach(function (d, i) {
+        glisse(bus, t + d, 1.4, 400, 1400, 0.5, 0.35, 0.7, 'brun');
+        glisse(bus, t + d + 0.2, 1.1, 900, 1700, 6, 0.04 * (1 - 0.3 * i), 0.6);
+      });
+    };
+    effets.satin = function (t) {
+      for (var i = 0; i < 9; i++) grain(bus, t + i * 0.075 + hasard(0, 0.02), 'blanc', 'bandpass', 2200, 1.2, 0.1 + 0.02 * i, 0.002, 0.04);
+      grain(bus, t + 0.78, 'blanc', 'highpass', 3500, 0.7, 0.5, 0.0004, 0.03);
+    };
+    // l'encre liquide qui s'épanouit sur la porte (6.4)
+    effets.encre = function (t) {
+      glisse(bus, t, 2.4, 300, 700, 1.2, 0.12, 0.6);
+      coupSourd(bus, t, 70, 55, 2.4, 0.15);
+      for (var i = 0; i < 5; i++) goutte(bus, t + hasard(0.2, 2), 0.04, true);
+    };
+    // le souffle de la fumée ; { eau: true } : l'eau d'un pinceau d'aquarelle (6.6)
+    effets.fumee = function (t, force, o) {
+      glisse(bus, t, 3.5, 1200, 700, 0.5, 0.1, 1.2);
+      if (o.eau) for (var i = 0; i < 8; i++) goutte(bus, t + hasard(0.2, 3), 0.025, Math.random() < 0.3);
+    };
+    // les anneaux du rideau, puis la ville qui monte d'en bas et s'éloigne (6.7)
+    effets.rideau = function (t) {
+      for (var i = 0; i < 10; i++) tinter(bus, t + i * 0.05 * (1 + i * 0.05), hasard(2800, 3800), [1, 2.3], 0.04, 0.12);
+      glisse(bus, t, 0.6, 3200, 2600, 1.5, 0.05, 0.05, 'blanc');
+      glisse(bus, t + 0.6, 3.5, 250, 180, 0.6, 0.18, 1.2, 'brun');
+    };
+    // quelques mesures de guitare de rue qui passent de droite à gauche et s'éteignent avant leur accord (4.5) :
+    // sol, mi mineur, do, ré sept, et le sol n'arrive pas (« l'accord tacite ») ; aucun do dièse
+    var RUE_GUITARE = [[43, 50, 55, 59], [40, 47, 52, 55], [48, 55, 60, 64], [50, 57, 60, 66]];
+    effets.musicien = function (t) {
+      var d = 0.34, p = pan(0.8, bus), lp = biquad('lowpass', 4200, 0.6, p), g = ampli(1, lp);
+      glisserPan(p, 0.8, -0.8, t, 8.4);
+      lp.frequency.setValueAtTime(4200, t); lp.frequency.linearRampToValueAtTime(1500, t + 8.4);
+      g.gain.setValueAtTime(1, t); g.gain.linearRampToValueAtTime(0.25, t + 8.4);
+      RUE_GUITARE.forEach(function (c, m) {
+        [[0, 0], [1, 1], [2, 2], [3, 3], [4, 2], [5, 3]].forEach(function (n) {
+          var t1 = t + (m * 6 + n[0]) * d + hasard(-0.006, 0.006);
+          pincer(g, t1, c[n[1]], 'guitare', n[0] ? 0.4 : 0.55, t1 + (n[0] ? 0.5 : 1.6), null);
+        });
+      });
+    };
+
+    // ---- le feu, la vision, l'étincelle
+    // une gerbe d'étincelles (3.12, 7.6)
+    effets.etincelles = function (t) {
+      var i;
+      glisse(bus, t, 0.5, 2000, 5000, 1, 0.08, 0.02, 'blanc');
+      for (i = 0; i < 40; i++) grain(bus, t + Math.pow(Math.random(), 1.6) * 0.9, 'blanc', 'bandpass', hasard(2500, 7500), hasard(2, 6), hasard(0.04, 0.2), 0.0004, hasard(0.004, 0.015));
+      for (i = 0; i < 6; i++) tinter(bus, t + hasard(0.05, 0.8), hasard(4000, 8000), [1, 2.4], 0.012, 0.15);
+    };
+    // les braises qui crépitent à peine (3.10, 3.11, 7.6)
+    effets.braises = function (t) { for (var i = 0; i < 9; i++) crepiter(bus, t + hasard(0, 2.6), hasard(0.03, 0.12)); };
+    // un battement sourd, intérieur : la vie palpite (3.10, 3.11)
+    effets.battement = function (t) { var chaud = ctx.createWaveShaper(); chaud.curve = courbeDouce(1.6); chaud.connect(bus); battre(chaud, t, 'darshan'); };
+    // une aspiration d'air brusque : l'air revient (3.11)
+    effets.aspiration = function (t) {
+      glisse(bus, t, 0.45, 250, 2600, 0.8, 0.5, 0.12);
+      glisse(bus, t + 0.05, 0.3, 900, 3000, 2, 0.05, 0.1);
+    };
+    // une goutte, un glaçon dans le verre ; la glace qui craque ; le sable qui file (7.3)
+    effets.glacon = function (t) {
+      goutte(bus, t, 0.2, true);
+      tinter(bus, t + 0.35, 2900, [1, 2.4, 4.1], 0.09, 0.5); grain(bus, t + 0.35, 'blanc', 'bandpass', 3200, 3, 0.15, 0.0005, 0.015);
+    };
+    effets.glace = function (t) {
+      for (var i = 0; i < 5; i++) {
+        var t1 = t + i * hasard(0.15, 0.35), o1 = ctx.createOscillator(), g = ctx.createGain();
+        grain(bus, t1, 'blanc', 'bandpass', hasard(1500, 4000), 2, 0.3, 0.0004, hasard(0.01, 0.04));
+        o1.frequency.setValueAtTime(1800, t1); o1.frequency.exponentialRampToValueAtTime(500, t1 + 0.08); enveloppe(g, t1, 0.002, 0.06, 0.08); o1.connect(g); g.connect(bus); o1.start(t1); o1.stop(t1 + 0.15);
+      }
+    };
+    effets.sable = function (t) {
+      glisse(bus, t, 1.6, 6000, 3500, 0.5, 0.12, 0.05, 'blanc');
+      for (var i = 0; i < 40; i++) grain(bus, t + i * 0.04 + hasard(0, 0.03), 'blanc', 'highpass', hasard(3500, 5500), 0.7, 0.1 * (1 - i / 50), 0.0008, 0.01);
+    };
+    // un grondement sous le trottoir ; la pierre qui se fend (7.12)
+    effets.grondement = function (t) {
+      var o1 = ctx.createOscillator(), g = ctx.createGain(), s = ctx.createBufferSource(), b = biquad('lowpass', 90, 0.5), g2 = ctx.createGain();
+      o1.frequency.setValueAtTime(34, t); o1.frequency.linearRampToValueAtTime(46, t + 3.4); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.7, t + 1.5); g.gain.linearRampToValueAtTime(0, t + 3.6);
+      s.buffer = bruit('brun'); g2.gain.setValueAtTime(0, t); g2.gain.linearRampToValueAtTime(0.9, t + 1.4); g2.gain.linearRampToValueAtTime(0, t + 3.6);
+      o1.connect(g); g.connect(bus); s.connect(b); b.connect(g2); g2.connect(bus); o1.start(t); o1.stop(t + 3.7); s.start(t, Math.random() * 4); s.stop(t + 3.7);
+    };
+    effets.pierre = function (t) {
+      grain(bus, t, 'blanc', 'bandpass', 1200, 0.7, 0.6, 0.0005, 0.06);
+      coupSourd(bus, t, 180, 60, 0.18, 0.6);
+      for (var i = 0; i < 14; i++) grain(bus, t + 0.05 + hasard(0, 0.7), 'rose', 'bandpass', hasard(500, 2500), 1.5, hasard(0.03, 0.12), 0.002, 0.03);
+    };
+    // le dernier son du livre : un impact grave, sourd, court, qu'on sent plus qu'on n'entend, avec la
+    // réverbération brève de la rue (7.15)
+    effets.choc = function (t) {
+      var e = chambreEcho(bus, 0.9, 0.3, 0.5);
+      coupSourd(e, t, 85, 32, 1.2, 1);
+      coupSourd(e, t + 0.01, 55, 28, 1, 0.7);
+      grain(e, t, 'brun', 'lowpass', 160, 0.7, 1, 0.002, 0.25);
+      grain(e, t, 'blanc', 'lowpass', 700, 0.7, 0.35, 0.001, 0.04);
+    };
+    // un éclat plus court, pour les lunettes de 1.9 et de 7.8 : le souffle, le choc, un anneau bref
+    effets['eclat-court'] = function (t) {
+      glisse(bus, t, 0.25, 260, 5200, 1.1, 0.3, 0.2, 'blanc');
+      coupSourd(bus, t + 0.3, 120, 42, 0.3, 0.6);
+      [1, 2.76, 5.4].forEach(function (m, i) { tinter(bus, t + 0.3, 587 * m, [1], 0.09 / (i + 1), 0.7 - i * 0.2); });
+    };
+    // les six paysages derrière les portes de 6.12 (une seconde chacun : village, gorge, ossau, banquise, rochers, champs)
+    var GAIN_PAYSAGE = { village: 1, gorge: 2, ossau: 1.65, banquise: 0.81, rochers: 0.95, champs: 4.6 };
+    effets.paysage = function (t, force, o) { avecGain(GAIN_PAYSAGE[cle(o.paysage)] || 1, function () { paysage(t, cle(o.paysage)); }); };
+    function paysage(t, p) {
+      var i;
+      if (p === 'village') {   // une cloche, loin
+        tinter(bus, t, 392, [1, 2.0, 2.4, 3.0, 4.1], 0.1, 1.6); glisse(bus, t, 1, 600, 900, 0.5, 0.03, 0.2);
+      } else if (p === 'gorge') {   // l'eau qui gronde entre les parois
+        glisse(chambreEcho(bus, 1.5, 0.4, 0.5), t, 1.1, 400, 700, 0.5, 0.2, 0.2);
+      } else if (p === 'ossau') {   // le vent de l'altitude, un cri de chocard
+        glisse(bus, t, 1.1, 300, 900, 0.5, 0.2, 0.3, 'brun'); sifflet(bus, t + 0.5, 0.12, 3400, 2400, 0.05, 0); sifflet(bus, t + 0.72, 0.1, 3300, 2300, 0.04, 0);
+      } else if (p === 'banquise') {   // le froid : la glace qui craque, un grave qui court dessous
+        effets.glace(t); coupSourd(bus, t + 0.1, 60, 40, 0.9, 0.25);
+      } else if (p === 'rochers') {   // des pierres qui dévalent
+        for (i = 0; i < 9; i++) { var f = hasard(140, 600); coupSourd(bus, t + i * hasard(0.06, 0.12), f, f * 0.6, 0.06, 0.22); grain(bus, t + i * 0.09, 'blanc', 'bandpass', hasard(1200, 3000), 2, 0.08, 0.0005, 0.012); }
+      } else if (p === 'champs') {   // les blés, les cigales
+        glisse(bus, t, 1, 2400, 3200, 0.6, 0.12, 0.2); for (i = 0; i < 14; i++) tinter(bus, t + i * 0.07, 4600, [1], 0.012, 0.03);
+      } else { tinter(bus, t, 880, [1, 2.4], 0.06, 0.6); }
+    }
+
+    // ---- ce qu'on entend de l'autre côté d'une porte (1.3 : aluva, 1.9 : paris-midi, 3.8 : periyar, 7.8 :
+    // hopital-nuit) : étouffé comme derrière des planches (un passe-bas, un creux de bois), qui monte en
+    // 2,5 s ; jamais l'accord du père. { duree: ms } (40 s par défaut), { arret: true }, ou la page qui change.
+    var LIEUX_GAIN = { aluva: 1, 'paris-midi': 0.86, periyar: 2.2, 'hopital-nuit': 2.35 };
+    BOUCLES['autre-cote'] = function (v, g, o) {
+      var lieu = cle(o.lieu) || 'aluva', duree = nombre(o.duree, 40000);
+      var planches = biquad('lowpass', 800, 0.7, ampli(LIEUX_GAIN[lieu] || 1, g)), ent = biquad('peaking', 230, 1.2, planches);
+      ent.gain.value = 4;
+      if (lieu === 'paris-midi') {   // une rue à midi, et, très loin, la salle d'un restaurant
+        var rue = nappe(v, 'brun', 'lowpass', 340, 0.5, 0.3, ent); derive(v, rue.g.gain, 0.2, 0.4, 2, 6);
+        souvent(v, function (t) { var d = Math.random() < 0.5; passage(ent, t, hasard(2.8, 5), hasard(0.15, 0.35), d ? -0.8 : 0.8, d ? 0.8 : -0.8, 'voiture'); }, 2, 6, 0.5);
+        murmure(v, ampli(0.35, ent), { voix: 8, clair: 0.3, niv: 0.5 });
+        souvent(v, function (t) { tinter(ent, t, hasard(2300, 3800), [1, 2.76, 5.4], 0.02, 0.15); }, 3, 9, 2);
+      } else if (lieu === 'periyar') {   // le clapotis du fleuve
+        var clapot = nappe(v, 'rose', 'bandpass', 700, 0.7, 0.08, ent); derive(v, clapot.f.frequency, 500, 1100, 0.4, 1.2); derive(v, clapot.g.gain, 0.04, 0.12, 0.3, 1);
+        nappe(v, 'rose', 'lowpass', 900, 0.5, 0.06, ent);
+        souvent(v, function (t) { goutte(pan(hasard(-0.6, 0.6), ent), t, hasard(0.02, 0.06), Math.random() < 0.4); }, 0.15, 0.7, 0.1);
+      } else if (lieu === 'hopital-nuit') {   // un bip désaccordé, un chariot au loin
+        nappe(v, 'brun', 'lowpass', 200, 0.5, 0.06, ent);
+        var pb = ctx.currentTime + 0.4;
+        cadence(v, function (debut, fin) { while (pb < fin) { if (pb >= debut) bip(ent, pb, 1031, 0.06); pb += 1.32; } });
+        souvent(v, function (t) { chariot(v, ent, t); }, 8, 16, 4);
+      } else {   // aluva : le tanpura en do et sol, un oiseau, le fleuve
+        tanpura(v, ent, 1.1);
+        nappe(v, 'rose', 'lowpass', 1100, 0.5, 0.14, ent);
+        souvent(v, function (t) { oiseauKerala(ent, t); }, 2.5, 7, 1);
+      }
+      v.plusTard(function () { arreterBoucle('autre-cote', 3); }, duree);
+    };
+    BOUCLES['autre-cote'].monte = 2.5;
+
+    // Le son qui répond à un nom : l'effet lui-même, ou, pour « achat-<objet> » (5.2) et
+    // « paysage-<image> » (6.11, 6.12), l'effet commun qui lit l'objet ou le paysage dans `o`.
+    function trouverEffet(nom, o) {
+      if (effets.hasOwnProperty(nom)) { var f = effets[nom]; f.niveau = nom; return f; }
+      var m = /^(achat|paysage)-(.+)$/.exec(nom);
+      if (m && effets.hasOwnProperty(m[1])) { o[m[1] === 'achat' ? 'objet' : 'paysage'] = m[2]; var g = effets[m[1]]; g.niveau = m[1]; return g; }
+      return null;
+    }
+    // Les sons qui durent : `tictac`, `pied`, `autre-cote` (la table BOUCLES, plus bas). Effet('tictac',
+    // { boucle: true }) les lance ; { arret: true } (ou { eteindre: ms }, ou { fin: true }) les arrête ;
+    // { ralentir: true } les ralentit puis les éteint ; sans `boucle`, chacun se tait seul au bout de
+    // son temps. Tous s'arrêtent avec la page.
+    function boucleEffet(nom, o) {
+      if (o.ralentir && boucles[nom] && boucles[nom].regler) { boucles[nom].regler(o); return; }   // ralentir, puis s'effacer
+      if (o.arret === true || o.fin === true || o.eteindre !== undefined) { arreterBoucle(nom, nombre(o.eteindre, 400) / 1000); return; }
+      lancerBoucle(nom, borne(nombre(o.force, 1)), function (v, g) { return BOUCLES[nom](v, g, o); }, BOUCLES[nom].monte);
+    }
+
     // ---- les niveaux, réglés au banc d'essai (outils/darshan/essai-son.js) : un facteur de gain par
     // nom. Ambiances : toutes vers un même niveau perçu, environ −30 dBFS sur le bus (mesure
     // pondérée K) ; couches et effets : au-dessus, sans jamais crever le plafond.
     var NIVEAUX = {
       ambiances: {
-        cosmos: 0.62, nuit: 1.06, kerala: 0.72, vent: 0.63, restaurant: 1.41, rue: 1.03, parc: 1.55, bibliotheque: 3.9,
+        cosmos: 0.62, nuit: 1.06, kerala: 0.72, vent: 0.63, restaurant: 1.0, rue: 1.03, parc: 1.55, bibliotheque: 3.9,
         vision: 1.55, metro: 0.84, hopital: 2.6, chambre: 1.21, marche: 1.34, patisserie: 2.11, appartement: 2.0,
         desert: 0.42, pluie: 0.75
       },
       // la ballade : l'entière vers −20 (au plus fort, sur 400 ms) ; les fragments, étouffés, vers −30
-      couches: { battements: 0.65, pluie: 0.92, feu: 0.53, tele: 0.62, vibration: 0.41, melodie: 0.38 },
+      couches: { battements: 0.65, pluie: 0.92, feu: 0.53, tele: 0.62, vibration: 0.41, melodie: 0.38, aube: 3.05, couteau: 1.5, vent: 0.7, bourdon: 0.2 },
       // les effets vers −20 au plus fort (les chocs vers −18, les petits sons vers −23) ; l'appel,
       // très bas, vers −24 ; l'accord du père vers −20. « tour » écrêtait (+2,6 dBFS), « papier » et
       // « grince » ne s'entendaient pas.
       effets: {
-        appel: 0.36, saut: 2.1, vibre: 2.9, fonte: 1.78, cle: 0.26, tour: 0.27, jour: 1.3, souffle: 0.67, tinte: 1.62,
+        appel: 0.36, saut: 1.9, vibre: 2.9, fonte: 1.78, cle: 0.26, tour: 0.27, souffle: 0.67, tinte: 1.62,
         papier: 15.5, grince: 50, eclat: 0.98, balai: 5.4, declic: 1.6, bandes: 6.2, coup: 1.48, iris: 1.3, frisson: 2.8,
-        pere: 0.32
+        pere: 0.32,
+        // la seconde partie (mesurés au banc d'essai, partie 5.4 de la synthèse)
+        cran: 2.12, 'porte-epaisse': 0.98, porte: 1.22, battant: 2.0, claque: 1.22, 'portes-vides': 6.6, toc: 1.45, tabouret: 6.4, pas: 3.3,
+        herbe: 3.5, clochette: 0.47, merle: 1.08, fourchette: 3.7, porcelaine: 2.26, assiettes: 4.0, crayon: 8.75, tasse: 2.83, the: 10.8,
+        achat: 1.65, buee: 10.2, mousse: 18.6, bombe: 3.5, coutelas: 1.46, poissons: 4.2, lin: 13, tissu: 12.6, balancier: 2.9, velours: 10.2,
+        plume: 14, frottement: 5.3, pinceau: 9.3, 'coche-pinceau': 7.6, 'coche-stylo': 12.6, clavier: 7.8, envoi: 5.4, reglette: 6.3,
+        graine: 9.7, remous: 10.5, 'fonte-visqueuse': 1.32, 'eclat-brise': 0.98, 'eclat-court': 1.06, tic: 9.8, vibreur: 0.64, bip: 1.06,
+        'portes-metro': 1.63, clairon: 0.94, eclair: 2.14, aiguille: 2.06, confettis: 7.7, roule: 3.4, mistral: 3.4, satin: 1.68, encre: 1.96,
+        fumee: 7.7, rideau: 5.3, musicien: 1.01, etincelles: 8.9, braises: 25.6, battement: 1.02, aspiration: 3.24, glacon: 1.83, glace: 6.1,
+        sable: 2.45, grondement: 0.48, pierre: 1.35, choc: 0.375, paysage: 2.4, montantes: 0.26, tictac: 5.2, pied: 1.5, 'autre-cote': 1.55
       }
     };
+
+    function demanderAmbiance(nom, r) {
+      suivrePage();
+      nom = cle(nom);
+      r = (r && typeof r === 'object') ? r : reglagesDeLaPage();
+      voulue = nom; voulueR = r;
+      var silence = !nom || nom === 'silence';
+      if (silence) couchesVoulues = {};
+      if (!ctx || !actif) return;   // pas de son : seulement retenue
+      try {
+        if (silence) { Object.keys(couches).forEach(function (n) { eteindreCouche(n, null); }); Object.keys(boucles).forEach(function (n) { arreterBoucle(n, 0.5); }); }
+        if (!ambiance || ambiance.nom !== nom) changerAmbiance(nom, r);
+        else if (JSON.stringify(ambiance.r || {}) !== JSON.stringify(r || {})) {
+          if (ambiance.regler && ambiance.regler(r || {})) ambiance.r = r; else changerAmbiance(nom, r);
+        }
+      } catch (e) { rate(e); }
+    }
 
     return {
       init: function () { try { init(); } catch (e) { rate(e); } },
       // Fondu enchaîné vers l'ambiance `nom`, avec ses réglages ; 'silence' ou null : tout se tait
-      // (les couches aussi ; l'accord du père, non).
-      ambiance: function (nom, r) {
-        nom = cle(nom);
-        r = (r && typeof r === 'object') ? r : null;
-        voulue = nom; voulueR = r;
-        var silence = !nom || nom === 'silence';
-        if (silence) couchesVoulues = {};
-        if (!ctx || !actif) return;   // pas de son : seulement retenue
-        try {
-          if (silence) Object.keys(couches).forEach(function (n) { eteindreCouche(n, null); });
-          if (!ambiance || ambiance.nom !== nom) changerAmbiance(nom, r);
-          else if (JSON.stringify(ambiance.r || {}) !== JSON.stringify(r || {})) {
-            if (ambiance.regler && ambiance.regler(r || {})) ambiance.r = r; else changerAmbiance(nom, r);
-          }
-        } catch (e) { rate(e); }
-      },
+      // (les couches aussi ; l'accord du père, non). Sans réglages, ceux de la page (ses variantes :
+      // soir, vaste, rame…) ; { partage: { gauche, droite }, actif } : deux ambiances à la fois.
+      ambiance: function (nom, r) { demanderAmbiance(nom, r); },
       // Effet ponctuel ; o : { force: 0 à 1 (gain, 1 par défaut), pan: -1 à 1 } ; pour 'pere', voir
       // l'en-tête (montee, tenu, eteindre, duree). Nom inconnu : rien.
       effet: function (nom, o) {
@@ -1588,34 +2534,42 @@
         o = (o && typeof o === 'object') ? o : {};
         try {
           if (nom === 'pere') { accordDuPere(o); return; }
-          if (!actif || !effets.hasOwnProperty(nom)) return;
+          if (!actif) return;
+          if (nom === 'jour') { nom = 'autre-cote'; if (!o.lieu) o.lieu = 'aluva'; }   // l'ancien nom : le jour d'une porte, jamais l'accord du père
+          if (BOUCLES.hasOwnProperty(nom)) { boucleEffet(nom, o); return; }
+          var fait = trouverEffet(nom, o);
+          if (!fait) return;
           var force = borne(nombre(o.force, 1)), p = Math.max(-1, Math.min(1, nombre(o.pan, 0)));
           var sortie = ctx.createGain(), fin = sortie;
-          sortie.gain.value = force * niveau('effets', nom);
+          sortie.gain.value = force * niveau('effets', fait.niveau || nom);
           if (p && ctx.createStereoPanner) { fin = ctx.createStereoPanner(); fin.pan.value = p; sortie.connect(fin); }
           fin.connect(busEff);
           bus = sortie;
-          effets[nom](ctx.currentTime + 0.01, force);
+          fait(ctx.currentTime + 0.01, force, o);
           horloge.poser(function () { try { fin.disconnect(); sortie.disconnect(); } catch (e) { /* rien */ } }, 12000);
         } catch (e) { rate(e); }
       },
       // Couche continue par-dessus l'ambiance (voir l'en-tête) ; oui : true (par défaut) ou false.
       couche: function (nom, oui, o) {
+        suivrePage();
         nom = cle(nom);
         if (!nom) return;
         var allumer = arguments.length < 2 || !!oui;
         o = (o && typeof o === 'object') ? o : {};
+        if (nom === 'horloge') { try { horlogeCouche(allumer, o); } catch (e) { rate(e); } return; }
         if (allumer) couchesVoulues[nom] = o; else delete couchesVoulues[nom];
         if (!ctx || !actif) return;   // pas de son : seulement retenue
         try { if (allumer) allumerCouche(nom, o); else eteindreCouche(nom, o); } catch (e) { rate(e); }
       },
       // Une note de la première mesure de la ballade (voir l'en-tête) ; rend son indice, ou −1.
       note: function (nom, i, o) {
-        if (!ctx || !actif || cle(nom) !== 'melodie') return -1;
+        if (!ctx || !actif) return -1;
+        nom = cle(nom);
+        if (nom !== 'melodie' && nom !== 'montantes') return -1;
         try {
-          var k = (typeof i === 'number' && isFinite(i)) ? ((Math.floor(i) % 6) + 6) % 6 : pasMelodie;
-          pasMelodie = (k + 1) % 6;
-          noteSeule(k, (o && typeof o === 'object') ? o : {});
+          var m = nom === 'melodie' ? 6 : MONTANTES.length, k = (typeof i === 'number' && isFinite(i)) ? ((Math.floor(i) % m) + m) % m : (nom === 'melodie' ? pasMelodie : pasMontantes);
+          if (nom === 'melodie') { pasMelodie = (k + 1) % 6; noteSeule(k, (o && typeof o === 'object') ? o : {}); }
+          else { pasMontantes = (k + 1) % m; noteMontante(k, (o && typeof o === 'object') ? o : {}); }
           return k;
         } catch (e) { rate(e); return -1; }
       },
@@ -1625,6 +2579,20 @@
         if (!ctx) return;
         try { appliquerFiltre(filtreVoulu, 1.5); } catch (e) { rate(e); }
       },
+      // Le niveau du monde (l'ambiance et les couches qui passent par lui), de 0 à 1, atteint en ms ;
+      // sans toucher aux réglages du lecteur ni aux effets. 1.1 : le vent tombe sous la voix (0,2 en
+      // 1 500 ms), `fin` le rétablit ; revient à 1 avec chaque page.
+      niveau: function (v, ms) {
+        niveauVoulu = volume(v);
+        if (!ctx || !niveauNode) return;
+        try { lisser(niveauNode.gain, niveauVoulu, ctx.currentTime, Math.max(0, nombre(ms, 0)) / 1000); } catch (e) { rate(e); }
+      },
+      // La rue ralentie (7.10, 7.11) : { ralenti: true } de l'ambiance, sans la recommencer.
+      ralenti: function (oui) { try { modifierAmbiance({ ralenti: oui !== false }); } catch (e) { rate(e); } },
+      // Quelle moitié parle, quand deux ambiances jouent à la fois : 'gauche', 'droite', 'les deux', 'aucun'.
+      partage: function (a) { try { modifierAmbiance({ actif: a }); } catch (e) { rate(e); } },
+      // Une nouvelle page commence (le moteur n'a pas à le dire : le son la voit tout seul).
+      page: function () { try { suivrePage(); } catch (e) { rate(e); } },
       actif: function () { return actif; },
       // Coupe ou remet le son, en fondu (0,4 s) ; coupé, plus rien ne tourne (voir init).
       basculer: function () {
@@ -1661,6 +2629,13 @@
       // deviennent virtuelles et n'avancent qu'avec avancer(t), que le banc appelle en suspendant
       // le rendu. Rend { sortie, avantPlafond, bus: { ambiance, effets }, avancer, minuteries, erreurs,
       // noms, niveaux }.
+      // Pour le banc d'essai : le livre demande-t-il un son que Son sait faire ? (sorte : 'ambiance', 'couche', 'effet')
+      _connu: function (sorte, nom) {
+        nom = cle(nom);
+        if (sorte === 'ambiance') return !nom || nom === 'silence' || ambiances.hasOwnProperty(nom);
+        if (sorte === 'couche') return nom === 'horloge' || COUCHES.hasOwnProperty(nom);
+        return nom === 'pere' || nom === 'jour' || BOUCLES.hasOwnProperty(nom) || !!trouverEffet(nom, {});
+      },
       _essai: function (c) {
         var file = [], n = 0;
         banc = { erreurs: [] };
@@ -1669,12 +2644,14 @@
           oter: function (id) { for (var i = 0; i < file.length; i++) if (file[i].id === id) { file.splice(i, 1); return; } }
         };
         ambiance = null; voulue = null; voulueR = null; couches = {}; couchesVoulues = {}; filtreVoulu = null;
-        pere = null; pasMelodie = 0; chaineNotes = null; tampons = {}; actif = true;
+        pere = null; pasMelodie = 0; pasMontantes = 0; chaineNotes = null; chaineMontantes = null; tampons = {}; actif = true;
+        boucles = {}; pageEnCours = null; niveauVoulu = 1; niveauNode = null; theEtat = { t: -99, k: 0 }; balancierK = 0;
         var sortie = construire(c, null);
         return {
           sortie: sortie, avantPlafond: maitre, bus: { ambiance: busAmb, effets: busEff }, erreurs: banc.erreurs, niveaux: NIVEAUX,
-          noms: { ambiances: Object.keys(ambiances), couches: Object.keys(COUCHES), effets: Object.keys(effets).concat(['pere']) },
+          noms: { ambiances: Object.keys(ambiances), couches: Object.keys(COUCHES), effets: Object.keys(effets).concat(['pere']), boucles: Object.keys(BOUCLES) },
           minuteries: function () { return file.length; },
+          etat: function () { return { ambiance: ambiance ? ambiance.nom : null, couches: Object.keys(couches).sort(), boucles: Object.keys(boucles).sort(), niveau: niveauVoulu }; },
           avancer: function (t) {
             for (var garde = 0; garde < 100000; garde++) {
               var k = -1, tmin = Infinity;

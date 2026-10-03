@@ -203,15 +203,16 @@ PRODUCTION = [
       "poème : calque d'arbres fixe, poussière d'or, fil d'or (frontiere) et course des astres (course)",
       "toit : la voix lettre à lettre (voix) ; l'appel, la quinte à vide (son appel)",
       "pigeonnier : tourner (260 unités), la clé portée vers le haut, le jour et l'autre côté (jour, autre-cote)",
-      "chaleur d'Aluva ; moustache de mousse (tracer) ; naissance du carnet", "clin d'œil d'encre (clin)",
+      "chaleur d'Aluva ; moustache de mousse (tracer) ; naissance du carnet",
+      "la lumière du matin qui se met à vivre à l'arrivée du vieil homme (vie)", "clin d'œil d'encre (clin)",
       "reflets de Paris dans le fleuve (remuer, reflet) et fragment de la ballade sous l'eau (melodie)",
-      "lumière qui vieillit, silence du tanpura, lin de la chemise (lin)",
+      "lumière qui vieillit, silence du tanpura, chemise boutonnée (toucher, lin)",
       "cabane à kayaks dessinée, en or, et son jour ; salut de la vue (camera)",
       "bandes qui s'ouvrent par l'obturateur (bandes-photo)", "caresse lente, flou qui suit le geste (caresser, flou)",
       "le cœur sous le doigt : chamade, puis deux cœurs à trois contre deux (maintenir, balance, valse)",
       "photo qui devient peinture, sous un masque ; la voix lettre à lettre, à l'encre",
       "réveil au toucher de lecture : question assourdie, obturateur (assourdi, net)",
-      "gros plan inséré, regard qui se baisse (decor avec camera)", "carnet du serveur, à une seule ligne (commande)",
+      "gros plan inséré, regard qui se baisse (decor avec camera)", "carte des desserts, commande de Darshan (toucher, commande)",
       "marche lente, on passe à côté (camera avec avance, passe)",
       "première mesure de la ballade, compte, porte épaisse, envol (melodie, compte, decor)",
       "rêve à l'encre sur le ciel, que l'ombre d'un nuage fait pâlir (esquisse, nuage)"]),
@@ -518,14 +519,18 @@ TABLEAUX = [
     T("1.5", "Le vieil homme", (25, None), "Aluva, au bord du fleuve", "Darshan", "fondu",
       "Le chemin sous les palmes, d'où vient le vieil homme ; puis son filet, en gros plan.",
       photos=[(34342144, "encre"), (34956319, "encre")],
-      moments=[("L’individu dépose à côté de lui un filet", "on passe au filet, en gros plan"),
+      moments=[("Un vieil homme au short", "la lumière du matin se met à vivre entre les palmes : des taches de soleil "
+                                           "gagnent le chemin d'où il vient, et bougent doucement jusqu'à ce qu'il parle"),
+               ("L’individu dépose à côté de lui un filet", "on passe au filet, en gros plan"),
                ("Il tire jusqu’à lui un tabouret rafistolé",
                 "le raclement du tabouret sur les planches ; puis les maquereaux plongent dans le tonneau"),
                ("l’homme entame la conversation",
                 "premier dialogue du livre : les répliques paraissent une à une, le vieil homme en clair, Darshan en or")],
       son="kerala ; tabouret, poissons",
       note="Le vieil homme n'a pas encore de nom : le livre ne le donne qu'à la dernière phrase du chapitre. "
-           "Le titre de cette page, « Jivan », devient « Le vieil homme ».",
+           "Le titre de cette page, « Jivan », devient « Le vieil homme ». Le sens de son nom, « la vie », est voulu "
+           "(réponse 16 de Karl) : le temps des vivants entre avec lui ; la même lumière vieillit en 1.8 et retombe en "
+           "1.9, quand le texte le nomme.",
       reperages=[("S9", "Un tabouret de bois rafistolé sur un ponton, un filet où brillent trois maquereaux ; "
                         "lumière du matin, cadre en hauteur")]),
     T("1.6", "L'esprit local", (30, None), "Aluva", "Darshan", "—",
@@ -554,13 +559,15 @@ TABLEAUX = [
       reperages=[("S8", "Bateaux-mouches sur la Seine, de nuit (« l’éclat des navires parcourant la Seine »)")]),
     T("1.8", "Vieillir", (35, None), "Aluva, le ponton", "Darshan", "—",
       "Le ponton du vieil homme, vide : sa place sans lui ; à « As-tu déjà pensé à vieillir ? », la lumière "
-      "vire lentement à l'or ; après la pirouette, le lin blanc de la chemise passe devant la vue.",
+      "vire lentement à l'or ; après la pirouette, Darshan boutonne sa chemise : le lin blanc couvre la vue, le col "
+      "ouvert.",
       photos=[(10310851, "encre")],
-      gestes=[("en enfilant sa chemise", "après la phrase, enfiler la chemise : glisser vers le bas, le lin "
-                                         "blanc passe devant la vue", "toucher")],
+      gestes=[("en enfilant sa chemise", "après la phrase, boutonner la chemise : les pans de lin entrent par les "
+                                         "côtés, un toucher par bouton, de haut en bas ; le col reste ouvert",
+               "toucher ou Entrée, un bouton chaque fois")],
       moments=[("As-tu déjà pensé à vieillir", "la lumière vire lentement à l'or ; le tanpura se tait, seul le "
                                                "fleuve continue, jusqu'à la réponse de Darshan")],
-      son="kerala ; silence du tanpura, lin",
+      son="kerala ; silence du tanpura, lin, tissu",
       note="Le ponton reste vide (aucune silhouette) : on voit la place du vieil homme sans lui, avant « je te "
            "quitterai avant lui ». Le jour vieillit pendant la question ; Darshan l'esquive en s'habillant.",
       reperages=[("S9", "Le même tabouret rafistolé, vide, sur le ponton, dans la lumière d'or de fin "
@@ -642,15 +649,17 @@ TABLEAUX = [
       note="Le gros plan montre un tartare de bœuf : exception à l'arbitrage 7, à valider par Karl ; sinon, la séance S1 d'abord.",
       reperages=[("S1", "Un tartare de saumon aux herbes fraîches, à peine entamé")]),
     T("2.7", "Le pain perdu", (56, None), "Le restaurant", "Julie", "fondu",
-      "La table, floue : le temps a passé ; le carnet du serveur ; son côté à elle, net ; "
+      "La table, floue : le temps a passé ; la carte des desserts, seule nette ; son côté à elle, net ; "
       "puis le pain perdu sur sa porcelaine jaune tournesol.",
       photos=[(34532663, "photo")],
-      moments=[("Ce sera un pain perdu", "le carnet du serveur monte : une seule ligne, le titre du chapitre"),
-               ("Il sera servi dans une porcelaine",
+      gestes=[("Ce sera un pain perdu", "passer la commande : toucher son dessert sur la carte ; la commande de "
+                                        "Darshan paraît, le titre du chapitre", "toucher, Entrée")],
+      moments=[("Il sera servi dans une porcelaine",
                 "son côté à elle, net ; puis le pain perdu, net (quand Karl l'aura photographié)")],
       son="restaurant ; assiettes, crayon, porcelaine",
-      note="Le livre ne dit pas qui commande : la commande paraît sans qu'on sache qui l'a passée. "
-           "« Si j’avais su… » reste du récit, sans couleur de personnage.",
+      note="C'est Darshan qui commande le dessert et pense « Si j’avais su » (réponse 13 de Karl) : le lecteur "
+           "passe la commande sur la carte, dont les autres lignes restent floues ; la pensée prend l'italique et "
+           "l'or de ses autres pensées.",
       reperages=[("S1", "Pain perdu de brioche, portion menue, sur porcelaine à motif fleuri, fond jaune "
                         "tournesol")]),
     T("2.8", "Montsouris", (60, None), "Paris, le parc Montsouris", "Julie", "obturateur",

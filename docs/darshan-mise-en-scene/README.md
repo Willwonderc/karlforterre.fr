@@ -434,6 +434,13 @@ reprise du chantier.
   jamais lue par une voix de synthèse ; elle ne peut venir que de la voix de Karl, qui
   l'enregistrera s'il le souhaite. Le livre audio commence donc au poème d'ouverture, et le
   colophon n'est pas lu.
+- **Orientation** (30 septembre au soir, après l'essai d'un livre audio par ElevenLabs, jugé
+  « vraiment décevant ») : aucune voix de synthèse, et plus largement aucune voix qui sonne
+  métallique. Le son fabriqué par programme peut rester s'il est probant ; la musique humaine
+  (jouée par des musiciens : enregistrements du domaine public ou sous CC0) est à privilégier.
+  Les photos de Karl passent d'abord, et surtout la dimension narrative et expressive du livre
+  (gestes, effets, scènes, transitions). Seule la voix de Karl pourrait paraître, pour la
+  dédicace, s'il le souhaite.
 - **À expliquer davantage, puis à reposer** (5) : 12 (qui dit « Il est incroyable. », 5.8 :
   avec un extrait plus large et une analyse plus poussée), 19 (la fenêtre de 6.13), 23 (le
   doigt de dieu, 7.1), 25 (les confettis : la question n'était pas claire), 43 (les
