@@ -37,7 +37,8 @@ qu'il est quand elle s'ouvre (synthèse de la pré-production, partie 3.3) :
   change jusqu'à la fin de son chapitre (celle de 2.9 ne dure que sa page) ; absent sinon ;
 - data-boussole : « nord », « perdue » ou « eteinte » (depuis 5.3) ; absent avant ;
 - data-repliques : « or », puis « clair » après la virgule de 7.14 : la couleur des répliques de
-  Darshan, dont les paragraphes portent la classe « de-darshan » (livre.REPLIQUES).
+  Darshan, dont les paragraphes portent la classe « de-darshan » (livre.REPLIQUES ; « pensee-darshan » : une
+  pensée de Darshan sans tiret, classes « de-darshan » et « voix », 2.7).
 Sur chaque plan du décor : data-genre (photo, encre, dessin ou uni), que les effets lisent pour ne
 toucher que les photos (le froid, le gel, l'effacement : genre_du_decor).
 Et, du découpage et de livre.py : data-son (l'ambiance de la page) et data-son-variantes (ses
@@ -500,8 +501,10 @@ def classes_du_paragraphe(p, a):
         c.append("sanskrit")
     if lignes[p].startswith("—"):
         c.append("replique")
-    if livre.REPLIQUES.get(p) == "darshan":
+    if livre.REPLIQUES.get(p) in ("darshan", "pensee-darshan"):
         c.append("de-darshan")          # en or tant que data-repliques="or" (synthèse 2.2, ligne 42)
+    if livre.REPLIQUES.get(p) == "pensee-darshan" and "voix" not in c:
+        c.append("voix")                # une pensée de Darshan, en italique comme ses voix intérieures (2.7)
     if a > 0:
         c.append("suite-para")
     return c
@@ -531,7 +534,7 @@ CLASSES_TEXTE = {"bas": "", "haut": "en-haut", "bas clair": "clair", "haut clair
                  "poeme": "poeme", "nu poeme": "nu poeme"}
 
 
-def balisage_texte(pg, classe_sup=""):
+def balisage_texte(pg, classe_sup="", apres=""):
     s = pg["s"]
     classe = " ".join(x for x in ("texte", CLASSES_TEXTE[s["texte"]], classe_sup) if x)
     corps = []
@@ -542,7 +545,16 @@ def balisage_texte(pg, classe_sup=""):
         c = classes_du_paragraphe(p, morceaux[0][0])
         cl = f' class="{" ".join(c)}"' if c else ""
         corps.append(f"<p{cl}>{''.join(span_temps(p, a, b) for a, b in morceaux)}</p>")
-    return f'<div class="{classe}">{"".join(corps)}</div>'
+    return f'<div class="{classe}">{"".join(corps)}{apres}</div>'
+
+
+def balisage_generique():
+    """Le générique de la page « Fin » (8.1), écrit en clair après le poème : lisible sans script ; en jeu, la scène
+    « cloture » montre le sien (finDuLivre, scenes.js) et la feuille de style cache celui-ci."""
+    return ('<div class="generique-clair">'
+            f'<p class="fin-titre">{e_(UI["fin"])}</p>'
+            f'<p class="fin-generique">{e_(UI["generique_auteur"])}</p>'
+            f'<p class="fin-couverture">{e_(UI["generique_couverture"])}</p></div>')
 
 
 def src_image(nom, img):
@@ -705,7 +717,7 @@ def section(pg, img, web):
     if s["special"] == "seuil":
         corps = balisage_decor(pg, img, web) + balisage_seuil(pg, img)
     else:
-        corps = balisage_decor(pg, img, web) + balisage_texte(pg)
+        corps = balisage_decor(pg, img, web) + balisage_texte(pg, apres=balisage_generique() if s["special"] == "cloture" else "")
     return f'<section {a}>{corps}<script type="application/json" class="config">{config_json(pg)}</script></section>'
 
 
@@ -769,7 +781,7 @@ def verifier(pages):
     # qui parle : des paragraphes du livre, des personnages connus
     for p, qui in livre.REPLIQUES.items():
         assert livre_texte.PREMIER <= p <= livre_texte.DERNIER, f"livre.REPLIQUES : paragraphe {p} hors du livre"
-        assert qui in ("darshan", "julie", "jivan", None), f"livre.REPLIQUES : {p} : « {qui} » inconnu"
+        assert qui in ("darshan", "pensee-darshan", "julie", "jivan", None), f"livre.REPLIQUES : {p} : « {qui} » inconnu"
     # les décors nommés par les réglages (reflets, clichés, calques…) : fabriqués ou signalés
     for n, nom in decors_employes():
         d = livre.DECORS[nom]
