@@ -505,7 +505,8 @@ SCENES = {
              coupes={100: ["«\u00a0Êtes-vous sûr", "«\u00a0Pouvez-vous évaluer", "Ces phrases sont longues",
                            "C’est en les répétant", "Généralement les gens"]},
              gestes=[G("curseur", mini=0, maxi=10, depart=0, sens="vertical", objet="reglette", apres=True)],
-             moments=[E("vers", questions=3, boucles=3)]),
+             moments=[E("vers", questions=3, boucles=3,
+                        coupes=[["ainsi que", "qui vous"], ["de vos"], ["sur une échelle", "dix étant", "que vous ayez", "et zéro"]])]),
     "4.3": S(["rer", "kawa", "lit-telephone"], texte="haut",
              debut=[E("tremble", legere=True, jusqua=1)],
              extra={"On s’est vues trente minutes": [E("decor", i=1), E("son", effet="tasse")],
@@ -513,7 +514,7 @@ SCENES = {
              gestes=[G("messages", a="Amélie", bulles=2, touchers=5,
                        effets=[E("objet+", id="telephone", sac="julie", style="notification")])]),
     "4.4": S("carrefour", texte="haut clair",
-             gestes=[G("rythme", n=4, effet="pas", semelles="plateforme", avance=True)]),
+             gestes=[G("rythme", n=4, effet="pas", sol="plateforme", avance=True)]),
     "4.5": S(["foule-telephone", "sortie", "village"], texte="haut",
              coupes={103: ["Je pourrais très bien partir", "Ces pensées me traversent", "Parfois ils sont pianistes"]},
              extra={"Je veux prendre l’air": [E("decor", i=1), E("assourdi")]},
@@ -532,14 +533,14 @@ SCENES = {
                                                                E("ambiance", id="chambre")]},
              gestes=[G("contact", nom="Darshan", nom_ecrit_au_retour=True, numero=None, tendre=True, apres=True)],
              moments=[E("vibre", cible="sac", n=3, haptique=[60, 90, 60, 90, 60]),
-                      E("compte", valeur="quatre jours", son="tic")]),
+                      E("compte", valeur="quatre jours", son="tic", monde="julie")]),
 
     # ============================================================ 5. Douceurs et confettis
     # 5.1 est encore une page de Julie à la première personne : sans les boutons de Darshan (barre du
     # chapitre 4). Ils reviennent en 5.2. La ballade n'est entière qu'en 5.7 (arbitrage 2).
     "5.1": S(["chambre", "toits-soir"], texte="haut clair", entree=dict(palette="lilas", grain="confettis"),
              coupes={110: ["Me fais-je des idées"]},
-             moments=[E("compte", de="quatre jours", valeur="soixante-douze heures", son="tic"),
+             moments=[E("compte", de="quatre jours", valeur="soixante-douze heures", son="tic", monde="julie"),
                       E("decor", i=1, fondu=1200)]),
     "5.2": S("marche-aluva", texte="haut clair",
              debut=[E("interface", avec="darshan", duree=1200, reflet="or"),
@@ -549,7 +550,7 @@ SCENES = {
                        cibles=[[380, 860, 110], [830, 880, 110], [290, 1060, 120], [900, 1080, 130],
                                [210, 700, 140]],
                        envol="court", avance=True, ploie=True)],
-             extra={"Le soleil d’orient": E("son", effet="pas", rythme="traine"),
+             extra={"Le soleil d’orient": E("son", effet="pas", rythme="traine", n=4, intervalle=560),
                     "Lève le pied": E("roule", image="mangue", depuis="bas")}),
     "5.3": S("marche-aluva", texte="haut clair",
              coupes={115: [], 116: ["Celle qui emporte"]},
@@ -558,6 +559,7 @@ SCENES = {
              moments=[[E("boussole", etat="nord", aiguille="haut"), E("carnet")]]),
     "5.4": S("marche-aluva", texte="haut clair", moments=[E("nuage", reste=0)]),
     "5.5": S("marche-aluva", texte="haut clair",
+             debut=[E("confettis", paquet=True)],
              gestes=[G("toucher", cible=[620, 960, 110],
                        effets=[E("confettis", n=3), E("objet+", id="confettis")])],
              moments=[E("vignette", image="facade", trace=True, place=[600, 760, 260], chaleur=True),
@@ -569,7 +571,7 @@ SCENES = {
                       E("cliche", image="patinoire", voisin=True, flou="mise-au-point"),
                       E("cliche", image="croque-serre", flou="bouge")]),
     "5.7": S("noir", texte="bas",
-             debut=[E("cliche", grille=True, feuilleter=True)],
+             debut=[E("cliche", grille=True, feuilleter=True, images=["bonbons", "patinoire", "croque-serre", "deux-flous", "reflet-paris"])],
              gestes=[G("toucher", cible=[600, 640, 220], apres=True,
                        effets=[E("video-lune", image="video-lune"),
                                E("melodie", mode="entiere", filtre="telephone")])],
@@ -578,8 +580,10 @@ SCENES = {
                       E("cliche", image="reflet-paris"),
                       E("cliche", image="video-lune", video=True)]),
     "5.8": S(["souvenir-lune", "souvenir-lune-proche", "chambre"], texte="bas",
-             debut=[E("video-lune", agrandir=True), E("ambiance", id="rue", nuit=True, foule=True)],
-             moments=[E("camera", avance=True, vers=1, duree=7000),
+             # origine et échelle : la lune de la vidéo (548, 964) rejoint celle du souvenir (606, 1045) à l'échelle 2,6
+             debut=[E("video-lune", agrandir=True, origine=[512, 913], echelle=2.6), E("ambiance", id="rue", nuit=True, foule=True)],
+             # cadre : [x, y, zoom] de souvenir-lune-proche (DECORS) : la vue avance jusqu'à son cadrage
+             moments=[E("camera", avance=True, vers=1, duree=7000, cadre=[0.42, 0.55, 2.2]),
                       [E("decor", i=2, fond="clair"), E("ambiance", id="chambre")],
                       E("son", effet="pied", mesure="6/8", boucle=True)],
              extra={"Difficile de distinguer": E("son", effet="pied", ralentir=True, arret=True)}),
@@ -590,7 +594,7 @@ SCENES = {
              moments=[[E("eclair", doux=True), E("decor", i=1, fond="sombre")],
                       [E("couche", couche="bourdon", oui=False), E("son", effet="clairon", tenu=True)],
                       E("coeur", qui="julie", tempo=64, arythmie=True, continu=True),
-                      E("camera", monte=True, vers=2, duree=9000)]),
+                      E("camera", monte=True, vers=2, duree=9000, bande="lune-bande", haut=[1.0, 0.28])]),
     "5.10": S(["rue-floue", "canneles"], texte="bas",
               coupes={130: ["La rue se fait floue", "Quel serait son meilleur ambassadeur", "Le chocolat, le café",
                             "Il faut peut-être chercher"]},
@@ -605,7 +609,7 @@ SCENES = {
               moments=[E("buee"),
                        None,   # Charlotte de Karl : E("camera", avance=True, …) dans le hublot, vers les feuilles de sucre
                        E("objet+", id="ticket", sac="julie", style="notification", ploie=True),
-                       E("compte", de="soixante-douze heures", valeur="onze heures, treize heures", son="tic")]),
+                       E("compte", de="soixante-douze heures", valeur="onze heures, treize heures", son="tic", monde="julie")]),
 
     # ============================================================ 6. Des attentes de part et d'autre
     # Panneau en bas sur toutes les pages (arbitrage 4) ; dans l'appartement (6.5 à 6.15), il ne change
