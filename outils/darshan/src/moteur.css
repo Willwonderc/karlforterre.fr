@@ -773,6 +773,9 @@ html:not(.jeu) .decor .plan.sans-script { opacity: 1; }
 .fx-papier-chaud { background: #ffe3a0; mix-blend-mode: multiply; }
 .fx-poussiere-leger { background: radial-gradient(ellipse 85% 30% at 50% 60%, rgba(212, 212, 220, 0.85), rgba(212, 212, 220, 0) 75%); }
 
+/* 3.13 : le bouton « Carnet » luit une fois, doucement, quand la fiche de la porte du père reçoit la règle */
+.barre .carnet-bouton.fx-luit { animation: pulse-objets 600ms ease-out 1; }
+
 /* ============================================================ effets nouveaux, chapitres 0 à 3 (fin) */
 
 /* ============================================================ effets nouveaux, chapitres 4 à 8 (début)

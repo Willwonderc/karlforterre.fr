@@ -443,6 +443,7 @@ SCENES = {
              moments=[[E("aube"), E("couche", couche="aube", oui=True)],
                       [E("couche", couche="aube", oui=False), E("son", effet="appel")]]),
     "3.6": S(["livres-poussiere", "pekin"], texte="bas clair", regard="porte-personnel",
+             debut=[E("poussiere", sens="couvre", couleur="gris")],       # la poussière grise couvre les livres, avant qu'on la souffle
              gestes=[G("glisser", sens="haut", effets=[E("poussiere", sens="envol", couleur="gris")])],
              moments=[E("decor", i=1), E("camera", avance=True, duree=3000, zoom=1.06)]),
     "3.7": S(["pekin", "recueil"], texte="bas clair", regard="porte-personnel",
@@ -455,10 +456,12 @@ SCENES = {
              moments=[E("decor", i=1)],
              extra={"Il quitte sa table avec son ouvrage sous le bras": E("objet+", id="recueil", discret=True)}),
     "3.9": S("periyar-soir", texte="haut clair",
-             debut=[E("porte", id="pekin", depuis=[600, 900]),
-                    E("remplacer", de="cle", vers="lunettes", discret=True)],
+             debut=[E("porte", id="pekin", depuis=[600, 900], delai=300),       # l'étoile naît quand la lumière du passage est retombée
+                    E("remplacer", de="cle", vers="lunettes", discret=True),
+                    E("eau")],                                                  # les reflets du fleuve tremblent, jusqu'au geste
              gestes=[G("deux-pouces", zone=[0, 900, 1200, 1500], cibles=[[450, 1150, 130], [750, 1150, 130]],
-                       suivre=True, duree=2600, effets=[E("sceau", x=600, y=1150)])],
+                       suivre=True, duree=2600,
+                       effets=[E("eau", calmer=True, suit_geste=True), E("sceau", x=600, y=1150)])],
              moments=[E("son", effet="herbe")]),
     "3.10": S(["periyar-soir", "noir-lueur", "porte-pere"], special="vision",
               debut=[E("sceau", x=600, y=1150, deja=True), E("interface", voile=True)],

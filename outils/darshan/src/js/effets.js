@@ -2404,6 +2404,176 @@ var FxA = (function () {
   };
 })();
 
+// ================================================================ chapitre 3 : les compléments des effets déjà là (3.3, 3.5, 3.6, 3.12) et le son
+(function () {
+  // ---------------------------------------------------------------- poussiere (3.3 : retombe ; 3.6 : couvre, envol)
+  // L'effet d'origine garde tout ce qu'il savait faire (bouffée du prototype, `tombe`, `monte`, `petite`) ; ces trois
+  // réglages-ci sont ajoutés.
+  // 3.3, « brasser inutilement de la poussière » (`retombe`) : une poussière grise se soulève du sentier (une quarantaine
+  // de grains, 1,5 s), tournoie, puis retombe là où elle était (1,5 s) : inutilement. Mouvement réduit : ni grains ni
+  // avancée, un voile gris paraît et s'efface.
+  // 3.6, « Soufflez la poussière » : la poussière grise couvre d'abord la pile de livres (`couvre`, à l'ouverture de la
+  // page : l'image est grisée, éteinte) ; au geste, `envol` : elle s'envole vers le haut et se disperse (1,5 s), et dessous
+  // revient le jaune chaud du vieux papier. Mouvement réduit : le voile gris s'efface en fondu, le papier se réchauffe.
+  var poussiereAvantA = Effets.poussiere, GRIS = 'rgb(214, 214, 220)';
+  // un calque de l'image, d'une classe de plus (fx-poussiere-sat : désature ce qu'il couvre ; fx-poussiere-voile : la
+  // poudre et la brume ; fx-poussiere-leger : un voile bas, pour le mouvement réduit ; fx-papier-chaud : réchauffe)
+  function calqueClasse(scene, nom, classe, z) {
+    var c = Fx.calque(scene, nom, z || 2, false);
+    if (c.className.indexOf(classe) < 0) c.className += ' ' + classe;
+    return c;
+  }
+  function retombe(scene, e) {
+    var x = e.x || 560, y = e.y || 1240;
+    if (calme) {
+      var v = calqueClasse(scene, 'poussiere-leger', 'fx-poussiere-leger');
+      v.style.opacity = 0;
+      return Fx.animer(scene, 1600, function (p) { v.style.opacity = (0.8 * lisse(p / 0.3) * (1 - lisse((p - 0.45) / 0.55))).toFixed(3); }).then(function () { retirer(v); });
+    }
+    Fx.sonner('souffle', { force: 0.4 });
+    var G = FxA.grains(scene), hasard = Fx.alea(43), liste = [], k;
+    for (k = 0; k < 42; k++) (function () {
+      var x0 = x + Fx.entre(hasard, -170, 170), y0 = y + Fx.entre(hasard, -30, 30), haut = Fx.entre(hasard, 90, 230), rayon = Fx.entre(hasard, 18, 70), phase = hasard() * 6.28;
+      var tours = Fx.entre(hasard, 0.9, 1.7);
+      liste.push({ x: x0, y: y0, r: Fx.entre(hasard, 2.8, 6.2), a: Fx.entre(hasard, 0.7, 1), entree: 0.4, sortie: 0.9, vie: 3, retard: hasard() * 0.3, couleur: GRIS,
+        // elle monte et revient exactement où elle était : la hauteur est un demi-sinus, le tournoiement s'éteint avec elle
+        trajet: function (s) {
+          var u = Math.sin(Math.PI * s), a = 2 * Math.PI * tours * s + phase;
+          return [x0 + rayon * Math.sin(a) * u, y0 - haut * u + rayon * 0.3 * Math.cos(a) * u];
+        } });
+    })();
+    G.jeter(liste);
+    return { suite: Promise.resolve(), fin: Fx.pause(scene, 1200) };
+  }
+  // la poudre : des grains pâles semés au hasard (la même à chaque lecture), dessinés une fois sur une toile qui ne bouge pas,
+  // puis donnés au voile comme une image : pas de grille, pas de répétition
+  var poudre = null;
+  function texturePoudre() {
+    if (poudre !== null) return poudre;
+    poudre = '';
+    try {
+      var c = doc.createElement('canvas'), x, h = hasard(97), i;
+      c.width = 512; c.height = 768;
+      x = c.getContext('2d');
+      for (i = 0; i < 1500; i++) {
+        x.fillStyle = 'rgba(240, 240, 244, ' + (0.12 + h() * 0.5).toFixed(2) + ')';
+        x.beginPath(); x.arc(h() * 512, h() * 768, 0.6 + h() * h() * 2.6, 0, 6.2832); x.fill();
+      }
+      poudre = c.toDataURL('image/png');
+    } catch (e) { poudre = ''; }
+    return poudre;
+  }
+  function couvre(scene) {
+    calqueClasse(scene, 'poussiere-sat', 'fx-poussiere-sat');
+    var voile = calqueClasse(scene, 'poussiere-voile', 'fx-poussiere-voile'), t = texturePoudre();
+    if (t) { voile.style.backgroundImage = 'url(' + t + ')'; voile.style.backgroundSize = '100% 100%'; }
+  }
+  function envol(scene, e) {
+    var fx = Fx.etat(scene), z = e.zone || [60, 500, 1140, 1250];
+    var voiles = ['poussiere-sat', 'poussiere-voile'].map(function (n) { return fx.calques[n]; }).filter(function (c) { return c && c.parentNode; });
+    // le papier se réchauffe : « dessous revient le jaune chaud du vieux papier »
+    var chaud = calqueClasse(scene, 'papier-chaud', 'fx-papier-chaud');
+    chaud.style.opacity = 0;
+    var ms = calme ? 600 : 1500;
+    function fonduDuVoile(p) {
+      voiles.forEach(function (c) { c.style.opacity = (1 - lisse(p)).toFixed(3); });
+      chaud.style.opacity = lisse(p).toFixed(3);
+    }
+    function ranger() { voiles.forEach(retirer); }
+    if (calme) return Fx.animer(scene, ms, fonduDuVoile).then(ranger);
+    Fx.sonner('souffle', { force: 0.6 });
+    var G = FxA.grains(scene), hasard = Fx.alea(59), liste = [], k;
+    for (k = 0; k < 74; k++) {
+      var gx = Fx.entre(hasard, z[0], z[2]), gy = Fx.entre(hasard, z[1], z[3]), bas = (gy - z[1]) / (z[3] - z[1]);
+      liste.push({ x: gx, y: gy, vx: Fx.entre(hasard, -45, 45), vy: -Fx.entre(hasard, 170, 520), gy: -20, r: Fx.entre(hasard, 2, 5), a: Fx.entre(hasard, 0.55, 0.95),
+        entree: 0.15, sortie: 0.8, vie: Fx.entre(hasard, 1.2, 2.1), retard: (1 - bas) * 0.1 + bas * 0.5 * hasard(), couleur: GRIS, balance: Fx.entre(hasard, 8, 30), p: hasard() * 6, attend: true });
+    }
+    G.jeter(liste);
+    Fx.animer(scene, ms, fonduDuVoile).then(ranger);
+    return { suite: Promise.resolve(), fin: Fx.pause(scene, 1000) };
+  }
+  Effets.poussiere = function (scene, e) {
+    if (e.sens === 'retombe') return retombe(scene, e);
+    if (e.sens === 'couvre') return couvre(scene, e);
+    if (e.sens === 'envol') return envol(scene, e);
+    return poussiereAvantA(scene, e);
+  };
+
+  // ---------------------------------------------------------------- camera (3.3, 3.6) en mouvement réduit
+  // 3.3 (« une très lente avancée sur le chemin », 5 % en 30 s) et 3.6 (« le regard file lentement dans l'allée », 3 s, un
+  // zoom de 6 %) : « supprimé en mouvement réduit », le plan reste fixe. (L'effet d'origine sautait au cadrage final.)
+  // Les autres avancées (un cadrage plus large, `suit_geste`, `deja`, `recule`) sont inchangées.
+  var cameraAvantA = Effets.camera;
+  Effets.camera = function (scene, e) {
+    if (calme && e.avance === true && e.zoom && e.zoom <= 1.07 && !e.deja && !e.suit_geste) return;
+    return cameraAvantA(scene, e);
+  };
+
+  // ---------------------------------------------------------------- aube (3.5)
+  // « Croire aux lendemains qui chantent » : l'aube monte sur la façade, comme au dernier vers du poème d'ouverture, sans
+  // étoile (3.5). Hors du poème, la page n'a pas encore sa lueur : elle est posée dans l'image, au bas, et monte en 5 s.
+  // Mouvement réduit : un fondu plus court.
+  var aubeAvantA = Effets.aube;
+  Effets.aube = function (scene, e) {
+    if (!scene.aube || !scene.aube.parentNode) {
+      var d = Fx.decor(scene);
+      if (d) {
+        scene.aube = el('div', { 'class': 'fx aube', 'aria-hidden': 'true' }, d);
+        if (calme) scene.aube.style.transition = 'opacity 1200ms';
+        void scene.aube.offsetWidth;                          // posée à zéro avant de monter
+      }
+    }
+    return aubeAvantA(scene, e);
+  };
+
+  // ---------------------------------------------------------------- net (3.12) : flou puis net
+  // « à l'entrée, flou puis net (1,2 s ; en mouvement réduit, net d'emblée) » : la page s'ouvre floue, les yeux de Darshan
+  // s'ouvrent ; la mise au point commence quand le balayage d'entrée s'achève. L'image floue est celle de `flou` (force
+  // 16, posée d'emblée).
+  var netAvantA = Effets.net;
+  Effets.net = function (scene, e) {
+    var fx = Fx.etat(scene);
+    if (e.depuis === 'flou' && !fx.flou && !calme) {
+      Effets.flou(scene, { force: e.force || 16 });
+      var f = fx.flou;
+      if (f) { f.calque.style.transition = 'none'; f.calque.style.opacity = 1; }
+      // la liste n'attend pas la mise au point pour jouer l'effet suivant (le couteau de Jivan commence avec la page) ; la mise
+      // au point attend la fin de l'entrée, puis quelques images : `flou` pose son image floue en deux images, et la lever plus
+      // tôt (dans l'EPUB, où l'entrée est immédiate) la reposerait aussitôt
+      return { suite: Promise.resolve(), fin: quandEntree(scene).then(function () { return Fx.pause(scene, 120); }).then(function () {
+        return Fx.vivante(scene, fx) ? netAvantA(scene, e) : null;
+      }) };
+    }
+    return netAvantA(scene, e);
+  };
+
+  // ---------------------------------------------------------------- couche « horloge » (6.11) : presser
+  // La couche `horloge` est le réglage `horloge` de l'ambiance de l'appartement (son.js) ; `presser` (ms) : les secondes qui
+  // restent s'égrènent plus vite (6.11, « Continuer »). Sans `presser`, l'effet d'origine.
+  var coucheAvantA = Effets.couche;
+  Effets.couche = function (scene, e) {
+    var nom = e.couche || e.id;
+    if (nom === 'horloge' && e.presser) {
+      Son.ambiance('appartement', { horloge: e.oui === false ? 0 : (e.proche ? 1 : 0.3), presser: e.presser });
+      return;
+    }
+    return coucheAvantA(scene, e);
+  };
+})();
+
+// ================================================================ chapitre 3 : la règle au carnet (3.13)
+(function () {
+  // « Cette porte s'ouvrira à moi quand j'aurai trouvé le véritable amour. » (traitement : « le bouton Carnet luit une fois
+  // (0,6 s) : la fiche de la porte du père a reçu la phrase. Rien d'autre : ni étoile ni accord ; le père ne confirme rien »).
+  // L'effet d'origine fait luire le bouton deux fois (1,8 s) ; pour la porte du père, une seule fois, doucement. `allumer`
+  // (7.12) et les autres portes : l'effet d'origine.
+  var carnetAvantA = Effets.carnet;
+  Effets.carnet = function (scene, e) {
+    if (e.id === 'pere' && !e.allumer) { Fx.marquer(scene, 'carnet', 'fx-luit', 700); return; }
+    return carnetAvantA(scene, e);
+  };
+})();
+
 // ================================================================ effets nouveaux, chapitres 0 à 3 (fin)
 
 // ================================================================ effets nouveaux, chapitres 4 à 8 (début)
