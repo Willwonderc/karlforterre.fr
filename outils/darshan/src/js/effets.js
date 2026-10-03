@@ -1174,45 +1174,150 @@ var FxA = (function () {
   };
 
   // ---------------------------------------------------------------- lin (1.8)
-  // « conclut Darshan en enfilant sa chemise » : le lin blanc de la chemise passe devant la vue, de haut en bas, et
-  // la couvre (traitement : 1,6 s en tout, « le texte reste lisible » : il est sous le texte) ; le lin mène au
-  // fondu blanc de 1.9. Mouvement réduit : un bref fondu au blanc.
-  Effets.lin = function (scene) {
-    var boite = Fx.dessous(scene, 'lin', 3, true);
-    var defs = svgEl('defs', {}, boite);
-    var plis = FxA.degrade(boite, 'linearGradient', { x1: 0, y1: 0, x2: 1, y2: 0 },
-      [[0, '#f2ecdf'], [0.09, '#fdfbf5'], [0.21, '#f0eadc'], [0.36, '#fefcf7'], [0.5, '#f3eee1'], [0.64, '#fdfaf3'], [0.79, '#efe9db'], [0.91, '#fcfaf4'], [1, '#f1ebdd']]);
-    var idTrame = FxA.id('trame');
+  // Réponse 40 de Karl (30 septembre) : la chemise est « boutonnée » (et non enfilée par la tête).
+  // « —Tu ne connais pas mes talents de séducteur, conclut Darshan en enfilant sa chemise. » : après la pirouette,
+  // les deux pans de lin entrent par les côtés de la vue (il passe les bras dans les manches), dans la lumière
+  // d'or du ponton ; le lecteur la boutonne de haut en bas, un bouton par toucher (le geste 1.8.1, `toucher` en
+  // `boutons` touchers, dont cet effet suit le progrès) ; le prochain bouton luit. Le col reste ouvert : le
+  // séducteur ne ferme pas le premier bouton. Boutonnée, la chemise couvre la vue, sous le texte, qui reste
+  // lisible : elle mène au fondu blanc de 1.9, « Après quelques ajustements… ». Tant que le lin est là, la
+  // consigne prend une pastille, lisible sur le lin (puis « Tournez la page », dans l'EPUB). Sans geste, les
+  // boutons se ferment d'eux-mêmes. Mouvement réduit : les pans paraissent en fondu, chaque bouton se ferme en
+  // fondu enchaîné.
+  Effets.lin = function (scene, e) {
+    var n = Math.max(1, e.boutons || 4), boite = Fx.dessous(scene, 'lin', 3, true), avecGeste = !!(e.suit_geste && e.geste);
+    var HAUT = 700, PAS = 250, B = [], debuts = [], c = [], k;
+    for (k = 0; k < n; k++) { B.push(HAUT + k * PAS); c.push(0); }
+    scene.classList.add('fx-lin-sur');
+    Fx.surDepart(scene, function () { scene.classList.remove('fx-lin-sur'); });
+    // le lin : ses plis, sa trame, la lumière d'or venue d'en haut ; les boutons de nacre
+    var plis = FxA.degrade(boite, 'linearGradient', { x1: 0, y1: 0, x2: W, y2: 0, gradientUnits: 'userSpaceOnUse' },
+      [[0, '#ede0c4'], [0.08, '#fbf3e2'], [0.19, '#eee1c5'], [0.31, '#fdf7ea'], [0.42, '#f0e3c8'], [0.5, '#f8efdc'],
+       [0.58, '#f0e3c8'], [0.69, '#fdf7ea'], [0.81, '#eee1c5'], [0.92, '#fbf3e2'], [1, '#ede0c4']]);
+    var jour = FxA.degrade(boite, 'linearGradient', { x1: 0, y1: 0, x2: 0, y2: H, gradientUnits: 'userSpaceOnUse' },
+      [[0, '#fff3cf', 0.35], [0.45, '#fff3cf', 0], [1, '#6e5634', 0.16]]);
+    var nacre = FxA.degrade(boite, 'radialGradient', { cx: 0.4, cy: 0.35, r: 0.65 }, [[0, '#fffefa'], [0.55, '#eee6d6'], [1, '#cdbfa6']]);
+    var defs = $('defs', boite), idTrame = FxA.id('trame'), idClip = FxA.id('pan');
     var trame = svgEl('pattern', { id: idTrame, width: 7, height: 7, patternUnits: 'userSpaceOnUse' }, defs);
-    svgEl('path', { d: 'M0,3.5 H7 M3.5,0 V7', stroke: '#8a7c5e', 'stroke-width': 0.9, opacity: 0.2 }, trame);
-    svgEl('path', { d: 'M0,0.5 H7 M0.5,0 V7', stroke: '#ffffff', 'stroke-width': 0.8, opacity: 0.5 }, trame);
-    var g = svgEl('g', {}, boite), corps = svgEl('path', { fill: plis }, g), grain = svgEl('path', { fill: 'url(#' + idTrame + ')' }, g);
-    var ourlet = svgEl('path', { fill: 'none', stroke: '#cfc5ad', 'stroke-width': 3, opacity: 0.7 }, g);
-    var plisHorizontaux = [], k;
-    for (k = 0; k < 4; k++) plisHorizontaux.push(svgEl('path', { fill: 'none', stroke: k % 2 ? '#ffffff' : '#c9bea5', 'stroke-width': 6 - k, opacity: 0.35 - k * 0.05, 'stroke-linecap': 'round' }, g));
-    function forme(dy, phase) {         // le bas du tissu, en vagues douces, à la hauteur dy
-      var pts = [], i;
-      for (i = 0; i <= 16; i++) {
-        pts.push([-60 + i * 82.5, dy + 30 * Math.sin(i * 0.8 + phase) + 15 * Math.sin(i * 1.7 - phase * 1.3)]);
+    svgEl('path', { d: 'M0,3.5 H7 M3.5,0 V7', stroke: '#8a7650', 'stroke-width': 0.9, opacity: 0.18 }, trame);
+    svgEl('path', { d: 'M0,0.5 H7 M0.5,0 V7', stroke: '#ffffff', 'stroke-width': 0.8, opacity: 0.45 }, trame);
+    var clip = svgEl('path', {}, svgEl('clipPath', { id: idClip, clipPathUnits: 'userSpaceOnUse' }, defs));
+    var tout = svgEl('g', {}, boite);
+    function trait(parent, couleur, epaisseur, opacite, pointilles) {
+      var a = { fill: 'none', stroke: couleur, 'stroke-width': epaisseur, opacity: opacite };
+      if (pointilles) a['stroke-dasharray'] = pointilles;
+      return svgEl('path', a, parent);
+    }
+    function pan() {
+      var g = svgEl('g', {}, tout);
+      return { g: g, peau: [svgEl('path', { fill: plis }, g), svgEl('path', { fill: 'url(#' + idTrame + ')' }, g), svgEl('path', { fill: jour }, g)] };
+    }
+    // le pan droit, où sont cousus les boutons ; l'ombre du pan gauche, qui le recouvre ; le pan gauche et ses boutonnières
+    var droit = pan(), coutureD = [trait(droit.g, '#c8b58c', 1.6, 0.8, '6 7'), trait(droit.g, '#c8b58c', 1.6, 0.8, '6 7')];
+    var ombre = svgEl('g', { 'clip-path': 'url(#' + idClip + ')' }, tout);
+    var ombres = [trait(ombre, '#6e5634', 26, 0.1), trait(ombre, '#6e5634', 9, 0.14)];
+    var gauche = pan(), coutureG = [trait(gauche.g, '#c8b58c', 1.6, 0.8, '6 7'), trait(gauche.g, '#c8b58c', 1.6, 0.8, '6 7')];
+    var bord = trait(gauche.g, '#d9c9a6', 2, 0.9), trous = [], boutons = [];
+    function bouton() {
+      var b = svgEl('g', {}, tout);
+      svgEl('ellipse', { cx: 2, cy: 4, rx: 19, ry: 17, fill: '#5e4a2c', opacity: 0.2 }, b);
+      svgEl('circle', { r: 17, fill: nacre, stroke: '#b1a284', 'stroke-width': 1.2 }, b);
+      svgEl('circle', { r: 11.5, fill: 'none', stroke: '#d3c6ad', 'stroke-width': 1 }, b);
+      svgEl('path', { d: 'M-4.5,-4.5 L4.5,4.5 M4.5,-4.5 L-4.5,4.5', stroke: '#e0d6c3', 'stroke-width': 1.6, 'stroke-linecap': 'round' }, b);
+      [[-4.5, -4.5], [4.5, -4.5], [-4.5, 4.5], [4.5, 4.5]].forEach(function (p) { svgEl('circle', { cx: p[0], cy: p[1], r: 2.1, fill: '#9a8b6f' }, b); });
+      return b;
+    }
+    for (k = 0; k < n; k++) {
+      trous.push(svgEl('rect', { x: -19, y: -3.5, width: 38, height: 7, rx: 3.5, fill: '#e6d9bd', stroke: '#b5a37f', 'stroke-width': 1.1 }, gauche.g));
+      boutons.push(bouton());
+    }
+    var lueur = svgEl('circle', { r: 31, fill: 'none', stroke: '#c9973a', 'stroke-width': 3, opacity: 0 }, tout);
+    // la géométrie : le pan ouvert s'écarte un peu vers le bas et beaucoup vers le col ; chaque bouton fermé
+    // rapproche les pans autour de lui (le gauche passe sur le droit), et un peu au-dessus et au-dessous
+    var ecart = 0;
+    function demi(y) { return y >= HAUT ? 170 + 45 * (y - HAUT) / (H - HAUT) : 170 + (HAUT - y) * 0.26; }
+    function ferme(y) {
+      var v = 0;
+      for (var i = 0; i < n; i++) if (c[i] > 0) v = Math.max(v, c[i] * (1 - lisse((Math.abs(y - B[i]) - 110) / 220)));
+      return v;
+    }
+    function bords(y) {
+      var f = ferme(y), d = demi(y) * (1 - f);
+      return [600 - d + 46 * f - ecart, 600 + d - 14 * f + ecart];
+    }
+    function ligne(pts, dx) {
+      return 'M' + pts.map(function (p) { return (p[0] + (dx || 0)).toFixed(1) + ',' + p[1]; }).join(' L');
+    }
+    function dessiner() {
+      var G = [], D = [], y, b, i;
+      for (y = -40; y <= H + 40; y += 30) { b = bords(y); G.push([b[0], y]); D.push([b[1], y]); }
+      var dG = 'M-80,-40 L' + ligne(G).slice(1) + ' L-80,' + (H + 40) + ' Z';
+      var dD = 'M' + (W + 80) + ',-40 L' + ligne(D).slice(1) + ' L' + (W + 80) + ',' + (H + 40) + ' Z';
+      gauche.peau.forEach(function (p) { p.setAttribute('d', dG); });
+      droit.peau.forEach(function (p) { p.setAttribute('d', dD); });
+      clip.setAttribute('d', dD);
+      bord.setAttribute('d', ligne(G));
+      coutureG[0].setAttribute('d', ligne(G, -10)); coutureG[1].setAttribute('d', ligne(G, -52));
+      coutureD[0].setAttribute('d', ligne(D, 10)); coutureD[1].setAttribute('d', ligne(D, 52));
+      ombres[0].setAttribute('d', ligne(G, 10)); ombres[1].setAttribute('d', ligne(G, 4));
+      for (i = 0; i < n; i++) {
+        b = bords(B[i]);
+        trous[i].setAttribute('transform', 'translate(' + (b[0] - 28).toFixed(1) + ' ' + B[i] + ')');
+        boutons[i].setAttribute('transform', 'translate(' + (b[1] + 32).toFixed(1) + ' ' + B[i] + ')');
       }
-      var courbe = Gestes.courbe(pts, false).replace(/^M[^C]*/, '');
-      var d = 'M-60,-3200 L-60,' + pts[0][1].toFixed(1) + courbe + ' L1260,-3200 Z';
-      corps.setAttribute('d', d); grain.setAttribute('d', d);
-      ourlet.setAttribute('d', Gestes.courbe(pts.map(function (p) { return [p[0], p[1] - 3]; }), false));
-      plisHorizontaux.forEach(function (p, j) {
-        var off = 60 + j * 70;
-        p.setAttribute('d', Gestes.courbe(pts.map(function (q) { return [q[0], q[1] - off + 10 * Math.sin(q[0] * 0.012 + j)]; }), false));
+      // le prochain bouton luit (seulement quand le lecteur boutonne)
+      if (avecGeste && faits < n) {
+        b = bords(B[faits]);
+        lueur.setAttribute('cx', (b[1] + 32).toFixed(1)); lueur.setAttribute('cy', B[faits]);
+      } else lueur.setAttribute('opacity', 0);
+    }
+    var faits = 0, horloge = 0, finir = null, fin = new Promise(function (ok) { finir = ok; });
+    function terminer() {
+      lueur.setAttribute('opacity', 0);
+      Fx.minuterie(scene, finir, calme ? 300 : 500, true);
+    }
+    // mouvement réduit : chaque bouton se ferme en fondu enchaîné (l'état d'avant s'efface par-dessus le nouveau)
+    function fondu(i) {
+      var avant = tout.cloneNode(true);
+      boite.appendChild(avant);
+      c[i] = 1;
+      dessiner();
+      Fx.animer(scene, 320, function (x) { avant.setAttribute('opacity', (1 - x).toFixed(3)); }).then(function () {
+        retirer(avant);
+        if (faits >= n && i === n - 1) terminer();
       });
     }
-    Fx.sonner('lin');
-    if (calme) {
-      forme(H + 300, 0); boite.style.opacity = 0;
-      return Fx.animer(scene, 350, function (p) { boite.style.opacity = lisse(p).toFixed(3); });
+    function boutonner(m) {
+      while (faits < Math.min(n, m)) {
+        var i = faits++;
+        if (!avecGeste) Fx.sonner('tissu');
+        if (calme) fondu(i); else debuts[i] = horloge;
+      }
     }
-    forme(-260, 0);
-    return Fx.animer(scene, 1600, function (p) {
-      forme(-260 + (H + 560) * lisse(p), p * 5.5);
-    });
+    Fx.sonner('lin');
+    dessiner();
+    if (calme) {
+      tout.setAttribute('opacity', 0);
+      if (avecGeste) lueur.setAttribute('opacity', 0.8);
+      Fx.animer(scene, 500, function (x) { tout.setAttribute('opacity', x.toFixed(3)); });
+    } else {
+      Fx.tache(scene, function (t) {
+        horloge = t;
+        var x = borne(t / 0.9), bouge = x < 1;
+        ecart = 260 * (1 - vif(x));
+        tout.setAttribute('opacity', lisse(borne(t / 0.5)).toFixed(3));
+        for (var i = 0; i < n; i++) {
+          var v = debuts[i] === undefined ? 0 : vif(borne((t - debuts[i]) / 0.38));
+          if (v !== c[i]) { c[i] = v; bouge = true; }
+        }
+        if (bouge) dessiner();
+        if (avecGeste && faits < n) lueur.setAttribute('opacity', (0.35 + 0.55 * (0.5 + 0.5 * Math.sin(t * 3.93))).toFixed(3));
+        if (faits >= n && !bouge && c[n - 1] >= 1) { terminer(); return false; }
+      });
+    }
+    if (avecGeste) e.geste.suivre(function (x, fini) { boutonner(fini ? n : Math.round(x * n)); });
+    else for (k = 1; k <= n; k++) Fx.minuterie(scene, boutonner.bind(null, k), (calme ? 500 : 900) + k * 420);
+    return fin;
   };
 
   // ---------------------------------------------------------------- reflet (1.7)
@@ -2851,6 +2956,157 @@ var FxB = {
 // ================================================================ effets des réponses de Karl (début)
 /* Les effets qu'appellent les réponses de Karl (2.7 : Darshan commande le dessert ; 1.5 : Jivan,
    « la vie »), écrits avec les scènes ; chacun juste au-dessus de la ligne « (fin) » ci-dessous. */
+(function () {
+  // ---------------------------------------------------------------- vie (1.5)
+  // Réponse 16 de Karl (30 septembre) : « Jivan n'est nommé nulle part avant le texte ; le sens de son nom, « la
+  // vie », est voulu : un effet en lien avec lui, qui reste élégant (1.5) ».
+  // « Un vieil homme au short et au marcel de lin le rejoint. » : avec lui entre le temps des vivants. L'encre
+  // d'Aluva était immobile ; à son arrivée, le soleil du matin passe entre les palmes : des taches de lumière
+  // chaude gagnent le jardin, du fond du chemin d'où il vient jusqu'à nous, et bougent doucement, comme les
+  // feuilles sous un vent léger. Elles restent sur son filet pendant qu'il s'installe et travaille, et s'apaisent
+  // quand il parle (`jusqua` : le temps où elles s'éteignent, 3 : « l'homme entame la conversation » ; la page
+  // suivante reste sur le même plan, sans elles). La même lumière vieillit en 1.8 (« As-tu déjà pensé à
+  // vieillir ? ») et retombe en 1.9, au crépuscule, quand le texte le nomme enfin : le jour d'une vie. Ni nom, ni
+  // silhouette, ni or (l'or est la magie de Darshan) : le soleil d'un matin, sur le bas de l'image, que le panneau
+  // clair laisse voir. Mouvement réduit : les taches paraissent en fondu, immobiles.
+  var GRAPPES_VIE = [[230, 1690, 5], [580, 1500, 4], [210, 1290, 3], [990, 1350, 4], [700, 1230, 3],
+    [930, 1700, 4], [1040, 1090, 2], [330, 1110, 2]];          // [x, y, taches] : le chemin, l'herbe, le sous-bois
+  Effets.vie = function (scene, e) {
+    var svg = Fx.calque(scene, 'vie', 5, true), h = Fx.alea(16), jusqua = e.jusqua === undefined ? 3 : e.jusqua;
+    var soleil = FxA.degrade(svg, 'radialGradient', { cx: 0.5, cy: 0.5, r: 0.5 },
+      [[0, '#fff0b8', 0.46], [0.45, '#ffeeb2', 0.4], [1, '#ffe8a4', 0]]);
+    // l'ombre des feuilles, à peine : elle donne aux taches leur éclat
+    var ombre = svgEl('rect', { x: -40, y: -40, width: W + 80, height: H + 80, fill: '#141e16', opacity: 0 }, svg);
+    var grappes = GRAPPES_VIE.map(function (g) {
+      var gr = { x: g[0], y: g[1], ax: Fx.entre(h, 10, 22), ay: Fx.entre(h, 4, 9), p: Fx.entre(h, 6, 11), ph: Fx.entre(h, 0, 6.28),
+        retard: Math.max(0, (g[1] - 1080) / 700 * 1.6), el: svgEl('g', {}, svg), taches: [] };
+      for (var k = 0; k < g[2]; k++) {
+        var rx = Fx.entre(h, 40, 95);
+        var t = { dx: Fx.entre(h, -90, 90), dy: Fx.entre(h, -30, 30), rot: Fx.entre(h, -12, 12), a: Fx.entre(h, 0.55, 1),
+          jx: Fx.entre(h, 4, 8), q: Fx.entre(h, 3, 6), qh: Fx.entre(h, 0, 6.28) };
+        t.el = svgEl('ellipse', { cx: 0, cy: 0, rx: rx.toFixed(1), ry: (rx * Fx.entre(h, 0.42, 0.62)).toFixed(1), fill: soleil, opacity: 0 }, gr.el);
+        gr.taches.push(t);
+      }
+      return gr;
+    });
+    function poser(temps) {
+      grappes.forEach(function (g) {
+        var x = g.x + (calme ? 0 : g.ax * Math.sin(temps / g.p * 6.2832 + g.ph)), y = g.y + (calme ? 0 : g.ay * Math.sin(temps / g.p * 4.4 + g.ph));
+        g.taches.forEach(function (t) {
+          var j = calme ? 0 : t.jx * Math.sin(temps / t.q * 6.2832 + t.qh);
+          t.el.setAttribute('transform', 'translate(' + (x + t.dx + j).toFixed(1) + ' ' + (y + t.dy + j * 0.4).toFixed(1) + ') rotate(' + t.rot.toFixed(1) + ')');
+        });
+      });
+    }
+    function eclairer(entree, force, temps) {
+      ombre.setAttribute('opacity', (0.09 * entree.ombre * force).toFixed(3));
+      grappes.forEach(function (g) {
+        var v = entree.grappe(g);
+        g.taches.forEach(function (t) {
+          var vie = calme ? 1 : 0.78 + 0.22 * Math.sin(temps / t.q * 6.2832 + t.qh * 2);
+          t.el.setAttribute('opacity', (t.a * v * vie * force).toFixed(3));
+        });
+      });
+    }
+    var force = 1, eteinte = false;
+    function eteindre() {
+      if (eteinte) return;
+      eteinte = true;
+      Fx.animer(scene, calme ? 900 : 2600, function (x) {
+        force = 1 - lisse(x);
+        if (calme) eclairer({ ombre: 1, grappe: function () { return 1; } }, force, 0);
+      }).then(function () { retirer(svg); });
+    }
+    poser(0);
+    if (calme) {
+      Fx.animer(scene, 1200, function (x) { if (!eteinte) eclairer({ ombre: lisse(x), grappe: function () { return lisse(x); } }, 1, 0); });
+    } else {
+      // le soleil gagne le jardin du fond vers nous (1,6 s), puis la lumière vit
+      Fx.tache(scene, function (temps) {
+        if (eteinte && force <= 0) return false;
+        poser(temps);
+        eclairer({ ombre: lisse(temps / 2), grappe: function (g) { return lisse((temps - g.retard) / 1.3); } }, force, temps);
+      });
+    }
+    Fx.surTemps(scene, function (t, i) {
+      if (i < jusqua) return true;
+      eteindre();
+      return false;
+    }, true);
+  };
+
+  // ---------------------------------------------------------------- commande (2.7)
+  // Réponse 13 de Karl (30 septembre) : « c'est Darshan qui commande le dessert et pense « Si j'avais su » (2.7) :
+  // le lecteur passe la commande sur une carte, un geste de plus ».
+  // « un serveur vient débarrasser la table et prendre la commande du dessert. » : la carte des desserts monte du
+  // bas, seule nette sur la table floue (la mise au point suit l'attention de Darshan : la grammaire du chapitre).
+  // Les autres lignes sont floues, illisibles : aucun autre dessert n'est écrit, seulement le sien, `plat` (« Ce
+  // sera un pain perdu »). Le lecteur passe la commande (le geste 2.7.1, `toucher`, dont cet effet suit le
+  // progrès) : un trait d'or, celui de Darshan, souligne le dessert, et sa commande, `ligne`, le titre du chapitre,
+  // paraît au-dessus de la carte, dans la police et l'or des titres : le lecteur découvre que ce titre est une
+  // phrase de tous les jours, et qu'elle est de Darshan. La carte redescend ; la commande reste pendant que le récit
+  // la confirme, et s'efface au temps `jusqua` (2 : « Il sera servi dans une porcelaine »). La carte et la commande
+  // passent au-dessus du panneau de texte (son voile les couvrirait), sous les aides du geste et la consigne ;
+  // pendant que la carte est là, le halo prend le graphite des aides de Julie (le blanc ne se verrait pas sur le
+  // papier). Décoratif pour les lecteurs d'écran : le texte dit la commande. Sans geste, la commande passe d'elle-même.
+  // Mouvement réduit : la carte paraît et s'efface en fondu, le trait aussi.
+  Effets.commande = function (scene, e) {
+    var LC = 600, HC = 470, Y0 = e.y || 1250, jusqua = e.jusqua === undefined ? 2 : e.jusqua;
+    var calqueC = Fx.dessus(scene, 'commande', 2);
+    var carte = Fx.poser(el('div', { 'class': 'fx-carte' }, calqueC), (W - LC) / 2, Y0, LC, HC);
+    el('div', { 'class': 'fx-carte-cadre' }, carte);
+    el('div', { 'class': 'fx-carte-titre' }, carte).textContent = ui('carte_desserts');
+    el('div', { 'class': 'fx-carte-filet' }, carte);
+    var h = Fx.alea(27);
+    [36, 47, 81, 91].forEach(function (y) {
+      var l = el('div', { 'class': 'fx-carte-flou' }, carte), w = Fx.entre(h, 30, 54);
+      l.style.left = ((100 - w) / 2).toFixed(2) + '%'; l.style.width = w.toFixed(2) + '%'; l.style.top = y + '%';
+    });
+    var mot = el('span', {}, el('div', { 'class': 'fx-carte-plat' }, carte));
+    mot.textContent = e.plat || '';
+    var trait = el('span', { 'class': 'fx-carte-trait' }, mot);
+    var ligne = el('div', { 'class': 'fx-commande-ligne' }, calqueC);
+    ligne.textContent = e.ligne || '';
+    ligne.style.top = Fx.pc(e.y_ligne || 1150, H);
+    scene.classList.add('fx-commande-attente');
+    Fx.surDepart(scene, function () { scene.classList.remove('fx-commande-attente'); });
+    // la carte monte du bas de la vue
+    var bas = 'translateY(' + ((H - Y0) / HC * 100 + 8).toFixed(1) + '%)';
+    if (calme) { carte.style.opacity = 0; carte.style.transition = 'opacity 350ms ease'; trait.style.transform = 'none'; trait.style.opacity = 0; }
+    else { carte.style.transform = bas; carte.style.transition = 'transform 450ms cubic-bezier(0.2, 0.8, 0.3, 1)'; }
+    Fx.ensuite(function () { if (calme) carte.style.opacity = 1; else carte.style.transform = 'none'; });
+    Fx.sonner('papier', { force: 0.5 });
+    var commandee = null;
+    function commander() {
+      if (commandee) return commandee;
+      scene.classList.remove('fx-commande-attente');
+      // Darshan choisit son dessert : le trait d'or
+      trait.style.transition = calme ? 'opacity 300ms ease' : 'transform 380ms ease-out';
+      Fx.ensuite(function () { if (calme) trait.style.opacity = 1; else trait.style.transform = 'scaleX(1)'; });
+      // sa commande, le titre du chapitre ; puis la carte redescend
+      Fx.minuterie(scene, function () { ligne.classList.add('vu'); }, calme ? 150 : 280);
+      Fx.minuterie(scene, function () {
+        if (calme) { carte.style.opacity = 0; return; }
+        carte.style.transition = 'transform 480ms cubic-bezier(0.5, 0, 0.75, 0.4)';
+        carte.style.transform = bas;
+      }, calme ? 900 : 1150);
+      Fx.surTemps(scene, function (t, i) {
+        if (i < jusqua) return true;
+        ligne.classList.remove('vu');
+        Fx.minuterie(scene, function () { retirer(calqueC); }, 900, true);
+        return false;
+      }, true);
+      commandee = Fx.pause(scene, calme ? 1100 : 1750);
+      return commandee;
+    }
+    if (e.suit_geste && e.geste) {
+      return new Promise(function (ok) {
+        e.geste.suivre(function (x, fini) { if (x >= 1 || fini) commander().then(ok, ok); });
+      });
+    }
+    return Fx.pause(scene, calme ? 600 : 1400).then(commander);
+  };
+})();
 // ================================================================ effets des réponses de Karl (fin)
 
 // ================================================================ effets nouveaux, chapitres 6 et 7 (début)
