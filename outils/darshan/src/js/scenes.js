@@ -149,21 +149,26 @@ var Scenes = (function () {
     scene.etoiles = Visuels.Etoiles(scene, 110, ciel);
     if (ciel) {
       ciel.style.transformOrigin = '38% 8%';
-      (function tourner() {
-        if (!vivant) return;
-        if (!calme) angle += 0.0016;
-        ciel.style.transform = 'rotate(' + angle + 'deg) scale(1.28)';
-        requestAnimationFrame(tourner);
-      })();
+      ciel.style.transform = 'rotate(0deg) scale(1.28)';
     }
     // Le titre du chapitre a claqué sur les bandes d'entrée ; il reste ensuite en haut de l'écran.
     var carton = $('h1.chapitre', scene);
     if (carton) { scene.appendChild(carton); carton.classList.add('carton', 'range'); }
     quandEntree(scene).then(function () { if (carton) carton.classList.add('vu'); });
     derouler(scene, cfg, { attente: 700, fin: function () { vivant = false; sortir(scene); } });
+    // la voûte tourne jusqu'à la fin de la page, ou jusqu'à ce qu'on la quitte (Fx.tache, liée au récit qui vient de
+    // naître : l'édition web garde les 85 pages dans un seul document)
+    if (ciel) Fx.tache(scene, function () {
+      if (!vivant) return false;
+      if (!calme) angle += 0.0016;
+      ciel.style.transform = 'rotate(' + angle + 'deg) scale(1.28)';
+    });
   };
 
-  // La danse sur les tuiles : chaque toucher est une enjambée de cinq tuiles vers le pigeonnier.
+  // La danse sur les tuiles : chaque toucher est une enjambée de cinq tuiles vers le pigeonnier. Les notes : décision 4
+  // de Karl, « Les notes nouvelles des tuiles (1.2) n'ont pas de do dièse, la tierce que le père garde pour sa porte » :
+  // la mécanique rythme (notes="montantes") joue Son.note('montantes', k), la, si, ré, mi, fa dièse ; la scène n'en
+  // joue aucune autre.
   speciales.tuiles = function (scene, cfg) {
     var monde = $('.monde', scene), cible = { x: 950, y: 1300 };
     function placer(k, n, bond) {
@@ -226,6 +231,7 @@ var Scenes = (function () {
       '<ellipse id="reflet" cx="-130" cy="-30" rx="26" ry="12" fill="#fff" opacity=".25"/>' +
       '</g></svg>';
     var svg = doc.importNode(new DOMParser().parseFromString(balisage, 'image/svg+xml').documentElement, true);
+    $$('svg.jeu-svg, .lumiere-flot', scene).forEach(retirer);     // une page rejouée (menu) repart de zéro
     scene.appendChild(svg);
     function q(id) { return svg.querySelector('#' + id); }
     var objet = q('objet'), gooG = q('goo-groupe'), cle = q('cle'), vg = q('verre-g'), vd = q('verre-d');
@@ -259,18 +265,16 @@ var Scenes = (function () {
         if (g.action) Objets.proposer(id, g.action, terminer);
       });
     }
+    // « elles vibrent entre ses doigts, leurs couleurs s'altèrent » ; la vibration s'arrête avec la fonte, ou avec la
+    // page (Fx.tache : l'édition web garde les 85 pages dans un seul document)
     function vibrer() {
       Son.effet('vibre');
-      var t0 = null;
       vibration = true;
-      (function v(t) {
-        if (!vibration) return;
-        if (t0 === null) t0 = t;
-        var dt = ((t || 0) - t0) / 1000;
-        placer(calme ? 0 : Math.sin(dt * 90) * 3, calme ? 0 : Math.cos(dt * 70) * 2);
-        gooG.style.filter = 'url(#goo) hue-rotate(' + Math.round(dt * 160) + 'deg) saturate(2.4)';
-        requestAnimationFrame(v);
-      })(0);
+      Fx.tache(scene, function (t) {
+        if (!vibration) return false;
+        placer(calme ? 0 : Math.sin(t * 90) * 3, calme ? 0 : Math.cos(t * 70) * 2);
+        gooG.style.filter = 'url(#goo) hue-rotate(' + Math.round(t * 160) + 'deg) saturate(2.4)';
+      });
     }
     function fondreEnCle() {
       Son.effet('fonte');
@@ -304,8 +308,15 @@ var Scenes = (function () {
     };
     // 2. le geste vif : glisser vers le haut, ou toucher
     if (gestes[1]) scene.gestesLocaux[gestes[1].cle] = function (g) { return surObjet(g, 'lunettes', scene); };
-    // 3. porter la clé jusqu'à la serrure
+    // 3. porter la clé jusqu'à la serrure : « Après sa fiche, la clé se pose sous la serrure : la porter est un
+    // mouvement vers le haut » (chapitre-1.md, 1.3, arbitrage 5 ; g.depart, livre.py). Mouvement réduit : elle y est.
     if (gestes[2]) scene.gestesLocaux[gestes[2].cle] = function (g) {
+      var dep = g.depart || [pose.x, pose.y], x0 = pose.x, y0 = pose.y, s0 = pose.s;
+      function poser(t) { pose.x = x0 + (dep[0] - x0) * t; pose.y = y0 + (dep[1] - y0) * t; pose.s = s0 + (0.8 - s0) * t; placer(); }
+      if (calme) { poser(1); return porter(g); }
+      return anime(700, function (x) { poser(lisse(x)); }).then(function () { return porter(g); });
+    };
+    function porter(g) {
       var c = consigne(scene, g.consigne, 1220, 2500);
       cibleSerrure.setAttribute('opacity', '0.8');
       anneau.classList.add('actif');
@@ -350,14 +361,22 @@ var Scenes = (function () {
         if (g.action) Objets.proposer('cle', g.action, terminer);
       });
     };
-    // 4. le tour de poignet : la clé tourne d'un quart de tour, la porte se déconsolide
+    // 4. le tour de poignet : « Le tour de poignet se tourne vraiment, sur un cercle d'au moins 250 unités
+    // (arbitrage 3) » (chapitre-1.md, 1.3) : la mécanique tourner (le quart de cercle en pointillés d'or, l'angle
+    // compté depuis la serrure, le cran, son frisson, « même consigne, même son en 6.13 et en 7.8 ») tourne notre
+    // clé par g.tourne ; puis la porte se déconsolide de la charpente.
     if (gestes[3]) scene.gestesLocaux[gestes[3].cle] = function (g) {
-      var tour = g.meca === 'tourner' ? Mecaniques.tourner(scene, g) : surObjet(g, 'cle');
+      var tour;
+      if (g.meca === 'tourner') {
+        g.tourne = function (d) { pose.r = d; placer(); };
+        tour = Mecaniques.tourner(scene, g);
+      } else {
+        tour = surObjet(g, 'cle').then(function () {
+          Son.effet('tour');
+          return anime(650, function (x) { pose.r = -90 * lisse(x); placer(); });
+        }).then(function () { Transitions.frisson(scene, 932, 1010, 130); });
+      }
       return tour.then(function () {
-        if (g.meca !== 'tourner') Son.effet('tour');
-        return anime(650, function (x) { pose.r = -90 * lisse(x); placer(); });
-      }).then(function () {
-        Transitions.frisson(scene, 932, 1010, 130);
         Son.effet('grince');
         return anime(1200, function (x) {
           var a = calme ? 0 : Math.sin(x * 40) * (1 - x) * 6;
@@ -375,23 +394,28 @@ var Scenes = (function () {
       });
     };
     scene.effetsLocaux = {
-      vibre: vibrer,
+      // « Nouveau, là où le téléphone le permet : il vibre trois fois, très brièvement […] ; jamais en mouvement
+      // réduit ni quand les effets sonores sont coupés » (e.haptique, par Fx.vibrer)
+      vibre: function (s, e) {
+        vibrer();
+        if (e && e.haptique) Fx.vibrer(e.haptique);
+      },
       // la clé née de la fonte entre dans les objets, et sa fiche se présente une fois
       eclat: function (s, e) {
         return fondreEnCle()
           .then(function () { return Effets.eclat(scene, e); })
           .then(function () { Objets.remplacer('lunettes', 'cle'); return Objets.presenter('cle'); });
       },
-      jour: function () {
-        Son.effet('jour');
+      // « le jour de la porte laisse transparaître la présence de l'astre solaire » : le soleil passe par les jours
+      // (2,6 s), puis vacille. Décision 4 de Karl : « les jours du pigeonnier ne sonnent plus l'accord, mais Aluva
+      // (le tanpura, un oiseau, le fleuve) » : l'autre côté (son="autre-cote", lieu="aluva"), jamais le père.
+      jour: function (s, e) {
+        Son.effet((e && e.son) || 'autre-cote', { lieu: (e && e.lieu) || 'aluva' });
         return anime(2600, function (x) { jours.setAttribute('opacity', 0.15 + 0.85 * lisse(x)); }).then(function () {
-          var t0 = null;
-          (function vacille(t) {
-            if (fini) return;
-            if (t0 === null) t0 = t;
-            if (!calme) jours.setAttribute('opacity', 0.85 + 0.15 * Math.sin(((t || 0) - t0) / 260));
-            requestAnimationFrame(vacille);
-          })(0);
+          Fx.tache(scene, function (t) {
+            if (fini) return false;
+            if (!calme) jours.setAttribute('opacity', 0.85 + 0.15 * Math.sin(t * 1000 / 260));
+          });
         });
       }
     };
