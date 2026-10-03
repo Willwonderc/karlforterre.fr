@@ -2671,7 +2671,8 @@ var FxA = (function () {
     var img = planImg(scene);
     if (calme || !img) return;
     var z = e.zone && e.zone.length === 4 ? e.zone : [0, 880, 1200, 1800], zx = z[0], zy = z[1], zw = z[2] - z[0], zh = z[3] - z[1];
-    var T = Fx.toile(scene, 'eau', 1, 1), c = T.x, bande = 8, dernier = -1000;
+    // définition 0,75 : l'eau tremble, un téléphone n'a pas à redessiner 1200 × 1800 points trente fois par seconde
+    var T = Fx.toile(scene, 'eau', 1, 0.75), c = T.x, bande = 8, dernier = -1000;
     eau = fx.eauA = { calme: 0 };
     // la fonte du haut : la zone se fond dans l'image au ras de l'horizon
     var fonteV = c.createLinearGradient(0, zy, 0, zy + zh);
