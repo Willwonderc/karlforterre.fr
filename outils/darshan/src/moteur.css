@@ -901,4 +901,8 @@ html:not(.jeu) .decor .plan.sans-script { opacity: 1; }
 
 /* ============================================================ effets nouveaux, chapitre 7 (début)
    Les règles des effets de ce chapitre s'ajoutent juste au-dessus de la ligne « (fin) » ci-dessous. */
+/* ---- 7.2 : la lumière bleue de la télévision bat sur la couette (un voile bleu en « multiply », dont l'intensité change comme un plan) */
+.fx-calque.fx-tele { background: radial-gradient(ellipse 96% 66% at 50% 62%, rgba(86, 138, 255, 0.98), rgba(62, 106, 242, 0.64) 50%, rgba(40, 72, 200, 0.18) 88%);
+  mix-blend-mode: multiply; }
+
 /* ============================================================ effets nouveaux, chapitre 7 (fin) */

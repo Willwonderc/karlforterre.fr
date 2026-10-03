@@ -727,14 +727,16 @@ SCENES = {
                         E("boussole", etat="perdue", bouton=True, anime=False)]]),
 
     # ============================================================ 7. Au-delà de la porte
-    "7.1": S("desert-nuit", gestes=[G("maintenir", duree=1800, paupieres=True)],
+    # les yeux fermés, « le vent s'assourdit : on se replie » (traitement de 7.1) : il baisse de lui-même ; la morsure l'éteint
+    "7.1": S("desert-nuit", gestes=[G("maintenir", duree=1800, paupieres=True, effets=[E("ambiance", id="desert", vent=0.3)])],
              moments=[E("filantes", n=7, sens="bas", larmes=True), E("morsure", duree=3000)]),
     "7.2": S(["petales", "chambre"],
              moments=[None, [E("decor", i=1, fondu=1500, fond="clair"), E("tele"), E("ambiance", id="chambre")]]),
     "7.3": S(["glacon", "banquise", "desert-jour"], debut=[E("flou", garde=[600, 900, 330], force=10)],
              moments=[E("goutte", x=640, y=960),
-                      E("decor", i=1, fondu=2400, delai=1400),
-                      [E("decor", i=2, fondu=2400, fond="clair"), E("sable")]]),
+                      # le flou du verre s'efface avec le glaçon (il ne suit pas la banquise) ; la glace craque pendant le fondu
+                      [E("net", duree=2400, delai=1400), E("decor", i=1, fondu=2400, delai=1400), E("son", effet="glace", delai=1400)],
+                      [E("decor", i=2, fondu=2400, fond="clair"), E("sable", delai=600)]]),
     "7.4": S(["desert-jour", "fleurs", "couloir", "periyar"],
              moments=[E("pluie", peint=1, accalmie=True),
                       E("partage", actif="les deux", ecart=24, tension=True)],
@@ -745,7 +747,8 @@ SCENES = {
                     "Jivan prie": [E("partage", droite="periyar", actif="droite"),
                                    E("ambiance", partage=dict(gauche="hopital", droite="kerala"))]}),
     "7.5": S("couloir", gestes=[G("toucher", n=2, effet="toc", cible=[1020, 1150, 140])],
-             moments=[[E("silence", duree=4000), E("pause", duree=3000)]],
+             # l'hôpital se tait quatre secondes ; pendant trois d'entre elles, rien ne se touche (les deux ensemble)
+             moments=[[E("silence", duree=4000), E("pause", duree=3000, delai=1)]],
              extra={"Julie récupère son appareil": E("objet+", id="ecg", sac="julie")}),
     "7.6": S(["feu", "depart-proche", "depart-loin"],
              gestes=[G("glisser", sens="haut", cible=[600, 1350, 260], effets=[E("etincelles", etoile=True)])],
