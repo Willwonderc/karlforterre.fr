@@ -1828,7 +1828,7 @@ var FxA = (function () {
     if (e.duree) {
       // retour au plan précédent après `duree` : un fondu court, le regard ne se relève pas (6.11)
       return fin.then(function () { return Fx.pause(scene, e.duree); }).then(function () {
-        return decorAvant(scene, { i: liste.indexOf(a), fondu: 500 });
+        return decorAvant(scene, { i: Fx.plans(scene).indexOf(a), fondu: 500 });
       });
     }
     return fin;
