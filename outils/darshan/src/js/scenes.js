@@ -607,5 +607,480 @@ var Scenes = (function () {
     derouler(scene, cfg, { attente: 500 });
   };
 
-  return { jouer: jouer, config: config, sortir: sortir, speciales: speciales };
+  // ---------------------------------------------------------------- la lanterne du père
+  /* « une lanterne de bois aux motifs circulaires » (3.10) ; « Le linteau s'accompagne d'une lanterne aux
+     rayons pénétrants » (7.12). Six pans de bois ajourés de cercles (d'après le vitrail aux arcs de cercle
+     de Karl, 34849711), vus de face : un pan entier, deux en raccourci ; un toit, une base, une chaîne qui
+     monte hors du cadre. Lanterne(parent, x, y, id) pose la flamme en (x, y) : c'est le point orange de
+     la nuit de Karl (noir-lueur, en (600, 300)), même taille, même couleur, pour que la photo puisse
+     s'effacer sous lui. Les mêmes dessins servent à la scène rue-de-rungis (7.12 à 7.15), 120 unités
+     au-dessus du haut de la porte. Rend { g, flamme, traits (les quatre tracés de couleur : ocre pour le
+     bois, vert pour le toit et la base, bleu pour les jours, or pour la chaîne), bois (la lanterne éclairée
+     du dedans), halo, jours (les centres des jours, en unités de page), etat, poser(etat) } ; états :
+     'eteinte' (rien), 'flamme' (le point seul), 'traits' (le dessin en couleurs), 'allumee'. */
+  function Lanterne(parent, x, y, id) {
+    var L = { etat: 'eteinte', jours: [] };
+    L.g = svgEl('g', { 'class': 'lanterne', transform: 'translate(' + x + ' ' + y + ')' }, parent);
+    var defs = svgEl('defs', {}, L.g);
+    function degrade(nom, stops, o) {
+      var gr = svgEl('radialGradient', Fx.copie({ id: id + '-' + nom }, o || {}), defs);
+      stops.forEach(function (s) { svgEl('stop', { offset: s[0], 'stop-color': s[1], 'stop-opacity': s[2] === undefined ? 1 : s[2] }, gr); });
+      return 'url(#' + id + '-' + nom + ')';
+    }
+    var fHalo = degrade('halo', [[0, '#ffe2a0', 0.55], [0.35, '#ffc867', 0.22], [1, '#ffb347', 0]]);
+    var fFlamme = degrade('flamme', [[0, '#ff7410'], [0.62, '#ff6402'], [0.85, '#ff6402', 0.35], [1, '#ff6402', 0]]);
+    var fJour = degrade('jour', [[0, '#fffbe8'], [0.55, '#ffe08e'], [1, '#f0a040']]);
+    var fAura = degrade('aura', [[0, '#ff6a10', 0.2], [0.5, '#ff6a10', 0.07], [1, '#ff6a10', 0]]);
+    var lueur = svgEl('filter', { id: id + '-lueur', x: '-80%', y: '-80%', width: '260%', height: '260%' }, defs);
+    svgEl('feGaussianBlur', { stdDeviation: 5, result: 'b' }, lueur);
+    var fm = svgEl('feMerge', {}, lueur);
+    svgEl('feMergeNode', { 'in': 'b' }, fm); svgEl('feMergeNode', { 'in': 'SourceGraphic' }, fm);
+    L.halo = svgEl('circle', { r: 340, fill: fHalo, opacity: 0 }, L.g);
+    L.flamme = svgEl('g', { opacity: 0 }, L.g);
+    svgEl('circle', { r: 92, fill: fAura }, L.flamme);
+    svgEl('circle', { r: 40, fill: fFlamme }, L.flamme);
+    // les jours (cercles et, sur les pans en raccourci, ellipses) : [x, y, rx, ry]
+    var JOURS = [[0, 0, 22, 22], [0, -50, 10, 10], [0, 50, 10, 10], [-26, -26, 7, 7], [26, -26, 7, 7], [-26, 26, 7, 7], [26, 26, 7, 7],
+      [-67.5, 0, 9, 20], [67.5, 0, 9, 20], [-67.5, -48, 4.5, 9], [67.5, -48, 4.5, 9], [-67.5, 48, 4.5, 9], [67.5, 48, 4.5, 9]];
+    JOURS.forEach(function (j) { L.jours.push([x + j[0], y + j[1], j[2]]); });
+    function ovale(j) { return 'M' + (j[0] - j[2]) + ',' + j[1] + 'a' + j[2] + ',' + j[3] + ' 0 1,0 ' + 2 * j[2] + ',0a' + j[2] + ',' + j[3] + ' 0 1,0 ' + (-2 * j[2]) + ',0'; }
+    var BOIS = 'M-90,-80V80M90,-80V80M-90,-80H90M-90,80H90M-45,-80V80M45,-80V80M-90,-72H90M-90,72H90';
+    var TOIT = 'M-98,-80L-72,-94L72,-94L98,-80ZM-72,-94L-14,-128L14,-128L72,-94M-24,-94L-5,-128M24,-94L5,-128M-92,80L-44,98L44,98L92,80M-12,98L0,116L12,98';
+    var CHAINE = 'M0,-330V-155M-9,-146a9,9 0 1,0 18,0a9,9 0 1,0 -18,0M-7,-134a7,7 0 1,0 14,0a7,7 0 1,0 -14,0';
+    // ---- éclairée du dedans : le bois sombre, les jours qui brillent, les arêtes qui prennent l'or
+    L.bois = svgEl('g', { opacity: 0 }, L.g);
+    svgEl('path', { d: 'M0,-330V-155', stroke: '#3a2414', 'stroke-width': 5 }, L.bois);
+    svgEl('path', { d: 'M1.5,-330V-155', stroke: OR, 'stroke-width': 1.2, opacity: 0.6 }, L.bois);
+    svgEl('path', { d: 'M-98,-80L-72,-94L72,-94L98,-80ZM-72,-94L-14,-128L14,-128L72,-94Z', fill: '#2b190d', stroke: '#c8893a', 'stroke-width': 2.5, 'stroke-linejoin': 'round' }, L.bois);
+    svgEl('path', { d: 'M-92,80L-44,98L44,98L92,80ZM-12,98L0,116L12,98Z', fill: '#2b190d', stroke: '#c8893a', 'stroke-width': 2.5, 'stroke-linejoin': 'round' }, L.bois);
+    svgEl('circle', { cx: 0, cy: -146, r: 9, fill: 'none', stroke: '#c8893a', 'stroke-width': 4 }, L.bois);
+    svgEl('circle', { cx: 0, cy: -134, r: 7, fill: '#c8893a' }, L.bois);
+    svgEl('rect', { x: -90, y: -80, width: 45, height: 160, fill: '#1e1109' }, L.bois);
+    svgEl('rect', { x: 45, y: -80, width: 45, height: 160, fill: '#1e1109' }, L.bois);
+    svgEl('rect', { x: -45, y: -80, width: 90, height: 160, fill: '#2a170c' }, L.bois);
+    var jours = svgEl('g', { fill: fJour, filter: 'url(#' + id + '-lueur)' }, L.bois);
+    JOURS.forEach(function (j) { svgEl('ellipse', { cx: j[0], cy: j[1], rx: j[2], ry: j[3] }, jours); });
+    svgEl('path', { d: BOIS, fill: 'none', stroke: '#4a2c16', 'stroke-width': 7 }, L.bois);
+    svgEl('path', { d: 'M-45,-72V72M45,-72V72M-90,-76H90M-90,76H90', fill: 'none', stroke: OR, 'stroke-width': 1.6, opacity: 0.75 }, L.bois);
+    // ---- les traits de couleur, tracés par les points venus du fond (pathLength = 1 : le tracé avance de 0 à 1)
+    L.traits = svgEl('g', { fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', filter: 'url(#' + id + '-lueur)' }, L.g);
+    L.traces = [[BOIS, '#d39a52'], [TOIT, '#6fb08a'], [JOURS.map(ovale).join(''), '#78a6e0'], [CHAINE, OR]].map(function (t) {
+      return svgEl('path', { d: t[0], stroke: t[1], 'stroke-width': 3.4, pathLength: 1, 'stroke-dasharray': '1 1', 'stroke-dashoffset': 1 }, L.traits);
+    });
+    // x de 0 à 1 : la part tracée de chaque trait (une liste de quatre, ou un seul nombre)
+    L.tracer = function (x) {
+      L.traces.forEach(function (p, i) { p.setAttribute('stroke-dashoffset', (1 - borne(typeof x === 'number' ? x : x[i])).toFixed(4)); });
+    };
+    L.poser = function (etat) {
+      L.etat = etat;
+      opacite(L.flamme, etat === 'eteinte' ? 0 : 1);
+      L.tracer(etat === 'traits' || etat === 'allumee' ? 1 : 0);
+      opacite(L.traits, etat === 'allumee' ? 0.18 : 1);
+      opacite(L.bois, etat === 'allumee' ? 1 : 0);
+      opacite(L.halo, etat === 'allumee' ? 1 : 0);
+    };
+    L.poser('eteinte');
+    return L;
+  }
+
+  // ---------------------------------------------------------------- vision (3.10, 3.11)
+  /* « Du noir vient la couleur. » (docs/darshan-mise-en-scene/chapitre-3.md, 3.10, 3.11 et section 6 ;
+     synthèse, partie 3.4). Le texte donne lui-même l'ordre de la vision, phrase après phrase : un temps par
+     phrase, et chaque image dit ce que dit la sienne. 3.10 : le souffle et ses braises ; le halo d'absence
+     et le silence d'un espace « dépourvu d'air » ; la vie qui palpite ; la bascule ; la nuit de Karl et sa
+     seule lumière orange ; les couleurs qui tracent la lanterne ; la lanterne qui s'allume avec l'accord
+     du père (il n'appartient qu'à cette porte) ; ses cercles de lumière qui révèlent en or les ornements de
+     la porte d'Irun ; le bois et la pierre qui se fond dans le noir. 3.11 s'ouvre comme 3.10 s'arrête
+     (lanterne allumée, ornements, accord tenu : Apple Books isole chaque page) ; la main s'arrête à un
+     doigt du bois ; la lanterne faiblit, la porte se drape de noir, il ne reste que la flamme, qui file au
+     carnet ; l'air revient. Une seule toile (les braises), jamais deux à la fois. Mouvement réduit : ni
+     bascule, ni ondulation, ni particule ; des fondus. Tout s'arrête avec la page ; l'accord ne survit à la
+     page que si la suivante est encore la vision (3.10 → 3.11, sur le web). */
+  var FALLS = [[410, 785, 82], [765, 785, 82], [345, 645, 34], [450, 645, 34], [715, 635, 34], [800, 635, 34]];
+  speciales.vision = function (scene, cfg) {
+    var id = prefixe(scene, 'vi');
+    var plans = $$('.decor .plan', scene), decor = $('.decor', scene);
+    // une page rejouée repart de son premier plan
+    $$('.vision-svg, .vision-braises, .vision-fond', scene).forEach(retirer);
+    plans.forEach(function (p, i) { p.classList.toggle('vu', i === 0); p.style.transform = ''; });
+    // sous les plans : le noir de la nuit de Karl (la porte est un calque transparent, posé sur lui)
+    if (decor) decor.insertBefore(el('div', { 'class': 'vision-fond', 'aria-hidden': 'true' }), decor.firstChild);
+    var traits = fichierDecor('porte-pere-traits');
+    var s = calqueScene(scene, 'vision-svg',
+      '<radialGradient id="' + id + '-absence" gradientUnits="userSpaceOnUse" cx="600" cy="720" r="1600">' +
+      '<stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".5" stop-color="#000" stop-opacity="0"/>' +
+      '<stop offset=".82" stop-color="#000" stop-opacity=".82"/><stop offset="1" stop-color="#000" stop-opacity="1"/></radialGradient>' +
+      '<radialGradient id="' + id + '-revele"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#fff"/>' +
+      '<stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
+      '<radialGradient id="' + id + '-tache"><stop offset="0" stop-color="#fff3cf" stop-opacity=".9"/><stop offset=".6" stop-color="#ffd98a" stop-opacity=".45"/>' +
+      '<stop offset="1" stop-color="#ffc861" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="' + id + '-voile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000"/><stop offset=".86" stop-color="#000"/>' +
+      '<stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="' + id + '-voile-m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000"/><stop offset=".86" stop-color="#000"/>' +
+      '<stop offset="1" stop-color="#fff"/></linearGradient>' +
+      '<mask id="' + id + '-masque" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="1800"><rect width="1200" height="1800" fill="#000"/></mask>' +
+      '<mask id="' + id + '-drape" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="1800"><rect width="1200" height="1800" fill="#fff"/></mask>');
+    function q(sel) { return s.querySelector(sel); }
+    var gradAbsence = q('#' + id + '-absence'), masque = q('#' + id + '-masque'), masqueDrape = q('#' + id + '-drape');
+    var absence = svgEl('rect', { width: W, height: H, fill: 'url(#' + id + '-absence)', opacity: 0 }, s);
+    var lueurVie = svgEl('rect', { width: W, height: H, fill: '#ffb36b', opacity: 0 }, s);
+    var noir = svgEl('rect', { x: -50, y: -50, width: W + 100, height: H + 100, fill: '#040205', opacity: 0 }, s);
+    var gBords = svgEl('g', { opacity: 0 }, s);
+    var voile = svgEl('rect', { x: -50, y: -2400, width: W + 100, height: 2400, fill: 'url(#' + id + '-voile)', opacity: 0 }, s);
+    var orn = svgEl('g', { opacity: 0 }, s);
+    var imgOrn = traits ? Gestes.image(orn, traits, { x: 0, y: 0, width: W, height: H, preserveAspectRatio: 'none', mask: 'url(#' + id + '-masque)' }) : null;
+    var gRayons = svgEl('g', { opacity: 0 }, s), rayons = [], taches = [];
+    var L = Lanterne(s, 600, 300, id);
+    var gTraces = svgEl('g', {}, s);
+    // les cercles de lumière : chaque jour de la lanterne envoie un faisceau sur un ornement de la porte
+    FALLS.forEach(function (f, i) {
+      var src = L.jours[[7, 8, 3, 5, 6, 4][i]];   // les pans en raccourci vers les octogones, les petits jours vers les médaillons
+      var gr = svgEl('linearGradient', { id: id + '-f' + i, gradientUnits: 'userSpaceOnUse', x1: src[0], y1: src[1], x2: f[0], y2: f[1] }, q('defs'));
+      svgEl('stop', { offset: 0, 'stop-color': '#ffe6a8', 'stop-opacity': 0.5 }, gr);
+      svgEl('stop', { offset: 1, 'stop-color': '#ffd98a', 'stop-opacity': 0.12 }, gr);
+      rayons.push({ src: src, f: f, p: svgEl('path', { fill: 'url(#' + id + '-f' + i + ')' }, gRayons) });
+      taches.push(svgEl('ellipse', { cx: f[0], cy: f[1], rx: 0, ry: 0, fill: 'url(#' + id + '-tache)' }, gRayons));
+    });
+    function faisceau(r, x) {   // x : la part du chemin parcourue par la lumière
+      var a = r.src, b = [entre(a[0], r.f[0], x), entre(a[1], r.f[1], x)], dx = b[0] - a[0], dy = b[1] - a[1], n = Math.hypot(dx, dy) || 1;
+      var ux = -dy / n, uy = dx / n, w0 = 6, w1 = r.f[2] * x;
+      r.p.setAttribute('d', 'M' + f1(a[0] + ux * w0) + ',' + f1(a[1] + uy * w0) + 'L' + f1(b[0] + ux * w1) + ',' + f1(b[1] + uy * w1) +
+        'L' + f1(b[0] - ux * w1) + ',' + f1(b[1] - uy * w1) + 'L' + f1(a[0] - ux * w0) + ',' + f1(a[1] - uy * w0) + 'Z');
+    }
+    function lumieres(x, taille) {
+      rayons.forEach(function (r) { faisceau(r, x); });
+      taches.forEach(function (t, i) { t.setAttribute('rx', f1(FALLS[i][2] * 1.05 * taille)); t.setAttribute('ry', f1(FALLS[i][2] * 0.9 * taille)); });
+    }
+
+    // ---- les bords de la pierre ondulent et se fondent dans le noir, lentement, sans fin
+    var couchesBords = [0, 1, 2, 3].map(function () { return svgEl('path', { fill: '#040205', 'fill-rule': 'evenodd', opacity: 0.26 }, gBords); });
+    function contour(k, t) {
+      var x0 = 190, x1 = 1010, y0 = 418, y1 = 1235, d = 'M-60,-60H1260V1860H-60Z', n = 96;
+      for (var i = 0; i <= n; i++) {
+        var u = i / n, th = u * Math.PI * 2, p = pourtour(u, x0, y0, x1, y1);
+        var o = 16 * k + 11 * Math.sin(5 * th + 0.42 * t + k) + 7 * Math.sin(11 * th - 0.61 * t + 1.7 * k) + 4 * Math.sin(17 * th + 0.9 * t);
+        d += (i ? 'L' : 'M') + f1(p[0] - p[2] * o) + ',' + f1(p[1] - p[3] * o);
+      }
+      return d + 'Z';
+    }
+    var bordsEnMarche = false;
+    function bords() {
+      if (bordsEnMarche) return;
+      bordsEnMarche = true;
+      opacite(gBords, 1);
+      var avant = -1;
+      function dessiner(t) { couchesBords.forEach(function (c, k) { c.setAttribute('d', contour(k, t)); }); }
+      dessiner(0);
+      if (calme) return;
+      Fx.tache(scene, function (t) {
+        if (!bordsEnMarche) return false;
+        if (t - avant < 0.033) return;   // trente images par seconde suffisent à cette lenteur
+        avant = t;
+        dessiner(t);
+      });
+    }
+
+    // ---- les braises du souffle (3.10) : elles montent tant qu'on inspire, s'éteignent et s'envolent à
+    // l'expiration ; une seule toile, rendue dès la fin du geste. Mouvement réduit : une lueur qui varie.
+    var braises = null;
+    function Braises() {
+      var b = { phase: 'repos', liste: [], fin: false, lueur: 0 };
+      var t = $('.texte', scene);
+      b.boite = el('div', { 'class': 'vision-braises', 'aria-hidden': 'true' });
+      if (t && t.parentNode === scene) scene.insertBefore(b.boite, t); else scene.appendChild(b.boite);
+      b.chaud = el('div', { 'class': 'vision-braises-lueur' }, b.boite);
+      if (calme) {
+        Fx.tache(scene, function (tt, dt) {
+          b.lueur = b.phase === 'inspire' ? Math.min(1, b.lueur + dt / 1.2) : Math.max(0, b.lueur - dt / 1.0);
+          b.chaud.style.opacity = (0.75 * b.lueur).toFixed(3);
+          if (b.fin && b.lueur <= 0) { retirer(b.boite); return false; }
+        });
+        return b;
+      }
+      var k = 0.5, c = el('canvas', { 'class': 'vision-braises-toile' }, b.boite), x = c.getContext('2d');
+      c.width = W * k; c.height = H * k;
+      // une braise : un point chaud et son halo, dessinés une fois, puis posés à chaque image
+      var sprite = doc.createElement('canvas');
+      sprite.width = sprite.height = 64;
+      var sx = sprite.getContext('2d'), gr = sx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      gr.addColorStop(0, 'rgba(255,244,214,1)'); gr.addColorStop(0.18, 'rgba(255,190,90,0.95)');
+      gr.addColorStop(0.45, 'rgba(255,110,30,0.35)'); gr.addColorStop(1, 'rgba(255,80,10,0)');
+      sx.fillStyle = gr; sx.fillRect(0, 0, 64, 64);
+      var rnd = hasard(31), attente = 0;
+      Fx.surDepart(scene, function () { c.width = 1; c.height = 1; retirer(b.boite); });
+      Fx.tache(scene, function (tt, dt) {
+        if (b.phase === 'inspire' && !b.fin) {
+          attente -= dt;
+          while (attente <= 0) {
+            attente += 0.032;
+            b.liste.push({ x: 90 + rnd() * 1020, y: 1280 + rnd() * 420, vx: (rnd() - 0.5) * 24, vy: -(70 + rnd() * 90), r: 11 + rnd() * 18,
+              vie: 1, ph: rnd() * 6.3, envol: false });
+          }
+        }
+        b.lueur = b.phase === 'inspire' ? Math.min(1, b.lueur + dt / 1.2) : Math.max(0, b.lueur - dt / 1.0);
+        b.chaud.style.opacity = (0.8 * b.lueur).toFixed(3);
+        x.setTransform(1, 0, 0, 1, 0, 0);
+        x.clearRect(0, 0, c.width, c.height);
+        x.setTransform(k, 0, 0, k, 0, 0);
+        x.globalCompositeOperation = 'lighter';
+        for (var i = b.liste.length - 1; i >= 0; i--) {
+          var e = b.liste[i];
+          if (b.phase !== 'inspire' || b.fin) e.envol = true;
+          if (e.envol) { e.vy = Math.max(-520, e.vy * (1 + 2.6 * dt) - 60 * dt); e.vie -= dt * 0.95; }
+          e.x += (e.vx + Math.sin(tt * 2 + e.ph) * 14) * dt; e.y += e.vy * dt;
+          if (e.vie <= 0 || e.y < -40) { b.liste.splice(i, 1); continue; }
+          var clin = 0.65 + 0.35 * Math.sin(tt * 9 + e.ph * 3);
+          x.globalAlpha = Math.max(0, Math.min(1, e.vie * clin * Math.min(1, (1760 - e.y) / 140)));
+          x.drawImage(sprite, e.x - e.r, e.y - e.r, e.r * 2, e.r * 2);
+        }
+        x.globalAlpha = 1;
+        if (b.fin && !b.liste.length && b.lueur <= 0) { c.width = 1; c.height = 1; retirer(b.boite); return false; }
+      });
+      return b;
+    }
+    cfg.gestes.forEach(function (g) {
+      if (g.meca !== 'respirer') return;
+      // le souffle du lecteur : la mécanique dit, à chaque image, où il en est (inspire, expire, repos)
+      g.progres = function (x, etat) {
+        if (!braises) braises = Braises();
+        braises.phase = (etat && etat.phase) || 'repos';
+      };
+    });
+
+    // ---- l'accord du père : tenu tant que la lanterne brille ; sur une page ouverte seule (EPUB),
+    // le son ne part qu'au premier geste du lecteur : l'accord est redemandé alors
+    function accord() { if (L.etat === 'allumee' && scene.classList.contains('active')) Fx.sonner('pere', { tenu: true }); }
+
+    // ---- les effets de la vision, dans l'ordre du texte
+    var extinction = null;
+    scene.effetsLocaux = {
+      // « Son inspiration l'emplit de braises. L'expiration extirpe tout trouble interne. » : après le
+      // geste, les dernières braises s'envolent et s'éteignent
+      braises: function () {
+        if (!braises) return null;
+        braises.fin = true;
+        return Fx.pause(scene, calme ? 300 : 1100);
+      },
+      // « La force de son âme l'entoure d'un halo d'absence, elle l'isole de contraintes matérielles. » :
+      // un halo d'ombre se referme des bords vers le centre (2,5 s) ; le fleuve se tait : plus d'air
+      absence: function () {
+        try { Son.ambiance('silence'); } catch (e) { signaler(e); }
+        if (calme) { gradAbsence.setAttribute('r', '520'); return animerPage(scene, 600, 600, function (x) { opacite(absence, x); }); }
+        opacite(absence, 1);
+        return Fx.animer(scene, 2500, function (x) { gradAbsence.setAttribute('r', f1(entre(1600, 520, lisse(x)))); });
+      },
+      // « La vie palpite en Darshan. » : l'image bat une fois, un battement sourd, intérieur
+      palpite: function () {
+        Fx.sonner('battement');
+        var p = plans[0];
+        return animerPage(scene, 900, 700, function (x) {
+          var b = Math.max(0, Math.sin(Math.PI * Math.min(1, x / 0.32))) + 0.55 * Math.max(0, Math.sin(Math.PI * borne((x - 0.36) / 0.3)));
+          if (!calme && p) { p.style.transformOrigin = '50% 40%'; p.style.transform = 'scale(' + (1 + 0.03 * b).toFixed(4) + ')'; }
+          if (!calme) gradAbsence.setAttribute('r', f1(520 + 46 * b));
+          opacite(lueurVie, 0.12 * b);
+        }).then(function () { if (p) p.style.transform = ''; opacite(lueurVie, 0); });
+      },
+      // « Il bascule en arrière et se voit flotter comme s'il était en lévitation. » : le regard pivote
+      // vers le haut, le fleuve sort du cadre par le bas, tout flotte, puis se fond au noir (2 s)
+      bascule: function () {
+        var p = plans[0];
+        return animerPage(scene, 3000, 600, function (x) {
+          if (!calme && p) {
+            var e = lisse(borne(x / 0.85)), flotte = Math.sin(x * Math.PI * 2.2);
+            p.style.transformOrigin = '50% 0%';
+            p.style.transform = 'translateY(' + (58 * e + 1.2 * flotte).toFixed(2) + '%) rotate(' + (0.9 * flotte).toFixed(3) + 'deg) scale(' + (1 + 0.06 * e).toFixed(4) + ')';
+          }
+          opacite(noir, calme ? x : lisse(borne((x - 0.33) / 0.67)));
+        }).then(function () {
+          // le noir : on range ce que le souffle avait posé, l'image qui a basculé, le halo
+          opacite(noir, 1);
+          if (p) p.style.transform = '';
+          opacite(absence, 0);
+          $$('.souffle-calque, .assombrir-calque', scene).forEach(retirer);
+        });
+      },
+      // « Du noir vient la couleur. » : la nuit de Karl et sa seule lumière orange, qui naît du noir ;
+      // elle sera la flamme de la lanterne
+      couleur: function () {
+        L.etat = 'flamme';
+        return animerPage(scene, 2200, 500, function (x) { var e = lisse(x); opacite(noir, 1 - e); opacite(L.flamme, e); });
+      },
+      lanterne: function (sc, e) {
+        // 3.11 s'ouvre comme 3.10 s'arrête : la lanterne allumée
+        if (e.allumee) { opacite(noir, 0); L.poser('allumee'); return null; }
+        // « Des couleurs, ils en approchent, elles viennent à sa rencontre, elles tracent les traits d'une
+        // lanterne de bois aux motifs circulaires. » : des points de couleur viennent du fond, grossissent
+        // et tracent les traits autour du point orange (3 s)
+        if (e.tracer) return tracer();
+        // « Elle s'allume. » : lueur d'or (1,5 s) ; l'accord du père monte en même temps (effet suivant)
+        if (e.allumer) {
+          L.etat = 'allumee';
+          var allume = animerPage(scene, 1500, 400, function (x) {
+            var v = lisse(x);
+            opacite(L.bois, v); opacite(L.halo, Math.min(1, v * 1.25)); opacite(L.traits, 1 - 0.82 * v);
+          });
+          return { suite: Promise.resolve(), fin: allume };
+        }
+        // « La lueur de la lanterne faiblit, s'éteint… » : 2,5 s ; la lumière qu'elle jette s'en va avec
+        // elle ; l'accord s'éteint au même instant (effet `son`, qui suit sans attendre)
+        if (e.eteindre) {
+          L.etat = 'flamme';
+          var r0 = +gRayons.getAttribute('opacity') || 0, b0 = +L.bois.getAttribute('opacity') || 0;
+          extinction = animerPage(scene, 2500, 600, function (x) {
+            var v = 1 - lisse(x);
+            opacite(L.bois, b0 * v); opacite(L.halo, v); opacite(L.traits, 0.18 * v); opacite(gRayons, r0 * v);
+          });
+          return { suite: Promise.resolve(), fin: extinction };
+        }
+        return null;
+      },
+      // « Son rayonnement dessine les ornements d'une finesse hors de portée d'homme. » : la lumière passe
+      // par les jours de la lanterne et projette des cercles sur les octogones sculptés des panneaux hauts ;
+      // là où ils tombent naissent, en or, les ornements de la porte, révélés depuis la lanterne (3,5 s)
+      ornements: function (sc, e) {
+        if (!imgOrn) return null;
+        if (e.deja) {
+          imgOrn.removeAttribute('mask');
+          opacite(orn, 1); lumieres(1, 1); opacite(gRayons, 0.3);
+          bords();
+          return null;
+        }
+        opacite(orn, 1);
+        if (calme) {
+          imgOrn.removeAttribute('mask');
+          lumieres(1, 1);
+          return animerPage(scene, 600, 600, function (x) { opacite(orn, x); opacite(gRayons, x); })
+            .then(function () { return animerPage(scene, 800, 400, function (x) { opacite(gRayons, 1 - 0.7 * x); }); })
+            .then(bords);
+        }
+        var revele = svgEl('circle', { cx: 600, cy: 300, r: 0, fill: 'url(#' + id + '-revele)' }, masque);
+        var cercles = FALLS.map(function (f) { return svgEl('circle', { cx: f[0], cy: f[1], r: 0, fill: 'url(#' + id + '-revele)' }, masque); });
+        opacite(gRayons, 1);
+        return Fx.animer(scene, 3500, function (x) {
+          var t = x * 3.5;
+          lumieres(lisse(borne(t / 0.9)), lisse(borne((t - 0.6) / 0.7)));
+          cercles.forEach(function (c, i) { c.setAttribute('r', f1(FALLS[i][2] * 1.6 * lisse(borne((t - 0.9) / 0.6)) + 360 * lisse(borne((t - 1.3) / 2.2)))); });
+          revele.setAttribute('r', f1(1650 * lent(borne((t - 1.1) / 2.4))));
+        }).then(function () {
+          imgOrn.removeAttribute('mask');
+          bords();
+          return animerPage(scene, 1200, 300, function (x) { opacite(gRayons, 1 - 0.7 * lisse(x)); });
+        });
+      },
+      // « … et emporte avec elle la porte en se drapant de l'inconnu. » : un voile noir descend sur la porte
+      // de haut en bas (2 s), les traits d'or s'éteignent les derniers ; il ne reste que la flamme
+      draper: function () {
+        var lagM = svgEl('rect', { x: -50, y: -2400, width: W + 100, height: 2400, fill: 'url(#' + id + '-voile-m)' }, masqueDrape);
+        var fin = Promise.resolve(extinction).then(function () {
+          if (imgOrn) imgOrn.setAttribute('mask', 'url(#' + id + '-drape)');
+          opacite(voile, 1);
+          if (calme) {
+            // un fondu : le voile couvre la porte, les traits s'éteignent les derniers
+            voile.setAttribute('y', '0'); opacite(voile, 0);
+            return animerPage(scene, 900, 900, function (x) { opacite(voile, x); opacite(orn, 1 - lisse(borne((x - 0.3) / 0.7))); });
+          }
+          return Fx.animer(scene, 2700, function (x) {
+            var t = x * 2.7, front = entre(-200, 2150, lisse(borne(t / 2))), retard = entre(-200, 2150, lisse(borne((t - 0.7) / 2)));
+            voile.setAttribute('y', f1(front - 2400));
+            lagM.setAttribute('y', f1(retard - 2400));
+          });
+        }).then(function () { opacite(orn, 0); bordsEnMarche = false; opacite(gBords, 0); });
+        return { suite: Promise.resolve(), fin: fin };
+      },
+      // « Darshan se voit happé, reconduit à lui par une force irrépressible. » : la flamme file vers le
+      // bouton Carnet (0,6 s) et s'y range, l'étoile à part (l'effet `porte`, qui suit) ; l'air revient
+      happe: function () {
+        Fx.sonner('aspiration');
+        try { Son.ambiance('kerala', { soir: true }); } catch (e) { signaler(e); }
+        var but = Fx.pointDe(scene, 'carnet'), de = [600, 300];
+        return animerPage(scene, 600, 300, function (x) {
+          if (calme) { opacite(L.flamme, 1 - x); return; }
+          var t = lent(x), u = 1 - t, c = [820, 120];
+          var px = u * u * de[0] + 2 * u * t * c[0] + t * t * but[0], py = u * u * de[1] + 2 * u * t * c[1] + t * t * but[1];
+          L.flamme.setAttribute('transform', 'translate(' + f1(px - 600) + ' ' + f1(py - 300) + ') scale(' + (1 - 0.82 * t).toFixed(3) + ')');
+          opacite(L.flamme, 1 - 0.4 * t);
+        }).then(function () { opacite(L.flamme, 0); L.poser('eteinte'); });
+      }
+    };
+    // « des points de couleur (ocre, vert, bleu, or) viennent du fond, grossissent et tracent les traits » :
+    // quatre plumes, une par couleur, au bout de chaque trait ; autour d'elles, des grains qui convergent
+    function tracer() {
+      L.poser('flamme');
+      if (calme) { L.tracer(1); return animerPage(scene, 600, 600, function (x) { opacite(L.traits, x); }); }
+      opacite(L.traits, 1);
+      var COUL = ['#d39a52', '#6fb08a', '#78a6e0', OR], rnd = hasard(17), grains = [];
+      var plumes = L.traces.map(function (p, i) {
+        return { p: p, L: p.getTotalLength ? p.getTotalLength() : 0, g: svgEl('circle', { r: 6.5, fill: COUL[i], opacity: 0 }, gTraces) };
+      });
+      for (var i = 0; i < 22; i++) {
+        var a = rnd() * Math.PI * 2, d = 380 + rnd() * 420, tr = plumes[i % 4];
+        var cible = tr.L ? tr.p.getPointAtLength(rnd() * tr.L) : { x: 0, y: 0 };
+        grains.push({ de: [600 + Math.cos(a) * d, Math.max(-40, 300 + Math.sin(a) * d * 0.8)], vers: [600 + cible.x, 300 + cible.y],
+          t0: rnd() * 0.5, g: svgEl('circle', { r: 2, fill: COUL[i % 4], opacity: 0 }, gTraces) });
+      }
+      var debuts = [0.55, 0.75, 0.9, 0.65], fins = [2.6, 2.8, 3.0, 2.3];
+      return Fx.animer(scene, 3000, function (x) {
+        var t = x * 3;
+        grains.forEach(function (gn) {
+          var v = borne((t - gn.t0) / 1.1), e = lent(v);
+          gn.g.setAttribute('cx', f1(entre(gn.de[0], gn.vers[0], e))); gn.g.setAttribute('cy', f1(entre(gn.de[1], gn.vers[1], e)));
+          gn.g.setAttribute('r', f1(1.5 + 4.5 * e));
+          opacite(gn.g, v <= 0 ? 0 : v < 1 ? 0.25 + 0.75 * e : Math.max(0, 1 - (t - gn.t0 - 1.1) * 4));
+        });
+        var parts = plumes.map(function (pl, i2) {
+          var v = lisse(borne((t - debuts[i2]) / (fins[i2] - debuts[i2])));
+          if (pl.L && v > 0 && v < 1) {
+            var pt = pl.p.getPointAtLength(v * pl.L);
+            pl.g.setAttribute('cx', f1(600 + pt.x)); pl.g.setAttribute('cy', f1(300 + pt.y));
+          }
+          opacite(pl.g, v > 0 && v < 1 ? 1 : 0);
+          return v;
+        });
+        L.tracer(parts);
+      }).then(function () {
+        L.tracer(1);
+        while (gTraces.firstChild) gTraces.removeChild(gTraces.firstChild);
+        L.etat = 'traits';
+      });
+    }
+    derouler(scene, cfg, { attente: 600 });
+    // ce qui suit dépend de l'état des effets de la page, lié au récit qui vient de naître
+    // « dans cet environnement dépourvu d'air » : une page qui s'ouvre dans la vision (3.11) s'ouvre sans air
+    if ((cfg.debut || []).some(function (e) { return e.nom === 'lanterne' && e.allumee; })) {
+      try { Son.ambiance('silence'); } catch (e) { signaler(e); }
+    }
+    function geste() { try { accord(); } catch (e) { signaler(e); } }
+    function lacher() { if (scene.ecouteAccord) { doc.removeEventListener('pointerup', scene.ecouteAccord); doc.removeEventListener('keydown', scene.ecouteAccord); } scene.ecouteAccord = null; }
+    lacher();   // une page rejouée : l'écoute de la lecture précédente s'en va
+    scene.ecouteAccord = geste;
+    doc.addEventListener('pointerup', geste);
+    doc.addEventListener('keydown', geste);
+    Fx.surDepart(scene, function () {
+      lacher();
+      bordsEnMarche = false;
+      // l'accord ne survit à la page que si la suivante est encore la vision (3.10 → 3.11, sur le web)
+      var suite = sceneCourante();
+      if (!(suite && suite !== scene && suite.getAttribute('data-special') === 'vision')) Fx.sonner('pere', { eteindre: 1500 });
+    });
+  };
+
+  // Un point du pourtour d'un rectangle aux coins arrondis (u de 0 à 1) et sa normale vers l'intérieur :
+  // [x, y, nx, ny]. Les bords ondulants de la pierre (vision) partent de lui.
+  function pourtour(u, x0, y0, x1, y1) {
+    var r = 80, l = x1 - x0 - 2 * r, h = y1 - y0 - 2 * r, arc = Math.PI * r / 2, P = 2 * (l + h) + 4 * arc, d = u * P;
+    var segs = [[l, 'h', x0 + r, y0, 1, 0, 0, 1], [arc, 'a', x1 - r, y0 + r, -Math.PI / 2], [h, 'v', x1, y0 + r, 0, 1, -1, 0],
+      [arc, 'a', x1 - r, y1 - r, 0], [l, 'h', x1 - r, y1, -1, 0, 0, -1], [arc, 'a', x0 + r, y1 - r, Math.PI / 2],
+      [h, 'v', x0, y1 - r, 0, -1, 1, 0], [arc, 'a', x0 + r, y0 + r, Math.PI]];
+    for (var i = 0; i < segs.length; i++) {
+      var sg = segs[i];
+      if (d <= sg[0] || i === segs.length - 1) {
+        if (sg[1] === 'a') { var a = sg[4] + d / r; return [sg[2] + r * Math.cos(a), sg[3] + r * Math.sin(a), -Math.cos(a), -Math.sin(a)]; }
+        return [sg[2] + sg[4] * d, sg[3] + sg[5] * d, sg[6], sg[7]];
+      }
+      d -= sg[0];
+    }
+    return [x0, y0, 1, 1];
+  }
+
+  return { jouer: jouer, config: config, sortir: sortir, speciales: speciales, Lanterne: Lanterne };
 })();

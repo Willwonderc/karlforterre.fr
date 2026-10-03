@@ -1689,7 +1689,7 @@ function Geste(scene, g, reglage) {
     var repos = Math.max(depart[1] + 140, arret + 300), course = repos - arret, bout = repos;
     var insiste = 0, derniereOnde = 0, auFinal = null, finiT = false, tenu = false;
     var ge = Geste(scene, g, {
-      sansHalo: true, yConsigne: Math.min(1480, depart[1] + 120),
+      sansHalo: true, yConsigne: g.y_consigne || Math.min(1480, depart[1] + 120),   // la page peut la placer (3.11)
       jouer: function () {
         return new Promise(function (ok) {
           auFinal = ok;

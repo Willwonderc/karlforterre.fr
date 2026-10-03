@@ -502,6 +502,13 @@ html:not(.jeu):not(.epub) .scene { margin-bottom: 2vh; }
 /* plier (3.4) : les noms des deux étoiles du carnet, en petites capitales d'or pâle */
 .plier-nom { font-family: "Unna", Georgia, serif; font-size: 40px; font-variant: small-caps; letter-spacing: 0.14em;
   fill: var(--or-pale); stroke: rgba(5, 8, 22, 0.75); stroke-width: 6px; paint-order: stroke; }
+/* vision (3.10, 3.11) : le noir de la nuit de Karl sous les plans ; les braises du souffle, par-dessus
+   les calques du geste ; leur lueur chaude au bas de l'image (seule, en mouvement réduit) */
+.decor .vision-fond { background: #040205; }
+.vision-braises { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.vision-braises-toile { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.vision-braises-lueur { position: absolute; left: 0; right: 0; bottom: 0; height: 45%; opacity: 0;
+  background: radial-gradient(ellipse 80% 70% at 50% 100%, rgba(255, 138, 48, 0.55), rgba(255, 100, 20, 0.16) 55%, rgba(255, 90, 10, 0) 75%); }
 /* ------------------------------------------------------------ scènes et transitions (fin) */
 
 /* ------------------------------------------------------------ mécaniques (équipe des mécaniques : src/js/mecaniques.js)

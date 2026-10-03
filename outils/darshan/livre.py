@@ -473,7 +473,7 @@ SCENES = {
     "3.11": S("porte-pere", special="vision",
               debut=[E("lanterne", allumee=True), E("ornements", calque="porte-pere-traits", deja=True),
                      E("son", effet="pere", tenu=True)],
-              gestes=[G("tendre", depart=[600, 1300], cible=[600, 760], arret=1000)],
+              gestes=[G("tendre", depart=[600, 1300], cible=[600, 760], arret=1000, y_consigne=1290)],   # au-dessus du texte
               moments=[E("voix", lettres=True, eclat=False, halo=False, son=False),
                        [E("lanterne", eteindre=True), E("draper"), E("son", effet="pere", eteindre=3000)],
                        [E("happe"), E("porte", id="pere", anneau=True)]]),
