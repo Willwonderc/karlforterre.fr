@@ -6,6 +6,13 @@
 // Sans nom : tout ; avec des noms (ou des débuts de noms), seulement ceux-là. --wav : écrit aussi
 // chaque rendu (la sortie, en stéréo) dans captures/son/, dossier non suivi par Git. --son : essaie
 // un autre son.js (une version plus ancienne, par exemple), sans toucher à celui du dépôt.
+//   NODE_PATH=/opt/node22/lib/node_modules node essai-son.js --livre [depuis [jusqua]] [--rythme k]
+// --livre : joue le livre web (dist/web, après build.py) au clavier, relève chaque appel que le moteur fait à
+// Son (ambiance, couche, effet, note, filtre, niveau…), puis rejoue chaque page hors ligne avec son.js : niveau
+// perçu sous la lecture, crête, et la liste des sons que les fiches demandent et que son.js ne sait pas faire.
+// Le clavier va vite (un appui toutes les 260 ms) : les sons d'une même page s'y entassent comme jamais
+// sous les doigts d'un lecteur. --rythme k étire d'autant les délais entre les appels d'une page (4 : un
+// lecteur qui prend son temps) ; les sons demandés au même instant restent ensemble.
 // --ecoute dossier : n'essaie rien, écrit seulement les fichiers d'écoute pour Karl (WAV stéréo, 16
 // bits, 48 kHz) : la rumeur du restaurant (2.1), la télévision de 7.2, la ballade de 5.7, et ce qu'on
 // entend par une porte ; le hasard est figé (même graine), donc deux versions de son.js se comparent
@@ -35,8 +42,10 @@ const path = require('path');
 const args = process.argv.slice(2);
 const avecWav = args.includes('--wav');
 const valeur = (nom) => { const i = args.indexOf(nom); return i >= 0 ? args[i + 1] : null; };
-const dossierEcoute = valeur('--ecoute'), fichierSon = valeur('--son'), suffixe = valeur('--suffixe');
-const choisis = args.filter((a, i) => !a.startsWith('--') && !['--ecoute', '--son', '--suffixe'].includes(args[i - 1]));
+const dossierEcoute = valeur('--ecoute'), fichierSon = valeur('--son'), suffixe = valeur('--suffixe'), modeLivre = args.includes('--livre');
+const rythme = Math.max(1, Number(valeur('--rythme')) || 1);
+const choisis = args.filter((a, i) => !a.startsWith('--') && !['--ecoute', '--son', '--suffixe', '--rythme'].includes(args[i - 1]));
+const pagesLivre = modeLivre ? choisis.filter((c) => /^\d+\.\d+$/.test(c)) : [];
 const CIBLE = -30;   // niveau perçu visé pour les ambiances, sur le bus
 
 // ---------------------------------------------------------------- les scénarios
@@ -60,11 +69,43 @@ function scenarios(noms) {
   amb('appartement', { horloge: 1 }, 'appartement (horloge)');
   amb('desert', { jour: true }, 'desert (jour)');
   amb('pluie', { densite: 0.3 }, 'pluie (0,3)');
+  // les réglages de la seconde partie
+  amb('rue', { soir: true }, 'rue (soir)');
+  amb('rue', { nuit: true, foule: true }, 'rue (nuit, foule)');
+  amb('rue', { ete: true, ralenti: true }, 'rue (été, ralentie)');
+  amb('hopital', { nuit: true }, 'hopital (nuit)');
+  amb('hopital', { mesure: true }, 'hopital (mesure)');
+  amb('kerala', { garder: 'fleuve' }, 'kerala (le fleuve seul)');
+  amb('kerala', { soir: true, tanpura: false }, 'kerala (sans tanpura)');
+  amb('marche', { tanpura: false }, 'marche (sans tanpura)');
+  amb('hopital', { partage: { gauche: 'hopital', droite: 'kerala' }, actif: 'les deux' }, 'partage (hopital, kerala)');
+  amb('rue', { partage: { gauche: 'rue', droite: 'rue' } }, 'partage (rue, rue)');
   // un changement de réglage sans recommencer (Pékin, 3.6 ; le vent qui tombe, 7.1)
   liste.push({ sorte: 'ambiance', nom: 'bibliotheque → vaste', duree: 20, mesure: [10, 16], fin: [18.5, 20],
     actions: [[0, 'ambiance', 'bibliotheque'], [6, 'ambiance', 'bibliotheque', { vaste: true }], [16, 'ambiance', 'silence']] });
   liste.push({ sorte: 'ambiance', nom: 'desert → vent 0,1', duree: 20, mesure: [10, 16], fin: [18.5, 20],
     actions: [[0, 'ambiance', 'desert'], [6, 'ambiance', 'desert', { vent: 0.1 }], [16, 'ambiance', 'silence']] });
+
+  liste.push({ sorte: 'ambiance', nom: 'partage (7.4 : pluie, puis chaque moitié)', duree: 32, mesure: [8, 28], fin: [30.5, 32],
+    actions: [[0, 'ambiance', 'pluie'], [5, 'ambiance', 'hopital', { partage: { gauche: 'hopital', droite: 'pluie' }, actif: 'gauche' }],
+      [12, 'partage', 'aucun'], [16, 'ambiance', 'hopital', { partage: { gauche: 'hopital', droite: 'kerala' }, actif: 'droite' }], [24, 'partage', 'les deux'],
+      [28, 'ambiance', 'silence']] });
+  liste.push({ sorte: 'ambiance', nom: 'rue → ralentie (7.10)', duree: 24, mesure: [4, 20], fin: [22.5, 24],
+    actions: [[0, 'ambiance', 'rue', { ete: true }], [8, 'ralenti', true], [16, 'ralenti', false], [20, 'ambiance', 'silence']] });
+  liste.push({ sorte: 'ambiance', nom: 'niveau (1.1 : le vent tombe)', duree: 24, mesure: [2, 20], fin: [22.5, 24],
+    actions: [[0, 'ambiance', 'nuit'], [6, 'niveau', 0.2, 1500], [14, 'niveau', 1, 1500], [20, 'ambiance', 'silence']] });
+  liste.push({ sorte: 'ambiance', nom: 'appartement → horloge qui presse (6.11)', duree: 20, mesure: [2, 16], fin: [18.5, 20],
+    actions: [[0, 'ambiance', 'appartement', { horloge: 1 }], [8, 'couche', 'horloge', true, { proche: true, presser: 1500 }], [16, 'ambiance', 'silence']] });
+  // le changement de page : ce qui durait s'arrête (les couches, redemandées, continuent), le niveau revient à 1
+  liste.push({ sorte: 'page', nom: 'changement de page', duree: 16, mesure: [0, 1], fin: null,
+    actions: [[0, 'page', 's-1'], [0.1, 'ambiance', 'rue'], [0.2, 'couche', 'battements', true, { tempo: 80 }], [0.3, 'couche', 'tele', true],
+      [3, 'verifier', { ambiance: 'rue', couches: ['battements', 'tele'], boucles: [], niveau: 1 }],
+      [4, 'niveau', 0.3, 100], [4.5, 'verifier', { ambiance: 'rue', couches: ['battements', 'tele'], boucles: [], niveau: 0.3 }],
+      [5, 'page', 's-2'], [5.05, 'ambiance', 'rue'], [5.1, 'couche', 'battements', true, { tempo: 80 }],
+      [5.5, 'verifier', { ambiance: 'rue', couches: ['battements', 'tele'], boucles: [], niveau: 1 }],
+      [8, 'verifier', { ambiance: 'rue', couches: ['battements'], boucles: [], niveau: 1 }],
+      [9, 'page', 's-3'], [9.05, 'ambiance', 'rue'],
+      [12, 'verifier', { ambiance: 'rue', couches: [], boucles: [], niveau: 1 }]] });
 
   const cou = (nom, o, titre, duree = 21) => liste.push({
     sorte: 'couche', nom: titre || nom, cle: nom, duree, mesure: [3, duree - 5], fin: [duree - 1.5, duree],
@@ -76,7 +117,12 @@ function scenarios(noms) {
   liste.push({ sorte: 'couche', nom: 'battements (deux cœurs)', cle: 'battements', duree: 14, mesure: [1, 10], fin: [12.5, 14],
     actions: [[0.1, 'couche', 'battements', true, { tempo: 96, julie: 64 }], [3, 'couche', 'battements', true, { cale: true }],
       [6, 'couche', 'battements', true, { tempo: 80, julie: 80, duree: 3000, cale: true }], [10, 'couche', 'battements', false]] });
-  noms.couches.filter((n) => n !== 'battements' && n !== 'melodie').forEach((n) => cou(n));
+  const DEJA = ['battements', 'melodie', 'aube', 'couteau', 'vent', 'bourdon'];
+  noms.couches.filter((n) => !DEJA.includes(n)).forEach((n) => cou(n));
+  if (noms.couches.includes('aube')) cou('aube', null, 'aube (3.5)', 36);
+  if (noms.couches.includes('couteau')) { cou('couteau', null, 'couteau (3.12)', 16); cou('couteau', { lent: true }, 'couteau (lent)', 16); }
+  if (noms.couches.includes('vent')) cou('vent', null, 'vent (3.14)', 26);
+  if (noms.couches.includes('bourdon')) cou('bourdon', null, 'bourdon (5.9)', 20);
   cou('vibration', { fois: 3 }, 'vibration (3 fois)', 12);
   const bal = (o, titre, duree) => liste.push({ sorte: 'couche', nom: titre, cle: 'melodie', duree, mesure: [0.1, duree - 1], fin: [duree - 1, duree],
     actions: [[0.1, 'couche', 'melodie', true, o]] });
@@ -90,7 +136,34 @@ function scenarios(noms) {
   liste.push({ sorte: 'couche', nom: 'melodie (six pas, 7.9)', cle: 'melodie', duree: 6, mesure: [0.3, 5], fin: [5.5, 6],
     actions: [0.4, 0.8, 1.15, 1.5, 1.8, 2.1].map((t) => [t, 'note', 'melodie']) });
 
+  // les effets à essayer avec leurs réglages, comme les appellent les pages (nom → [titre, actions])
+  const pas5 = (o) => [0.1, 0.65, 1.2, 1.75, 2.3].map((t) => [t, 'effet', 'pas', o]);
+  const sons = [
+    ['pas (gravier)', 4, pas5({ sol: 'gravier' })], ['pas (pavé)', 4, pas5({ sol: 'pave' })], ['pas (plateforme)', 4, pas5({ sol: 'plateforme' })],
+    ['pas (traînent)', 4, pas5({ sol: 'poussiere', rythme: 'traine' })],
+    ['the (verser)', 7, [0.1, 0.75, 1.4, 2.05, 2.7, 3.35, 4.0, 4.65].map((t, i) => [t, 'effet', 'the', { force: 0.35 + 0.08 * i }])],
+    ['toc (deux coups)', 3, [[0.1, 'effet', 'toc'], [0.7, 'effet', 'toc']]],
+    ['coutelas (trois coups)', 4, [[0.1, 'effet', 'coutelas'], [0.8, 'effet', 'coutelas'], [1.5, 'effet', 'coutelas']]],
+    ['clavier (frappes)', 3, [0.1, 0.3, 0.45, 0.7, 0.85, 1.1, 1.3].map((t) => [t, 'effet', 'clavier', { force: 0.6 }])],
+    ['balancier (gauche, droite)', 4, [0.1, 0.85, 1.6, 2.35].map((t, i) => [t, 'effet', 'balancier', { cote: i % 2 ? 'droite' : 'gauche' }])],
+    ['claque (de plus en plus vite)', 5, [0.1, 1.0, 1.7, 2.2, 2.55, 2.8, 3.0].map((t) => [t, 'effet', 'claque'])],
+    ['tic (Darshan, Julie)', 3, [[0.1, 'effet', 'tic'], [1, 'effet', 'tic', { monde: 'julie' }]]],
+    ['porte (ouvre, ferme)', 8, [[0.1, 'effet', 'porte'], [4, 'effet', 'porte', { ferme: true }]]],
+  ];
+  ['thes', 'curcuma', 'encens', 'jarres', 'tapisseries'].forEach((o, i) => sons.push([`achat-${o}`, 4, [[0.1, 'effet', 'achat-' + o]]]));
+  ['village', 'gorge', 'ossau', 'banquise', 'rochers', 'champs'].forEach((p) => sons.push([`paysage-${p}`, 4, [[0.1, 'effet', 'paysage-' + p]]]));
+  sons.forEach(([nom, duree, actions]) => liste.push({ sorte: 'effet', nom, cle: nom.startsWith('achat-') ? 'achat' : nom.startsWith('paysage-') ? 'paysage' : nom.split(' ')[0], duree, mesure: [0, duree], fin: null, actions }));
+  liste.push({ sorte: 'effet', nom: 'notes montantes (1.2)', cle: 'montantes', duree: 4, mesure: [0, 4], fin: null,
+    actions: [0.2, 0.7, 1.15, 1.6, 2.05].map((t, i) => [t, 'note', 'montantes', i]) });
+  // les sons qui durent
+  liste.push({ sorte: 'effet', nom: 'tictac (boucle)', cle: 'tictac', duree: 10, mesure: [0.5, 5], fin: [8.5, 10],
+    actions: [[0.1, 'effet', 'tictac', { boucle: true }], [5, 'effet', 'tictac', { arret: true }]] });
+  liste.push({ sorte: 'effet', nom: 'pied (6/8, puis ralenti)', cle: 'pied', duree: 14, mesure: [0.5, 12], fin: null,
+    actions: [[0.1, 'effet', 'pied', { mesure: '6/8', boucle: true }], [6, 'effet', 'pied', { ralentir: true, arret: true }]] });
+  ['aluva', 'paris-midi', 'periyar', 'hopital-nuit'].forEach((l) => liste.push({ sorte: 'effet', nom: `autre-cote (${l})`, cle: 'autre-cote', duree: 20, mesure: [3, 13], fin: [18, 20],
+    actions: [[0.1, 'effet', 'autre-cote', { lieu: l }], [13, 'effet', 'autre-cote', { arret: true }]] }));
   noms.effets.forEach((n) => {
+    if (n === 'achat' || n === 'paysage') return;
     if (n === 'pere') {
       liste.push({ sorte: 'effet', nom: 'pere', cle: 'pere', duree: 14, mesure: [0.1, 8], fin: [13, 14],
         actions: [[0.1, 'effet', 'pere'], [8, 'effet', 'pere', { eteindre: 3000 }]] });
@@ -120,6 +193,20 @@ function scenarios(noms) {
     if (i % 6 === 0) act.push([t + 0.9, 'effet', ['eclat', 'coup', 'appel', 'papier', 'tour'][(i / 6 | 0) % 5]]);
     if (i % 25 === 0) act.push([t + 1, 'effet', 'pere']);
     if (i % 25 === 3) act.push([t + 1, 'effet', 'pere', { eteindre: 2000 }]);
+    // la seconde partie : les sons qui durent, les couches nouvelles, deux ambiances à la fois, les pages
+    const lieux = ['aluva', 'paris-midi', 'periyar', 'hopital-nuit'], nouvelles = ['aube', 'couteau', 'vent', 'bourdon'];
+    if (i % 7 === 0) act.push([t + 0.2, 'effet', 'autre-cote', { lieu: lieux[(i / 7 | 0) % 4] }]);
+    if (i % 7 === 4) act.push([t + 0.2, 'effet', 'autre-cote', { arret: true }]);
+    if (i % 8 === 1) act.push([t + 0.35, 'effet', 'tictac', { boucle: true }]);
+    if (i % 8 === 5) act.push([t + 0.35, 'effet', 'tictac', { arret: true }]);
+    if (i % 12 === 2) act.push([t + 0.45, 'effet', 'pied', { boucle: true }]);
+    if (i % 12 === 9) act.push([t + 0.45, 'effet', 'pied', { ralentir: true }]);
+    if (i % 10 === 2) act.push([t + 0.5, 'couche', nouvelles[(i / 10 | 0) % 4], true]);
+    if (i % 10 === 8) act.push([t + 0.5, 'couche', nouvelles[(i / 10 | 0) % 4], false]);
+    if (i % 15 === 3) act.push([t + 0.2, 'ambiance', 'hopital', { partage: { gauche: 'hopital', droite: 'rue' }, actif: 'gauche' }]);
+    if (i % 15 === 4) act.push([t + 0.2, 'partage', 'droite']);
+    if (i % 5 === 0) act.push([t + 0.05, 'page', 's-' + i]);
+    if (i % 20 === 7) act.push([t + 1.1, 'effet', ['paysage-gorge', 'achat-thes', 'musicien', 'choc', 'pas'][(i / 20 | 0) % 5]]);
   }
   act.push([80.2, 'basculer'], [85.1, 'basculer']);   // le son coupé, puis remis
   act.push([160, 'ambiance', 'silence'], [160, 'effet', 'pere', { eteindre: 1000 }]);
@@ -227,10 +314,28 @@ function dansLaPage() {
     for (let i = 0; i < octets.length; i += 0x8000) s += String.fromCharCode.apply(null, octets.subarray(i, i + 0x8000));
     return btoa(s);
   }
+  // Une action du scénario : un appel de Son, un changement de page (le son voit .scene.active), ou une
+  // vérification de l'état (ambiance, couches, sons qui durent, niveau), notée comme erreur si elle échoue.
+  window.nettoyerPages = () => { document.querySelectorAll('.scene').forEach((x) => x.remove()); };
+  window.agir = (e, a) => {
+    try {
+      if (a[1] === 'page') {
+        document.querySelectorAll('.scene').forEach((x) => x.classList.remove('active'));
+        let s = document.getElementById(a[2]);
+        if (!s) { s = document.createElement('section'); s.className = 'scene'; s.id = a[2]; document.body.appendChild(s); }
+        if (a[3]) s.setAttribute('data-son-variantes', a[3]); else s.removeAttribute('data-son-variantes');
+        s.classList.add('active');
+      } else if (a[1] === 'verifier') {
+        const vu = JSON.stringify(e.etat()), attendu = JSON.stringify(a[2]);
+        if (vu !== attendu) e.erreurs.push(`vérification : attendu ${attendu}, vu ${vu}`);
+      } else window.Son[a[1]].apply(null, a.slice(2));
+    } catch (err) { e.erreurs.push('action : ' + err.message); }
+  };
   window.noms = () => window.Son._essai(new OfflineAudioContext(2, 128, 48000)).noms;
   // L'endurance : à 16 kHz (seuls comptent les nœuds et les minuteries), en comptant les sources
   // démarrées et finies, et les réverbérations encore chargées.
   window.endurance = async function (item) {
+    window.nettoyerPages();
     const sr = 16000, ctx = new OfflineAudioContext(2, Math.ceil(sr * item.duree), sr);
     const compte = { demarrees: 0, finies: 0, max: 0, convolueurs: [] };
     const demarrer = AudioScheduledSourceNode.prototype.start, creer = BaseAudioContext.prototype.createConvolver;
@@ -245,10 +350,7 @@ function dansLaPage() {
       const actions = item.actions.slice().sort((a, b) => a[0] - b[0]);
       let ia = 0;
       const faire = (t) => {
-        while (ia < actions.length && actions[ia][0] <= t + 1e-9) {
-          const a = actions[ia++];
-          try { window.Son[a[1]].apply(null, a.slice(2)); } catch (err) { e.erreurs.push('action : ' + err.message); }
-        }
+        while (ia < actions.length && actions[ia][0] <= t + 1e-9) window.agir(e, actions[ia++]);
       };
       faire(0);
       for (let k = 1; k * 0.1 < item.duree - 0.05; k++) {
@@ -270,6 +372,7 @@ function dansLaPage() {
     }
   };
   window.rendre = async function (item, avecWav) {
+    window.nettoyerPages();
     const sr = 48000, n = Math.ceil(sr * item.duree);
     const ctx = new OfflineAudioContext(6, n, sr);
     // un hasard figé (Mulberry32) : les fichiers d'écoute se refont à l'identique
@@ -295,10 +398,7 @@ function dansLaPage() {
     const actions = item.actions.slice().sort((a, b) => a[0] - b[0]);
     let ia = 0;
     const faire = (t) => {
-      while (ia < actions.length && actions[ia][0] <= t + 1e-9) {
-        const a = actions[ia++];
-        try { window.Son[a[1]].apply(null, a.slice(2)); } catch (err) { e.erreurs.push('action : ' + err.message); }
-      }
+      while (ia < actions.length && actions[ia][0] <= t + 1e-9) window.agir(e, actions[ia++]);
     };
     faire(0);
     for (let k = 1; k * 0.05 < item.duree - 0.01; k++) {
@@ -335,6 +435,89 @@ function dansLaPage() {
   };
 }
 
+// ---------------------------------------------------------------- le livre joué, puis rejoué hors ligne
+async function essaiLivre(nav, banc, noms) {
+  const dist = path.join(__dirname, 'dist', 'web');
+  const moteur = fs.readFileSync(path.join(dist, 'js', 'moteur.js'), 'utf8');
+  if (!moteur.includes('var Son = (function () {')) throw new Error('moteur.js : « var Son = » introuvable (build.py à relancer ?)');
+  fs.writeFileSync(path.join(dist, 'js', 'moteur-banc.js'), moteur.replace('var Son = (function () {', 'var Son = window.__Son = (function () {'));
+  fs.writeFileSync(path.join(dist, 'index-banc.html'), fs.readFileSync(path.join(dist, 'index.html'), 'utf8').split('js/moteur.js').join('js/moteur-banc.js'));
+  const livre = await nav.newPage({ viewport: { width: 600, height: 900 } });
+  const erreurs = [];
+  livre.on('pageerror', (e) => erreurs.push(String(e && e.message || e)));
+  await livre.addInitScript(() => {
+    try { localStorage.setItem('darshan.reglages', JSON.stringify({ son: false, mouvement: 'reduit' })); } catch (e) { /* rien */ }
+    window.__journal = [];
+    function installer(S) {   // chaque appel que le moteur fait à Son, avec la page où il a lieu
+      ['ambiance', 'couche', 'effet', 'note', 'filtre', 'niveau', 'ralenti', 'partage'].forEach((m) => {
+        const f = S[m];
+        S[m] = function () {
+          try {
+            const sc = document.querySelector('.scene.active');
+            let a; try { a = JSON.parse(JSON.stringify(Array.from(arguments))); } catch (e) { a = Array.from(arguments).map(String); }
+            window.__journal.push({ t: performance.now(), page: sc ? sc.getAttribute('data-scene') : null, variantes: sc ? sc.getAttribute('data-son-variantes') : null, m, a });
+          } catch (e) { /* rien */ }
+          return f.apply(this, arguments);
+        };
+      });
+    }
+    Object.defineProperty(window, '__Son', { configurable: true, set(v) { Object.defineProperty(window, '__Son', { value: v, writable: true, configurable: true }); installer(v); } });
+  });
+  const depuis = pagesLivre[0] && pagesLivre[0] !== '0.1' ? pagesLivre[0] : null, jusqua = pagesLivre[1] || null;   // 0.1 : depuis la page de titre (on clique sur la porte)
+  await livre.goto('file://' + path.join(dist, 'index-banc.html') + (depuis ? '#s-' + depuis.replace('.', '-') : ''));
+  await livre.waitForTimeout(800);
+  const scene = () => livre.evaluate(() => { const s = document.querySelector('.scene.active'); return s ? s.getAttribute('data-scene') : null; });
+  if (!depuis) await livre.click('.bouton-porte');
+  let n = await scene(), appuis = 0, fini = false;
+  const limite = Date.now() + 30 * 60 * 1000;
+  while (Date.now() < limite && !fini) {
+    await livre.keyboard.press('Enter'); appuis++;
+    await livre.waitForTimeout(260);
+    const m = await scene();
+    if (m !== n) { if (jusqua && n === jusqua) { fini = true; break; } n = m; appuis = 0; continue; }
+    if (appuis > 120) break;   // la dernière page
+  }
+  const journal = await livre.evaluate(() => window.__journal);
+  await livre.close();
+  console.log(`\nLe livre joué : ${journal.length} appels à Son, ${erreurs.length} panne(s) du moteur.`);
+  // ce que chaque page demande, rejoué hors ligne
+  const pages = [];
+  journal.forEach((j) => {
+    let p = pages.find((x) => x.page === j.page);
+    if (!p) { p = { page: j.page, variantes: j.variantes, t0: j.t, appels: [] }; pages.push(p); }
+    p.appels.push(j);
+  });
+  const inconnus = {};
+  const f = (x, l = 6) => (x === -Infinity ? '−∞' : x.toFixed(1).replace('-', '−')).padStart(l);
+  console.log('page   ambiance(s)                   couches          effets  niveau K  moment  crête  silence  remarques');
+  const problemes = [];
+  for (const p of pages) {
+    const actions = [[0, 'page', 's-' + String(p.page).replace('.', '-'), p.variantes || '']];
+    const ambiances = [], couches = [], effets = [];
+    for (const j of p.appels) {
+      const t = Math.max(0.05, (j.t - p.t0) / 1000 * rythme + 0.05);
+      actions.push([t, j.m].concat(j.a));
+      const nom = j.a[0];
+      if (j.m === 'ambiance') { if (!ambiances.includes(String(nom))) ambiances.push(String(nom)); const c = await banc.evaluate(([x]) => window.Son._connu('ambiance', x), [nom]); if (!c) (inconnus['ambiance ' + nom] = inconnus['ambiance ' + nom] || []).push(p.page); }
+      else if (j.m === 'couche') { if (j.a[1] !== false && !couches.includes(String(nom))) couches.push(String(nom)); const c = await banc.evaluate(([x]) => window.Son._connu('couche', x), [nom]); if (!c) (inconnus['couche ' + nom] = inconnus['couche ' + nom] || []).push(p.page); }
+      else if (j.m === 'effet') { effets.push(String(nom)); const c = await banc.evaluate(([x]) => window.Son._connu('effet', x), [nom]); if (!c) (inconnus['effet ' + nom] = inconnus['effet ' + nom] || []).push(p.page); }
+    }
+    const fin = actions.reduce((m, a) => Math.max(m, a[0]), 0);
+    const duree = Math.max(14, Math.ceil(fin + 7));
+    const r = await banc.evaluate(([item]) => window.rendre(item, false), [{ sorte: 'livre', nom: String(p.page), duree, mesure: [3, duree - 1], fin: null, actions }]);
+    const rem = [];
+    if (r.crete > -1) rem.push('CRÊTE'); if (r.creteComp > -1) rem.push('crête avant plafond ' + f(r.creteComp, 0));
+    if (r.busK > -22) rem.push('FORT'); if (r.erreurs.length) rem.push('erreurs : ' + r.erreurs.join(' ; '));
+    if (rem.length) problemes.push(`page ${p.page} : ${rem.join(', ')}`);
+    console.log(String(p.page).padEnd(6) + ' ' + ambiances.join('>').slice(0, 29).padEnd(29) + ' ' + String(couches.length ? couches.join(',') : '').slice(0, 16).padEnd(16) + ' ' + String(effets.length).padStart(6) + f(r.busK, 10) + f(r.moment, 8) + f(r.crete, 7) + (Math.round(r.silence * 100) + ' %').padStart(8) + '  ' + rem.join(', '));
+  }
+  const cles = Object.keys(inconnus).sort();
+  console.log(cles.length ? '\nSons demandés par les fiches et que son.js ne sait pas (encore) faire :\n' + cles.map((k) => `- ${k} (${[...new Set(inconnus[k])].join(', ')})`).join('\n') : '\nTous les sons demandés par les fiches sont connus de son.js.');
+  if (erreurs.length) problemes.push('pannes du moteur : ' + erreurs.slice(0, 3).join(' ; '));
+  console.log(problemes.length ? '\nProblèmes :\n- ' + problemes.join('\n- ') : '\nAucun problème de niveau ni de crête sous la lecture.');
+  process.exitCode = problemes.length ? 1 : 0;
+}
+
 // ---------------------------------------------------------------- en avant
 (async () => {
   const racine = __dirname;
@@ -349,6 +532,7 @@ function dansLaPage() {
   await page.addScriptTag({ content: "window.Son = (function () {\n'use strict';\nvar doc = document;\nvar reglages = { son: true, ambiance: 1, effets: 1 };\nfunction ecrire() {}\n" + son + '\nreturn Son;\n})();' });
   await page.addScriptTag({ content: '(' + dansLaPage.toString() + ')();' });
   const noms = await page.evaluate(() => window.noms());
+  if (modeLivre) { await essaiLivre(nav, page, noms); await nav.close(); return; }
   if (dossierEcoute) {   // les fichiers d'écoute : rien d'autre
     fs.mkdirSync(path.resolve(dossierEcoute), { recursive: true });
     let l = ecoutes();
@@ -370,7 +554,12 @@ function dansLaPage() {
   if (avecWav) fs.mkdirSync(dossierWav, { recursive: true });
 
   const f = (x, l = 6) => (x === null ? '' : x === -Infinity ? '−∞' : x.toFixed(1).replace('-', '−')).padStart(l);
-  const titres = { ambiance: 'Ambiances', couche: 'Couches', effet: 'Effets', ensemble: 'Ensemble' };
+  const titres = { ambiance: 'Ambiances', couche: 'Couches', effet: 'Effets', page: 'Pages', ensemble: 'Ensemble' };
+  // le niveau perçu visé pour un effet (le plus fort, sur 400 ms, pondéré K) : −20 dBFS ; les chocs −18, les petits sons −23
+  const CHOCS = ['coup', 'eclat', 'choc', 'claque', 'porte-epaisse', 'battant', 'grondement', 'pierre', 'eclat-brise', 'tour', 'porte', 'clairon'];
+  const PETITS = ['cle', 'tinte', 'frisson', 'declic', 'papier', 'tic', 'tictac', 'toc', 'reglette', 'clavier', 'buee', 'mousse', 'plume', 'frottement', 'coche-pinceau',
+    'coche-stylo', 'crayon', 'fourchette', 'tasse', 'braises', 'graine', 'clochette', 'cran', 'balai', 'bip', 'montantes', 'velours', 'pinceau', 'glacon', 'lin', 'tissu', 'herbe', 'roule', 'bandes'];
+  const cibleEffet = (nom) => (CHOCS.includes(nom) ? -18 : PETITS.includes(nom) ? -23 : -20);
   const problemes = [], notes = [];
   let sorte = null;
   const t0 = Date.now();
@@ -391,7 +580,7 @@ function dansLaPage() {
     if (s.sorte !== sorte) {
       sorte = s.sorte;
       console.log('\n' + titres[sorte]);
-      console.log('nom'.padEnd(26) + '   bus  bus K sortie  crête  comp. moment silence  G/M/A      courbe    niveau' + (sorte === 'ambiance' ? '  → proposé' : ''));
+      console.log('nom'.padEnd(26) + '   bus  bus K sortie  crête  comp. moment silence  G/M/A      courbe    niveau' + (sorte === 'ambiance' || sorte === 'effet' ? '  → proposé' : ''));
     }
     const r = await page.evaluate(([item, w]) => window.rendre(item, w), [s, avecWav]);
     const gma = r.spectre.gma.map((x) => String(x).padStart(2)).join('/');
@@ -400,6 +589,9 @@ function dansLaPage() {
       (r.niveau === null ? '' : String(+r.niveau.toFixed(3)).padStart(6));
     if (s.sorte === 'ambiance' && r.niveau !== null && s.cle && isFinite(r.busK) && !s.nom.includes('→')) {
       ligne += '  → ' + (r.niveau * Math.pow(10, (CIBLE - r.busK) / 20)).toFixed(3);
+    }
+    if (s.sorte === 'effet' && r.niveau !== null && s.cle && isFinite(r.moment)) {
+      ligne += '  → ' + (r.niveau * Math.pow(10, (cibleEffet(s.cle) - r.moment) / 20)).toFixed(3) + ' (' + cibleEffet(s.cle) + ')';
     }
     console.log(ligne);
     if (r.crete > -1) problemes.push(`${s.nom} : crête à ${f(r.crete, 0)} dBFS`);
