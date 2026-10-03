@@ -643,7 +643,10 @@ var FxA = (function () {
   // (ce qui est flou n'a pas besoin de plus), pour toutes les apparitions de la page ; chacune ajoute ses
   // grains, et l'animation s'arrête quand il n'en reste plus. Rend { jeter(liste), fixes(liste, ms) }.
   // Un grain : { x, y, vx, vy, gy (la pesanteur), r, a (opacité), entree, sortie, vie, couleur, sens (le
-  // balancement de côté) } ; ses temps sont en secondes, ses vitesses en unités par seconde.
+  // balancement de côté) } ; ses temps sont en secondes, ses vitesses en unités par seconde. Trois options
+  // pour les gerbes et les poussières qui reviennent à leur place : `trajet` (une fonction de 0 à 1 sur la vie du
+  // grain, qui rend [x, y] : le grain la suit au lieu d'être intégré), `trait` (une étincelle : un trait dans le
+  // sens du mouvement, long de vx · trait), `attend` (le grain ne bouge pas pendant son retard).
   function grains(scene) {
     var fx = Fx.etat(scene);
     if (fx.grainsA) return fx.grainsA;
@@ -653,6 +656,14 @@ var FxA = (function () {
       return g.a * lisse(e) * lisse(s);
     }
     function dessiner(g, a) {
+      if (g.trait) {
+        ctx.strokeStyle = g.couleur; ctx.lineCap = 'round';
+        ctx.globalAlpha = a * 0.3; ctx.lineWidth = g.r * 3.2;
+        ctx.beginPath(); ctx.moveTo(g.x - g.vx * g.trait, g.y - g.vy * g.trait); ctx.lineTo(g.x, g.y); ctx.stroke();
+        ctx.globalAlpha = a; ctx.lineWidth = g.r * 1.2; ctx.stroke();
+        ctx.fillStyle = '#fff6dc'; ctx.beginPath(); ctx.arc(g.x, g.y, g.r * 0.9, 0, 6.2832); ctx.fill();
+        return;
+      }
       ctx.globalAlpha = a * 0.24; ctx.fillStyle = g.couleur;
       ctx.beginPath(); ctx.arc(g.x, g.y, g.r * 3, 0, 6.2832); ctx.fill();
       ctx.globalAlpha = a; ctx.fillStyle = g.couleur;
@@ -664,16 +675,24 @@ var FxA = (function () {
         var g = liste[i];
         g.age += dt;
         if (g.age >= g.vie) { liste.splice(i, 1); continue; }
-        g.vy += (g.gy || 0) * dt;
-        g.x += (g.vx + (g.balance ? Math.sin(g.age * 1.7 + g.p) * g.balance : 0)) * dt;
-        g.y += g.vy * dt;
+        if (g.trajet) {
+          if (g.age >= 0) { var q = g.trajet(g.age / g.vie); g.x = q[0]; g.y = q[1]; }
+        } else if (g.age >= 0 || !g.attend) {
+          g.vy += (g.gy || 0) * dt;
+          g.x += (g.vx + (g.balance ? Math.sin(g.age * 1.7 + g.p) * g.balance : 0)) * dt;
+          g.y += g.vy * dt;
+        }
         dessiner(g, opacite(g));
       }
       if (!liste.length) { tache = null; return false; }
     }
     var soi = fx.grainsA = {
       jeter: function (nouveaux) {
-        nouveaux.forEach(function (g) { g.age = -(g.retard || 0); g.p = g.p || 0; liste.push(g); });
+        nouveaux.forEach(function (g) {
+          g.age = -(g.retard || 0); g.p = g.p || 0;
+          if (g.trajet) { var q = g.trajet(0); g.x = q[0]; g.y = q[1]; }
+          liste.push(g);
+        });
         if (!tache) tache = Fx.tache(scene, image);
       },
       // mouvement réduit : des points fixes qui s'éteignent, rien qui bouge
