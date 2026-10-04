@@ -1082,7 +1082,7 @@ function Geste(scene, g, reglage) {
         if (notes === 'melodie') Son.note('melodie', k - 1);
         else if (notes === 'montantes') Son.note('montantes', k - 1);
       }
-      Son.effet(g.effet || 'saut', { force: g.effet ? 0.8 : 1 });
+      Son.effet(g.effet || 'saut', { force: g.effet ? 0.8 : 1, sol: g.sol });     // sol : le sol des pas (4.4 : « plateforme »)
       if (g.avance && !calme) {
         var pc = 3;
         if (g.avance.length === 2) pc = G.entre(g.avance[1], g.avance[0], borne((ecart - 300) / 600));
@@ -1689,7 +1689,7 @@ function Geste(scene, g, reglage) {
     var repos = Math.max(depart[1] + 140, arret + 300), course = repos - arret, bout = repos;
     var insiste = 0, derniereOnde = 0, auFinal = null, finiT = false, tenu = false;
     var ge = Geste(scene, g, {
-      sansHalo: true, yConsigne: Math.min(1480, depart[1] + 120),
+      sansHalo: true, yConsigne: g.y_consigne || Math.min(1480, depart[1] + 120),   // la page peut la placer (3.11)
       jouer: function () {
         return new Promise(function (ok) {
           auFinal = ok;
@@ -2241,6 +2241,8 @@ function Geste(scene, g, reglage) {
     scene.addEventListener('pointerdown', bas);
     scene.addEventListener('pointerup', haut);
   }
+  // exporté : l'effet cliche de 5.6 et 5.7 le prend dès qu'il existe (effets.js, feuilleter)
+  Gestes.feuilleter = feuilleter;
 
   // ---------------------------------------------------------------- essuyer
   /* 5.11 : la buée (l'effet `buee`) voile la vitrine ; on frotte en petits cercles dans le `hublot`

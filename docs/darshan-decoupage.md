@@ -14,7 +14,7 @@ Julie) : [plan-darshan-interface.md](plan-darshan-interface.md).
 ## En bref
 
 - **85 tableaux**, 8404 mots, de 40 à 160 mots chacun (moyenne 99).
-- **58 gestes**, tous nés d'une phrase du livre ; chacun a son équivalent au toucher simple et au clavier.
+- **59 gestes**, tous nés d'une phrase du livre ; chacun a son équivalent au toucher simple et au clavier.
 - **80 photographies de Karl** mises en scène : telles quelles dans le monde de Julie, passées à l'encre dans celui de Darshan, ou comme modèles des dessins.
 - **43 repérages** : les photos qui manquent encore, à prendre par Karl, regroupées en 10 sorties (liste à la fin).
 - Déjà jouables dans le prototype, au moins en partie : 0.1, 0.2, 1.1, 1.2, 1.3, 1.4.
@@ -23,7 +23,7 @@ Julie) : [plan-darshan-interface.md](plan-darshan-interface.md).
 |---|---|---|---|---|---|
 | Ouverture | 8–16 | 2 | 139 | livre | 0 |
 | 1. Un ciel mouvant | 17–39 | 9 | 876 | Darshan, les deux | 10 |
-| 2. Un pain perdu s’il vous plaît. | 40–62 | 10 | 961 | Julie, les deux | 5 |
+| 2. Un pain perdu s’il vous plaît. | 40–62 | 10 | 961 | Julie, les deux | 6 |
 | 3. Entre deux mondes | 63–98 | 14 | 1373 | Darshan, légende | 8 |
 | 4. Amélie et Julie | 99–108 | 7 | 755 | Julie | 5 |
 | 5. Douceurs et confettis | 109–133 | 11 | 1252 | Darshan, Julie | 6 |
@@ -134,8 +134,8 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 | **porter** | Porter un objet jusqu'à sa place (la clé, la lettre) | 2 | 1.3, 7.8 | écrite |
 | **rythme** | Toucher en rythme, au rythme du lecteur, jamais de pulsation (les tuiles, les pas, la course) | 3 | 1.2, 4.4, 7.9 | écrite |
 | **maintenir** | Maintenir le doigt posé (le cœur : chamade, deux cœurs, unisson ; les paupières) | 6 | 2.2, 2.9, 5.9, 6.10, 7.1, 7.10 | écrite |
-| **glisser** | Un glissement vertical (le geste vif, la marche lente, le regard qui se baisse) | 10 | 1.3, 1.8, 2.6, 2.8, 3.4, 3.6, 6.11, 6.15, 7.6, 7.11 | écrite |
-| **toucher** | Toucher la cible, ou n'importe où (Entrée, Espace) | 10 | 1.3, 1.9, 3.2, 3.8, 5.5, 5.7, 6.4, 6.7, 7.5 | écrite |
+| **glisser** | Un glissement vertical (le geste vif, la marche lente, le regard qui se baisse) | 9 | 1.3, 2.6, 2.8, 3.4, 3.6, 6.11, 6.15, 7.6, 7.11 | écrite |
+| **toucher** | Toucher la cible, ou n'importe où (Entrée, Espace) | 12 | 1.3, 1.8, 1.9, 2.7, 3.2, 3.8, 5.5, 5.7, 6.4, 6.7, 7.5 | écrite |
 
 ## Les objets et leurs états
 
@@ -281,11 +281,12 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 - **Lieu** : Aluva, au bord du fleuve · **monde** : Darshan · **entrée** : fondu
 - **Décor** : Le chemin sous les palmes, d'où vient le vieil homme ; puis son filet, en gros plan.
 - **Photos de Karl** : [34342144](https://photos.karlforterre.fr/photo/34342144/) « Jardin tropical » (encre) ; [34956319](https://photos.karlforterre.fr/photo/34956319/) « Gros plan d'un casier de pêche noir et de filets parmi des fleurs jaunes sauvages » (encre)
+- **Moment** : « Un vieil homme au short » → la lumière du matin se met à vivre entre les palmes : des taches de soleil gagnent le chemin d'où il vient, et bougent doucement jusqu'à ce qu'il parle
 - **Moment** : « L’individu dépose à côté de lui un filet » → on passe au filet, en gros plan
 - **Moment** : « Il tire jusqu’à lui un tabouret rafistolé » → le raclement du tabouret sur les planches ; puis les maquereaux plongent dans le tonneau
 - **Moment** : « l’homme entame la conversation » → premier dialogue du livre : les répliques paraissent une à une, le vieil homme en clair, Darshan en or
 - **Son** : kerala ; tabouret, poissons
-- **Note** : Le vieil homme n'a pas encore de nom : le livre ne le donne qu'à la dernière phrase du chapitre. Le titre de cette page, « Jivan », devient « Le vieil homme ».
+- **Note** : Le vieil homme n'a pas encore de nom : le livre ne le donne qu'à la dernière phrase du chapitre. Le titre de cette page, « Jivan », devient « Le vieil homme ». Le sens de son nom, « la vie », est voulu (réponse 16 de Karl) : le temps des vivants entre avec lui ; la même lumière vieillit en 1.8 et retombe en 1.9, quand le texte le nomme.
 - **Repérage** (S9) : Un tabouret de bois rafistolé sur un ponton, un filet où brillent trois maquereaux ; lumière du matin, cadre en hauteur
 
 ### 1.6 L'esprit local
@@ -320,11 +321,11 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 ¶35–38, 128 mots : « — Je t’invite à t’attarder davantage sur ma personne … conclut Darshan en enfilant sa chemise. »
 
 - **Lieu** : Aluva, le ponton · **monde** : Darshan · **entrée** : même plan
-- **Décor** : Le ponton du vieil homme, vide : sa place sans lui ; à « As-tu déjà pensé à vieillir ? », la lumière vire lentement à l'or ; après la pirouette, le lin blanc de la chemise passe devant la vue.
+- **Décor** : Le ponton du vieil homme, vide : sa place sans lui ; à « As-tu déjà pensé à vieillir ? », la lumière vire lentement à l'or ; après la pirouette, Darshan boutonne sa chemise : le lin blanc couvre la vue, le col ouvert.
 - **Photos de Karl** : [10310851](https://photos.karlforterre.fr/photo/10310851/) « Ponton en bois et petite barque sur une rivière calme reflétant les nuages » (encre)
-- **Geste** : « en enfilant sa chemise » → après la phrase, enfiler la chemise : glisser vers le bas, le lin blanc passe devant la vue (sinon : toucher)
+- **Geste** : « en enfilant sa chemise » → après la phrase, boutonner la chemise : les pans de lin entrent par les côtés, un toucher par bouton, de haut en bas ; le col reste ouvert (sinon : toucher ou Entrée, un bouton chaque fois)
 - **Moment** : « As-tu déjà pensé à vieillir » → la lumière vire lentement à l'or ; le tanpura se tait, seul le fleuve continue, jusqu'à la réponse de Darshan
-- **Son** : kerala ; silence du tanpura, lin
+- **Son** : kerala ; silence du tanpura, lin, tissu
 - **Note** : Le ponton reste vide (aucune silhouette) : on voit la place du vieil homme sans lui, avant « je te quitterai avant lui ». Le jour vieillit pendant la question ; Darshan l'esquive en s'habillant.
 - **Repérage** (S9) : Le même tabouret rafistolé, vide, sur le ponton, dans la lumière d'or de fin d'après-midi
 
@@ -426,12 +427,12 @@ le haut ou le bas, ou restent dans une zone, et un toucher simple les remplace t
 ¶56–59, 123 mots : « Après quelques bouchées assorties d’un geste de la main … laissé filer aussi facilement mon saumon. »
 
 - **Lieu** : Le restaurant · **monde** : Julie · **entrée** : fondu
-- **Décor** : La table, floue : le temps a passé ; le carnet du serveur ; son côté à elle, net ; puis le pain perdu sur sa porcelaine jaune tournesol.
+- **Décor** : La table, floue : le temps a passé ; la carte des desserts, seule nette ; son côté à elle, net ; puis le pain perdu sur sa porcelaine jaune tournesol.
 - **Photos de Karl** : [34532663](https://photos.karlforterre.fr/photo/34532663/) « Table heureuse » (photo)
-- **Moment** : « Ce sera un pain perdu » → le carnet du serveur monte : une seule ligne, le titre du chapitre
+- **Geste** : « Ce sera un pain perdu » → passer la commande : toucher son dessert sur la carte ; la commande de Darshan paraît, le titre du chapitre (sinon : toucher, Entrée)
 - **Moment** : « Il sera servi dans une porcelaine » → son côté à elle, net ; puis le pain perdu, net (quand Karl l'aura photographié)
 - **Son** : restaurant ; assiettes, crayon, porcelaine
-- **Note** : Le livre ne dit pas qui commande : la commande paraît sans qu'on sache qui l'a passée. « Si j’avais su… » reste du récit, sans couleur de personnage.
+- **Note** : C'est Darshan qui commande le dessert et pense « Si j’avais su » (réponse 13 de Karl) : le lecteur passe la commande sur la carte, dont les autres lignes restent floues ; la pensée prend l'italique et l'or de ses autres pensées.
 - **Repérage** (S1) : Pain perdu de brioche, portion menue, sur porcelaine à motif fleuri, fond jaune tournesol
 
 ### 2.8 Montsouris
@@ -1354,12 +1355,12 @@ entre parenthèses sont ceux des mécaniques et des effets de `livre.py`.
 
 ### D3. Ouverture, chapitres 1 et 2
 
-- **Tableaux** : 21 (0.1 à 2.10), 1976 mots, 15 gestes
+- **Tableaux** : 21 (0.1 à 2.10), 1976 mots, 16 gestes
 - **Plans nouveaux** : 12, dont 6 décors dessinés (monde de Darshan)
 - **Photos de Karl** : 12 telles quelles, 6 passées à l'encre ; **repérages** : 11
 - **Mécaniques** : caresser, glisser, maintenir, porter, remuer, rythme, toucher, tourner, tracer ; à écrire : **caresser, remuer**
 - **Ambiances sonores** : cosmos, kerala, nuit, parc, restaurant, rue, silence, vent
-- **À construire** : seuil : la dédicace qui paraît d'elle-même, « Ouvrir » actif dès l'arrivée ; poème : calque d'arbres fixe, poussière d'or, fil d'or (frontiere) et course des astres (course) ; toit : la voix lettre à lettre (voix) ; l'appel, la quinte à vide (son appel) ; pigeonnier : tourner (260 unités), la clé portée vers le haut, le jour et l'autre côté (jour, autre-cote) ; chaleur d'Aluva ; moustache de mousse (tracer) ; naissance du carnet ; clin d'œil d'encre (clin) ; reflets de Paris dans le fleuve (remuer, reflet) et fragment de la ballade sous l'eau (melodie) ; lumière qui vieillit, silence du tanpura, lin de la chemise (lin) ; cabane à kayaks dessinée, en or, et son jour ; salut de la vue (camera) ; bandes qui s'ouvrent par l'obturateur (bandes-photo) ; caresse lente, flou qui suit le geste (caresser, flou) ; le cœur sous le doigt : chamade, puis deux cœurs à trois contre deux (maintenir, balance, valse) ; photo qui devient peinture, sous un masque ; la voix lettre à lettre, à l'encre ; réveil au toucher de lecture : question assourdie, obturateur (assourdi, net) ; gros plan inséré, regard qui se baisse (decor avec camera) ; carnet du serveur, à une seule ligne (commande) ; marche lente, on passe à côté (camera avec avance, passe) ; première mesure de la ballade, compte, porte épaisse, envol (melodie, compte, decor) ; rêve à l'encre sur le ciel, que l'ombre d'un nuage fait pâlir (esquisse, nuage).
+- **À construire** : seuil : la dédicace qui paraît d'elle-même, « Ouvrir » actif dès l'arrivée ; poème : calque d'arbres fixe, poussière d'or, fil d'or (frontiere) et course des astres (course) ; toit : la voix lettre à lettre (voix) ; l'appel, la quinte à vide (son appel) ; pigeonnier : tourner (260 unités), la clé portée vers le haut, le jour et l'autre côté (jour, autre-cote) ; chaleur d'Aluva ; moustache de mousse (tracer) ; naissance du carnet ; la lumière du matin qui se met à vivre à l'arrivée du vieil homme (vie) ; clin d'œil d'encre (clin) ; reflets de Paris dans le fleuve (remuer, reflet) et fragment de la ballade sous l'eau (melodie) ; lumière qui vieillit, silence du tanpura, chemise boutonnée (toucher, lin) ; cabane à kayaks dessinée, en or, et son jour ; salut de la vue (camera) ; bandes qui s'ouvrent par l'obturateur (bandes-photo) ; caresse lente, flou qui suit le geste (caresser, flou) ; le cœur sous le doigt : chamade, puis deux cœurs à trois contre deux (maintenir, balance, valse) ; photo qui devient peinture, sous un masque ; la voix lettre à lettre, à l'encre ; réveil au toucher de lecture : question assourdie, obturateur (assourdi, net) ; gros plan inséré, regard qui se baisse (decor avec camera) ; carte des desserts, commande de Darshan (toucher, commande) ; marche lente, on passe à côté (camera avec avance, passe) ; première mesure de la ballade, compte, porte épaisse, envol (melodie, compte, decor) ; rêve à l'encre sur le ciel, que l'ombre d'un nuage fait pâlir (esquisse, nuage).
 
 ### D4. Chapitre 3
 

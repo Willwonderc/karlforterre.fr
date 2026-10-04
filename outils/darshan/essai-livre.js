@@ -6,6 +6,7 @@
      NODE_PATH=/opt/node22/lib/node_modules node essai-livre.js            (mouvement réduit, rapide)
      NODE_PATH=/opt/node22/lib/node_modules node essai-livre.js normal     (animations complètes)
      NODE_PATH=/opt/node22/lib/node_modules node essai-livre.js calme 3.9  (à partir d'une page)
+     NODE_PATH=/opt/node22/lib/node_modules node essai-livre.js calme 3.9 3.11  (de 3.9 à 3.11 comprise)
 
    Photos dans captures/livre/ (non suivi par Git), rapport dans captures/livre/rapport.txt. */
 const { chromium } = require('playwright');
@@ -14,6 +15,7 @@ const fs = require('fs');
 
 const mode = process.argv[2] || 'calme';
 const depuis = process.argv[3] || null;
+const jusqua = process.argv[4] || null;     // dernière page jouée (comprise), sinon jusqu'à « Fin »
 const sortie = path.join(__dirname, 'captures', 'livre');
 fs.mkdirSync(sortie, { recursive: true });
 
@@ -38,6 +40,7 @@ fs.mkdirSync(sortie, { recursive: true });
   courante = n;
   const limite = Date.now() + 40 * 60 * 1000;
   const photographiees = {};
+  let atteinte = false;   // la page « jusqu'à » a été jouée jusqu'au bout
   const etatPage = () => page.evaluate(() => {
     const s = document.querySelector('.scene.active');
     if (!s) return null;
@@ -58,6 +61,7 @@ fs.mkdirSync(sortie, { recursive: true });
     const m = await scene();
     if (m !== n) {
       rapport.push(`${n}\t${((Date.now() - debut) / 1000).toFixed(1)} s\t${appuis} appuis`);
+      if (jusqua && n === jusqua) { atteinte = true; break; }
       n = m; courante = m; debut = Date.now(); appuis = 0;
       continue;
     }
@@ -78,10 +82,10 @@ fs.mkdirSync(sortie, { recursive: true });
     erreurs.map((e) => `${e.page}\t${e.message}`).join('\n') + '\n';
   fs.writeFileSync(path.join(sortie, 'rapport.txt'), texte);
   console.log(texte);
-  // l'essai échoue sur une panne du moteur, ou s'il n'a pas atteint la dernière page
-  const derniere = await page.evaluate(() => (window.DARSHAN || {}).derniere);
-  if (pannes || n !== derniere) {
-    console.error(`ÉCHEC : ${pannes} panne(s) ; arrêt à la page ${n} (dernière : ${derniere})`);
+  // l'essai échoue sur une panne du moteur, ou s'il n'a pas atteint la dernière page (ou la page visée)
+  const derniere = jusqua || await page.evaluate(() => (window.DARSHAN || {}).derniere);
+  if (pannes || (jusqua ? !atteinte : n !== derniere)) {
+    console.error(`ÉCHEC : ${pannes} panne(s) ; arrêt à la page ${n} (visée : ${derniere})`);
     process.exitCode = 1;
   }
   await navigateur.close();
