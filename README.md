@@ -62,7 +62,8 @@ Facultatif :
   dans l'abonnement Creative Cloud : ne résiliez l'abonnement que si vous n'utilisez plus
   ses logiciels (Lightroom, Photoshop…).
 - **Anciennes adresses** : `/work`, `/projets`, `/tarifs-des-services`,
-  `/copie-de-consulter` et `/copie-de-consulter-1` mènent aux nouvelles pages ;
+  `/copie-de-consulter` et `/copie-de-consulter-1` mènent aux nouvelles pages, `/contact` à la
+  section Contact de l'accueil ;
   `/mentions-legales` garde son adresse. Les liens existants restent valables.
 - **Google Search Console** : propriété « Domaine » `karlforterre.fr` (validée par une
   ligne TXT chez OVH), puis déclaration du plan du site
@@ -197,5 +198,5 @@ Pour déposer un fichier : **Add file** → **Upload files**, dans le bon dossie
 - `mentions-legales/`, `404.html` (page introuvable), `robots.txt`, `sitemap.xml`,
   `favicon.svg`, `apple-touch-icon.png`, `images/partage.jpg` (aperçu lors d'un partage).
 - `work/`, `projets/`, `tarifs-des-services/`, `copie-de-consulter/`,
-  `copie-de-consulter-1/` : redirections des anciennes adresses d'Adobe.
+  `copie-de-consulter-1/`, `contact/` : redirections des anciennes adresses d'Adobe.
 - `.nojekyll` : demande à GitHub Pages de publier les fichiers tels quels.
