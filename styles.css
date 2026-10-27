@@ -4075,6 +4075,54 @@ html {
     display: none !important;
 }
 
+/* Distinction Pexels Heroes : la pastille festonnée de Pexels, redessinée et sans texte
+   (images/sceau-pexels-heroes.svg), à côté de la phrase qui la nomme */
+.site-photo-distinction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+    max-width: 600px;
+    margin: var(--space-lg) auto 0;
+    text-align: left;
+}
+
+.site-photo-distinction p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--color-text-light);
+}
+
+.sceau-heroes {
+    flex: none;
+    display: block;
+    width: 3.5rem;
+    height: 3.5rem;
+    background: url("images/sceau-pexels-heroes.svg") center / contain no-repeat;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+    transition: transform 0.3s ease;
+}
+
+.sceau-heroes:hover,
+.sceau-heroes:focus-visible {
+    transform: rotate(-8deg) scale(1.05);
+}
+
+@media (max-width: 600px) {
+    .site-photo-distinction {
+        flex-direction: column;
+        gap: var(--space-md);
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sceau-heroes {
+        transition: none;
+    }
+}
+
 .site-photo-chiffres {
     margin-top: var(--space-md);
     font-size: 0.9rem;
