@@ -4076,7 +4076,10 @@ html {
 }
 
 /* Distinction Pexels Heroes : la pastille festonnée de Pexels, redessinée et sans texte
-   (images/sceau-pexels-heroes.svg), à côté de la phrase qui la nomme */
+   (images/sceau-pexels-heroes.svg), à côté de la phrase qui la nomme. Son ombre est
+   dessinée dans l'image, sur une marge de 32 % autour de la pastille, que reprennent des
+   marges négatives : Safari couperait au carré l'ombre d'un filtre CSS quand la pastille
+   tourne au survol. La pastille seule, et non son ombre, répond au pointeur (::after). */
 .site-photo-distinction {
     display: flex;
     align-items: center;
@@ -4095,13 +4098,27 @@ html {
 }
 
 .sceau-heroes {
+    --marge: 1.12rem;
+    position: relative;
     flex: none;
     display: block;
-    width: 3.5rem;
-    height: 3.5rem;
+    width: calc(3.5rem + var(--marge) * 2);
+    height: calc(3.5rem + var(--marge) * 2);
+    margin: calc(var(--marge) * -1);
     background: url("images/sceau-pexels-heroes.svg") center / contain no-repeat;
-    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+    pointer-events: none;
     transition: transform 0.3s ease;
+}
+
+.sceau-heroes::after {
+    content: "";
+    position: absolute;
+    inset: var(--marge);
+    pointer-events: auto;
+}
+
+.sceau-heroes:focus-visible {
+    outline-offset: calc(var(--marge) * -1);
 }
 
 .sceau-heroes:hover,
