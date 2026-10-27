@@ -4075,8 +4075,8 @@ html {
     display: none !important;
 }
 
-/* Distinction Pexels Heroes : la pastille festonnée de Pexels, redessinée
-   (images/sceau-pexels-heroes.svg), le titre à la place du chiffre */
+/* Distinction Pexels Heroes : la pastille festonnée de Pexels, redessinée et sans texte
+   (images/sceau-pexels-heroes.svg), à côté de la phrase qui la nomme */
 .site-photo-distinction {
     display: flex;
     align-items: center;
@@ -4096,20 +4096,11 @@ html {
 
 .sceau-heroes {
     flex: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 6rem;
-    height: 6rem;
+    display: block;
+    width: 4.5rem;
+    height: 4.5rem;
     background: url("images/sceau-pexels-heroes.svg") center / contain no-repeat;
-    color: #fff;
-    font-size: 0.85rem;
-    font-weight: 700;
-    line-height: 1.1;
-    text-align: center;
-    text-decoration: none;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
     transition: transform 0.3s ease;
 }
 

@@ -217,7 +217,7 @@ window.TRADUCTIONS = {
     // Séries et galeries du site photo
     "Séries et galeries": { en: "Series and galleries", zh: "系列与图集" },
     "Des centaines de photographies libres de droits, racontées en séries et rangées en galeries, à télécharger gratuitement sur Pexels.": { en: "Hundreds of royalty-free photographs, told in series and arranged in galleries, free to download on Pexels.", zh: "数百张免版税照片，以系列讲述、按图集分类，可在 Pexels 免费下载。" },
-    "Distinction accordée par Pexels, sur invitation, aux photographes dont son équipe de sélection retient et met en avant de nombreuses images.": { en: "A distinction Pexels grants, by invitation, to photographers with many images selected and featured by its curation team.", zh: "Pexels 以邀请方式授予的荣誉，受邀摄影师均有大量作品被其策展团队精选和推荐。" },
+    "Pexels Heroes : une distinction qui me fait entrer dans le cercle des 1 500 contributeurs les plus vus de Pexels et salue une reconnaissance réitérée de mes photographies.": { en: "Pexels Heroes: a distinction that places me among the 1,500 most-viewed contributors on Pexels and honours the repeated recognition of my photographs.", zh: "Pexels Heroes：这项荣誉让我跻身 Pexels 浏览量最高的 1500 位贡献者之列，也是对我的摄影作品一再获得认可的肯定。" },
     "Par lieu": { en: "By place", zh: "按地点" },
     "Toutes les galeries": { en: "All galleries", zh: "全部图集" },
     "Le site photo": { en: "The photo site", zh: "摄影网站" },
