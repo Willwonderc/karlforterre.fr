@@ -4097,8 +4097,8 @@ html {
 .sceau-heroes {
     flex: none;
     display: block;
-    width: 4.5rem;
-    height: 4.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
     background: url("images/sceau-pexels-heroes.svg") center / contain no-repeat;
     filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
     transition: transform 0.3s ease;
