@@ -53,8 +53,9 @@ sur `main` :
 - les 11 essais de touchers façon iPhone : réussis ;
 - le banc des transitions : sans erreur.
 
-Le banc du son joué sur tout le livre (`essai-son.js --livre`), long, n'a pas été attendu : il est
-dans les contrôles du lot 1, qui touche au son.
+- le banc du son joué sur tout le livre (`essai-son.js --livre --rythme 4`) : un seul son
+  demandé et inconnu, `nuage` (2.10, 5.4), et un seul défaut de niveau, en 2.9 (crête de 6 dB
+  avant le plafond) ; les deux sont au lot 1.
 
 En chiffres : 85 pages, 446 temps, 59 gestes ; 100 effets sur 106 ; 10 scènes sur 10 ; un son
 muet (`nuage`) ; 48 textes d'interface à valider ; EPUB jouable de 31,8 Mo. Le détail est dans

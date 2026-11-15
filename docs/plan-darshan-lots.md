@@ -38,7 +38,7 @@ Chiffres relevés par `outils/darshan/mesure.py` (à relancer à chaque lot ; r�
 | Les effets | 100 écrits sur les 106 qu'emploient les pages (94 %) |
 | Les scènes écrites à la main | 10 sur 10 : seuil, poème, toit, tuiles, pigeonnier, pliage, vision, listes, rue de Rungis, clôture |
 | Les entrées de page | 13 sortes (porte, bandes, bandes de photos, bandes de Julie, encre, iris, obturateur, lumière, même plan…) |
-| Le son | 17 ambiances, 10 couches, 88 sons ponctuels ; un seul son demandé par les pages n'existe pas encore (`nuage`) |
+| Le son | 17 ambiances, 10 couches, 88 sons ponctuels ; un seul son demandé par les pages n'existe pas encore (`nuage`), et un seul niveau est à reprendre (2.9), d'après le banc du son joué sur tout le livre |
 | L'interface | 18 objets et leurs fiches, 7 portes au carnet, regard, compte à rebours, boussole, menu ; 126 textes d'interface, dont 48 marques « à valider par Karl » |
 | L'édition classique | EPUB refusionnable de 0,5 Mo, couverture de 2023, sans erreur à EPUBCheck ni à Ace |
 | Les contrôles | fabrication, EPUBCheck (deux éditions), Ace, livre joué en entier, 11 essais de touchers façon iPhone, 12 essais de transitions, banc du son ; tâche GitHub « Darshan » à chaque envoi |
@@ -181,7 +181,9 @@ Saison 4, plus loin
 2. Réponse 47 : « adossé au doigt de **Dieu** », 35e entrée de `texte.CORRECTIONS` ; les
    citations qui la reprennent (`decoupage.py`, `objets.ini`, `portes.ini`) ; le découpage
    régénéré.
-3. Le son `nuage` (2.10, 5.4) ; vérifier que « Continuer » presse l'horloge en 6.11.
+3. Le son `nuage` (2.10, 5.4) ; le niveau de 2.9, où les battements et la mélodie ensemble
+   dépassent de 6 dB avant le plafond (seul défaut relevé par le banc du son le 14 novembre) ;
+   vérifier que « Continuer » presse l'horloge en 6.11.
 4. Réponse 45 : vérifier en 5.8 les deux voix de Julie (la raison en romain, sans couleur ; le
    cœur en italique), à la même place.
 5. `build.py --strict` passe, et entre dans la tâche GitHub ; les boutons nouveaux du banc
