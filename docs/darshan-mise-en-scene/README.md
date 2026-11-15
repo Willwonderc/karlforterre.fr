@@ -445,3 +445,17 @@ reprise du chantier.
   avec un extrait plus large et une analyse plus poussée), 19 (la fenêtre de 6.13), 23 (le
   doigt de dieu, 7.1), 25 (les confettis : la question n'était pas claire), 43 (les
   repérages).
+- **Second tour** (questions 45 à 51, réponses du 3 octobre 2026 au soir, lues le 14 novembre) :
+  d'accord pour 45 (« Il est incroyable. », 5.8 : Julie se dispute avec elle-même, la raison en
+  romain et sans couleur, le cœur en italique), 46 (la fenêtre de 6.13 est celle de 6.7), 48 (les
+  confettis restent au sac), 50 (le Kerala : ses photos au naturel pour ce qui est vécu à Aluva,
+  l'encre pour ce qui est imaginé ou raconté, des dessins seulement où rien ne convient ; les sept
+  points de la proposition) et 51 (les sons refaits : « tes productions sont superbes »). Avec
+  une précision :
+  - 47 : « Dieu prend une majuscule et je valide la photo » (7.1 : une correction de plus à la
+    fabrication ; le rocher de sa photo reste) ;
+  - 49 : « Il faut me faire une liste de prompt à faire produire par chatgpt dans un style
+    pastel et cohérent avec des productions. » Les images des repérages ne seront donc pas
+    photographiées : Karl les fait produire, d'après une liste de prompts, dans un pastel accordé
+    aux décors du livre.
+  Leur report est planifié dans `docs/plan-darshan-lots.md` (lots 1, 2, 3 et 6).

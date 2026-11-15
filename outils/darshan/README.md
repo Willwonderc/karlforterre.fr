@@ -16,6 +16,15 @@ Rien ici n'est encore relié au site : aucune page ne pointe vers ce dossier.
 
 ## Chantier en cours : le livre entier (arrêt propre du 3 octobre 2026, au soir)
 
+**Depuis le 14 novembre 2026**, le chantier est mené par la session ALFRED, un lot par semaine :
+le plan, la consigne d'un lot et le cadre commun des séances sont dans
+[docs/plan-darshan-lots.md](../../docs/plan-darshan-lots.md) ; la passation dans
+[docs/darshan-passation.md](../../docs/darshan-passation.md) ; la mesure chiffrée dans
+[docs/darshan-mesure.md](../../docs/darshan-mesure.md), écrite par `mesure.py` (à relancer à la
+fin de chaque lot : `python3 mesure.py --journal "Lot N"`). Ce qui suit décrit l'état à l'arrêt
+du 3 octobre, toujours exact, sauf deux points que la mesure a corrigés : un seul son manque, et
+Karl a répondu aux questions 45 à 51.
+
 La pré-production est terminée (`docs/darshan-mise-en-scene/`, avec sa synthèse, qui fait foi)
 et reportée dans la fabrication. Le 30 septembre vers 11 h (UTC), le chantier est mis en pause à
 un point stable : le livre se fabrique, passe EPUBCheck sans erreur ni avertissement et se joue
@@ -90,16 +99,19 @@ Reste, dans l'ordre :
    - Compléments : la pluie de 7.4 (`peint`, `accalmie` : pas de seconde averse si l'ambiance est
      déjà la pluie), `transfert` avec `jaillir` (7.8), la boussole avec `bouton` et `etat="nord"`
      (7.10 : l'aiguille de 62° à −38° en 1,5 s, puis `Carnet.boussole('nord')`).
-2. **Sons appelés et encore muets** (`son.js`) : grondement, pierre et choc (7.12 à 7.15),
-   battement, aspiration, coche-pinceau et coche-stylo (3.10, 6.2), nuage (2.10), bouton de nacre
-   (1.8), mistral, satin, encre, fumée, rideau, éclat brisé, portes vides, fonte visqueuse
-   (chapitre 6) ; `tinte` doit lire `o.note` (0 à 6 : ré, mi, sol, la, si, ré, mi ; 3.1) ; un
-   souffle bref (3.3).
-3. **Ce qui attend Karl** : ses réponses aux questions 45 à 51 (le Kerala : rien n'est appliqué
-   avant son accord ; les sons refaits : la rumeur du restaurant, la télévision, la ballade) ; ses
-   avis sur le pli de 3.4, la lanterne, l'eau de 3.9 (ajoutée par l'équipe des effets : deux
-   `E("eau")` à retirer s'il n'en veut pas), le fondu enchaîné des pages « même plan », les
-   textes d'interface nouveaux (« à valider par Karl »).
+2. **Le son** : mesuré le 14 novembre sur la version fusionnée, un seul son demandé par les
+   pages manque dans `son.js` : `nuage` (2.10, 5.4). Les sons notés « muets » le 3 octobre
+   (grondement, pierre, choc, battement, coches, sons du chapitre 6) existent : les équipes les
+   avaient constatés sur des copies qui n'avaient pas encore le nouveau moteur du son. Restent à
+   affiner : `tinte` qui lise `o.note` (0 à 6 : ré, mi, sol, la, si, ré, mi ; 3.1), un souffle
+   bref (3.3), un son de bouton de nacre (1.8).
+3. **Les réponses de Karl aux questions 45 à 51** (3 octobre au soir) sont à reporter : « Dieu »
+   avec une majuscule en 7.1 ; le Kerala en photos (d'accord sur les sept points) ; une liste de
+   prompts pour faire produire par ChatGPT, au pastel, les images des repérages ; les trois sons
+   refaits approuvés (détail et lots : plan, point 2). Restent ses avis sur le pli de 3.4, la
+   lanterne, l'eau de 3.9 (ajoutée par l'équipe des effets : deux `E("eau")` à retirer s'il n'en
+   veut pas), le fondu enchaîné des pages « même plan », et les 48 textes d'interface marqués
+   « à valider par Karl » (lot 5).
 4. **Les essais d'ensemble** : `essai-livre.js` calme et normal, `essai-touchers.js`,
    `essai-transitions.js` (ajouter les boutons nouveaux à `instants`), les pages de l'EPUB au
    clavier, en grand texte et sans script ; puis la fiche d'essai pour Karl sur iPhone (Apple

@@ -1,5 +1,9 @@
 # Darshan jouable : les trois sessions qui restent
 
+> **Remplacé le 14 novembre 2026** par le plan par lots, un lot par semaine :
+> [plan-darshan-lots.md](plan-darshan-lots.md). Ce document reste pour mémoire (le protocole
+> d'exigence et les consignes d'origine).
+
 > **Mise à jour du 3 octobre au soir.** Les sessions 1 et 2 sont presque entièrement faites, et la
 > première partie de la session 3 aussi (le son, le plan du Kerala, le second tour de questions),
 > par équipes parallèles dans une seule session. Il reste six effets du chapitre 7, quelques sons
