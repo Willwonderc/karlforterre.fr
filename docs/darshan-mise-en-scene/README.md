@@ -458,4 +458,10 @@ reprise du chantier.
     pastel et cohérent avec des productions. » Les images des repérages ne seront donc pas
     photographiées : Karl les fait produire, d'après une liste de prompts, dans un pastel accordé
     aux décors du livre.
-  Leur report est planifié dans `docs/plan-darshan-lots.md` (lots 1, 2, 3 et 6).
+  Leur report est planifié dans `docs/plan-darshan-lots.md` (lots 1, 2, 3 et 9).
+- **Plus d'ambition, et Codex pour les photos** (16 novembre 2026) : Karl demande d'améliorer le
+  plan « avec encore plus d'ambition », en sachant que Codex peut être mobilisé pour modifier
+  ses photos. Le plan gagne un atelier des photos (lot 2) et trois lots où chaque photo est
+  accordée à sa page (lots 6 à 8). Restent à lui faire trancher, exemples sous les yeux : jusqu'où
+  une retouche peut aller ; pour les 43 images qui manquent, ses photos retouchées ou le pastel
+  de ChatGPT (réponse 49) ; et comment le générique nomme une photo retouchée.

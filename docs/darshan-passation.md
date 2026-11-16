@@ -1,6 +1,6 @@
 # Darshan jouable : passation à ALFRED
 
-Écrit le 14 novembre 2026 par la session qui a fabriqué le livre jouable (du 28 septembre au
+Écrit le 14 novembre 2026, tenu à jour depuis (voir « Progressions », en bas), par la session qui a fabriqué le livre jouable (du 28 septembre au
 3 octobre), pour la session **ALFRED en poste**, qui mène le projet à partir d'aujourd'hui.
 
 Karl a demandé trois choses : mesurer ce qui est fait ; un plan qui découpe le travail en lots,
@@ -82,7 +82,7 @@ Trois choses ont été découvertes en mesurant :
    fusionné et sa case cochée ; choisir le lot de la semaine (le suivant, ou celui d'après si
    le suivant attend Karl : règle du point 4 du plan).
 2. **Ouvrir une séance neuve** sur le dépôt Willwonderc/karlforterre.fr (ajouter
-   Willwonderc/PexelsWillwonder pour les lots 2, 3, 6 et 16, qui lisent l'inventaire des photos
+   Willwonderc/PexelsWillwonder pour les lots 2, 3, 6 à 9 et 19, qui lisent l'inventaire des photos
    ou le studio vidéo) et y coller la consigne du point 6 du plan, avec le numéro du lot. Une
    séance neuve par lot : le contexte court coûte beaucoup moins qu'une longue session.
 3. **Pendant la séance** : rien à faire, sauf répondre. Si la limite approche, lui demander un
@@ -98,7 +98,7 @@ Trois choses ont été découvertes en mesurant :
 ## Ce qui attend Karl maintenant
 
 Rien d'urgent. Fusionner la pull request de ce plan. Le premier vrai rendez-vous est après le
-lot 2 (produire les dix premières images), puis au lot 4 (une heure de lecture sur l'iPhone,
+lot 2 (regarder dix retouches d'essai et trancher), puis au lot 4 (une heure de lecture sur l'iPhone,
 carnet d'essai ouvert). Le tableau complet est au point 8 du plan.
 
 ## Pièges connus
@@ -131,6 +131,11 @@ carnet d'essai ouvert). Le tableau complet est au point 8 du plan.
   `darshan-mesure.md`) : on modifie le programme. Les pages `en/` et `zh/` du site aussi.
 - **Dans le rapport d'`essai-livre.js`**, la ligne « ARRÊT » sur la page 8.1 est normale : c'est
   la fin du livre.
+- **Pillow** : `decors.py` et `images.py` en ont besoin, et le `python3` courant d'une séance ne
+  le trouve pas toujours (constaté le 16 novembre : Python 3.11 sans Pillow, Python 3.13 avec).
+  Les lancer par `/usr/bin/python3`. Rien à installer.
+- **Codex n'est pas dans les séances du dépôt** : aucune séance ne peut le lancer. Elle prépare
+  les consignes et vérifie les fichiers reçus ; c'est ALFRED, ou Karl, qui lance Codex sur le Mac.
 - **Ne jamais lancer** `--envoyer-indexnow` ni `--renouveler-jeton` (dépôt PexelsWillwonder).
 
 ## Ce que la session sortante n'a pas vérifié
@@ -148,3 +153,28 @@ carnet d'essai ouvert). Le tableau complet est au point 8 du plan.
 La session sortante (« EPUB narratif spectaculaire pour Darshan ») reste lisible au compte de
 Karl, mais son contexte est très lourd : pour toute suite, préférer une séance neuve et ces
 documents.
+
+## Progressions, pour ALFRED
+
+Karl a demandé à la session sortante de tenir ALFRED au courant. Elle ne peut pas lui écrire :
+ALFRED tourne sur le Mac de Karl, et une session du dépôt n'atteint les autres sessions de Karl
+qu'avec un accord qu'il n'a pas donné. Le message direct (14 novembre) n'est donc pas parti, et
+la tâche planifiée qui devait le porter a été refusée. Ces lignes en tiennent lieu : ALFRED les
+lit ici, sur la branche `claude/upbeat-turing-bwatsc` puis sur `main`.
+
+- **14 novembre** : mesure du chantier, plan en 22 lots, passation, pull request 17. Les
+  réponses de Karl aux questions 45 à 51, restées non lues depuis le 3 octobre, sont inscrites
+  aux décisions.
+- **16 novembre** : à la demande de Karl (« encore plus d'ambition », et Codex pour modifier ses
+  photos), le plan passe à **25 lots**, et la **version 1.0 du lot 13 au lot 16** (semaine du
+  6 mars 2027). Nouveaux : l'atelier des photos (lot 2, qui absorbe la liste de prompts), chaque
+  photo accordée à sa page (lots 6 à 8), les 43 images qui manquent (lot 9, ancien lot 6). Les
+  lots 1, 3, 4 et 5 gardent leur numéro et leur semaine. Tout ce qui suivait recule de trois
+  semaines. Rien n'est retiré.
+- **Ce que cela demande de neuf à ALFRED** : lancer Codex sur les consignes que le lot 2 aura
+  préparées, d'abord dix retouches d'essai ; montrer l'avant et l'après à Karl ; lui faire
+  trancher les trois questions du plan (jusqu'où va une retouche, photos retouchées ou pastel,
+  les mots du générique).
+- **Non fait, à savoir** : Codex n'a pas été essayé ; aucune photo n'a été retouchée ; les
+  budgets des lots 6 à 8 sont estimés sans mesure. La pull request 17 n'est pas fusionnée.
+

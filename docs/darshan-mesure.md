@@ -1,6 +1,6 @@
 # Darshan jouable : la mesure du chantier
 
-*Écrit le 2026-11-15 par `outils/darshan/mesure.py` : modifier le programme, jamais ce document.
+*Écrit le 2026-11-16 par `outils/darshan/mesure.py` : modifier le programme, jamais ce document.
 Le plan par lots, qui dit ce que ces chiffres doivent devenir : [plan-darshan-lots.md](plan-darshan-lots.md).*
 
 | Ce qui se mesure | Aujourd'hui |
@@ -20,7 +20,7 @@ Le plan par lots, qui dit ce que ces chiffres doivent devenir : [plan-darshan-lo
 | Textes d'interface | 126 textes, dont 48 marques « à valider par Karl » |
 | Programme | moteur 16154 lignes, fabrication 8335 lignes, essais 1254 lignes |
 | Éditions fabriquées | jouable : 31.8 Mo ; classique : 0.5 Mo |
-| Lots du plan | 0 faits sur 22 |
+| Lots du plan | 0 faits sur 25 |
 
 Ce que le programme ne voit pas : la liste des sons muets est une lecture du code (le banc
 `essai-son.js --livre` la confirme en jouant le livre) ; les essais sur appareil, les validations de
