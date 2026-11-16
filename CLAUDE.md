@@ -70,7 +70,11 @@ dans le dépôt Willwonderc/PexelsWillwonder.
   `outils/darshan/`, relié à aucune page. Le texte y est lu dans
   `livres/darshan.epub`, jamais recopié ni modifié ; les coquilles de l'annexe A, acceptées
   par Karl le 30 septembre 2026, sont corrigées à la fabrication, chacune listée dans
-  `texte.CORRECTIONS` (`outils/darshan/texte.py`).
+  `texte.CORRECTIONS` (`outils/darshan/texte.py`). Depuis le 14 novembre 2026, le chantier
+  avance par lots, un par semaine, menés par la session ALFRED : plan, consigne d'un lot et
+  cadre commun des séances dans `docs/plan-darshan-lots.md` ; passation dans
+  `docs/darshan-passation.md` ; mesure dans `docs/darshan-mesure.md`, écrite par
+  `outils/darshan/mesure.py` (modifier le programme, jamais le document).
 - Section Photographie : elle lit à chaque visite `https://photos.karlforterre.fr/apercu.json`,
   écrit chaque nuit par `vitrine/build.py` du dépôt PexelsWillwonder (sélection, séries,
   galeries, chiffres). La liste `photosIntegrees` de `script.js` ne sert qu'en secours.
