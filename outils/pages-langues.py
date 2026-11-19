@@ -21,6 +21,9 @@ Python seul suffit, sans bibliothèque à installer.
 import html
 import json
 import re
+import subprocess
+import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 RACINE = Path(__file__).resolve().parent.parent
@@ -219,28 +222,70 @@ class Page:
         return re.sub(r"(<!DOCTYPE html>\s*)", r"\1" + AVERTISSEMENT.replace("\\", "\\\\"), page, count=1, flags=re.I)
 
 
+def fichier_de(adresse):
+    """https://karlforterre.fr/en/memoire/ → en/memoire/index.html"""
+    chemin = adresse[len(SITE):].strip("/")
+    return f"{chemin}/index.html" if chemin else "index.html"
+
+
+def git(*arguments):
+    try:
+        return subprocess.run(["git", "-C", str(RACINE), *arguments], capture_output=True, text=True,
+                              timeout=30).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return ""
+
+
+def derniere_modification(adresse, ancienne):
+    """Date de la dernière modification de la page (lastmod) : aujourd'hui si son fichier vient
+    de changer sans être encore enregistré (une page /en/ ou /zh/ réécrite à l'instant), sinon
+    la date du dernier enregistrement qui l'a modifiée, d'après l'historique git (la tâche
+    GitHub le lit en entier). Sans git, la date déjà notée dans le plan."""
+    fichier = fichier_de(adresse)
+    if not (RACINE / fichier).exists():
+        return ancienne
+    if git("status", "--porcelain", "--", fichier):
+        return datetime.now(timezone.utc).date().isoformat()
+    return git("log", "-1", "--format=%cs", "--", fichier) or ancienne
+
+
 def ecrire_plan():
     """sitemap.xml : les trois versions de chaque page traduite, reliées entre elles, puis
-    les autres adresses déjà présentes dans le plan."""
+    les autres adresses déjà présentes dans le plan, chacune avec la date de sa dernière
+    modification. Rend les adresses dont cette date a changé, à signaler aux moteurs."""
     chemin = RACINE / "sitemap.xml"
     versions = [{"fr": f"{SITE}{page}", "en": f"{SITE}/en{page}", "zh-Hans": f"{SITE}/zh{page}"}
                 for page in PAGES.values()]
     traduites = {adresse for v in versions for adresse in v.values()}
-    autres = []
+    anciennes, autres = {}, []
     if chemin.exists():
         for bloc in re.findall(r"<url>.*?</url>", chemin.read_text(encoding="utf-8"), re.S):
             adresse = re.search(r"<loc>(.*?)</loc>", bloc).group(1).strip()
+            date = re.search(r"<lastmod>(.*?)</lastmod>", bloc)
+            anciennes[adresse] = date.group(1).strip() if date else ""
             if adresse not in traduites:
-                autres.append(f"    <url><loc>{adresse}</loc></url>")
+                autres.append(adresse)
+    dates = {a: derniere_modification(a, anciennes.get(a, "")) for a in [*traduites, *autres]}
+
+    def lastmod(adresse):
+        return f"\n        <lastmod>{dates[adresse]}</lastmod>" if dates[adresse] else ""
+
     lignes = []
     for v in versions:
         liens = "".join(f'\n        <xhtml:link rel="alternate" hreflang="{code}" href="{adresse}"/>'
                         for code, adresse in list(v.items()) + [("x-default", v["fr"])])
-        lignes += [f"    <url>\n        <loc>{adresse}</loc>{liens}\n    </url>" for adresse in v.values()]
+        lignes += [f"    <url>\n        <loc>{adresse}</loc>{lastmod(adresse)}{liens}\n    </url>"
+                   for adresse in v.values()]
+    lignes += [f"    <url>\n        <loc>{adresse}</loc>{lastmod(adresse)}\n    </url>" for adresse in autres]
     chemin.write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
-        + "\n".join(lignes + autres) + "\n</urlset>\n", encoding="utf-8")
+        + "\n".join(lignes) + "\n</urlset>\n", encoding="utf-8")
+    # À signaler : les pages dont la date a changé, et celles modifiées aujourd'hui (une page
+    # retouchée deux fois le même jour garde la même date, mais doit être signalée à nouveau).
+    aujourdhui = datetime.now(timezone.utc).date().isoformat()
+    ordre = [a for v in versions for a in v.values()] + autres
+    return [a for a in ordre if dates[a] and (dates[a] != anciennes.get(a, "") or dates[a] == aujourdhui)]
 
 
 def main():
@@ -255,8 +300,13 @@ def main():
             print(f"{langue}/{fichier} écrite ; textes restés en français : {len(page.manquantes)}")
             for texte in sorted(page.manquantes):
                 print(f"   - {texte[:100]}")
-    ecrire_plan()
-    print("sitemap.xml mis à jour.")
+    changees = ecrire_plan()
+    print("sitemap.xml mis à jour" + (f" ; pages à signaler : {len(changees)}" if changees else "") + ".")
+    # Avec « --signaler FICHIER », ces adresses, une par ligne, que la tâche GitHub signale
+    # ensuite aux moteurs par IndexNow (outils/indexnow.py).
+    if "--signaler" in sys.argv:
+        Path(sys.argv[sys.argv.index("--signaler") + 1]).write_text(
+            "".join(f"{a}\n" for a in changees), encoding="utf-8")
 
 
 if __name__ == "__main__":

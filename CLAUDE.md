@@ -44,6 +44,11 @@ dans le dépôt Willwonderc/PexelsWillwonder.
   redirige désormais vers karlforterre.fr. Seuls `canonical`, `og:*`, `hreflang`, les
   données structurées, les balises `citation_*` (Google Scholar), `sitemap.xml`,
   `robots.txt` et `llms.txt` donnent des adresses complètes en https://karlforterre.fr.
+- `sitemap.xml` (dates `lastmod` tirées de l'historique git) est écrit par
+  `outils/pages-langues.py`, qui liste aussi les pages modifiées ; la tâche « Pages en
+  anglais et en chinois » les signale ensuite par IndexNow (`outils/indexnow.py`, clé
+  publique dans le fichier `.txt` de la racine). Ne jamais lancer `indexnow.py` sans
+  `--essai` en session : il contacte Bing.
 - Mémoire : la page `memoire/index.html` le présente pour les moteurs, Google Scholar et
   les assistants IA ; ses citations viennent mot pour mot du PDF, avec leur page.
   `en/memoire/` et `zh/memoire/` en sont tirées par `outils/pages-langues.py`, comme
