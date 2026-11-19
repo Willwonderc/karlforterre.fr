@@ -2,6 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>https://karlforterre.fr/</loc>
+        <lastmod>2026-10-27</lastmod>
         <xhtml:link rel="alternate" hreflang="fr" href="https://karlforterre.fr/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://karlforterre.fr/en/"/>
         <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://karlforterre.fr/zh/"/>
@@ -9,6 +10,7 @@
     </url>
     <url>
         <loc>https://karlforterre.fr/en/</loc>
+        <lastmod>2026-10-27</lastmod>
         <xhtml:link rel="alternate" hreflang="fr" href="https://karlforterre.fr/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://karlforterre.fr/en/"/>
         <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://karlforterre.fr/zh/"/>
@@ -16,6 +18,7 @@
     </url>
     <url>
         <loc>https://karlforterre.fr/zh/</loc>
+        <lastmod>2026-10-27</lastmod>
         <xhtml:link rel="alternate" hreflang="fr" href="https://karlforterre.fr/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://karlforterre.fr/en/"/>
         <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://karlforterre.fr/zh/"/>
@@ -23,6 +26,7 @@
     </url>
     <url>
         <loc>https://karlforterre.fr/memoire/</loc>
+        <lastmod>2026-09-27</lastmod>
         <xhtml:link rel="alternate" hreflang="fr" href="https://karlforterre.fr/memoire/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://karlforterre.fr/en/memoire/"/>
         <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://karlforterre.fr/zh/memoire/"/>
@@ -30,6 +34,7 @@
     </url>
     <url>
         <loc>https://karlforterre.fr/en/memoire/</loc>
+        <lastmod>2026-09-27</lastmod>
         <xhtml:link rel="alternate" hreflang="fr" href="https://karlforterre.fr/memoire/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://karlforterre.fr/en/memoire/"/>
         <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://karlforterre.fr/zh/memoire/"/>
@@ -37,10 +42,14 @@
     </url>
     <url>
         <loc>https://karlforterre.fr/zh/memoire/</loc>
+        <lastmod>2026-09-27</lastmod>
         <xhtml:link rel="alternate" hreflang="fr" href="https://karlforterre.fr/memoire/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://karlforterre.fr/en/memoire/"/>
         <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://karlforterre.fr/zh/memoire/"/>
         <xhtml:link rel="alternate" hreflang="x-default" href="https://karlforterre.fr/memoire/"/>
     </url>
-    <url><loc>https://karlforterre.fr/mentions-legales/</loc></url>
+    <url>
+        <loc>https://karlforterre.fr/mentions-legales/</loc>
+        <lastmod>2026-11-19</lastmod>
+    </url>
 </urlset>
