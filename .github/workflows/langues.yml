@@ -1,11 +1,11 @@
 # Pages en anglais (/en/) et en chinois (/zh/) du site.
 #
-# Après chaque modification d'index.html, de memoire/index.html ou de js/traductions.js
-# enregistrée sur main, outils/pages-langues.py réécrit les pages de en/ et zh/ et
-# sitemap.xml, puis
-# cette tâche les enregistre sur main. GitHub Pages publie ensuite le site comme
-# d'habitude. On peut aussi la lancer à la main : Actions → « Pages en anglais et en
-# chinois » → Run workflow.
+# Après chaque modification d'index.html, de memoire/index.html, de mentions-legales/ ou de
+# js/traductions.js enregistrée sur main, outils/pages-langues.py réécrit les pages de en/
+# et zh/ et sitemap.xml (avec la date de dernière modification de chaque page), puis cette
+# tâche les enregistre sur main. GitHub Pages publie ensuite le site comme d'habitude, et
+# outils/indexnow.py signale les pages modifiées à Bing et aux autres moteurs IndexNow. On
+# peut aussi la lancer à la main : Actions → « Pages en anglais et en chinois » → Run workflow.
 name: Pages en anglais et en chinois
 
 on:
@@ -14,6 +14,7 @@ on:
     paths:
       - index.html
       - memoire/index.html
+      - mentions-legales/index.html
       - js/traductions.js
       - outils/pages-langues.py
   workflow_dispatch:
@@ -31,9 +32,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # tout l'historique : la date de dernière modification de chaque page en vient
 
       - name: Écrire les pages /en/ et /zh/
-        run: python3 outils/pages-langues.py
+        run: python3 outils/pages-langues.py --signaler "$RUNNER_TEMP/a-signaler.txt"
 
       - name: Enregistrer les pages sur main et republier le site
         env:
@@ -50,4 +53,12 @@ jobs:
             gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" || true
           else
             echo "Pages déjà à jour."
+          fi
+
+      - name: Signaler les pages modifiées aux moteurs (IndexNow)
+        run: |
+          if [ -s "$RUNNER_TEMP/a-signaler.txt" ]; then
+            python3 outils/indexnow.py "$RUNNER_TEMP/a-signaler.txt"
+          else
+            echo "Aucune page à signaler."
           fi

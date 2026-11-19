@@ -140,7 +140,12 @@ navigateur, avec le même fichier.
 - En chinois, les caractères viennent des polices déjà installées sur l'appareil du
   visiteur (PingFang, Microsoft YaHei, Noto…).
 - Google peut indexer les trois versions : déclarez le plan du site,
-  https://karlforterre.fr/sitemap.xml, dans Google Search Console.
+  https://karlforterre.fr/sitemap.xml, dans Google Search Console. Le plan donne la date
+  de dernière modification de chaque page, tirée de l'historique de GitHub.
+- Bing, Yandex et les autres moteurs du protocole IndexNow sont prévenus tout seuls : après
+  chaque publication, la tâche « Pages en anglais et en chinois » leur signale les pages
+  modifiées (`outils/indexnow.py`). Le fichier de clé `bd238327a8daa1482e97920b81e3813d.txt`,
+  à la racine, n'a rien de secret : il prouve que l'envoi vient du site. Ne pas le supprimer.
 
 ### Ajouter une image
 
@@ -195,7 +200,8 @@ Pour déposer un fichier : **Add file** → **Upload files**, dans le bon dossie
 - `llms.txt` : présentation du site pour les assistants IA (format llmstxt.org). Le guide
   du référencement auprès des moteurs et des assistants IA (Bing, Wikidata, Wikimedia
   Commons, dépôt du mémoire) est dans le dépôt du site photo : `referencement/README.md`.
-- `mentions-legales/`, `404.html` (page introuvable), `robots.txt`, `sitemap.xml`,
+- `mentions-legales/`, `404.html` (page introuvable), `robots.txt`, `sitemap.xml` (écrit par
+  `outils/pages-langues.py`), le fichier de clé IndexNow (`bd2383….txt`),
   `favicon.svg`, `apple-touch-icon.png`, `images/partage.jpg` (aperçu lors d'un partage).
 - `work/`, `projets/`, `tarifs-des-services/`, `copie-de-consulter/`,
   `copie-de-consulter-1/`, `contact/` : redirections des anciennes adresses d'Adobe.
